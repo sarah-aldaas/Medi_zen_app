@@ -1,0 +1,59 @@
+{
+  "appbar_for_application": {
+    "home_page": "الواجهة الرئيسية"
+  },
+  "loading": {
+    "title": "جاري التحميل..."
+  },
+  "welcome": {
+    "title": "مرحبا بك! هيا بنا",
+    "loading_to_enjoy": "هيا للاستمتاع بالميزات المقدمة",
+    "stay_healthy": "لتحافظ على صحتك",
+    "login": "تسجيل الدخول",
+    "sign_up": "انشاء حساب"
+  },
+  "on_boarding": {
+    "get_start": "ابدأ",
+    "manage_medical_records": "إدارة السجلات الطبية",
+    "track_your_health": "تتبع صحتك",
+    "medicine_reminder": "تذكير بالدواء",
+    "keep_all_your_medical": "احتفظ بجميع سجلاتك الطبية منظمة في مكان واحد.",
+    "easily_track_health": "تتبع التقدم الصحي بسهولة.",
+    "set_up_reminder": "قم بإعداد تذكير لتناول الدواء في الموعد المحدد."
+  },
+  "sign_up_page": {
+    "first_name": "الاسم الأول",
+    "last_name": "الاسم الأخير",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirm_password": "تأكيد كلمة المرور",
+    "sign_up": "انشاء حساب",
+    "already_have_account": "هل لديك حساب بالفعل؟",
+    "login": "تسجيل الدخول",
+    "validation": {
+      "first_name_required": "الاسم الأول مطلوب",
+      "last_name_required": "الاسم الأخير مطلوب",
+      "email_required": "البريد الإلكتروني مطلوب",
+      "email_invalid": "البريد الإلكتروني غير صالح",
+      "password_required": "كلمة المرور مطلوبة",
+      "password_length": "يجب أن تكون كلمة المرور على الأقل 6 أحرف",
+      "confirm_password_required": "تأكيد كلمة المرور مطلوب",
+      "passwords_not_match": "كلمات المرور غير متطابقة"
+    }
+  },
+  "login_page": {
+    "login": "تسجيل دخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "sign_up": "انشاء حساب",
+    "do_not_have_account": "لا تملك حساب؟",
+    "forgot_password": "نسيت كلمة المرور؟",
+    "validation": {
+      "email_required": "البريد الإلكتروني مطلوب",
+      "email_invalid": "البريد الإلكتروني غير صالح",
+      "password_required": "كلمة المرور مطلوبة",
+      "password_length": "يجب أن تكون كلمة المرور على الأقل 6 أحرف"
+    }
+  }
+}
+

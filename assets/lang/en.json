@@ -1,0 +1,58 @@
+{
+  "appbar_for_application": {
+    "home_page": "Home page"
+  },
+  "loading": {
+    "title": "Loading..."
+  },
+  "welcome": {
+    "title": "Let's get Welcomed!",
+    "loading_to_enjoy": "Loading to enjoy the features provided",
+    "stay_healthy": "so stay healthy",
+    "login": "Login",
+    "sign_up": "Sign up"
+  },
+  "on_boarding": {
+    "get_start": "Get start",
+    "manage_medical_records": "Manage medical records",
+    "track_your_health": "Track your health",
+    "medicine_reminder": "Medicine reminder",
+    "keep_all_your_medical": "keep all your medical records organize in one place.",
+    "easily_track_health": "Easily track health progress.",
+    "set_up_reminder": "Set up a reminder to take your medicine on time."
+  },
+  "sign_up_page": {
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "sign_up": "Sign Up",
+    "already_have_account": "Already have an account?",
+    "login": "Login",
+    "validation": {
+      "first_name_required": "First name is required",
+      "last_name_required": "Last name is required",
+      "email_required": "Email is required",
+      "email_invalid": "Email is invalid",
+      "password_required": "Password is required",
+      "password_length": "Password must be at least 6 characters",
+      "confirm_password_required": "Confirm password is required",
+      "passwords_not_match": "Passwords do not match"
+    }
+  },
+  "login_page": {
+    "login": "Login",
+    "email": "Email",
+    "password": "Password",
+    "sign_up": "Sign Up",
+    "forgot_password": "Forget password?",
+    "do_not_have_account": "Don't have an account?",
+    "validation": {
+      "email_required": "Email is required",
+      "email_invalid": "Email is invalid",
+      "password_required": "Password is required",
+      "password_length": "Password must be at least 6 characters"
+    }
+  }
+}
