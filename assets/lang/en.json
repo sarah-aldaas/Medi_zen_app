@@ -361,8 +361,74 @@
     "your_journey": "Your journey to a healthier you starts here.",
     "empowering_your": "Empowering your well-being, every step of the way.",
     "learnMore": "Learn more"
+  },
+  "notificationSettings": {
+    "title": "Notification Settings",
+    "options": {
+      "general": "General Notification",
+      "sound": "Sound",
+      "vibrate": "Vibrate",
+      "specialOffers": "Special Offers",
+      "promoDiscounts": "Promo & Discount",
+      "payments": "Payments",
+      "cashback": "Cashback",
+      "appUpdates": "App Updates",
+      "newService": "New Service Available",
+      "newTips": "New Tips Available"
+    }
+  },
+  "notificationPage": {
+    "title": "Notification",
+    "new": "New"
+  },
+  "profilePage": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "notification": "Notification",
+    "payment": "Payment",
+    "security": "Security",
+    "complaint": "Complaint",
+    "language": "Language",
+    "englishUS": "English (US)",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "helpCenter": "Help Center",
+    "inviteFriends": "Invite Friends",
+    "logout": "Logout"
+  },
+  "servicesPage": {
+    "title": "Health Services"
+  },
+  "clinicCard": {
+    "seeDetails": "See Details >"
+  },
+  "clinicsPage": {
+    "allClinics": "All clinics"
+  },
+  "greetings": {
+    "morning": "Good Morning ☀️",
+    "afternoon": "Good Afternoon 🌤️",
+    "evening": "Good Evening 🌙"
+  },
+  "row_icons": {
+    "doctors": "Doctors",
+    "articles": "Articles",
+    "services": "Services",
+    "help_center": "Help center"
+  },
+  "searchField": {
+    "title": "Search..."
+  },
+  "someArticles": {
+    "seeAll": "See all",
+    "title": "Health articles"
+  },
+  "someClinics": {
+    "seeAll": "See all",
+    "title": "Some clinics"
+  },
+  "some_doctors": {
+    "top_doctors": "Top Doctors",
+    "see_all": "See all"
   }
-
-
-
 }

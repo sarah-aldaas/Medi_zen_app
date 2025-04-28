@@ -28,7 +28,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                 _buildHeader(context),
                 SearchField(),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(horizontal:  16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -45,6 +45,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                     ],
                   ),
                 ),
+                Gap(10),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Wrap(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/features/medical_record/pages/services_mixin.dart';
 
@@ -15,7 +16,7 @@ class SomeServices extends StatelessWidget with ServicesMixin {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Health Services",
+                "servicesPage.title".tr(context),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
-
 import '../model/docotr_model.dart';
 import 'mixin/doctor_mixin.dart';
 
@@ -12,7 +12,7 @@ class DoctorsPage extends StatefulWidget with DoctorMixin {
 }
 
 class allDoctorsPageState extends State<DoctorsPage> {
-  int _selectedFilter = 0; // 0 for All, 1 for General, etc.
+  int _selectedFilter = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +20,18 @@ class allDoctorsPageState extends State<DoctorsPage> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(-10),
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('Doctors', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+            "doctorsPage.title".tr(context),
+            style: TextStyle(fontWeight: FontWeight.bold)
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: Colors.grey),
+            tooltip: "doctorsPage.actions.search".tr(context),
             onPressed: () {
               // Handle search
             },
@@ -43,10 +45,10 @@ class allDoctorsPageState extends State<DoctorsPage> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  _buildFilterButton('All', 0),
-                  _buildFilterButton('General', 1),
-                  _buildFilterButton('Dentist', 2),
-                  _buildFilterButton('Nutritionist', 3),
+                  _buildFilterButton("doctorsPage.filters.all".tr(context), 0),
+                  _buildFilterButton("doctorsPage.filters.general".tr(context), 1),
+                  _buildFilterButton("doctorsPage.filters.dentist".tr(context), 2),
+                  _buildFilterButton("doctorsPage.filters.nutritionist".tr(context), 3),
                 ],
               ),
             ),
@@ -57,9 +59,7 @@ class allDoctorsPageState extends State<DoctorsPage> {
         padding: const EdgeInsets.only(bottom: 20.0),
         child: ListView.builder(
           itemCount: _filteredDoctors().length,
-          itemBuilder: (context, index) {
-            return _buildDoctorItem(_filteredDoctors()[index]);
-          },
+          itemBuilder: (context, index) => _buildDoctorItem(_filteredDoctors()[index]),
         ),
       ),
     );
@@ -69,22 +69,16 @@ class allDoctorsPageState extends State<DoctorsPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ElevatedButton(
-        onPressed: () {
-          setState(() {
-            _selectedFilter = index;
-          });
-        },
+        onPressed: () => setState(() => _selectedFilter = index),
         child: Text(text),
         style: ElevatedButton.styleFrom(
           backgroundColor: _selectedFilter == index
               ? Theme.of(context).primaryColor
               : Theme.of(context).scaffoldBackgroundColor,
-          foregroundColor:
-              _selectedFilter == index ? Colors.white : Colors.black,
+          foregroundColor: _selectedFilter == index ? Colors.white : Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
-            side: BorderSide(
-                color: Theme.of(context).primaryColor), // Add this line
+            side: BorderSide(color: Theme.of(context).primaryColor),
           ),
         ),
       ),
@@ -104,23 +98,30 @@ class allDoctorsPageState extends State<DoctorsPage> {
               child: Row(
                 children: [
                   ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(doctor.imageUrl!,
-                          height: 100, width: 100, fit: BoxFit.fill)),
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.asset(
+                        doctor.imageUrl!,
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.fill
+                    ),
+                  ),
                   SizedBox(
                     width: context.width / 1.9,
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(doctor.name!,
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.favorite_border))
-                          ],
+                      Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                            doctor.name!,
+                            style: TextStyle(fontWeight: FontWeight.bold)
+                        ),
+                        Spacer(),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.favorite_border)
+                        )],
                         ),
                         Divider(),
                         Text(
@@ -128,11 +129,16 @@ class allDoctorsPageState extends State<DoctorsPage> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
-                        Row(children: [
-                          Icon(Icons.star,
-                              size: 16, color: Theme.of(context).primaryColor),
-                          Text('${doctor.rating} (${doctor.reviews} reviews)')
-                        ]),
+                        Row(
+                          children: [
+                            Icon(
+                                Icons.star,
+                                size: 16,
+                                color: Theme.of(context).primaryColor
+                            ),
+                            Text('${doctor.rating} (${doctor.reviews} ${"doctorsPage.reviews".tr(context)})')
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -146,28 +152,19 @@ class allDoctorsPageState extends State<DoctorsPage> {
   }
 
   List<DoctorModel> _filteredDoctors() {
-    if (_selectedFilter == 0) {
-      return widget.allDoctors; // Show all doctors
-    } else {
-      // Filter based on selected filter (you'll need to implement this logic)
-      return widget.allDoctors
-          .where((doctor) =>
-              doctor.specialization!.toLowerCase() ==
-              _getFilterText(_selectedFilter).toLowerCase())
-          .toList();
-    }
+    if (_selectedFilter == 0) return widget.allDoctors;
+
+    return widget.allDoctors.where((doctor) =>
+    doctor.specialization!.toLowerCase() == _getFilterText(_selectedFilter).toLowerCase()
+    ).toList();
   }
 
   String _getFilterText(int index) {
     switch (index) {
-      case 1:
-        return 'General';
-      case 2:
-        return 'Dentist';
-      case 3:
-        return 'Nutritionist';
-      default:
-        return '';
+      case 1: return "doctorsPage.filters.general".tr(context);
+      case 2: return "doctorsPage.filters.dentist".tr(context);
+      case 3: return "doctorsPage.filters.nutritionist".tr(context);
+      default: return '';
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
@@ -40,8 +41,8 @@ class ClinicsPage extends StatelessWidget {
           child: ListView.builder(
             itemCount: clinics.length,
             itemBuilder: (context, index) {
-              return ClincCard(
-                clincName: clinics[index].name,
+              return ClinicCard(
+                clinicName: clinics[index].name,
                 specialization: clinics[index].details,
               );
             },
@@ -81,7 +82,7 @@ class ClinicsPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 100),
-                    Text('All Clinics',
+                    Text('clinicsPage.allClinics'.tr(context),
                         style: TextStyle(
                             color: AppColors.blackColor,
                             fontSize: 22,
