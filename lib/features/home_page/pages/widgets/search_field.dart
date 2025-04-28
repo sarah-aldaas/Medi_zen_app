@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class SearchField extends StatelessWidget {
   SearchField({super.key});
@@ -9,13 +10,13 @@ class SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
           filled: true, // Enable filling the background color
           fillColor: Colors.grey.shade50, // Set the background color
-          hintText: 'Search...',
+          hintText: 'searchField.title'.tr(context),
           hintStyle: TextStyle(color: Colors.grey.withOpacity(_opacityLevel)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(25.0),

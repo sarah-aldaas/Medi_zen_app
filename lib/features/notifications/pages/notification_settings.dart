@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+
 class NotificationSettingsPage extends StatefulWidget {
   const NotificationSettingsPage({super.key});
 
@@ -24,137 +26,107 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,color: Colors.grey,),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
+          onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Notification', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+            "notificationSettings.title".tr(context),
+            style: TextStyle(fontWeight: FontWeight.bold)
+        ),
       ),
       body: ListView(
         children: <Widget>[
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-            title: const Text('General Notification'),
+          _buildSwitchTile(
+            context,
             value: _generalNotifications,
-            onChanged: (bool value) {
-              setState(() {
-                _generalNotifications = value;
-              });
-            },
-            secondary: Icon(
-              Icons.notifications_active,
-              size: 20, // Smaller icon size
-              color: _generalNotifications ? Theme.of(context).primaryColor : null, // Primary color when selected
-            ),
+            onChanged: (v) => setState(() => _generalNotifications = v),
+            icon: Icons.notifications_active,
+            titleKey: "notificationSettings.options.general",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-
-            splashRadius: 5,
-            title: const Text('Sound'),
+          _buildSwitchTile(
+            context,
             value: _sound,
-            onChanged: (bool value) {
-              setState(() {
-                _sound = value;
-              });
-            },
-            secondary: Icon(Icons.volume_up, size: 20, color: _sound ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _sound = v),
+            icon: Icons.volume_up,
+            titleKey: "notificationSettings.options.sound",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-
-            title: const Text('Vibrate'),
+          _buildSwitchTile(
+            context,
             value: _vibrate,
-            onChanged: (bool value) {
-              setState(() {
-                _vibrate = value;
-              });
-            },
-            secondary: Icon(Icons.vibration, size: 20, color: _vibrate ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _vibrate = v),
+            icon: Icons.vibration,
+            titleKey: "notificationSettings.options.vibrate",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-
-            title: const Text('Special Offers'),
+          _buildSwitchTile(
+            context,
             value: _specialOffers,
-            onChanged: (bool value) {
-              setState(() {
-                _specialOffers = value;
-              });
-            },
-            secondary: Icon(Icons.local_offer, size: 20, color: _specialOffers ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _specialOffers = v),
+            icon: Icons.local_offer,
+            titleKey: "notificationSettings.options.specialOffers",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-            title: const Text('Promo & Discount'),
+          _buildSwitchTile(
+            context,
             value: _promoDiscounts,
-            onChanged: (bool value) {
-              setState(() {
-                _promoDiscounts = value;
-              });
-            },
-            secondary: Icon(Icons.discount, size: 20, color: _promoDiscounts ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _promoDiscounts = v),
+            icon: Icons.discount,
+            titleKey: "notificationSettings.options.promoDiscounts",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-            title: const Text('Payments'),
+          _buildSwitchTile(
+            context,
             value: _payments,
-            onChanged: (bool value) {
-              setState(() {
-                _payments = value;
-              });
-            },
-            secondary: Icon(Icons.payment, color: _payments ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _payments = v),
+            icon: Icons.payment,
+            titleKey: "notificationSettings.options.payments",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-
-            title: const Text('Cashback'),
+          _buildSwitchTile(
+            context,
             value: _cashback,
-            onChanged: (bool value) {
-              setState(() {
-                _cashback = value;
-              });
-            },
-            secondary: Icon(Icons.monetization_on, size: 20, color: _cashback ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _cashback = v),
+            icon: Icons.monetization_on,
+            titleKey: "notificationSettings.options.cashback",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-            title: const Text('App Updates'),
+          _buildSwitchTile(
+            context,
             value: _appUpdates,
-            onChanged: (bool value) {
-              setState(() {
-                _appUpdates = value;
-              });
-            },
-            secondary: Icon(Icons.system_update, size: 20, color: _appUpdates ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _appUpdates = v),
+            icon: Icons.system_update,
+            titleKey: "notificationSettings.options.appUpdates",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-
-            title: const Text('New Service Available'),
+          _buildSwitchTile(
+            context,
             value: _newServiceAvailable,
-            onChanged: (bool value) {
-              setState(() {
-                _newServiceAvailable = value;
-              });
-            },
-            secondary: Icon(Icons.new_releases, size: 20, color: _newServiceAvailable ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _newServiceAvailable = v),
+            icon: Icons.new_releases,
+            titleKey: "notificationSettings.options.newService",
           ),
-          SwitchListTile(
-            activeColor: Theme.of(context).primaryColor,
-
-            title: const Text('New Tips Available'),
+          _buildSwitchTile(
+            context,
             value: _newTipsAvailable,
-            onChanged: (bool value) {
-              setState(() {
-                _newTipsAvailable = value;
-              });
-            },
-            secondary: Icon(Icons.lightbulb_outline, size: 20, color: _newTipsAvailable ? Theme.of(context).primaryColor : null),
+            onChanged: (v) => setState(() => _newTipsAvailable = v),
+            icon: Icons.lightbulb_outline,
+            titleKey: "notificationSettings.options.newTips",
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSwitchTile(
+      BuildContext context, {
+        required bool value,
+        required ValueChanged<bool> onChanged,
+        required IconData icon,
+        required String titleKey,
+      }) {
+    return SwitchListTile(
+      activeColor: Theme.of(context).primaryColor,
+      title: Text(titleKey.tr(context)),
+      value: value,
+      onChanged: onChanged,
+      secondary: Icon(
+        icon,
+        size: 20,
+        color: value ? Theme.of(context).primaryColor : null,
       ),
     );
   }

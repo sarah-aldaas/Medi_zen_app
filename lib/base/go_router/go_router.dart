@@ -91,34 +91,34 @@ GoRouter goRouter() {
               return WelcomeScreen();
             },
           ),
-          GoRoute(
-            path: "/settings",
-            name: AppRouter.settings.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return Settings();
-            },
-          ),
-          GoRoute(
-            path: "/changeTheme",
-            name: AppRouter.changeTheme.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return ChangeTheme();
-            },
-          ),
-          GoRoute(
-            path: "/changeLang",
-            name: AppRouter.changeLang.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return ChangeLang();
-            },
-          ),
-          GoRoute(
-            path: "/changePassword",
-            name: AppRouter.changePassword.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return ChangePassword();
-            },
-          ),
+          // GoRoute(
+          //   path: "/settings",
+          //   name: AppRouter.settings.name,
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     return Settings();
+          //   },
+          // ),
+          // GoRoute(
+          //   path: "/changeTheme",
+          //   name: AppRouter.changeTheme.name,
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     return ChangeTheme();
+          //   },
+          // ),
+          // GoRoute(
+          //   path: "/changeLang",
+          //   name: AppRouter.changeLang.name,
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     return ChangeLang();
+          //   },
+          // ),
+          // GoRoute(
+          //   path: "/changePassword",
+          //   name: AppRouter.changePassword.name,
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     return ChangePassword();
+          //   },
+          // ),
           GoRoute(
             path: "/homePage",
             name: AppRouter.homePage.name,

@@ -1,6 +1,7 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 
 import '../../../../base/go_router/go_router.dart';
@@ -20,13 +21,13 @@ class SomeArticles extends StatelessWidget with ArticleMixin {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Health articles",
+              Text("someArticles.title".tr(context),
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               TextButton(
                 onPressed: () {
                   context.pushNamed(AppRouter.articles.name);
                 },
-                child: Text("See all",
+                child: Text("someArticles.seeAll".tr(context),
                     style: TextStyle(color: Theme.of(context).primaryColor)),
               ),
             ],
