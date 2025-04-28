@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
 import '../../reset_password/view/reset_password_screen.dart';
 import '../cubit/change_password_cubit.dart';
 import '../cubit/change_password_state.dart';
-
 
 class ChangePasswordPage extends StatefulWidget {
   @override
@@ -26,18 +24,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       create: (context) => ChangePasswordCubit(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Change Password', style: AppStyles.appBarTitle),
+          title: Text("changePassword.title".tr(context), style: AppStyles.appBarTitle),
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_rounded),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ResetPasswordScreen(),
-                ),
-              );
-            },
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ResetPasswordScreen()),
+            ),
           ),
         ),
         body: Padding(
@@ -52,27 +46,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'Enter a new password to change your password',
+                  "changePassword.instruction".tr(context),
                   textAlign: TextAlign.center,
-                  style:
-                  AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                  style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 50),
                 TextField(
                   controller: _newPasswordController,
                   obscureText: _obscureText1,
                   decoration: InputDecoration(
-                    hintText: 'New password',
+                    hintText: "changePassword.fields.newPassword".tr(context),
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText1 ? Icons.visibility_off : Icons.visibility,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureText1 = !_obscureText1;
-                        });
-                      },
+                      onPressed: () => setState(() => _obscureText1 = !_obscureText1),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
@@ -84,17 +73,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   controller: _confirmPasswordController,
                   obscureText: _obscureText2,
                   decoration: InputDecoration(
-                    hintText: 'Re-enter new password',
+                    hintText: "changePassword.fields.confirmPassword".tr(context),
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText2 ? Icons.visibility_off : Icons.visibility,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureText2 = !_obscureText2;
-                        });
-                      },
+                      onPressed: () => setState(() => _obscureText2 = !_obscureText2),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
@@ -106,12 +91,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   listener: (context, state) {
                     if (state is ChangePasswordSuccess) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text('Password changed successfully')),
+                        SnackBar(content: Text("changePassword.messages.success".tr(context))),
                       );
                     } else if (state is ChangePasswordFailure) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.error)),
+                        SnackBar(content: Text(state.error ?? "changePassword.messages.error".tr(context))),
                       );
                     }
                   },
@@ -120,18 +104,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                       onPressed: state is ChangePasswordLoading
                           ? null
                           : () {
-                        context
-                            .read<ChangePasswordCubit>()
-                            .changePassword(
+                        context.read<ChangePasswordCubit>().changePassword(
                           _newPasswordController.text,
                           _confirmPasswordController.text,
                         );
                       },
                       child: state is ChangePasswordLoading
                           ? CircularProgressIndicator(color: AppColors.whiteColor)
-                          : Text('Reset Password',
-                          style: AppStyles.bodyText
-                              .copyWith(color: AppColors.whiteColor)),
+                          : Text("changePassword.button".tr(context),
+                          style: AppStyles.bodyText.copyWith(color: AppColors.whiteColor)),
                       style: AppStyles.primaryButtonStyle,
                     );
                   },
@@ -145,4 +126,3 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     );
   }
 }
-

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class RemoveFromFavoritesBottomSheet extends StatelessWidget {
   final String imageUrl;
@@ -21,39 +22,24 @@ class RemoveFromFavoritesBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
-      ),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(12.0))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            'Remove from Favorites?',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text("favorites.removeTitle".tr(context), style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
           SizedBox(height: 16.0),
           ListTile(
-            leading: CircleAvatar(
-              radius: 30,
-              backgroundImage: NetworkImage(imageUrl),
-            ),
-            title: Text(
-              name,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            leading: CircleAvatar(radius: 30, backgroundImage: NetworkImage(imageUrl)),
+            title: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('$specialty | $hospital'),
+                Text("favorites.doctorInfo.specialtyHospital".tr(context).format([specialty, hospital])),
                 Row(
                   children: [
                     Icon(Icons.star, size: 16, color: Colors.blue),
-                    Text('$rating ($reviews reviews)'),
+                    Text("favorites.doctorInfo.rating".tr(context).format([rating.toString(), reviews.toString()])),
                   ],
                 ),
               ],
@@ -64,25 +50,15 @@ class RemoveFromFavoritesBottomSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the bottom sheet
-                },
-                child: Text('Cancel'),
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                ),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("favorites.buttons.cancel".tr(context)),
+                style: TextButton.styleFrom(backgroundColor: Colors.grey),
               ),
               SizedBox(width: 16.0),
               ElevatedButton(
-                onPressed: () {
-                  // Handle remove from favorites logic here
-                  Navigator.of(context).pop(true); // Close and return true if removed
-                },
-                child: Text('Yes, Remove'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.blue,
-                  backgroundColor: Colors.white,
-                ),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text("favorites.buttons.confirmRemove".tr(context)),
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.blue, backgroundColor: Colors.white),
               ),
             ],
           ),
@@ -92,17 +68,12 @@ class RemoveFromFavoritesBottomSheet extends StatelessWidget {
   }
 }
 
-// How to Use:
-
-// 1. Import: Import the RemoveFromFavoritesBottomSheet widget into your file.
-
-// 2. Show the Bottom Sheet: Use showModalBottomSheet to display the bottom sheet when needed.
-
+// Usage remains the same:
 // showModalBottomSheet(
 //   context: context,
 //   builder: (BuildContext context) {
 //     return RemoveFromFavoritesBottomSheet(
-//       imageUrl: 'YOUR_IMAGE_URL', // Replace with your image URL
+//       imageUrl: 'YOUR_IMAGE_URL',
 //       name: 'Dr. Travis Westaby',
 //       specialty: 'Cardiologists',
 //       hospital: 'Alka Hospital',
@@ -112,9 +83,6 @@ class RemoveFromFavoritesBottomSheet extends StatelessWidget {
 //   },
 // ).then((value) {
 //   if (value == true) {
-//     // Doctor was removed from favorites
-//     // Add your logic here
-//   } else {
-//     // Bottom sheet was dismissed (not removed)
+//     // Handle removal
 //   }
 // });

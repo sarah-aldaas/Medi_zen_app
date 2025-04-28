@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medizen_mobile/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
 
 import '../model/docotr_model.dart';
 import 'mixin/doctor_mixin.dart';

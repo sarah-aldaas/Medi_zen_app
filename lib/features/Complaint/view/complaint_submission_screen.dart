@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medizen_mobile/features/Complaint/view/widget/complaint_dropdown.dart';
-import 'package:medizen_mobile/features/Complaint/view/widget/complaint_submit_button.dart';
-import 'package:medizen_mobile/features/Complaint/view/widget/complaint_text_field.dart';
+import 'package:medizen_app/features/Complaint/view/widget/complaint_dropdown.dart';
+import 'package:medizen_app/features/Complaint/view/widget/complaint_submit_button.dart';
+import 'package:medizen_app/features/Complaint/view/widget/complaint_text_field.dart';
 
 import '../cubit/complaint_cubit.dart';
 

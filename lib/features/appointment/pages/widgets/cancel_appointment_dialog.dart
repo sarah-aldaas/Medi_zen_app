@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class CancelAppointmentDialog extends StatelessWidget {
   @override
@@ -33,7 +34,7 @@ class CancelAppointmentDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Cancel Appointment',
+            "cancelAppointment.title".tr(context), // Translated
             style: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
@@ -41,12 +42,12 @@ class CancelAppointmentDialog extends StatelessWidget {
           ),
           SizedBox(height: 16.0),
           Text(
-            'Are you sure you want to cancel your appointment?',
+            "cancelAppointment.message".tr(context), // Translated
             style: TextStyle(fontSize: 16.0),
           ),
           SizedBox(height: 8.0),
           Text(
-            'Only 50% of the funds will be returned to your account.',
+            "cancelAppointment.refundNote".tr(context), // Translated
             style: TextStyle(fontSize: 16.0),
           ),
           SizedBox(height: 24.0),
@@ -54,21 +55,16 @@ class CancelAppointmentDialog extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: Text('Back'),
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("cancelAppointment.backButton".tr(context)), // Translated
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.grey,
                 ),
               ),
               SizedBox(width: 16.0),
               ElevatedButton(
-                onPressed: () {
-                  // Handle cancel appointment logic here
-                  Navigator.of(context).pop(true); // Close and return true if cancelled
-                },
-                child: Text('Yes, Cancel'),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text("cancelAppointment.confirmButton".tr(context)), // Translated
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.blue,
                   backgroundColor: Colors.white,
@@ -81,17 +77,3 @@ class CancelAppointmentDialog extends StatelessWidget {
     );
   }
 }
-
-
-///use it
-// showDialog(
-// context: context,
-// builder: (BuildContext context) => CancelAppointmentDialog(),
-// ).then((value) {
-// if (value == true) {
-// // Appointment was cancelled
-// // Add your logic here
-// } else {
-// // Dialog was dismissed (not cancelled)
-// }
-// });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class RescheduleSuccessDialog extends StatelessWidget {
   @override
@@ -47,7 +48,7 @@ class RescheduleSuccessDialog extends StatelessWidget {
           ),
           SizedBox(height: 16.0),
           Text(
-            'Rescheduling Success!',
+            "rescheduleSuccess.title".tr(context),
             style: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
@@ -55,27 +56,22 @@ class RescheduleSuccessDialog extends StatelessWidget {
           ),
           SizedBox(height: 8.0),
           Text(
-            'Appointment successfully changed.\nYou will receive a notification and the\ndoctor you selected will contact you.',
+            "rescheduleSuccess.message".tr(context),
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16.0),
           ),
           SizedBox(height: 24.0),
           ElevatedButton(
-            onPressed: () {
-              // Handle view appointment logic here
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: Text('View Appointment'),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("rescheduleSuccess.viewAppointmentButton".tr(context)),
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.blue,
               backgroundColor: Colors.white,
             ),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("rescheduleSuccess.cancelButton".tr(context)),
             style: TextButton.styleFrom(
               backgroundColor: Colors.grey,
             ),
@@ -85,10 +81,3 @@ class RescheduleSuccessDialog extends StatelessWidget {
     );
   }
 }
-
-
-
-///showDialog(
-//   context: context,
-//   builder: (BuildContext context) => RescheduleSuccessDialog(),
-// );

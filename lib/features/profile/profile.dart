@@ -2,7 +2,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_mobile/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 import '../../base/blocs/localization_bloc/localization_bloc.dart';
 import '../../base/constant/app_images.dart';

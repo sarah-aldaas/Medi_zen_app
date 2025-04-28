@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_mobile/base/extensions/localization_extensions.dart';
-import 'package:medizen_mobile/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
 
 import '../../../../../base/constant/app_images.dart';
 import '../../../../../base/constant/storage_key.dart';

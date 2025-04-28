@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_mobile/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/constant/app_images.dart';
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/go_router/go_router.dart';
 
-import '../../../base/go_router/go_router.dart';
 import '../model/article_model.dart';
 import 'article_details_page.dart';
 import 'mixin/article_mixin.dart';
@@ -15,44 +17,38 @@ class Articles extends StatefulWidget {
 }
 
 class _ArticlesState extends State<Articles> with ArticleMixin {
-  String _selectedFilter = 'Newest'; // Default filter
-
+  late String _selectedFilter ; // Default filter
+  @override
+  void initState() {
+    _selectedFilter= "articles.filters.newest".tr(context);
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          'Articles',
+          "articles.title".tr(context),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.grey,
-          ),
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Colors.grey,
-            ),
+            icon: Icon(Icons.search, color: Colors.grey),
+            tooltip: "articles.actions.search".tr(context),
             onPressed: () {
               // Handle search
             },
           ),
           IconButton(
-            icon: Icon(
-              Icons.bookmark_border,
-              color: Colors.grey,
-            ),
-            onPressed: () {
-              context.pushNamed(AppRouter.myBookMark.name);
-            },
+            icon: Icon(Icons.bookmark_border, color: Colors.grey),
+            tooltip: "articles.actions.bookmark".tr(context),
+            onPressed: () => context.pushNamed(AppRouter.myBookMark.name),
           ),
         ],
       ),
@@ -79,13 +75,13 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Trending',
+            Text("articles.trending".tr(context),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             TextButton(
               onPressed: () {
                 // Navigate to see all trending
               },
-              child: Text('See All',
+              child: Text("articles.seeAll".tr(context),
                   style: TextStyle(color: Theme.of(context).primaryColor)),
             ),
           ],
@@ -94,29 +90,20 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: trendingArticles
-                .map((article) => _buildTrendingArticleCard(
-                    article: article, context: context))
-                .toList(),
+            children: trendingArticles.map((article) =>
+                _buildTrendingArticleCard(article: article, context: context)).toList(),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildTrendingArticleCard(
-      {required ArticleModel article, required BuildContext context}) {
+  Widget _buildTrendingArticleCard({required ArticleModel article, required BuildContext context}) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ArticleDetailsPage(
-              article: article,
-            ),
-          ),
-        );
-      },
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ArticleDetailsPage(article: article)),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
@@ -126,7 +113,8 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset(article.imageUrl, fit: BoxFit.fill)),
+                  child: Image.asset(article.imageUrl, fit: BoxFit.fill)
+              ),
               SizedBox(height: 8),
               Text(article.title,
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -146,13 +134,13 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Articles',
+            Text("articles.title".tr(context),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             TextButton(
               onPressed: () {
                 // Navigate to see all articles
               },
-              child: Text('See All',
+              child: Text("articles.seeAll".tr(context),
                   style: TextStyle(color: Theme.of(context).primaryColor)),
             ),
           ],
@@ -162,36 +150,30 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _buildArticleFilterButton(text: 'Newest'),
+              _buildArticleFilterButton(text: "articles.filters.newest".tr(context)),
               SizedBox(width: 8),
-              _buildArticleFilterButton(text: 'Health'),
+              _buildArticleFilterButton(text: "articles.filters.health".tr(context)),
               SizedBox(width: 8),
-              _buildArticleFilterButton(text: 'Covid-19'),
+              _buildArticleFilterButton(text: "articles.filters.covid".tr(context)),
               SizedBox(width: 8),
-              _buildArticleFilterButton(text: 'Lifestyle'),
+              _buildArticleFilterButton(text: "articles.filters.lifestyle".tr(context)),
             ],
           ),
         ),
         SizedBox(height: 16),
-        ...healthArticles
-            .map((article) => _buildArticleItem(article: article))
-            .toList(),
+        ...healthArticles.map((article) => _buildArticleItem(article: article)).toList(),
       ],
     );
   }
 
   Widget _buildArticleFilterButton({required String text}) {
     return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          _selectedFilter = text;
-        });
-      },
+      onPressed: () => setState(() => _selectedFilter = text),
       child: Text(text),
       style: ElevatedButton.styleFrom(
-        backgroundColor: _selectedFilter == text
-            ? Theme.of(context).primaryColor
-            : Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: _selectedFilter == text ?
+        Theme.of(context).primaryColor :
+        Theme.of(context).scaffoldBackgroundColor,
         foregroundColor: _selectedFilter == text ? Colors.white : Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
@@ -203,16 +185,10 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
 
   Widget _buildArticleItem({required ArticleModel article}) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ArticleDetailsPage(
-              article: article,
-            ),
-          ),
-        );
-      },
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ArticleDetailsPage(article: article)),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -220,16 +196,14 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(article.imageUrl,
-                  height: 100, width: 100, fit: BoxFit.fill),
+              child: Image.asset(article.imageUrl, height: 100, width: 100, fit: BoxFit.fill),
             ),
             SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(article.date,
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text(article.date, style: TextStyle(fontSize: 12, color: Colors.grey)),
                   SizedBox(height: 4),
                   Text(article.title,
                       style: TextStyle(fontWeight: FontWeight.bold),

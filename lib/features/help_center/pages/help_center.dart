@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class HelpCenterPage extends StatefulWidget {
   const HelpCenterPage({super.key});
@@ -15,12 +16,13 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('Help Center',style: TextStyle(fontWeight: FontWeight.bold),),
+        title: Text(
+          "helpCenter.title".tr(context),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios,color: Colors.grey,),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
+          onPressed: () => Navigator.pop(context),
         ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48.0),
@@ -28,28 +30,24 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
             children: <Widget>[
               Expanded(
                 child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _selectedTab = 0;
-                    });
-                  },
+                  onPressed: () => setState(() => _selectedTab = 0),
                   style: TextButton.styleFrom(
-                    foregroundColor: _selectedTab == 0 ? Theme.of(context).primaryColor : Colors.grey,
+                    foregroundColor: _selectedTab == 0
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey,
                   ),
-                  child: Text('FAQ'),
+                  child: Text("helpCenter.tabs.faq".tr(context)),
                 ),
               ),
               Expanded(
                 child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _selectedTab = 1;
-                    });
-                  },
+                  onPressed: () => setState(() => _selectedTab = 1),
                   style: TextButton.styleFrom(
-                    foregroundColor: _selectedTab == 1 ? Theme.of(context).primaryColor : Colors.grey,
+                    foregroundColor: _selectedTab == 1
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey,
                   ),
-                  child: Text('Contact us'),
+                  child: Text("helpCenter.tabs.contactUs".tr(context)),
                 ),
               ),
             ],
@@ -68,10 +66,11 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
           children: <Widget>[
             TextField(
               decoration: InputDecoration(
-                hintText: 'Search',
+                hintText: "helpCenter.search.hint".tr(context),
                 prefixIcon: Icon(Icons.search),
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
+                  tooltip: "helpCenter.search.clear".tr(context),
                   onPressed: () {
                     // Clear search
                   },
@@ -80,14 +79,21 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
             ),
             SizedBox(height: 16),
             _buildFaqItem(
-              title: 'What is Medical?',
-              content:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+              title: "helpCenter.faqItems.whatIsMedical".tr(context),
+              content: "helpCenter.faqItems.content".tr(context),
             ),
-            _buildFaqItem(title: 'How to use Medical?'),
-            _buildFaqItem(title: 'How do I cancel an appointment?'),
-            _buildFaqItem(title: 'How do I save the recording?'),
-            _buildFaqItem(title: 'How do I exit the app?'),
+            _buildFaqItem(
+              title: "helpCenter.faqItems.howToUse".tr(context),
+            ),
+            _buildFaqItem(
+              title: "helpCenter.faqItems.cancelAppointment".tr(context),
+            ),
+            _buildFaqItem(
+              title: "helpCenter.faqItems.saveRecording".tr(context),
+            ),
+            _buildFaqItem(
+              title: "helpCenter.faqItems.exitApp".tr(context),
+            ),
           ],
         ),
       ),
@@ -108,9 +114,8 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
   }
 
   Widget _buildContactUsContent() {
-    // Implement contact us content here
     return Center(
-      child: Text('Contact Us Content'),
+      child: Text("helpCenter.contactUs.title".tr(context)),
     );
   }
 }
