@@ -2,7 +2,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_mobile/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
 
 import '../../../../base/go_router/go_router.dart';
 import '../../../../base/theme/app_color.dart';

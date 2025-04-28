@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_mobile/base/extensions/localization_extensions.dart';
-import 'package:medizen_mobile/features/authentication/login/view/widget/login_form.dart';
-
-import '../../../../base/go_router/go_router.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/go_router/go_router.dart';
+import 'package:medizen_app/features/authentication/login/view/widget/login_form.dart';
 import '../cubit/login_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -37,7 +36,7 @@ class LoginScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor,
+                        color:Theme.of(context).primaryColor,
                       ),
                     ),
                     SizedBox(width: 48),

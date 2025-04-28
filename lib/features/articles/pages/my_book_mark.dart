@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-import 'mixin/article_mixin.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/features/articles/pages/mixin/article_mixin.dart';
 
 class MyBookmarkPage extends StatelessWidget with ArticleMixin {
   @override
@@ -9,22 +9,25 @@ class MyBookmarkPage extends StatelessWidget with ArticleMixin {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('My Bookmark', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          "bookmark.title".tr(context),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: Colors.grey),
+            tooltip: "bookmark.actions.search".tr(context),
             onPressed: () {
               // Handle search
             },
           ),
           IconButton(
             icon: Icon(Icons.more_vert, color: Colors.grey),
+            tooltip: "bookmark.actions.more".tr(context),
             onPressed: () {
               // Handle more options
             },
@@ -37,53 +40,46 @@ class MyBookmarkPage extends StatelessWidget with ArticleMixin {
           itemCount: bookmarkArticles.length,
           itemBuilder: (context, index) {
             final article = bookmarkArticles[index];
-            return
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(article.imageUrl, height: 100, width: 100, fit: BoxFit.fill),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(article.date, style: TextStyle(fontSize: 12, color: Colors.grey)),
-                          SizedBox(height: 4),
-                          Text(article.title, style: TextStyle(fontWeight: FontWeight.bold), maxLines: 2, overflow: TextOverflow.ellipsis),
-                          SizedBox(height: 4),
-                          Text(article.category, style: TextStyle(color: Theme.of(context).primaryColor)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-              Column(
-              children: [
-                ListTile(
-                  leading: SizedBox(
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.asset(
+                      article.imageUrl,
                       height: 100,
                       width: 100,
-                      child: ClipRRect(borderRadius: BorderRadius.circular(8.0), child: Image.asset(article.imageUrl, width: 200, height: 100, fit: BoxFit.fill))),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(article.date, style: TextStyle(fontSize: 12, color: Colors.grey)),
-                      Gap(5),
-                      Text(article.title, style: TextStyle(fontWeight: FontWeight.bold), maxLines: 2, overflow: TextOverflow.ellipsis),
-                    ],
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                  subtitle: Text(article.category, style: TextStyle(color: Colors.blue)),
-                  onTap: () {
-                    // Navigate to article details
-                  },
-                ),
-              ],
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          article.date,
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          article.title,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          article.category,
+                          style: TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),

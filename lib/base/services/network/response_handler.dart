@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:medizen_mobile/base/services/network/resource.dart';
+import 'package:medizen_app/base/services/network/resource.dart';
 
 class ResponseHandler<T> {
   final Response<dynamic> response;

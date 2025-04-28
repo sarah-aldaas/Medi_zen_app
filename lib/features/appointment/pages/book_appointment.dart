@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class BookAppointmentPage extends StatefulWidget {
   @override
@@ -39,12 +40,10 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Book Appointment'),
+        title: Text("bookAppointment.title".tr(context)),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios,color: Colors.grey),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
@@ -53,7 +52,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Select Date',
+              "bookAppointment.selectDate".tr(context),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
@@ -69,7 +68,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${_selectedDate.day} ${_getMonthName(_selectedDate.month)}, ${_selectedDate.year}',
+                      '${_selectedDate.day} ${_getMonthName(_selectedDate.month, context)}, ${_selectedDate.year}',
                       style: TextStyle(fontSize: 16),
                     ),
                     Icon(Icons.calendar_today),
@@ -79,27 +78,14 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
             ),
             SizedBox(height: 20),
             Text(
-              'Select Hour',
+              "bookAppointment.selectHour".tr(context),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             Wrap(
               spacing: 8.0,
               runSpacing: 8.0,
-              children: [
-                _buildTimeButton('09:00 AM'),
-                _buildTimeButton('09:30 AM'),
-                _buildTimeButton('10:00 AM'),
-                _buildTimeButton('10:30 PM'),
-                _buildTimeButton('11:00 PM'),
-                _buildTimeButton('11:30 PM'),
-                _buildTimeButton('15:00 PM'),
-                _buildTimeButton('15:30 PM'),
-                _buildTimeButton('16:00 PM'),
-                _buildTimeButton('16:30 PM'),
-                _buildTimeButton('17:00 PM'),
-                _buildTimeButton('17:30 PM'),
-              ],
+              children: _buildTimeButtons(context),
             ),
             Spacer(),
             Center(
@@ -107,7 +93,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                 onPressed: () {
                   // Handle next button press
                 },
-                child: Text('Next'),
+                child: Text("bookAppointment.nextButton".tr(context)),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
                   textStyle: TextStyle(fontSize: 18),
@@ -120,7 +106,26 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     );
   }
 
-  Widget _buildTimeButton(String time) {
+  List<Widget> _buildTimeButtons(BuildContext context) {
+    final timeSlots = [
+      "bookAppointment.timeSlots.0".tr(context),
+      "bookAppointment.timeSlots.1".tr(context),
+      "bookAppointment.timeSlots.2".tr(context),
+      "bookAppointment.timeSlots.3".tr(context),
+      "bookAppointment.timeSlots.4".tr(context),
+      "bookAppointment.timeSlots.5".tr(context),
+      "bookAppointment.timeSlots.6".tr(context),
+      "bookAppointment.timeSlots.7".tr(context),
+      "bookAppointment.timeSlots.8".tr(context),
+      "bookAppointment.timeSlots.9".tr(context),
+      "bookAppointment.timeSlots.10".tr(context),
+      "bookAppointment.timeSlots.11".tr(context),
+    ];
+
+    return timeSlots.map((time) => _buildTimeButton(time, context)).toList();
+  }
+
+  Widget _buildTimeButton(String time, BuildContext context) {
     return ElevatedButton(
       onPressed: () {
         setState(() {
@@ -146,34 +151,21 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
     );
   }
 
-  String _getMonthName(int month) {
+  String _getMonthName(int month, BuildContext context) {
     switch (month) {
-      case 1:
-        return 'January';
-      case 2:
-        return 'February';
-      case 3:
-        return 'March';
-      case 4:
-        return 'April';
-      case 5:
-        return 'May';
-      case 6:
-        return 'June';
-      case 7:
-        return 'July';
-      case 8:
-        return 'August';
-      case 9:
-        return 'September';
-      case 10:
-        return 'October';
-      case 11:
-        return 'November';
-      case 12:
-        return 'December';
-      default:
-        return '';
+      case 1: return "bookAppointment.months.january".tr(context);
+      case 2: return "bookAppointment.months.february".tr(context);
+      case 3: return "bookAppointment.months.march".tr(context);
+      case 4: return "bookAppointment.months.april".tr(context);
+      case 5: return "bookAppointment.months.may".tr(context);
+      case 6: return "bookAppointment.months.june".tr(context);
+      case 7: return "bookAppointment.months.july".tr(context);
+      case 8: return "bookAppointment.months.august".tr(context);
+      case 9: return "bookAppointment.months.september".tr(context);
+      case 10: return "bookAppointment.months.october".tr(context);
+      case 11: return "bookAppointment.months.november".tr(context);
+      case 12: return "bookAppointment.months.december".tr(context);
+      default: return '';
     }
   }
 }

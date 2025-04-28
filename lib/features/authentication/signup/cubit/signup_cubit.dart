@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medizen_mobile/features/authentication/signup/cubit/signup_state.dart';
+import 'package:medizen_app/features/authentication/signup/cubit/signup_state.dart';
 
 class SignupCubit extends Cubit<SignupState> {
   SignupCubit() : super(SignupInitial());

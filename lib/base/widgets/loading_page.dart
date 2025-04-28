@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:medizen_mobile/base/extensions/localization_extensions.dart';
-import 'package:medizen_mobile/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({super.key});

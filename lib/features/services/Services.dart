@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:medizen_mobile/base/extensions/media_query_extension.dart';
-import 'package:medizen_mobile/features/medical_record/pages/services_mixin.dart';
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/features/medical_record/pages/services_mixin.dart';
 
 class SomeServices extends StatelessWidget with ServicesMixin {
   SomeServices({super.key});

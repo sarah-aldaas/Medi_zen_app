@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-import '../../../base/constant/app_images.dart';
-
+import 'package:medizen_app/base/constant/app_images.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class MyAppointmentPage extends StatefulWidget {
   const MyAppointmentPage({super.key});
@@ -19,7 +18,8 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('My Appointment', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text("myAppointments.title".tr(context),
+            style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: Colors.grey),
@@ -38,7 +38,11 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           preferredSize: Size.fromHeight(48.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [_buildTabButton('Upcoming', 0), _buildTabButton('Completed', 1), _buildTabButton('Cancelled', 2)],
+            children: [
+              _buildTabButton("myAppointments.tabs.upcoming".tr(context), 0),
+              _buildTabButton("myAppointments.tabs.completed".tr(context), 1),
+              _buildTabButton("myAppointments.tabs.cancelled".tr(context), 2),
+            ],
           ),
         ),
       ),
@@ -48,21 +52,27 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
 
   Widget _buildTabButton(String label, int index) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedTab = index;
-        });
-      },
+      onTap: () => setState(() => _selectedTab = index),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: _selectedTab == index ? Theme.of(context).primaryColor : Colors.transparent, width: 2.0)),
+          border: Border(
+            bottom: BorderSide(
+                color: _selectedTab == index
+                    ? Theme.of(context).primaryColor
+                    : Colors.transparent,
+                width: 2.0),
+          ),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: _selectedTab == index ? Theme.of(context).primaryColor : Colors.grey,
-            fontWeight: _selectedTab == index ? FontWeight.bold : FontWeight.normal,
+            color: _selectedTab == index
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
+            fontWeight: _selectedTab == index
+                ? FontWeight.bold
+                : FontWeight.normal,
           ),
         ),
       ),
@@ -70,45 +80,39 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   }
 
   Widget _buildAppointmentList() {
-    // Replace with your actual appointment data
     List<Appointment> appointments = [
       Appointment(
         imageUrl: AppAssetImages.photoDoctor1,
-        // Replace with your image URL
         name: 'Dr. Drake Boeson',
-        communication: 'Messaging',
-        status: 'Upcoming',
+        communication: "myAppointments.communicationTypes.messaging".tr(context),
+        status: "myAppointments.status.upcoming".tr(context),
         time: 'Today | 16:00 PM',
       ),
       Appointment(
         imageUrl: AppAssetImages.photoDoctor2,
-        // Replace with your image URL
         name: 'Dr. Jenny Watson',
-        communication: 'Voice Call',
-        status: 'Upcoming',
+        communication: "myAppointments.communicationTypes.voiceCall".tr(context),
+        status: "myAppointments.status.upcoming".tr(context),
         time: 'Today | 14:00 PM',
       ),
       Appointment(
         imageUrl: AppAssetImages.photoDoctor3,
-        // Replace with your image URL
         name: 'Dr. Maria Foose',
-        communication: 'Video Call',
-        status: 'Upcoming',
+        communication: "myAppointments.communicationTypes.videoCall".tr(context),
+        status: "myAppointments.status.upcoming".tr(context),
         time: 'Today | 10:00 AM',
       ),
     ];
 
-    // Filter appointments based on selected tab
-    List<Appointment> filteredAppointments =
-        appointments.where((appointment) {
-          if (_selectedTab == 0) {
-            return appointment.status == 'Upcoming';
-          } else if (_selectedTab == 1) {
-            return appointment.status == 'Completed';
-          } else {
-            return appointment.status == 'Cancelled';
-          }
-        }).toList();
+    List<Appointment> filteredAppointments = appointments.where((appointment) {
+      if (_selectedTab == 0) {
+        return appointment.status == "myAppointments.status.upcoming".tr(context);
+      } else if (_selectedTab == 1) {
+        return appointment.status == "myAppointments.status.completed".tr(context);
+      } else {
+        return appointment.status == "myAppointments.status.cancelled".tr(context);
+      }
+    }).toList();
 
     return ListView.builder(
       itemCount: filteredAppointments.length,
@@ -129,20 +133,31 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
               child: Row(
                 spacing: 5,
                 children: [
-                  ClipRRect(borderRadius: BorderRadius.circular(8.0), child: Image.asset(appointment.imageUrl, height: 100, width: 100, fit: BoxFit.fill)),
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.asset(
+                          appointment.imageUrl,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.fill
+                      )
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(appointment.name, style: TextStyle(fontWeight: FontWeight.bold)),
-
                       Row(
                         children: [
                           Text(appointment.communication),
                           SizedBox(width: 8),
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                            decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.2), borderRadius: BorderRadius.circular(10.0)),
-                            child: Text(appointment.status, style: TextStyle(color: Theme.of(context).primaryColor)),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(10.0)),
+                            child: Text(
+                                appointment.status,
+                                style: TextStyle(color: Theme.of(context).primaryColor)),
                           ),
                         ],
                       ),
@@ -158,23 +173,20 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      // Handle cancel appointment
-                    },
-                    child: Text('Cancel Appointment'),
+                    onPressed: () {},
+                    child: Text("myAppointments.buttons.cancelAppointment".tr(context)),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Theme.of(context).primaryColor,
                       side: BorderSide(color: Theme.of(context).primaryColor),
-
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      // Handle reschedule
-                    },
-                    child: Text('Reschedule'),
-                    style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor, foregroundColor: Colors.white),
+                    onPressed: () {},
+                    child: Text("myAppointments.buttons.reschedule".tr(context)),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white),
                   ),
                 ],
               ),
@@ -194,300 +206,11 @@ class Appointment {
   final String status;
   final String time;
 
-  Appointment({required this.imageUrl, required this.name, required this.communication, required this.status, required this.time});
-}
-
-class CompletedAppointmentsPage extends StatefulWidget {
-  const CompletedAppointmentsPage({super.key});
-
-  @override
-  _CompletedAppointmentsPageState createState() => _CompletedAppointmentsPageState();
-}
-
-class _CompletedAppointmentsPageState extends State<CompletedAppointmentsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Appointment'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Handle search
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {
-              // Handle more options
-            },
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [_buildTabButton('Upcoming', 0), _buildTabButton('Completed', 1), _buildTabButton('Cancelled', 2)],
-          ),
-        ),
-      ),
-      body: _buildAppointmentList(),
-    );
-  }
-
-  Widget _buildTabButton(String label, int index) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to the corresponding tab
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: index == 1 ? Theme.of(context).primaryColor : Colors.transparent, // Highlight Completed tab
-              width: 2.0,
-            ),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: index == 1 ? Theme.of(context).primaryColor : Colors.grey, // Highlight Completed tab
-            fontWeight: index == 1 ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppointmentList() {
-    // Replace with your actual completed appointment data
-    List<Appointment> completedAppointments = [
-      Appointment(
-        imageUrl: 'YOUR_IMAGE_URL_1',
-        // Replace with your image URL
-        name: 'Dr. Aidan Allende',
-        communication: 'Video Call',
-        time: 'Dec 14, 2022 | 15:00 PM',
-        status: '',
-      ),
-      Appointment(
-        imageUrl: 'YOUR_IMAGE_URL_2',
-        // Replace with your image URL
-        name: 'Dr. Iker Holl',
-        communication: 'Messaging',
-        time: 'Nov 22, 2022 | 09:00 AM',
-        status: '',
-      ),
-      Appointment(
-        imageUrl: 'YOUR_IMAGE_URL_3',
-        // Replace with your image URL
-        name: 'Dr. Jada Srnsky',
-        communication: 'Voice Call',
-        time: 'Nov 06, 2022 | 18:00 PM',
-        status: '',
-      ),
-    ];
-
-    return ListView.builder(
-      itemCount: completedAppointments.length,
-      itemBuilder: (context, index) {
-        return _buildAppointmentItem(completedAppointments[index]);
-      },
-    );
-  }
-
-  Widget _buildAppointmentItem(Appointment appointment) {
-    return Column(
-      children: [
-        ListTile(
-          leading: CircleAvatar(radius: 30, backgroundImage: NetworkImage(appointment.imageUrl)),
-          title: Text(appointment.name, style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(appointment.communication),
-                  SizedBox(width: 8),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.2), borderRadius: BorderRadius.circular(10.0)),
-                    child: Text('Completed', style: TextStyle(color: Theme.of(context).primaryColor)),
-                  ),
-                ],
-              ),
-              Text(appointment.time),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Handle book again
-                },
-                child: Text('Book Again'),
-                style: ElevatedButton.styleFrom(foregroundColor: Theme.of(context).primaryColor, backgroundColor: Colors.white),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle leave a review
-                },
-                child: Text('Leave a Review'),
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.grey[300], backgroundColor: Colors.black),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 16),
-        Divider(),
-      ],
-    );
-  }
-}
-
-class CancelledAppointmentsPage extends StatefulWidget {
-  const CancelledAppointmentsPage({super.key});
-
-  @override
-  _CancelledAppointmentsPageState createState() => _CancelledAppointmentsPageState();
-}
-
-class _CancelledAppointmentsPageState extends State<CancelledAppointmentsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Appointment'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Handle search
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {
-              // Handle more options
-            },
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [_buildTabButton('Upcoming', 0), _buildTabButton('Completed', 1), _buildTabButton('Cancelled', 2)],
-          ),
-        ),
-      ),
-      body: _buildAppointmentList(),
-    );
-  }
-
-  Widget _buildTabButton(String label, int index) {
-    return GestureDetector(
-      onTap: () {
-        // Handle tab navigation
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: index == 2 ? Theme.of(context).primaryColor : Colors.transparent, // Highlight Cancelled tab
-              width: 2.0,
-            ),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: index == 2 ? Theme.of(context).primaryColor : Colors.grey, // Highlight Cancelled tab
-            fontWeight: index == 2 ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAppointmentList() {
-    // Replace with your actual cancelled appointment data
-    List<Appointment> cancelledAppointments = [
-      Appointment(
-        imageUrl: 'YOUR_IMAGE_URL_1',
-        // Replace with your image URL
-        name: 'Dr. Raul Zirkind',
-        communication: 'Voice Call',
-        time: 'Dec 12, 2022 | 16:00 PM',
-        status: '',
-      ),
-      Appointment(
-        imageUrl: 'YOUR_IMAGE_URL_2',
-        // Replace with your image URL
-        name: 'Dr. Keegan Dach',
-        communication: 'Messaging',
-        time: 'Nov 20, 2022 | 10:00 AM',
-        status: '',
-      ),
-      Appointment(
-        imageUrl: 'YOUR_IMAGE_URL_3',
-        // Replace with your image URL
-        name: 'Dr. Drake Boeson',
-        communication: 'Video Call',
-        time: 'Nov 08, 2022 | 13:00 PM',
-        status: '',
-      ),
-      Appointment(
-        imageUrl: 'YOUR_IMAGE_URL_4',
-        // Replace with your image URL
-        name: 'Dr. Quinn Slatter',
-        communication: 'Voice Call',
-        time: 'Oct 16, 2022 | 09:00 AM',
-        status: '',
-      ),
-    ];
-
-    return ListView.builder(
-      itemCount: cancelledAppointments.length,
-      itemBuilder: (context, index) {
-        return _buildAppointmentItem(cancelledAppointments[index]);
-      },
-    );
-  }
-
-  Widget _buildAppointmentItem(Appointment appointment) {
-    return Column(
-      children: [
-        ListTile(
-          leading: CircleAvatar(radius: 30, backgroundImage: NetworkImage(appointment.imageUrl)),
-          title: Text(appointment.name, style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(appointment.communication),
-                  SizedBox(width: 8),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.2), borderRadius: BorderRadius.circular(10.0)),
-                    child: Text('Cancelled', style: TextStyle(color: Theme.of(context).primaryColor)),
-                  ),
-                ],
-              ),
-              Text(appointment.time),
-            ],
-          ),
-        ),
-        Divider(),
-      ],
-    );
-  }
+  Appointment({
+    required this.imageUrl,
+    required this.name,
+    required this.communication,
+    required this.status,
+    required this.time,
+  });
 }

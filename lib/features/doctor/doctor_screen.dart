@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medizen_mobile/features/doctor/pages/details_doctor.dart';
+import 'package:medizen_app/features/doctor/pages/details_doctor.dart';
 
 import '../../base/theme/app_color.dart';
 import '../../base/theme/app_style.dart';
@@ -86,7 +86,7 @@ class Doctorscreen extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => DoctorDetailsPage(
-                  doctor: doctors[index],
+                  // doctor: doctors[index],
                 ),
               ),
             );

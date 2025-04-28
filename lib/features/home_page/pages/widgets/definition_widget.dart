@@ -1,15 +1,13 @@
 import 'dart:async';
-
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_mobile/base/extensions/localization_extensions.dart';
-import 'package:medizen_mobile/base/extensions/media_query_extension.dart';
-
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 import '../../../../base/constant/app_images.dart';
 import '../../../../base/go_router/go_router.dart';
-import '../../../../base/theme/app_color.dart';
 
 class DefinitionWidget extends StatefulWidget {
   const DefinitionWidget({super.key});
@@ -28,17 +26,15 @@ class _DefinitionWidgetState extends State<DefinitionWidget> {
     AppAssetImages.photoDoctor2,
     AppAssetImages.photoDoctor1,
   ];
-
-  final List<String> _sentences = [
-    "Early protection for your family health",
-    "Your journey to a healthier you starts here.",
-    "Empowering your well-being, every step of the way.",
+  List<String> get _sentences => [
+    "definitionWidget.early_protection".tr(context),
+    "definitionWidget.your_journey".tr(context),
+    "definitionWidget.empowering_your".tr(context),
   ];
-
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+    _timer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
       if (_currentPage < _imageUrls.length - 1) {
         _currentPage++;
       } else {
@@ -102,13 +98,14 @@ class _DefinitionWidgetState extends State<DefinitionWidget> {
                       Expanded(
                         // Use Expanded to wrap the text
                         child: Text(
-                          _sentences[_currentPage],
+                          _sentences[_currentPage].toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
-                          overflow: TextOverflow
-                              .ellipsis, // Add ellipsis for overflow
+                          overflow:
+                              TextOverflow
+                                  .ellipsis, // Add ellipsis for overflow
                           maxLines:
                               2, // limit to 2 lines, or remove for unlimited
                         ),
@@ -128,7 +125,7 @@ class _DefinitionWidgetState extends State<DefinitionWidget> {
                             horizontal: 30,
                           ),
                           child: Text(
-                            "Learn more".tr(context),
+                            "definitionWidget.learnMore".tr(context),
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
