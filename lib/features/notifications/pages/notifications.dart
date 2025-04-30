@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -8,7 +9,7 @@ class NotificationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('Notification', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('notificationPage.notification'.tr(context), style: TextStyle(fontWeight: FontWeight.bold)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
           onPressed: () {
@@ -92,7 +93,7 @@ class NotificationPage extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10.0)),
-                child: Text('New', style: TextStyle(color: Colors.white, fontSize: 12)),
+                child: Text('notificationPage.new'.tr(context), style: TextStyle(color: Colors.white, fontSize: 12)),
               ),
             ],
           ),

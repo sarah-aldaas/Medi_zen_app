@@ -2,8 +2,8 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_mobile/base/extensions/media_query_extension.dart';
-
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
+import '../../../../base/extensions/localization_extensions.dart'; // Add this import
 import '../../../../base/go_router/go_router.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../doctor/pages/mixin/doctor_mixin.dart';
@@ -21,7 +21,7 @@ class SomeDoctors extends StatelessWidget with DoctorMixin {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Top Doctors",
+                "some_doctors.top_doctors".tr(context),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               TextButton(
@@ -29,7 +29,7 @@ class SomeDoctors extends StatelessWidget with DoctorMixin {
                   context.pushNamed(AppRouter.doctors.name);
                 },
                 child: Text(
-                  "See all",
+                  "some_doctors.see_all".tr(context),
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
               ),

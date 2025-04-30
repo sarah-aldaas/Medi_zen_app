@@ -2,7 +2,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_mobile/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 import '../../base/blocs/localization_bloc/localization_bloc.dart';
 import '../../base/constant/app_images.dart';
@@ -24,7 +24,7 @@ class ProfilePage extends StatelessWidget {
               child: Image.asset(AppAssetImages.logoGreenPng),
             ),
             Text(
-              'Profile'.tr(context),
+              'profilePage.title'.tr(context),
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
@@ -60,7 +60,7 @@ class ProfilePage extends StatelessWidget {
                   Icons.person_outline,
                   color: Theme.of(context).primaryColor,
                 ),
-                title: Text('Edit Profile'),
+                title: Text('profilePage.editProfile'.tr(context)),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   // Navigate to edit profile
@@ -71,7 +71,7 @@ class ProfilePage extends StatelessWidget {
                   Icons.notifications_none,
                   color: Theme.of(context).primaryColor,
                 ),
-                title: Text('Notification'),
+                title: Text('profilePage.notification'.tr(context)),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   context.pushNamed(AppRouter.notificationSettings.name);
@@ -82,7 +82,7 @@ class ProfilePage extends StatelessWidget {
                   Icons.payment_outlined,
                   color: Theme.of(context).primaryColor,
                 ),
-                title: Text('Payment'),
+                title: Text('profilePage.payment'.tr(context)),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   // Navigate to payment
@@ -93,7 +93,7 @@ class ProfilePage extends StatelessWidget {
                   Icons.security_outlined,
                   color: Theme.of(context).primaryColor,
                 ),
-                title: Text('Security'),
+                title: Text('profilePage.security'.tr(context)),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   // Navigate to security
@@ -104,7 +104,7 @@ class ProfilePage extends StatelessWidget {
                   Icons.insert_comment_outlined,
                   color: Theme.of(context).primaryColor,
                 ),
-                title: Text('Complaint'),
+                title: Text('profilePage.complaint'.tr(context)),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   context.pushNamed(AppRouter.complaint.name);
@@ -115,10 +115,10 @@ class ProfilePage extends StatelessWidget {
                   Icons.language,
                   color: Theme.of(context).primaryColor,
                 ),
-                title: Text('Language'),
+                title: Text('profilePage.language'.tr(context)),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [Text('English (US)'), Icon(Icons.chevron_right)],
+                  children: [Text('profilePage.englishUS'.tr(context)), Icon(Icons.chevron_right)],
                 ),
                 onTap: () {
                   final bloc = context.read<LocalizationBloc>();
@@ -141,8 +141,8 @@ class ProfilePage extends StatelessWidget {
                     ),
                     title: Text(
                       theme.brightness == Brightness.light
-                          ? 'Dark Mode'
-                          : 'Light Mode',
+                          ? 'profilePage.darkMode'.tr(context)
+                          : 'profilePage.lightMode'.tr(context),
                     ),
                     onTap: () => switcher.changeTheme(
                       theme: theme.brightness == Brightness.light
@@ -157,7 +157,7 @@ class ProfilePage extends StatelessWidget {
                   Icons.info_outline,
                   color: Theme.of(context).primaryColor,
                 ),
-                title: Text('Help Center'),
+                title: Text('profilePage.helpCenter'.tr(context)),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   // Navigate to help center
@@ -168,7 +168,7 @@ class ProfilePage extends StatelessWidget {
                   Icons.people_outline,
                   color: Theme.of(context).primaryColor,
                 ),
-                title: Text('Invite Friends'),
+                title: Text('profilePage.inviteFriends'.tr(context)),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   // Navigate to invite friends
@@ -176,7 +176,7 @@ class ProfilePage extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.logout, color: Colors.red),
-                title: Text('Logout', style: TextStyle(color: Colors.red)),
+                title: Text('profilePage.logout'.tr(context), style: TextStyle(color: Colors.red)),
                 onTap: () {
                   // Handle logout
                 },

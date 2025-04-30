@@ -1,6 +1,6 @@
 // screen/complaint_list_screen.dart
 import 'package:flutter/material.dart';
-import 'package:medizen_mobile/features/Complaint/view/widget/complaint_item.dart';
+import 'package:medizen_app/features/Complaint/view/widget/complaint_item.dart';
 
 import '../../../base/theme/app_color.dart';
 

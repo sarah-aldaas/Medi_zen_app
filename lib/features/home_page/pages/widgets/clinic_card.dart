@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
+import '../../../../base/constant/app_images.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
 import '../../../doctor/doctor_screen.dart';
 
-class ClincCard extends StatelessWidget {
-  final String clincName;
+class ClinicCard extends StatelessWidget {
+  final String clinicName;
   final String specialization;
 
-  ClincCard({required this.clincName, required this.specialization});
+  const ClinicCard({
+    super.key,
+    required this.clinicName,
+    required this.specialization,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class ClincCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
               child: Image.asset(
-                'assets/clinic.png',
+                AppAssetImages.clinic,
                 height: 130,
                 width: 120,
                 fit: BoxFit.fitHeight,
@@ -38,7 +44,7 @@ class ClincCard extends StatelessWidget {
                 child: Center(
                   child: ListTile(
                     title: Text(
-                      clincName,
+                      clinicName,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -58,7 +64,7 @@ class ClincCard extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        'See Details >',
+                        "clinicCard.seeDetails".tr(context),
                         style: AppStyles.buttonTextStyle,
                       ),
                     ),

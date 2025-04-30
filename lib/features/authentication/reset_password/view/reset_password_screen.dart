@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
 import '../../change_password/view/change_password_page.dart';
 import '../../forget_password/view/forget_password.dart';
 import '../cubit/reset_password_cubit.dart';
 import '../cubit/reset_password_state.dart';
-
 
 class ResetPasswordScreen extends StatefulWidget {
   @override
@@ -23,18 +22,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       create: (context) => ResetPasswordCubit(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Reset Password', style: AppStyles.appBarTitle),
+          title: Text("resetPassword.title".tr(context), style: AppStyles.appBarTitle),
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_rounded),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ForgotPasswordScreen(),
-                ),
-              );
-            },
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+            ),
           ),
         ),
         body: SingleChildScrollView(
@@ -42,18 +37,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             child: Padding(
               padding: const EdgeInsets.only(top: 180),
               child: Column(
-
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-
                   Text(
-                    'Check your email',
+                    "resetPassword.checkEmail".tr(context),
                     textAlign: TextAlign.center,
                     style: AppStyles.heading,
                   ),
                   SizedBox(height: 12),
                   Text(
-                    'please enter your 6-digit code. Then create and confirm your new password',
+                    "resetPassword.instruction".tr(context),
                     style: AppStyles.bodyText,
                     textAlign: TextAlign.center,
                   ),
@@ -104,25 +97,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         );
                       } else if (state is ResetPasswordFailure) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(state.error)),
+                          SnackBar(content: Text(state.error ?? "resetPassword.errors.default".tr(context))),
                         );
                       }
                     },
                     builder: (context, state) {
                       return ElevatedButton(
-                        onPressed:
-                        state is ResetPasswordLoading
+                        onPressed: state is ResetPasswordLoading
                             ? null
                             : () {
-                          context
-                              .read<ResetPasswordCubit>()
-                              .resetPassword(_otp.join());
+                          context.read<ResetPasswordCubit>().resetPassword(_otp.join());
                         },
                         child: state is ResetPasswordLoading
                             ? CircularProgressIndicator(color: AppColors.whiteColor)
-                            : Text('Reset Password',
-                            style: AppStyles.bodyText
-                                .copyWith(color: AppColors.whiteColor)),
+                            : Text(
+                          "resetPassword.buttons.reset".tr(context),
+                          style: AppStyles.bodyText.copyWith(color: AppColors.whiteColor),
+                        ),
                         style: AppStyles.primaryButtonStyle,
                       );
                     },
@@ -130,9 +121,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   SizedBox(height: 20),
                   TextButton(
                     onPressed: () {
+                      // Handle resend code
                     },
                     child: Text(
-                      "Send another code",
+                      "resetPassword.buttons.resendCode".tr(context),
                       style: AppStyles.bodyText.copyWith(color: Colors.blue),
                     ),
                   ),

@@ -46,6 +46,7 @@ class AppAssetImages {
   static const article10 = "assets/images/articles/article10.png";
 
   ///clinic
+  static const clinic = "assets/images/clinic/clinic.png";
   static const clinic1 = "assets/images/clinic/clinic1.jpeg";
   static const clinic2 = "assets/images/clinic/clinic2.jpeg";
   static const clinic3 = "assets/images/clinic/clinic3.jpeg";

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart'; // <== Added!
 
 class DoctorReviewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('4.8 (4,942 reviews)'),
+        title: Text('doctorReviewsPage.title'.tr(context)),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios,color: Colors.grey),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             onPressed: () {
               // Handle more options
             },
@@ -30,53 +31,53 @@ class DoctorReviewsPage extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildFilterButton('All', true),
-                  _buildFilterButton('★ 5', false),
-                  _buildFilterButton('★ 4', false),
-                  _buildFilterButton('★ 3', false),
-                  _buildFilterButton('★ 2', false),
+                  _buildFilterButton('doctorReviewsPage.filters.all'.tr(context), true),
+                  _buildFilterButton('doctorReviewsPage.filters.fiveStars'.tr(context), false),
+                  _buildFilterButton('doctorReviewsPage.filters.fourStars'.tr(context), false),
+                  _buildFilterButton('doctorReviewsPage.filters.threeStars'.tr(context), false),
+                  _buildFilterButton('doctorReviewsPage.filters.twoStars'.tr(context), false),
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildReviewTile(
-              imageUrl: 'YOUR_IMAGE_URL_1', // Replace with your image URL
+              imageUrl: 'YOUR_IMAGE_URL_1',
               name: 'Charolette Hanlin',
               rating: 5,
-              review: 'Dr. Jenny is very professional in her work and responsive. I have consulted and my problem is solved. 👍👍',
-              daysAgo: '6 days ago',
+              review: 'doctorReviewsPage.reviews.review1'.tr(context),
+              daysAgo: 'doctorReviewsPage.reviews.daysAgo'.tr(context),
               likes: 938,
             ),
             _buildReviewTile(
-              imageUrl: 'YOUR_IMAGE_URL_2', // Replace with your image URL
+              imageUrl: 'YOUR_IMAGE_URL_2',
               name: 'Darron Kulikowski',
               rating: 4,
-              review: 'The doctor is very beautiful and the service is excellent! I like it and want to consult again. 🥰🥰',
-              daysAgo: '6 days ago',
+              review: 'doctorReviewsPage.reviews.review2'.tr(context),
+              daysAgo: 'doctorReviewsPage.reviews.daysAgo'.tr(context),
               likes: 863,
             ),
             _buildReviewTile(
-              imageUrl: 'YOUR_IMAGE_URL_3', // Replace with your image URL
+              imageUrl: 'YOUR_IMAGE_URL_3',
               name: 'Lauralee Quintero',
               rating: 4,
-              review: 'Doctors who are very skilled and fast in service. I highly recommend Dr. Jenny for all who want to consult. 🙏🙏',
-              daysAgo: '6 days ago',
+              review: 'doctorReviewsPage.reviews.review3'.tr(context),
+              daysAgo: 'doctorReviewsPage.reviews.daysAgo'.tr(context),
               likes: 629,
             ),
             _buildReviewTile(
-              imageUrl: 'YOUR_IMAGE_URL_4', // Replace with your image URL
+              imageUrl: 'YOUR_IMAGE_URL_4',
               name: 'Aileen Fullbright',
               rating: 5,
-              review: 'Doctors who are very skilled and fast in service. My illness is cured, thank you very much! 😇',
-              daysAgo: '6 days ago',
+              review: 'doctorReviewsPage.reviews.review4'.tr(context),
+              daysAgo: 'doctorReviewsPage.reviews.daysAgo'.tr(context),
               likes: 553,
             ),
             _buildReviewTile(
-              imageUrl: 'YOUR_IMAGE_URL_5', // Replace with your image URL
+              imageUrl: 'YOUR_IMAGE_URL_5',
               name: 'Rodolfo Goode',
               rating: 4,
-              review: 'Dr. Jenny is very professional in her work and responsive. I have consulted and my problem is solved. 🙏🙏',
-              daysAgo: '6 days ago',
+              review: 'doctorReviewsPage.reviews.review5'.tr(context),
+              daysAgo: 'doctorReviewsPage.reviews.daysAgo'.tr(context),
               likes: 487,
             ),
           ],
@@ -87,8 +88,8 @@ class DoctorReviewsPage extends StatelessWidget {
 
   Widget _buildFilterButton(String text, bool isSelected) {
     return Container(
-      margin: EdgeInsets.only(right: 8),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: isSelected ? Colors.blue : Colors.grey[300],
         borderRadius: BorderRadius.circular(20),
@@ -115,11 +116,11 @@ class DoctorReviewsPage extends StatelessWidget {
       title: Row(
         children: [
           Text(name),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Row(
             children: List.generate(
               rating,
-                  (index) => Icon(Icons.star, color: Colors.amber, size: 16),
+                  (index) => const Icon(Icons.star, color: Colors.amber, size: 16),
             ),
           ),
         ],
@@ -131,13 +132,13 @@ class DoctorReviewsPage extends StatelessWidget {
           Row(
             children: [
               Text('$likes'),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Text(daysAgo),
             ],
           ),
         ],
       ),
-      trailing: Icon(Icons.more_horiz),
+      trailing: const Icon(Icons.more_horiz),
     );
   }
 }

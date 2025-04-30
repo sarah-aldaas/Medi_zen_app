@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medizen_mobile/features/Complaint/view/widget/complaint_dropdown.dart';
-import 'package:medizen_mobile/features/Complaint/view/widget/complaint_submit_button.dart';
-import 'package:medizen_mobile/features/Complaint/view/widget/complaint_text_field.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
+import 'package:medizen_app/features/Complaint/view/widget/complaint_dropdown.dart';
+import 'package:medizen_app/features/Complaint/view/widget/complaint_submit_button.dart';
+import 'package:medizen_app/features/Complaint/view/widget/complaint_text_field.dart';
 
 import '../cubit/complaint_cubit.dart';
 
@@ -28,12 +30,12 @@ class ComplaintSubmissionView extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.primaryColor),
         ),
         title: Text(
-          'Submit a Complaint',
+          'Complaint.title'.tr(context),
           style: TextStyle(
-            color: Colors.black,
+            color: AppColors.primaryColor,
             fontWeight: FontWeight.bold,
             fontSize: 22,
           ),
@@ -49,22 +51,24 @@ class ComplaintSubmissionView extends StatelessWidget {
           children: [
             ComplaintDropdown(
               items: clinics,
-              hintText: 'Clinics',
-              onChanged: (value) =>
-                  context.read<ComplaintCubit>().selectClinic(value),
+              hintText: 'Complaint.Clinic'.tr(context),
+              onChanged:
+                  (value) => context.read<ComplaintCubit>().selectClinic(value),
             ),
             SizedBox(height: 40),
             ComplaintDropdown(
               items: doctors,
-              hintText: 'Doctors',
-              onChanged: (value) =>
-                  context.read<ComplaintCubit>().selectDoctor(value),
+              hintText: 'Complaint.Doctor'.tr(context),
+              onChanged:
+                  (value) => context.read<ComplaintCubit>().selectDoctor(value),
             ),
             SizedBox(height: 40),
             ComplaintTextField(
-              hintText: 'Complaint Content',
-              onChanged: (value) =>
-                  context.read<ComplaintCubit>().updateComplaintContent(value),
+              hintText: 'Complaint.ComplaintContent'.tr(context),
+              onChanged:
+                  (value) => context
+                      .read<ComplaintCubit>()
+                      .updateComplaintContent(value),
             ),
             SizedBox(height: 40),
             ComplaintSubmitButton(

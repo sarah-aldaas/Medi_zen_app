@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
 import '../../login/view/login_screen.dart';
@@ -21,8 +21,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
 class _ForgotPasswordContent extends StatefulWidget {
   @override
-  State<_ForgotPasswordContent> createState() =>
-      _ForgotPasswordContentState();
+  State<_ForgotPasswordContent> createState() => _ForgotPasswordContentState();
 }
 
 class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
@@ -39,7 +38,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
           );
         } else if (state is ForgotPasswordError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error)),
+            SnackBar(content: Text(state.error ?? "forgotPassword.errors.default".tr(context))),
           );
         }
       },
@@ -51,33 +50,28 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Forgot your password?',
+                  "forgotPassword.title".tr(context),
                   style: AppStyles.titleTextStyle.copyWith(fontSize: 28),
                 ),
                 const SizedBox(height: 40),
-                 Text(
-                  'Enter your email address and we will send you instruction to reset your password.',
+                Text(
+                  "forgotPassword.instruction".tr(context),
                   textAlign: TextAlign.center,
                   style: AppStyles.instructionTextStyle,
                 ),
                 const SizedBox(height: 50),
                 TextField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email address',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: "forgotPassword.fields.email".tr(context),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: () {
-                    context
-                        .read<ForgotPasswordCubit>()
+                    context.read<ForgotPasswordCubit>()
                         .sendResetLink(_emailController.text);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ResetPasswordScreen()),
-                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
@@ -85,11 +79,9 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
                   ),
                   child: state is ForgotPasswordLoading
                       ? const CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.white),
-                  )
-                      :  Text(
-                    'Continue',
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                      : Text(
+                    "forgotPassword.buttons.continue".tr(context),
                     style: AppStyles.buttonTextStyle,
                   ),
                 ),
@@ -101,8 +93,8 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
                       MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
-                  child:  Text(
-                    'Back to login',
+                  child: Text(
+                    "forgotPassword.buttons.backToLogin".tr(context),
                     style: AppStyles.linkTextStyle,
                   ),
                 ),

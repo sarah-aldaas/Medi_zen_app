@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
+import '../../../../base/constant/app_images.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
 import '../../cubit/clinic.dart';
@@ -40,8 +42,8 @@ class ClinicsPage extends StatelessWidget {
           child: ListView.builder(
             itemCount: clinics.length,
             itemBuilder: (context, index) {
-              return ClincCard(
-                clincName: clinics[index].name,
+              return ClinicCard(
+                clinicName: clinics[index].name,
                 specialization: clinics[index].details,
               );
             },
@@ -76,16 +78,19 @@ class ClinicsPage extends StatelessWidget {
                         },
                         icon: const Icon(
                           Icons.arrow_back_ios_new,
-                          color: AppColors.blackColor,
+                          color: AppColors.primaryColor,
                         ),
                       ),
                     ),
                     SizedBox(width: 100),
-                    Text('All Clinics',
-                        style: TextStyle(
-                            color: AppColors.blackColor,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold)),
+                    Text(
+                      'clinicsPage.allClinics'.tr(context),
+                      style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 30),
@@ -97,7 +102,7 @@ class ClinicsPage extends StatelessWidget {
                       height: 50,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('assets/clinic.png'),
+                          image: AssetImage(AppAssetImages.clinic),
                         ),
                       ),
                     ),

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:medizen_mobile/features/authentication/reset_password/cubit/reset_password_state.dart';
+import 'package:medizen_app/features/authentication/reset_password/cubit/reset_password_state.dart';
 
 class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   ResetPasswordCubit() : super(ResetPasswordInitial());

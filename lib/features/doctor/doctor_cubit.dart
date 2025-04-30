@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 
+import '../../base/constant/app_images.dart';
 import 'doctor.dart';
 import 'doctor_state.dart';
 
@@ -13,17 +14,17 @@ class DoctorCubit extends Cubit<DoctorState> {
         Doctor(
           name: 'Dr. Ahmed Ali',
           specialization: 'Orthodontics',
-          imagePath: 'assets/images/clinic/photo_doctor3.png',
+          imagePath: AppAssetImages.photoDoctor1,
         ),
         Doctor(
           name: 'Dr. Fatima Mohamed',
           specialization: 'Maxillofacial Surgery',
-          imagePath: 'assets/images/clinic/photo_doctor3.png',
+          imagePath: AppAssetImages.photoDoctor2,
         ),
         Doctor(
           name: 'Dr. Omar Said',
           specialization: 'Pediatric Dentistry',
-          imagePath: 'assets/images/clinic/photo_doctor3.png',
+          imagePath: AppAssetImages.photoDoctor3,
         ),
       ];
 
