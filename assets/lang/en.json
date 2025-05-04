@@ -27,6 +27,10 @@
     "email": "Email",
     "password": "Password",
     "confirm_password": "Confirm Password",
+    "gender": "Gender",
+    "marital_status": "Marital status",
+    "gender_male": "Male",
+    "gender_female": "Female",
     "sign_up": "Sign Up",
     "already_have_account": "Already have an account?",
     "login": "Login",
@@ -38,9 +42,11 @@
       "password_required": "Password is required",
       "password_length": "Password must be at least 6 characters",
       "confirm_password_required": "Confirm password is required",
-      "passwords_not_match": "Passwords do not match"
+      "passwords_not_match": "Passwords do not match",
+      "gender_required": "Gender is required"
     }
   },
+
   "login_page": {
     "login": "Login",
     "email": "Email",
@@ -383,7 +389,7 @@
   },
   "profilePage": {
     "title": "Profile",
-    "editProfile": "Edit Profile",
+    "personalDetails": "Personal details",
     "notification": "Notification",
     "payment": "Payment",
     "security": "Security",
@@ -394,7 +400,9 @@
     "lightMode": "Light Mode",
     "helpCenter": "Help Center",
     "inviteFriends": "Invite Friends",
-    "logout": "Logout"
+    "logout": "Logout",
+    "logoutAllDevices": "All Devices",
+    "logoutThisDevice": "This Device only"
   },
   "servicesPage": {
     "title": "Health Services"
@@ -430,5 +438,17 @@
   "some_doctors": {
     "top_doctors": "Top Doctors",
     "see_all": "See all"
+  },
+
+  "otp_verification_page": {
+    "title": "Verify OTP",
+    "enter_otp": "Enter the OTP sent to your email",
+    "sent_to": "Sent to: ",
+    "verify": "Verify",
+    "otp_verify_password": "OTP Verify Password",
+    "invalid_otp_error": "Please enter a valid 6-digit OTP",
+    "resend_otp_in": "Resend OTP in",
+    "didnt_receive_otp": "Didn’t receive the OTP?",
+    "resend_otp": "Resend OTP"
   }
 }

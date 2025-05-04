@@ -49,9 +49,13 @@ dependencies:
   gap:
   pretty_dio_logger:
   equatable:
+  permission_handler:
+#  health:
   loading_animation_widget:
   curved_navigation_bar: ^1.0.6
   google_nav_bar: ^5.0.7
+  dartz:
+  pin_code_fields:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
@@ -87,6 +91,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/articles/
+    - assets/images/locks/
     - assets/images/clinic/
     - assets/lang/
     - assets/fonts/

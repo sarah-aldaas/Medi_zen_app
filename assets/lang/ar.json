@@ -27,7 +27,11 @@
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
     "confirm_password": "تأكيد كلمة المرور",
-    "sign_up": "انشاء حساب",
+    "gender": "الجنس",
+    "marital_status": "الحالة الاجتماعية",
+    "gender_male": "ذكر",
+    "gender_female": "أنثى",
+    "sign_up": "انشاء الحساب",
     "already_have_account": "هل لديك حساب بالفعل؟",
     "login": "تسجيل الدخول",
     "validation": {
@@ -36,9 +40,10 @@
       "email_required": "البريد الإلكتروني مطلوب",
       "email_invalid": "البريد الإلكتروني غير صالح",
       "password_required": "كلمة المرور مطلوبة",
-      "password_length": "يجب أن تكون كلمة المرور على الأقل 6 أحرف",
+      "password_length": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
       "confirm_password_required": "تأكيد كلمة المرور مطلوب",
-      "passwords_not_match": "كلمات المرور غير متطابقة"
+      "passwords_not_match": "كلمتا المرور غير متطابقتين",
+      "gender_required": "الجنس مطلوب"
     }
   },
   "login_page": {
@@ -360,7 +365,7 @@
     "early_protection": "حماية مبكرة لصحة عائلتك واحبابك",
     "your_journey": "رحلتك نحو صحة أفضل تبدأ من هنا",
     "empowering_your": "تمكين صحتك في كل خطوة",
-    "learnMore": "تعلم المزيد"
+    "learnMore": "رؤية المزيد"
   },
   "notificationSettings": {
     "title": "إعدادات الإشعارات",
@@ -383,7 +388,7 @@
   },
   "profilePage": {
     "title": "الملف الشخصي",
-    "editProfile": "تعديل الملف الشخصي",
+    "personalDetails": "التفاصيل الشخصية",
     "notification": "الإشعارات",
     "payment": "الدفع",
     "security": "الأمان",
@@ -394,7 +399,9 @@
     "lightMode": "الوضع الفاتح",
     "helpCenter": "مركز المساعدة",
     "inviteFriends": "دعوة الأصدقاء",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "logoutAllDevices": "من جميع الأجهزة",
+    "logoutThisDevice": "من هذا الجهاز فقط"
   },
   "servicesPage": {
     "title": "الخدمات الصحية"
@@ -432,6 +439,17 @@
   "some_doctors": {
     "top_doctors": "أفضل الأطباء",
     "see_all": "عرض الكل"
+  },
+  "otp_verification_page": {
+    "title": "تحقق من رمز التفعيل",
+    "enter_otp": "أدخل رمز التفعيل المرسل إلى بريدك الإلكتروني",
+    "sent_to": "تم الإرسال إلى: ",
+    "verify": "تحقق",
+    "otp_verify_password": "تحقق من كلمة المرور برمز التفعيل",
+    "invalid_otp_error": "يرجى إدخال رمز تفعيل صالح مكون من 6 أرقام",
+    "resend_otp_in": "إعادة إرسال رمز التفعيل خلال",
+    "didnt_receive_otp": "لم تتلقَ رمز التفعيل؟",
+    "resend_otp": "إعادة إرسال رمز التفعيل"
   }
 
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart'
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -27,16 +29,33 @@ void main() async {
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
   );
+
   runApp(const MyApp());
+
 }
 
 String? token = serviceLocator<StorageService>().getFromDisk(StorageKey.token);
+PatientModel? myPatientModel;
+
 
 Future<void> bootstrapApplication() async {
   await initDI();
   await DependencyInjectionGen.initDI();
+  loadingPatientModel();
 }
-
+void loadingPatientModel(){
+  final String? jsonString = serviceLocator<StorageService>().getFromDisk(StorageKey.patientModel);
+  if (jsonString != null) {
+    try {
+      final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+      myPatientModel = PatientModel.fromJson(jsonMap);
+    } catch (e) {
+      myPatientModel = null;
+    }
+  } else {
+    myPatientModel = null; // No data in storage
+  }
+}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -64,20 +83,22 @@ class MyApp extends StatelessWidget {
               ],
               child: BlocBuilder<LocalizationBloc, LocalizationState>(
                 builder: (context, state) {
-                  return OKToast(
-                    child: MaterialApp.router(
-                      routerConfig: goRouter(),
-                      theme: theme,
-                      debugShowCheckedModeBanner: false,
-                      title: 'MediZen Mobile',
-                      locale: state.locale,
-                      supportedLocales: AppLocalizations.supportedLocales,
-                      localizationsDelegates: [
-                        AppLocalizations.delegate,
-                        GlobalWidgetsLocalizations.delegate,
-                        GlobalMaterialLocalizations.delegate,
-                        GlobalCupertinoLocalizations.delegate,
-                      ],
+                  return SafeArea(
+                    child: OKToast(
+                      child: MaterialApp.router(
+                        routerConfig: goRouter(),
+                        theme: theme,
+                        debugShowCheckedModeBanner: false,
+                        title: 'MediZen Mobile',
+                        locale: state.locale,
+                        supportedLocales: AppLocalizations.supportedLocales,
+                        localizationsDelegates: [
+                          AppLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                        ],
+                      ),
                     ),
                   );
                 },

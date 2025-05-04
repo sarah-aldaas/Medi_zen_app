@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/features/authentication/presentation/forget_password/view/otp_verify_password.dart';
+import 'package:medizen_app/features/authentication/presentation/otp/verified.dart';
+import 'package:medizen_app/features/authentication/presentation/reset_password/view/reset_password_screen.dart';
 
 import '../../features/Complaint/view/complaint_list_screen.dart';
 import '../../features/articles/pages/articles.dart';
 import '../../features/articles/pages/my_book_mark.dart';
-import '../../features/authentication/forget_password/view/forget_password.dart';
-import '../../features/authentication/login/view/login_screen.dart';
-import '../../features/authentication/otp/otp_page.dart';
-import '../../features/authentication/signup/view/signup_screen.dart';
+import '../../features/authentication/presentation/forget_password/view/forget_password.dart';
+import '../../features/authentication/presentation/login/view/login_screen.dart';
+import '../../features/authentication/presentation/otp/otp_verification_screen.dart';
+import '../../features/authentication/presentation/signup/view/signup_screen.dart';
 import '../../features/clinics/pages/clinics.dart';
 import '../../features/doctor/pages/doctor.dart';
 import '../../features/help_center/pages/help_center.dart';
@@ -44,12 +47,12 @@ enum AppRouter {
   clinics,
   doctors,
   clinic,
-  complaint,
+  complaint, otpVerification,verified,verifyPasswordOtp,resetPassword
 }
 
 GoRouter goRouter() {
   return GoRouter(
-    initialLocation: "/homePage",
+    initialLocation: "/splashScreen",
     routes: [
       ShellRoute(
         builder: (context, state, child) {
@@ -141,13 +144,6 @@ GoRouter goRouter() {
             },
           ),
           GoRoute(
-            path: "/otpPage",
-            name: AppRouter.otp.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return OtpPage();
-            },
-          ),
-          GoRoute(
             path: "/notificationSettings",
             name: AppRouter.notificationSettings.name,
             builder: (BuildContext context, GoRouterState state) {
@@ -201,6 +197,40 @@ GoRouter goRouter() {
             name: AppRouter.complaint.name,
             builder: (BuildContext context, GoRouterState state) {
               return ComplaintListScreen();
+            },
+          ),
+          GoRoute(
+            path: "/verified",
+            name: AppRouter.verified.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return Verified();
+            },
+          ),
+          GoRoute(
+            path: '/otp-verification',
+            name: AppRouter.otpVerification.name,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              final email = extra?['email'] as String? ?? '';
+              return OtpVerificationScreen(email: email);
+            },
+          ),
+          GoRoute(
+            path: '/otp-verification-password',
+            name: AppRouter.verifyPasswordOtp.name,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              final email = extra?['email'] as String? ?? '';
+              return OtpVerifyPassword(email: email);
+            },
+          ),
+          GoRoute(
+            path: '/reset-password',
+            name: AppRouter.resetPassword.name,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              final email = extra?['email'] as String? ?? '';
+              return ResetPasswordScreen(email: email);
             },
           ),
         ],

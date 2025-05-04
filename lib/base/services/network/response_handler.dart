@@ -37,52 +37,6 @@ class ResponseHandler<T> {
     }
   }
 
-  //
-  // _processResponseError<R>(response, int statusCode, {fromJson}) {
-  //   final message = response.data['message'] ?? 'Unknown error occurred';
-  //
-  //   // Function to extract error messages
-  //   String _extractErrors(Map<String, dynamic> errors) {
-  //     List<String> errorMessages = [];
-  //     errors.forEach((key, value) {
-  //       if (value is List) {
-  //         errorMessages.addAll(value.map((e) => e.toString()));
-  //       } else if (value is String) {
-  //         errorMessages.add(value);
-  //       }
-  //     });
-  //     return errorMessages.join(" ");
-  //   }
-  //
-  //   // Check if errors key exists in the response
-  //   String errorMessages = "";
-  //   if (response.data.containsKey('errors')) {
-  //     errorMessages = _extractErrors(response.data['errors']);
-  //   }
-  //
-  //   switch (statusCode) {
-  //     case 426:
-  //       return ResponseError<R>(
-  //         data: fromJson != null ? fromJson(response.data) : null,
-  //         code: response.data['status_code'],
-  //         message: "$message $errorMessages",
-  //       );
-  //     case 400:
-  //     case 401:
-  //     case 406:
-  //     case 404:
-  //     case 500:
-  //       return ResponseError<R>(
-  //         data: null,
-  //         message: "$message $errorMessages",
-  //       );
-  //     default:
-  //       return ResponseError<R>(
-  //         message: "$message $errorMessages",
-  //       );
-  //   }
-  // }
-
   _processResponseError<R>(response, int statusCode, {fromJson}) {
     final message = response.data['message'] ?? 'Unknown error occurred';
 

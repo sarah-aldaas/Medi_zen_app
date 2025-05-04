@@ -6,6 +6,8 @@ import 'package:medizen_app/features/home_page/pages/widgets/greeting_widget.dar
 import 'package:medizen_app/features/home_page/pages/widgets/search_field.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_articles.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
+import 'package:medizen_app/main.dart';
+import '../../../base/constant/app_images.dart';
 import '../../../base/theme/app_color.dart';
 
 class HomePageBody extends StatefulWidget {
@@ -103,7 +105,7 @@ class _HomePageBodyState extends State<HomePageBody> {
             children: [
               const CircleAvatar(
                 radius: 20,
-                child: Icon(Icons.person),
+                backgroundImage:AssetImage(AppAssetImages.photoDoctor1) ,
               ),
               const SizedBox(width: 8.0),
               Column(
@@ -111,7 +113,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                 children: [
                   GreetingWidget(),
                   Text(
-                      "homePage.header.userName".tr(context),
+                      myPatientModel!=null? "${myPatientModel!.fName} ${myPatientModel!.lName}":"",
                       style: TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
