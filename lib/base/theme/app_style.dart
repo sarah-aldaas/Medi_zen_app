@@ -55,7 +55,7 @@ class AppStyles {
 
   static var primaryButtonStyle;
 
-  static var titleTextStyle;
+  static TextStyle titleTextStyle=TextStyle();
 
   static var instructionTextStyle;
 

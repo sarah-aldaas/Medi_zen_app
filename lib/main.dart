@@ -1,12 +1,13 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'
-    show SystemChrome, SystemUiMode, SystemUiOverlay;
+import 'package:flutter/services.dart' show SystemChrome, SystemUiMode, SystemUiOverlay;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -23,10 +24,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GoRouter.optionURLReflectsImperativeAPIs = true;
   await bootstrapApplication();
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.manual,
-    overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
-  );
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+
   runApp(const MyApp());
 }
 
@@ -37,13 +36,20 @@ Future<void> bootstrapApplication() async {
   await DependencyInjectionGen.initDI();
 }
 
+PatientModel loadingPatientModel() {
+  PatientModel myPatientModel;
+  final String jsonString = serviceLocator<StorageService>().getFromDisk(StorageKey.patientModel);
+  final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+  myPatientModel = PatientModel.fromJson(jsonMap);
+  return myPatientModel;
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isPlatformDark =
-        PlatformDispatcher.instance.platformBrightness == Brightness.dark;
+    final isPlatformDark = PlatformDispatcher.instance.platformBrightness == Brightness.dark;
     final initTheme = isPlatformDark ? darkTheme : lightTheme;
     return ThemeProvider(
       initTheme: initTheme,
@@ -56,28 +62,25 @@ class MyApp extends StatelessWidget {
               const Breakpoint(start: 961, end: double.infinity, name: DESKTOP),
             ],
             child: MultiBlocProvider(
-              providers: [
-                BlocProvider<LocalizationBloc>(
-                  create: (context) => serviceLocator<LocalizationBloc>(),
-                  lazy: false,
-                ),
-              ],
+              providers: [BlocProvider<LocalizationBloc>(create: (context) => serviceLocator<LocalizationBloc>(), lazy: false)],
               child: BlocBuilder<LocalizationBloc, LocalizationState>(
                 builder: (context, state) {
-                  return OKToast(
-                    child: MaterialApp.router(
-                      routerConfig: goRouter(),
-                      theme: theme,
-                      debugShowCheckedModeBanner: false,
-                      title: 'MediZen Mobile',
-                      locale: state.locale,
-                      supportedLocales: AppLocalizations.supportedLocales,
-                      localizationsDelegates: [
-                        AppLocalizations.delegate,
-                        GlobalWidgetsLocalizations.delegate,
-                        GlobalMaterialLocalizations.delegate,
-                        GlobalCupertinoLocalizations.delegate,
-                      ],
+                  return SafeArea(
+                    child: OKToast(
+                      child: MaterialApp.router(
+                        routerConfig: goRouter(),
+                        theme: theme,
+                        debugShowCheckedModeBanner: false,
+                        title: 'MediZen Mobile',
+                        locale: state.locale,
+                        supportedLocales: AppLocalizations.supportedLocales,
+                        localizationsDelegates: [
+                          AppLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                        ],
+                      ),
                     ),
                   );
                 },

@@ -39,13 +39,14 @@ class LoadingPage extends StatelessWidget {
 }
 
 class LoadingButton extends StatelessWidget {
-  const LoadingButton({super.key});
+   LoadingButton({super.key,this.isWhite}) ;
+  bool? isWhite=false;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: LoadingAnimationWidget.hexagonDots(
-        color: Theme.of(context).primaryColor,
+        color:isWhite!?Colors.white: Theme.of(context).primaryColor,
         size: 25,
       ),
     );
