@@ -28,7 +28,9 @@ class LogoutCubit extends Cubit<LogoutState> {
       if (result is Success<AuthResponseModel>) {
         if (result.data.status) {
           serviceLocator<StorageService>().removeFromDisk(StorageKey.token);
-          serviceLocator<StorageService>().removeFromDisk(StorageKey.patientModel);
+          // serviceLocator<StorageService>().removeFromDisk(
+          //   StorageKey.patientModel,
+          // );
           emit(LogoutSuccess(message: result.data.msg.toString()));
         } else {
           String errorMessage = '';

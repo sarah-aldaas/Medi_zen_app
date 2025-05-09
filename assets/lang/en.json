@@ -401,8 +401,8 @@
     "helpCenter": "Help Center",
     "inviteFriends": "Invite Friends",
     "logout": "Logout",
-    "logoutAllDevices": "All Devices",
-    "logoutThisDevice": "This Device only"
+    "logoutAllDevices": "All devices",
+    "logoutThisDevice": "Only this device"
   },
   "servicesPage": {
     "title": "Health Services"

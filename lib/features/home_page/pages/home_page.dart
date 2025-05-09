@@ -5,7 +5,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/features/home_page/pages/home_page_body.dart';
-import 'package:medizen_app/features/profile/profile.dart';
+import 'package:medizen_app/features/profile/presentaiton/pages/profile.dart';
 import '../../../main.dart';
 import '../../appointment/pages/appointments.dart';
 
@@ -18,18 +18,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-@override
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loadingPatientModel();
-}
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       HomePageBody(),
       MyAppointmentPage(),
-      MyAppointmentPage(),      ProfilePage(),
+      MyAppointmentPage(),
+      ProfilePage(),
     ];
 
     return ThemeSwitchingArea(
@@ -39,13 +40,18 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              boxShadow: [BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))],
+              boxShadow: [
+                BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1)),
+              ],
             ),
             child: SafeArea(
               child: SizedBox(
                 width: context.width,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 8,
+                  ),
                   child: GNav(
                     rippleColor: AppColors.backGroundLogo,
                     hoverColor: Theme.of(context).primaryColor,
@@ -60,37 +66,42 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.home_outlined,
                         text: "home.tabs.home".tr(context),
                         textStyle: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 12,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       GButton(
                         icon: Icons.date_range_outlined,
                         text: "home.tabs.appointment".tr(context),
                         textStyle: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 12,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       GButton(
                         icon: Icons.medical_information_outlined,
                         text: "home.tabs.medicalRecord".tr(context),
                         textStyle: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 12,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       GButton(
                         icon: Icons.person_outline,
                         text: "home.tabs.profile".tr(context),
                         textStyle: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold),
+                          fontSize: 12,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                     selectedIndex: _selectedIndex,
-                    onTabChange: (index) => setState(() => _selectedIndex = index),
+                    onTabChange:
+                        (index) => setState(() => _selectedIndex = index),
                   ),
                 ),
               ),

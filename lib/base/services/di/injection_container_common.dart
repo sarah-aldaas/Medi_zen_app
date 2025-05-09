@@ -1,4 +1,3 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logger/logger.dart';
@@ -8,10 +7,14 @@ import 'package:medizen_app/features/authentication/presentation/forget_password
 import 'package:medizen_app/features/authentication/presentation/logout/cubit/logout_cubit.dart';
 import 'package:medizen_app/features/authentication/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:medizen_app/features/authentication/presentation/signup/cubit/signup_cubit.dart';
+import 'package:medizen_app/features/profile/data/data_sources/telecom_remote_data_sources.dart';
+import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit.dart';
+import 'package:medizen_app/features/profile/data/data_sources/profile_remote_data_sources.dart';
 
 import '../../../features/authentication/data/datasource/auth_remote_data_source.dart';
 import '../../../features/authentication/presentation/login/cubit/login_cubit.dart';
 import '../../../features/authentication/presentation/otp/cubit/otp_cubit.dart';
+import '../../../features/profile/presentaiton/cubit/telecom_cubit.dart';
 import '../../blocs/localization_bloc/localization_bloc.dart';
 import '../../data/data_sources/remote_data_sources.dart';
 import '../logger/logging.dart';
@@ -30,45 +33,61 @@ Future<void> initDI() async {
 Future<void> _initService() async {
   serviceLocator.registerSingleton<LogService>(LogService(log: Logger()));
   await CacheDependencyInjection.initDi();
-  serviceLocator.registerSingleton<NetworkInfo>(NetworkInfoImplementation(InternetConnection()));
+  serviceLocator.registerSingleton<NetworkInfo>(
+    NetworkInfoImplementation(InternetConnection()),
+  );
   serviceLocator.registerSingleton<LocalizationBloc>(LocalizationBloc());
   await NetworkClientDependencyInjection.initDi();
 }
+
 Future<void> _initDataSource() async {
   serviceLocator.registerLazySingleton<AuthRemoteDataSource>(
-        () => AuthRemoteDataSourceImpl(networkClient: serviceLocator()),
+    () => AuthRemoteDataSourceImpl(networkClient: serviceLocator()),
   );
 
   serviceLocator.registerLazySingleton<RemoteDataSourcePublic>(
-        () => RemoteDataSourcePublicImpl(networkClient: serviceLocator()),
+    () => RemoteDataSourcePublicImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<TelecomRemoteDataSource>(
+        () => TelecomRemoteDataSourceImpl(networkClient: serviceLocator()),
   );
 }
 
 Future<void> _initBloc() async {
   serviceLocator.registerFactory<SignupCubit>(
-        () => SignupCubit(authRemoteDataSource: serviceLocator()),
+    () => SignupCubit(authRemoteDataSource: serviceLocator()),
   );
   serviceLocator.registerFactory<OtpCubit>(
-        () => OtpCubit(authRemoteDataSource: serviceLocator()),
+    () => OtpCubit(authRemoteDataSource: serviceLocator()),
   );
   serviceLocator.registerFactory<ForgotPasswordCubit>(
-        () => ForgotPasswordCubit(authRemoteDataSource: serviceLocator()),
+    () => ForgotPasswordCubit(authRemoteDataSource: serviceLocator()),
   );
   serviceLocator.registerFactory<OtpVerifyPasswordCubit>(
-        () => OtpVerifyPasswordCubit(authRemoteDataSource: serviceLocator()),
+    () => OtpVerifyPasswordCubit(authRemoteDataSource: serviceLocator()),
   );
   serviceLocator.registerFactory<ResetPasswordCubit>(
-        () => ResetPasswordCubit(authRemoteDataSource: serviceLocator()),
+    () => ResetPasswordCubit(authRemoteDataSource: serviceLocator()),
   );
   serviceLocator.registerFactory<LoginCubit>(
-        () => LoginCubit(authRemoteDataSource: serviceLocator()),
+    () => LoginCubit(authRemoteDataSource: serviceLocator()),
   );
 
   serviceLocator.registerFactory<LogoutCubit>(
-        () => LogoutCubit(authRemoteDataSource: serviceLocator()),
+    () => LogoutCubit(authRemoteDataSource: serviceLocator()),
   );
 
   serviceLocator.registerFactory<CodeTypesCubit>(
-        () => CodeTypesCubit(remoteDataSource: serviceLocator()),
+    () => CodeTypesCubit(remoteDataSource: serviceLocator()),
+  );
+
+  serviceLocator.registerFactory<ProfileCubit>(
+    () => ProfileCubit(remoteDataSource: serviceLocator()),
+  );
+  serviceLocator.registerFactory<TelecomCubit>(
+        () => TelecomCubit(remoteDataSource: serviceLocator()),
   );
 }

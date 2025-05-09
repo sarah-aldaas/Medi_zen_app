@@ -38,7 +38,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
     return BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
       listener: (context, state) {
         if (state is ForgotPasswordSuccess) {
-          ShowToast.showToastSuccess(message: state.message);
+          // ShowToast.showToastSuccess(message: state.message);
           context.pushNamed(AppRouter.verifyPasswordOtp.name, extra: {'email': _emailController.text});
         } else if (state is ForgotPasswordError) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error ?? "forgotPassword.errors.default".tr(context))));

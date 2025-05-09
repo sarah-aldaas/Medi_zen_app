@@ -27,7 +27,7 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
       await fetchCodeTypes();
     } else {
       emit(CodeTypesSuccess(codeTypes: cachedCodeTypes, codes: []));
-      await _fetchInitialCodes();
+       await _fetchInitialCodes();
     }
   }
 
@@ -69,16 +69,62 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     final genderCodeType = codeTypes.firstWhere((ct) => ct.name == 'gender', orElse: () => throw Exception('Gender code type not found'));
     final currentCodes = (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
 
-    if (!currentCodes.any((code) => code.codeTypeId == genderCodeType.id)) {
+    if (!currentCodes.any((code) => code.codeTypeModel!.id == genderCodeType.id)) {
       await fetchCodes(codeTypeId: genderCodeType.id, codeTypes: codeTypes);
     }
 
     final updatedState = state;
     if (updatedState is CodeTypesSuccess) {
-      return updatedState.codes?.where((code) => code.codeTypeId == genderCodeType.id).toList() ?? [];
+      return updatedState.codes?.where((code) => code.codeTypeModel!.id == genderCodeType.id).toList() ?? [];
     }
     return [];
   }
+
+  // Fetch and return telecom type codes
+  Future<List<CodeModel>> getTelecomTypeCodes() async {
+    final codeTypes = state is CodeTypesSuccess ? (state as CodeTypesSuccess).codeTypes : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(); // Ensure code types are fetched if not available
+      return getTelecomTypeCodes(); // Recursive call after fetching
+    }
+
+    final telecomTypeCodeType = codeTypes.firstWhere((ct) => ct.name == 'telecom_type', orElse: () => throw Exception('Telecom type code type not found'));
+    final currentCodes = (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any((code) => code.codeTypeModel!.id == telecomTypeCodeType.id)) {
+      await fetchCodes(codeTypeId: telecomTypeCodeType.id, codeTypes: codeTypes);
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes?.where((code) => code.codeTypeModel!.id == telecomTypeCodeType.id).toList() ?? [];
+    }
+    return [];
+  }
+
+
+  // Fetch and return telecom use codes
+  Future<List<CodeModel>> getTelecomUseCodes() async {
+    final codeTypes = state is CodeTypesSuccess ? (state as CodeTypesSuccess).codeTypes : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(); // Ensure code types are fetched if not available
+      return getTelecomUseCodes(); // Recursive call after fetching
+    }
+
+    final telecomUseCodeType = codeTypes.firstWhere((ct) => ct.name == 'telecom_use', orElse: () => throw Exception('Telecom use code type not found'));
+    final currentCodes = (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any((code) => code.codeTypeModel!.id == telecomUseCodeType.id)) {
+      await fetchCodes(codeTypeId: telecomUseCodeType.id, codeTypes: codeTypes);
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes?.where((code) => code.codeTypeModel!.id == telecomUseCodeType.id).toList() ?? [];
+    }
+    return [];
+  }
+
 
   // Fetch and return marital status codes
   Future<List<CodeModel>> getMaritalStatusCodes() async {
@@ -94,13 +140,13 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     );
     final currentCodes = (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
 
-    if (!currentCodes.any((code) => code.codeTypeId == maritalStatusCodeType.id)) {
+    if (!currentCodes.any((code) => code.codeTypeModel!.id == maritalStatusCodeType.id)) {
       await fetchCodes(codeTypeId: maritalStatusCodeType.id, codeTypes: codeTypes);
     }
 
     final updatedState = state;
     if (updatedState is CodeTypesSuccess) {
-      return updatedState.codes?.where((code) => code.codeTypeId == maritalStatusCodeType.id).toList() ?? [];
+      return updatedState.codes?.where((code) => code.codeTypeModel!.id == maritalStatusCodeType.id).toList() ?? [];
     }
     return [];
   }

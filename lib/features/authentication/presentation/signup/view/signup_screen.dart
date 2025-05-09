@@ -1,4 +1,3 @@
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +6,6 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/features/authentication/presentation/signup/view/widget/signup_form.dart';
 import '../../../../../base/go_router/go_router.dart';
-import '../../../../start_app/welcome/view/welcome_screen.dart';
 import '../cubit/signup_cubit.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -24,47 +22,45 @@ class SignupScreen extends StatelessWidget {
           create: (context) => CodeTypesCubit(remoteDataSource: serviceLocator()),
         ),
       ],
-      child: ThemeSwitchingArea(
-        child: Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          context.replaceNamed(AppRouter.welcomeScreen.name);
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.grey,
-                        ),
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        context.replaceNamed(AppRouter.welcomeScreen.name);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.grey,
                       ),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            "sign_up_page.sign_up".tr(context),
-                            style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor // Color(0xFF47BD93),
-                            ),
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          "sign_up_page.sign_up".tr(context),
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Theme
+                                  .of(context)
+                                  .primaryColor // Color(0xFF47BD93),
                           ),
                         ),
                       ),
-                      SizedBox(width: 48),
-                    ],
-                  ),
-                  const SizedBox(height: 50),
-                  SignupForm(),
-                ],
-              ),
+                    ),
+                    SizedBox(width: 48),
+                  ],
+                ),
+                const SizedBox(height: 50),
+                SignupForm(),
+              ],
             ),
           ),
         ),

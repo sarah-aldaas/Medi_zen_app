@@ -27,7 +27,7 @@ class SignupCubit extends Cubit<SignupState> {
   SignupCubit({required this.authRemoteDataSource}) : super(SignupState.initial());
 
   // Helper method to parse error messages from API response
-  String _parseErrorMessage(dynamic msg) {
+  String parseErrorMessage(dynamic msg) {
     if (msg is Map<String, dynamic>) {
       final errors = <String>[];
       msg.forEach((key, value) {
@@ -54,11 +54,11 @@ class SignupCubit extends Cubit<SignupState> {
           if (response.status) {
             emit(SignupState.success(response.msg));
           } else {
-            emit(SignupState.error(_parseErrorMessage(response.msg)));
+            emit(SignupState.error(parseErrorMessage(response.msg)));
           }
         },
         error: (String? message, int? code, AuthResponseModel? data) {
-          emit(SignupState.error(data != null ? _parseErrorMessage(data.msg) : message ?? 'Signup failed'));
+          emit(SignupState.error(data != null ? parseErrorMessage(data.msg) : message ?? 'Signup failed'));
         },
       );
     } catch (e) {

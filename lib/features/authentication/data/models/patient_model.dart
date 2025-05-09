@@ -1,10 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
+import 'package:medizen_app/features/profile/data/models/address_model.dart';
 
 class PatientModel extends Equatable {
-  final int id;
-  final String fName;
-  final String lName;
+  final String? id;
+  final String? fName;
+  final String? lName;
   final String? text;
   final String? family;
   final String? given;
@@ -12,22 +14,24 @@ class PatientModel extends Equatable {
   final String? suffix;
   final String? avatar;
   final String? dateOfBirth;
-  final double? height;
-  final double? weight;
-  final bool? smoker;
-  final bool? alcoholDrinker;
+  final String? height;
+  final String? weight;
+  final String? smoker;
+  final String? alcoholDrinker;
   final String? deceasedDate;
   final String email;
   final String? emailVerifiedAt;
-  final int active;
-  final int genderId;
-  final int maritalStatusId;
-  final int? bloodId;
+  final String? active;
+  final String? genderId;
+  final String? maritalStatusId;
+  final String? bloodId;
   final String createdAt;
   final String updatedAt;
   final CodeModel gender;
   final CodeModel maritalStatus;
   final CodeModel? bloodType;
+  final AddressModel? addressModel; // Single address or null
+  final List<TelecomModel>? telecoms; // List of telecoms
 
   const PatientModel({
     required this.id,
@@ -56,36 +60,55 @@ class PatientModel extends Equatable {
     required this.gender,
     required this.maritalStatus,
     this.bloodType,
+    this.addressModel,
+    this.telecoms,
   });
 
   factory PatientModel.fromJson(Map<String, dynamic> json) {
     return PatientModel(
-      id: json['id'] as int,
-      fName: json['f_name'] as String,
-      lName: json['l_name'] as String,
-      text: json['text'] as String?,
-      family: json['family'] as String?,
-      given: json['given'] as String?,
-      prefix: json['prefix'] as String?,
-      suffix: json['suffix'] as String?,
-      avatar: json['avatar'] as String?,
-      dateOfBirth: json['date_of_birth'] as String?,
-      height: json['height'] != null ? (json['height'] as num).toDouble() : null,
-      weight: json['weight'] != null ? (json['weight'] as num).toDouble() : null,
-      smoker: json['smoker'] as bool?,
-      alcoholDrinker: json['alcohol_drinker'] as bool?,
-      deceasedDate: json['deceased_date'] as String?,
-      email: json['email'] as String,
-      emailVerifiedAt: json['email_verified_at'] as String?,
-      active: json['active'] as int,
-      genderId: json['gender_id'] as int,
-      maritalStatusId: json['marital_status_id'] as int,
-      bloodId: json['blood_id'] as int?,
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
+      id: json['id']?.toString(),
+      fName: json['f_name']?.toString(),
+      lName: json['l_name']?.toString(),
+      text: json['text']?.toString(),
+      family: json['family']?.toString(),
+      given: json['given']?.toString(),
+      prefix: json['prefix']?.toString(),
+      suffix: json['suffix']?.toString(),
+      avatar: json['avatar']?.toString(),
+      dateOfBirth: json['date_of_birth']?.toString(),
+      height: json['height']?.toString(),
+      weight: json['weight']?.toString(),
+      smoker: json['smoker']?.toString(),
+      alcoholDrinker: json['alcohol_drinker']?.toString(),
+      deceasedDate: json['deceased_date']?.toString(),
+      email: json['email']?.toString() ?? '',
+      emailVerifiedAt: json['email_verified_at']?.toString(),
+      active: json['active']?.toString(),
+      genderId: json['gender_id']?.toString(),
+      maritalStatusId: json['marital_status_id']?.toString(),
+      bloodId: json['blood_id']?.toString(),
+      createdAt: json['created_at']?.toString() ?? '',
+      updatedAt: json['updated_at']?.toString() ?? '',
       gender: CodeModel.fromJson(json['gender'] as Map<String, dynamic>),
       maritalStatus: CodeModel.fromJson(json['marital_status'] as Map<String, dynamic>),
-      bloodType: json['blood_type'] != null ? CodeModel.fromJson(json['blood_type'] as Map<String, dynamic>) : null,
+      bloodType:
+          json['blood_type'] != null
+              ? CodeModel.fromJson(json['blood_type'] as Map<String, dynamic>)
+              : json['blood'] != null
+              ? CodeModel.fromJson(json['blood'] as Map<String, dynamic>)
+              : null,
+      // Handle addresses as a single AddressModel (first item if array) or null
+      addressModel: json.containsKey('addresses')
+          ? (json['addresses'] is List && (json['addresses'] as List).isNotEmpty
+          ? AddressModel.fromJson((json['addresses'] as List).first as Map<String, dynamic>)
+          : (json['addresses'] is Map
+          ? AddressModel.fromJson(json['addresses'] as Map<String, dynamic>)
+          : null)):null,
+      // Handle telecoms as a list from a 'telecoms' key (adjust key if different)
+      telecoms: json.containsKey('telecoms')?
+          json['telecoms'] != null
+              ? (json['telecoms'] as List).map((telecomJson) => TelecomModel.fromJson(telecomJson as Map<String, dynamic>)).toList()
+              : null:null,
     );
   }
 
@@ -117,6 +140,9 @@ class PatientModel extends Equatable {
       'gender': gender.toJson(),
       'marital_status': maritalStatus.toJson(),
       'blood_type': bloodType?.toJson(),
+      'blood': bloodType?.toJson(),
+      'addresses': addressModel?.toJson(), // Convert single address to JSON
+      'telecoms': telecoms?.map((t) => t.toJson()).toList(), // Convert list of telecoms to JSON
     };
   }
 
@@ -148,5 +174,7 @@ class PatientModel extends Equatable {
     gender,
     maritalStatus,
     bloodType,
+    addressModel,
+    telecoms,
   ];
 }

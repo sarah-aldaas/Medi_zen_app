@@ -93,7 +93,11 @@ class CodesResponseModel {
       status: json['status'] ?? false,
       errNum: json['errNum'] ?? 0,
       msg: json['msg'] ?? '',
-      codes: (json['codes'] as List<dynamic>?)
+      codes: json.containsKey('codes') && json['codes'].containsKey('data')
+          ? (json['codes']['data'] as List<dynamic>?)
+          ?.map((item) => CodeModel.fromJson(item as Map<String, dynamic>))
+          .toList() ?? []
+          : (json['codes'] as List<dynamic>?)
           ?.map((item) => CodeModel.fromJson(item as Map<String, dynamic>))
           .toList() ?? [],
     );

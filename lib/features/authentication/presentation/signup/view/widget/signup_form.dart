@@ -44,7 +44,7 @@ class _SignupFormState extends State<SignupForm> {
       child: BlocConsumer<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state.successMessage != null) {
-            ShowToast.showToastSuccess(message: state.successMessage!);
+            // ShowToast.showToastSuccess(message: state.successMessage!);
             context.pushNamed(AppRouter.otpVerification.name, extra: {'email': _cubit.state.formData['email']});
           } else if (state.errorMessage != null) {
             ShowToast.showToastError(message: state.errorMessage!);

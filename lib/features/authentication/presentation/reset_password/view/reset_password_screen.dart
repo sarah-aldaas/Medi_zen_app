@@ -46,7 +46,7 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
     return BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
       listener: (context, state) {
         if (state is ResetPasswordSuccess) {
-          ShowToast.showToastSuccess(message: state.message);
+          // ShowToast.showToastSuccess(message: state.message);
           context.goNamed(AppRouter.login.name);
         } else if (state is ResetPasswordFailure) {
           ShowToast.showToastError(message: state.error);

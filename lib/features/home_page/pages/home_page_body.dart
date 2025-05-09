@@ -9,6 +9,8 @@ import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 import 'package:medizen_app/main.dart';
 import '../../../base/constant/app_images.dart';
 import '../../../base/theme/app_color.dart';
+import '../../authentication/data/models/patient_model.dart';
+import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
 
 class HomePageBody extends StatefulWidget {
   const HomePageBody({super.key});
@@ -18,6 +20,13 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
+  PatientModel? myPatientModel;
+
+  @override
+  void initState() {
+  myPatientModel=loadingPatientModel();
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -96,6 +105,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    loadingPatientModel();
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -103,10 +113,7 @@ class _HomePageBodyState extends State<HomePageBody> {
         children: [
           Row(
             children: [
-              const CircleAvatar(
-                radius: 20,
-                backgroundImage:AssetImage(AppAssetImages.photoDoctor1) ,
-              ),
+              AvatarImage(imageUrl: myPatientModel!.avatar,radius: 20,),
               const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
