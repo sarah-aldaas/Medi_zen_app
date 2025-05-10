@@ -27,7 +27,7 @@ class ClinicCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
               child: Image.asset(
-                AppAssetImages.clinic,
+                AppAssetImages.clinic1,
                 height: 130,
                 width: 120,
                 fit: BoxFit.fitHeight,

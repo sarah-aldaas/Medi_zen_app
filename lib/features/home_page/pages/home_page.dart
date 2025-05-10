@@ -5,10 +5,10 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/features/home_page/pages/home_page_body.dart';
-import 'package:medizen_app/features/profile/profile.dart';
 
 import '../../appointment/pages/appointments.dart';
 import '../../medical_record/Medical_Record.dart';
+import '../../profile/presentaiton/pages/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

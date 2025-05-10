@@ -1,0 +1,132 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/features/authentication/data/models/register_request_model.dart';
+import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
+import 'package:medizen_app/features/authentication/presentation/signup/cubit/signup_cubit.dart';
+
+class SignupFormState {
+  final List<CodeModel> genderCodes;
+  final List<CodeModel> maritalStatusCodes;
+  final String? genderId;
+  final String? maritalStatusId;
+  final bool isLoadingCodes;
+  final Map<String, String> formData;
+  final bool obscurePassword; // Added for password visibility
+  final bool obscureConfirmPassword; // Added for confirm password visibility
+
+  SignupFormState({
+    this.genderCodes = const [],
+    this.maritalStatusCodes = const [],
+    this.genderId,
+    this.maritalStatusId,
+    this.isLoadingCodes = true,
+    this.formData = const {'firstName': '', 'lastName': '', 'email': '', 'password': '', 'confirmPassword': ''},
+    this.obscurePassword = true, // Default to hidden
+    this.obscureConfirmPassword = true, // Default to hidden
+  });
+
+  SignupFormState copyWith({
+    List<CodeModel>? genderCodes,
+    List<CodeModel>? maritalStatusCodes,
+    String? genderId,
+    String? maritalStatusId,
+    bool? isLoadingCodes,
+    Map<String, String>? formData,
+    bool? obscurePassword,
+    bool? obscureConfirmPassword,
+  }) {
+    return SignupFormState(
+      genderCodes: genderCodes ?? this.genderCodes,
+      maritalStatusCodes: maritalStatusCodes ?? this.maritalStatusCodes,
+      genderId: genderId ?? this.genderId,
+      maritalStatusId: maritalStatusId ?? this.maritalStatusId,
+      isLoadingCodes: isLoadingCodes ?? this.isLoadingCodes,
+      formData: formData ?? this.formData,
+      obscurePassword: obscurePassword ?? this.obscurePassword,
+      obscureConfirmPassword: obscureConfirmPassword ?? this.obscureConfirmPassword,
+    );
+  }
+}
+
+class SignupFormCubit extends Cubit<SignupFormState> {
+  final CodeTypesCubit codeTypesCubit;
+
+  SignupFormCubit(this.codeTypesCubit) : super(SignupFormState());
+
+  Future<void> loadCodes() async {
+    if (state.isLoadingCodes) {
+      final results = await Future.wait([codeTypesCubit.getGenderCodes(), codeTypesCubit.getMaritalStatusCodes()]);
+      final uniqueGenderCodes = <String, CodeModel>{};
+      final uniqueMaritalStatusCodes = <String, CodeModel>{};
+
+      for (var code in results[0]) {
+        uniqueGenderCodes[code.id.toString()] = code;
+      }
+      for (var code in results[1]) {
+        uniqueMaritalStatusCodes[code.id.toString()] = code;
+      }
+
+      emit(state.copyWith(
+        genderCodes: uniqueGenderCodes.values.toList(),
+        maritalStatusCodes: uniqueMaritalStatusCodes.values.toList(),
+        isLoadingCodes: false,
+        genderId: uniqueGenderCodes.isNotEmpty ? uniqueGenderCodes.values.first.id.toString() : null,
+        maritalStatusId: uniqueMaritalStatusCodes.isNotEmpty ? uniqueMaritalStatusCodes.values.first.id.toString() : null,
+      ));
+    }
+  }
+
+  void updateFormData(String key, String value) {
+    final newFormData = Map<String, String>.from(state.formData)..[key] = value;
+    emit(state.copyWith(formData: newFormData));
+  }
+
+  void updateGenderId(String? value) {
+    emit(state.copyWith(genderId: value));
+  }
+
+  void updateMaritalStatusId(String? value) {
+    emit(state.copyWith(maritalStatusId: value));
+  }
+
+  // Added method to toggle password visibility
+  void togglePasswordVisibility() {
+    emit(state.copyWith(obscurePassword: !state.obscurePassword));
+  }
+
+  // Added method to toggle confirm password visibility
+  void toggleConfirmPasswordVisibility() {
+    emit(state.copyWith(obscureConfirmPassword: !state.obscureConfirmPassword));
+  }
+
+  void submitForm(BuildContext context) {
+    if (isFormValid()) {
+      final cubit = context.read<SignupCubit>();
+      cubit.signup(
+        registerRequestModel: RegisterRequestModel(
+          firstName: state.formData['firstName']!,
+          lastName: state.formData['lastName']!,
+          email: state.formData['email']!,
+          password: state.formData['password']!,
+          genderId: state.genderId!,
+          maritalStatusId: state.maritalStatusId!,
+        ),
+      );
+    }
+  }
+
+  bool isFormValid() {
+    final data = state.formData;
+    return data['firstName']!.isNotEmpty &&
+        data['lastName']!.isNotEmpty &&
+        data['email']!.isNotEmpty &&
+        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(data['email']!) &&
+        data['password']!.isNotEmpty &&
+        data['password']!.length >= 6 &&
+        data['confirmPassword']!.isNotEmpty &&
+        data['confirmPassword'] == data['password'] &&
+        state.genderId != null &&
+        state.maritalStatusId != null;
+  }
+}

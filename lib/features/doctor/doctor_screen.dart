@@ -50,7 +50,7 @@ class Doctorscreen extends StatelessWidget {
                     height: 50,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(AppAssetImages.clinic),
+                        image: AssetImage(AppAssetImages.clinic1),
                       ),
                     ),
                   ),

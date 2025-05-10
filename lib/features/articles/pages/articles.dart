@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
-import 'package:medizen_app/base/go_router/go_router.dart';
 
+import '../../../base/go_router/go_router.dart';
 import '../model/article_model.dart';
 import 'article_details_page.dart';
 import 'mixin/article_mixin.dart';
