@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../base/theme/app_color.dart';
 import '../../base/theme/app_style.dart';
 
 class DoctorCard extends StatelessWidget {
@@ -19,7 +20,7 @@ class DoctorCard extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
 
       child: Card(
-        // color: AppColors.primaryColor,
+        color: AppColors.backgroundColor,
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Padding(

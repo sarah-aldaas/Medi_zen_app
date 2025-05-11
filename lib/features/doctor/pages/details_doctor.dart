@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:medizen_app/base/constant/app_images.dart';
-import 'package:medizen_app/base/extensions/media_query_extension.dart';
-import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:intl/intl.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart'; // <-- Make sure you import this
+import 'package:medizen_app/base/constant/app_images.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/extensions/media_query_extension.dart';
+
+import '../../../base/theme/app_style.dart';
+import '../../Complaint/view/complaint_submission_screen.dart';
 
 class DoctorDetailsPage extends StatefulWidget {
   const DoctorDetailsPage({super.key});
@@ -75,7 +77,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     Text(
                       'doctorDetails.doctorName'.tr(context),
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text('doctorDetails.specialty'.tr(context)),
                     Text('doctorDetails.hospital'.tr(context)),
@@ -87,10 +91,30 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildInfoColumn(Icons.people, '5.000+', 'doctorDetails.patients', context),
-                _buildInfoColumn(Icons.calendar_today, '10+', 'doctorDetails.yearsExperience', context),
-                _buildInfoColumn(Icons.star, '4.8', 'doctorDetails.rating', context),
-                _buildInfoColumn(Icons.rate_review, '4.942', 'doctorDetails.reviews', context),
+                _buildInfoColumn(
+                  Icons.people,
+                  '5.000+',
+                  'doctorDetails.patients',
+                  context,
+                ),
+                _buildInfoColumn(
+                  Icons.calendar_today,
+                  '10+',
+                  'doctorDetails.yearsExperience',
+                  context,
+                ),
+                _buildInfoColumn(
+                  Icons.star,
+                  '4.8',
+                  'doctorDetails.rating',
+                  context,
+                ),
+                _buildInfoColumn(
+                  Icons.rate_review,
+                  '4.942',
+                  'doctorDetails.reviews',
+                  context,
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -116,10 +140,12 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: days.length,
-                    separatorBuilder: (context, index) => const SizedBox(width: 8),
+                    separatorBuilder:
+                        (context, index) => const SizedBox(width: 8),
                     itemBuilder: (context, index) {
                       final day = days[index];
-                      final isSelected = day.day == _selectedDate.day &&
+                      final isSelected =
+                          day.day == _selectedDate.day &&
                           day.month == _selectedDate.month &&
                           day.year == _selectedDate.year;
 
@@ -133,9 +159,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                         child: Container(
                           width: 45,
                           decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0xFF00CBA9)
-                                : Colors.grey[200],
+                            color:
+                                isSelected
+                                    ? const Color(0xFF00CBA9)
+                                    : Colors.grey[200],
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Column(
@@ -145,9 +172,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                 DateFormat('E').format(day).substring(0, 3),
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.grey[600],
+                                  color:
+                                      isSelected
+                                          ? Colors.white
+                                          : Colors.grey[600],
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -156,9 +184,8 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.black,
+                                  color:
+                                      isSelected ? Colors.white : Colors.black,
                                 ),
                               ),
                             ],
@@ -175,42 +202,51 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     spacing: 8.0,
                     alignment: WrapAlignment.spaceBetween,
                     runSpacing: 8.0,
-                    children: _availableTimes.map((timeStr) {
-                      final parsedTime = DateFormat("hh:mm a").parse(timeStr);
-                      final timeOfDay = TimeOfDay.fromDateTime(parsedTime);
-                      final isSelected = _selectedTime == timeOfDay;
-                      final isBooked = _bookedTimes.contains(timeStr);
+                    children:
+                        _availableTimes.map((timeStr) {
+                          final parsedTime = DateFormat(
+                            "hh:mm a",
+                          ).parse(timeStr);
+                          final timeOfDay = TimeOfDay.fromDateTime(parsedTime);
+                          final isSelected = _selectedTime == timeOfDay;
+                          final isBooked = _bookedTimes.contains(timeStr);
 
-                      return InkWell(
-                        onTap: isBooked
-                            ? null
-                            : () {
-                          setState(() {
-                            _selectedTime = timeOfDay;
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0xFF00CBA9)
-                                : isBooked
-                                ? Colors.grey[300]
-                                : Colors.grey[200],
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            timeStr,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: isSelected || isBooked
-                                  ? Colors.white
-                                  : Colors.black,
+                          return InkWell(
+                            onTap:
+                                isBooked
+                                    ? null
+                                    : () {
+                                      setState(() {
+                                        _selectedTime = timeOfDay;
+                                      });
+                                    },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    isSelected
+                                        ? const Color(0xFF00CBA9)
+                                        : isBooked
+                                        ? Colors.grey[300]
+                                        : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                timeStr,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      isSelected || isBooked
+                                          ? Colors.white
+                                          : Colors.black,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        }).toList(),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -224,19 +260,42 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             const SizedBox(height: 30),
             Center(
               child: ElevatedButton(
-                onPressed: _selectedTime == null
-                    ? null
-                    : () {
-                  print('Booking appointment on $_selectedDate at ${_selectedTime!.format(context)}');
-                },
+                onPressed:
+                    _selectedTime == null
+                        ? null
+                        : () {
+                          print(
+                            'Booking appointment on $_selectedDate at ${_selectedTime!.format(context)}',
+                          );
+                        },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,
                   disabledBackgroundColor: Colors.grey[400],
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                    vertical: 16,
+                  ),
                 ),
                 child: Text(
                   'doctorDetails.bookAppointment'.tr(context),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ComplaintSubmissionScreen(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'doctorDetails.SubmitaComplaint'.tr(context),
+                  style: AppStyles.complaintTextStyle,
                 ),
               ),
             ),
@@ -246,7 +305,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               children: [
                 Text(
                   'doctorDetails.reviewsTitle'.tr(context),
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 TextButton(
                   onPressed: () {},
@@ -262,10 +324,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               subtitle: Text('doctorDetails.reviewText'.tr(context)),
               trailing: const Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.star, color: Colors.amber),
-                  Text('5'),
-                ],
+                children: [Icon(Icons.star, color: Colors.amber), Text('5')],
               ),
             ),
             const Gap(30),
@@ -275,14 +334,16 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     );
   }
 
-  Widget _buildInfoColumn(IconData icon, String value, String labelKey, BuildContext context) {
+  Widget _buildInfoColumn(
+    IconData icon,
+    String value,
+    String labelKey,
+    BuildContext context,
+  ) {
     return Column(
       children: [
         Icon(icon, color: Theme.of(context).primaryColor),
-        Text(
-          value,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
         Text(labelKey.tr(context)),
       ],
     );

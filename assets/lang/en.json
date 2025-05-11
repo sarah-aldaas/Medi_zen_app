@@ -260,8 +260,9 @@
     "reviewsTitle": "Reviews",
     "seeAll": "See All",
     "reviewAuthor": "Charolette Hanlin",
-    "reviewText": "Dr. Jenny is very professional in her work and responsive. I have consulted and my problem is solved. 👍👍"
-  },
+    "reviewText": "Dr. Jenny is very professional in her work and responsive. I have consulted and my problem is solved. 👍👍",
+    "  SubmitaComplaint": "Submit a Complaint?"
+},
   "doctorsPage": {
     "title": "Doctors",
     "filters": {
@@ -450,5 +451,48 @@
     "resend_otp_in": "Resend OTP in",
     "didnt_receive_otp": "Didn’t receive the OTP?",
     "resend_otp": "Resend OTP"
+  },
+  "servicesPage": {
+    "title": "Health Services",
+    "Diagnostic Services": "Diagnostic Services",
+    "X-ray Imaging": "X-ray Imaging",
+    "Magnetic Resonance Imaging (MRI)": "Magnetic Resonance Imaging (MRI)",
+    "Blood Tests": "Blood Tests",
+
+    "Therapeutic Services": "Therapeutic Services",
+    "Physical Therapy": "Physical Therapy",
+    "Speech Therapy":"Speech Therapy",
+    "Psychotherapy": "Psychotherapy",
+
+    "Emergency Services":"Emergency Services",
+    "Emergency Care": "Emergency Care",
+    "First Aid Services": "First Aid Services",
+    "Burn Care": "Burn Care",
+    "Preventive Services": "Preventive Services",
+    "Child Vaccinations": "Child Vaccinations",
+    "Adult Vaccinations": "Adult Vaccinations",
+    "Preventive Screenings": "Preventive Screenings",
+
+    "Chronic Care Services": "Chronic Care Services",
+    "Diabetes Management": "Diabetes Management",
+    "Hypertension Care": "Hypertension Care",
+    "Heart Disease Care": "Heart Disease Care",
+
+    "Community Services": "Community Services",
+    "Rehabilitation Therapy": "Rehabilitation Therapy",
+    "Nutritional Counseling": "Nutritional Counseling",
+    "Support Groups": "Support Groups",
+    "close": "close"},
+  "Complaint":{
+    "title": "Submit a Complaint",
+    "Clinic":"Clinic",
+    "Doctor": "Doctor",
+    "ComplaintContent": "Complaint Content",
+    "Submit": "Submit"
+  },
+  "favorite":{
+    "title": "My Favorite Articles",
+    "note": "No favorite articles yet "
+
   }
 }
