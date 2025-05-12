@@ -1,5 +1,4 @@
 import '../../../../base/data/models/code_type_model.dart';
-import '../../../../base/data/models/meta_model.dart';
 
 class TelecomModel {
   final String? id;
@@ -51,36 +50,6 @@ class TelecomModel {
       'use': use!.toJson(),
       'use_id':useId.toString(),
       'type_id':typeId.toString()
-    };
-  }
-}
-class TelecomsDataModel {
-  final List<TelecomModel> data;
-  final MetaModel? meta;
-  final LinksModel? links;
-
-  TelecomsDataModel({
-    required this.data,
-    required this.meta,
-    required this.links,
-  });
-
-  factory TelecomsDataModel.fromJson(Map<String, dynamic> json) {
-    return TelecomsDataModel(
-      data:json.containsKey('telecoms')? (json['telecoms']['data'] as List<dynamic>?)
-          ?.map((item) => TelecomModel.fromJson(item as Map<String, dynamic>))
-          .toList() ??
-          []:[],
-      meta:json['meta'] != null? MetaModel.fromJson(json['meta'] as Map<String, dynamic>):null,
-      links:json['links'] != null? LinksModel.fromJson(json['links'] as Map<String, dynamic>):null,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'data': data.map((item) => item.toJson()).toList(),
-      'meta': meta!.toJson(),
-      'links': links!.toJson(),
     };
   }
 }

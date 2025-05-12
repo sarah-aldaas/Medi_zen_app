@@ -8,14 +8,14 @@ import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:get_it/get_it.dart';
-import 'package:medizen_app/features/profile/presentaiton/cubit/telecom_cubit.dart';
+import 'package:medizen_app/features/profile/presentaiton/cubit/telecom_cubit/telecom_cubit.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/address_page.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/telecom_page.dart';
 import 'package:medizen_app/features/profile/presentaiton/widgets/avatar_image_widget.dart';
 import '../../../../base/data/models/code_type_model.dart';
 import '../../data/models/telecom_model.dart';
-import '../cubit/profile_cubit.dart';
-import '../cubit/profile_state.dart';
+import '../cubit/profile_cubit/profile_cubit.dart';
+
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -88,7 +88,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    AvatarImage(imageUrl: patient.avatar, radius: 70),
+                    // AvatarImage(imageUrl: patient.avatar, radius: 70),
                     const Gap(30),
                     Text("${patient.fName ?? 'N/A'} ${patient.lName ?? 'N/A'}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                     Text(patient.email),

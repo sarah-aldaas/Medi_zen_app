@@ -1,14 +1,18 @@
+import 'package:dio/dio.dart';
+import 'package:medizen_app/base/data/models/public_response_model.dart';
 import 'package:medizen_app/base/helpers/enums.dart';
 import 'package:medizen_app/base/services/network/network_client.dart';
 import 'package:medizen_app/base/services/network/resource.dart';
 import 'package:medizen_app/base/services/network/response_handler.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
-import 'package:medizen_app/features/profile/data/end_points_profile.dart';
+import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
+
+import '../end_points/profile_end_points.dart';
 
 abstract class ProfileRemoteDataSource {
   Future<Resource<PatientModel>> getMyProfile();
-  Future<Resource<PatientModel>> updateMyProfile({
-    required PatientModel patientModel,
+  Future<Resource<PublicResponseModel>> updateMyProfile({
+    required UpdateProfileRequestModel updateProfileRequestModel,
   });
 }
 
@@ -20,25 +24,52 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Resource<PatientModel>> getMyProfile() async {
     final response = await networkClient.invoke(
-      EndPointsProfile.showMyProfile,
+      ProfileEndPoints.showMyProfile,
       RequestType.get,
     );
     return ResponseHandler<PatientModel>(response).processResponse(
-      fromJson: (json) => PatientModel.fromJson(json["profile"]),
+      fromJson: (json) => PatientModel.fromJson(json["profile_cubit"]),
     );
   }
 
+  // @override
+  // Future<Resource<PublicResponseModel>> updateMyProfile({
+  //   required UpdateProfileRequestModel updateProfileRequestModel,
+  // }) async {
+  //   final response = await networkClient.invoke(
+  //     ProfileEndPoints.editMyProfile,
+  //     RequestType.post,
+  //     body: updateProfileRequestModel.toJson(),
+  //   );
+  //   return ResponseHandler<PublicResponseModel>(
+  //     response,
+  //   ).processResponse(fromJson: (json) => PublicResponseModel.fromJson(json));
+  // }
+
   @override
-  Future<Resource<PatientModel>> updateMyProfile({
-    required PatientModel patientModel,
+  Future<Resource<PublicResponseModel>> updateMyProfile({
+    required UpdateProfileRequestModel updateProfileRequestModel,
   }) async {
-    final response = await networkClient.invoke(
-      EndPointsProfile.editMyProfile,
+    final formData = FormData.fromMap(updateProfileRequestModel.toJson());
+
+    // Add avatar file if present
+    if (updateProfileRequestModel.avatar != null) {
+      formData.files.add(MapEntry(
+        'avatar', // Adjust field name if API expects different (e.g., 'profile_picture')
+        await MultipartFile.fromFile(
+          updateProfileRequestModel.avatar!.path,
+          filename: updateProfileRequestModel.avatar!.path.split('/').last,
+        ),
+      ));
+    }
+
+    final response = await networkClient.invokeMultipart(
+      ProfileEndPoints.editMyProfile,
       RequestType.post,
-      body: patientModel.toJson(),
+      formData: formData,
     );
-    return ResponseHandler<PatientModel>(
+    return ResponseHandler<PublicResponseModel>(
       response,
-    ).processResponse(fromJson: (json) => PatientModel.fromJson(json));
+    ).processResponse(fromJson: (json) => PublicResponseModel.fromJson(json));
   }
 }

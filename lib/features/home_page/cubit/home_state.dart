@@ -1,8 +1,5 @@
 
-
-
-import '../../clinics/models/clinic_model.dart';
-
+part of "home_cubit.dart";
 abstract class HomeState {}
 
 class HomeInitial extends HomeState {}

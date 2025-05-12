@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GButton(
                         icon: Icons.person_outline,
-                        text: "home.tabs.profile".tr(context),
+                        text: "home.tabs.profile_cubit".tr(context),
                         textStyle: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).primaryColor,
