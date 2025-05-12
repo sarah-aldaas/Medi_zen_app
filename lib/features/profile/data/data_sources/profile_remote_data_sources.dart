@@ -28,7 +28,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       RequestType.get,
     );
     return ResponseHandler<PatientModel>(response).processResponse(
-      fromJson: (json) => PatientModel.fromJson(json["profile_cubit"]),
+      fromJson: (json) => PatientModel.fromJson(json["profile"]),
     );
   }
 

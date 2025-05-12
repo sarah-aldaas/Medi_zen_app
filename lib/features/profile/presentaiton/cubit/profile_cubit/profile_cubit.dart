@@ -28,7 +28,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
         },
         error: (String? message, int? code, PatientModel? data) {
-          emit(ProfileState.error(message ?? 'Failed to fetch profile_cubit'));
+          emit(ProfileState.error(message ?? 'Failed to fetch profile'));
         },
       );
     } catch (e) {
@@ -45,7 +45,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           emit(ProfileState.success(null));
         },
         error: (String? message, int? code, PublicResponseModel? data) {
-          emit(ProfileState.error(message ?? 'Failed to update profile_cubit'));
+          emit(ProfileState.error(message ?? 'Failed to update profile'));
         },
       );
     } catch (e) {

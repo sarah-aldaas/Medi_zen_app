@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 import '../../../../base/theme/app_color.dart';
 
@@ -12,8 +13,8 @@ class ComplaintSubmitButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       child: Text(
-        'Submit',
-        style: TextStyle(fontSize: 17, color: Colors.white),
+        'Complaint.Submit'.tr(context),
+        style: TextStyle(fontSize: 17, color: AppColors.whiteColor),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,

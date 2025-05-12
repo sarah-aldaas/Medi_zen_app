@@ -33,6 +33,8 @@ class LogoutCubit extends Cubit<LogoutState> {
           // );
           emit(LogoutSuccess(message: result.data.msg.toString()));
         } else {
+          // serviceLocator<StorageService>().removeFromDisk(StorageKey.token);
+
           String errorMessage = '';
           if (result.data.msg is Map<String, dynamic>) {
             // Handle nested error messages
@@ -44,18 +46,30 @@ class LogoutCubit extends Cubit<LogoutState> {
               }
             });
           } else if (result.data.msg is String) {
+            // serviceLocator<StorageService>().removeFromDisk(StorageKey.token);
+
             errorMessage = result.data.msg;
           } else {
+            // serviceLocator<StorageService>().removeFromDisk(StorageKey.token);
+
             errorMessage = 'Unknown error';
           }
+          // serviceLocator<StorageService>().removeFromDisk(StorageKey.token);
+
           emit(LogoutError(error: errorMessage));
         }
       } else if (result is ResponseError<AuthResponseModel>) {
+        // serviceLocator<StorageService>().removeFromDisk(StorageKey.token);
+
         emit(LogoutError(error: result.message ?? 'An error occurred'));
       }
     } on ServerException catch (e) {
+      // serviceLocator<StorageService>().removeFromDisk(StorageKey.token);
+
       emit(LogoutError(error: e.message));
     } catch (e) {
+      // serviceLocator<StorageService>().removeFromDisk(StorageKey.token);
+
       emit(LogoutError(error: 'Unexpected error: ${e.toString()}'));
     }
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/features/authentication/presentation/forget_password/view/otp_verify_password.dart';
@@ -108,7 +107,7 @@ GoRouter goRouter() {
             },
           ),
           GoRoute(
-            path: "/profile_cubit",
+            path: "/profile",
             name: AppRouter.profile.name,
             builder: (BuildContext context, GoRouterState state) {
               return ProfilePage();
@@ -212,11 +211,13 @@ GoRouter goRouter() {
             },
           ),
           GoRoute(
-            path: '/profile_cubit-details',
+            path: '/profile-details',
             name: AppRouter.profileDetails.name,
             builder: (context, state) {
               return BlocProvider(
-                create: (context) => serviceLocator<ProfileCubit>()..fetchMyProfile(),
+                create:
+                    (context) =>
+                        serviceLocator<ProfileCubit>()..fetchMyProfile(),
                 child: ProfileDetailsPage(),
               );
             },

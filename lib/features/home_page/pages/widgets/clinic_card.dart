@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
+import '../../../../base/constant/app_images.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
 import '../../../doctor/doctor_screen.dart';
@@ -9,8 +10,11 @@ class ClinicCard extends StatelessWidget {
   final String clinicName;
   final String specialization;
 
-
-  const ClinicCard({super.key,required this.clinicName, required this.specialization});
+  const ClinicCard({
+    super.key,
+    required this.clinicName,
+    required this.specialization,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class ClinicCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
               child: Image.asset(
-                'assets/clinic.png',
+                AppAssetImages.clinic1,
                 height: 130,
                 width: 120,
                 fit: BoxFit.fitHeight,

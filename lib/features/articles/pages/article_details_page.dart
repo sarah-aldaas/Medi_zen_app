@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/articles/pages/my_book_mark.dart';
+
 import '../model/article_model.dart';
 
 class ArticleDetailsPage extends StatelessWidget {
@@ -10,6 +11,7 @@ class ArticleDetailsPage extends StatelessWidget {
   const ArticleDetailsPage({
     super.key,
     required this.article,
+    required String articleTitle,
   });
 
   @override
@@ -25,10 +27,11 @@ class ArticleDetailsPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.bookmark_border, color: Colors.grey),
             tooltip: "articleDetails.actions.bookmark".tr(context),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyBookmarkPage()),
-            ),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyBookmarkPage()),
+                ),
           ),
           IconButton(
             icon: Icon(Icons.share, color: Colors.grey),
@@ -63,8 +66,8 @@ class ArticleDetailsPage extends StatelessWidget {
                   Text(
                     "${"articleDetails.content.category".tr(context)}: ${article.category}",
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(

@@ -5,9 +5,10 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/features/home_page/pages/home_page_body.dart';
-import 'package:medizen_app/features/profile/presentaiton/pages/profile.dart';
-import '../../../main.dart';
+
 import '../../appointment/pages/appointments.dart';
+import '../../medical_record/Medical_Record.dart';
+import '../../profile/presentaiton/pages/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,18 +19,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  @override
-  void initState() {
-    super.initState();
-    loadingPatientModel();
-  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       HomePageBody(),
       MyAppointmentPage(),
-      MyAppointmentPage(),
+      MedicalRecordPage(),
       ProfilePage(),
     ];
 
@@ -91,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GButton(
                         icon: Icons.person_outline,
-                        text: "home.tabs.profile_cubit".tr(context),
+                        text: "home.tabs.profile".tr(context),
                         textStyle: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).primaryColor,

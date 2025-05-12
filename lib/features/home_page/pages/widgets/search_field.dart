@@ -11,37 +11,37 @@ class SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child:  ThemeSwitcher.withTheme(
-        builder: (_, switcher, theme) {
-          return  TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              filled: true, // Enable filling the background color
-              fillColor:theme.brightness== Brightness.dark?Colors.black12: Colors.grey.shade50, // Set the background color
-              hintText: 'searchField.title'.tr(context),
-              hintStyle: TextStyle(color: Colors.grey.withValues(alpha: _opacityLevel)),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(color: Colors.transparent),
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child:  ThemeSwitcher.withTheme(
+          builder: (_, switcher, theme) {
+            return  TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                filled: true, // Enable filling the background color
+                fillColor:theme.brightness== Brightness.dark?Colors.black12: Colors.grey.shade50, // Set the background color
+                hintText: 'searchField.title'.tr(context),
+                hintStyle: TextStyle(color: Colors.grey.withValues(alpha: _opacityLevel)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey.withValues(alpha: _opacityLevel),
+                ),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(color: Colors.transparent),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(color: Theme.of(context).primaryColor),
-              ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.grey.withValues(alpha: _opacityLevel),
-              ),
-            ),
-          );
-        },
-      )
+            );
+          },
+        )
     );
   }
 }

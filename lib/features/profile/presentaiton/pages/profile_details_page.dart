@@ -11,9 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/telecom_cubit/telecom_cubit.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/address_page.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/telecom_page.dart';
-import 'package:medizen_app/features/profile/presentaiton/widgets/avatar_image_widget.dart';
-import '../../../../base/data/models/code_type_model.dart';
-import '../../data/models/telecom_model.dart';
+
 import '../cubit/profile_cubit/profile_cubit.dart';
 
 

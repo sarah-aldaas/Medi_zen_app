@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/features/doctor/pages/details_doctor.dart';
 
+import '../../base/constant/app_images.dart';
 import '../../base/theme/app_color.dart';
 import '../../base/theme/app_style.dart';
 import 'doctor.dart';
@@ -22,14 +23,17 @@ class Doctorscreen extends StatelessWidget {
             },
             icon: const Icon(
               Icons.arrow_back_ios_new,
-              color: AppColors.blackColor,
+              color: AppColors.primaryColor,
             ),
           ),
-          title: Text('All Doctors',
-              style: TextStyle(
-                  fontSize: 22,
-                  color: AppColors.blackColor,
-                  fontWeight: FontWeight.bold)),
+          title: Text(
+            'All Doctors',
+            style: TextStyle(
+              fontSize: 22,
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           centerTitle: true,
           backgroundColor: AppColors.backgroundColor,
           foregroundColor: AppColors.secondaryColor,
@@ -46,7 +50,7 @@ class Doctorscreen extends StatelessWidget {
                     height: 50,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/clinic.png'),
+                        image: AssetImage(AppAssetImages.clinic1),
                       ),
                     ),
                   ),
@@ -85,9 +89,10 @@ class Doctorscreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DoctorDetailsPage(
-                  // doctor: doctors[index],
-                ),
+                builder:
+                    (context) => DoctorDetailsPage(
+                      // doctor: doctors[index],
+                    ),
               ),
             );
           },

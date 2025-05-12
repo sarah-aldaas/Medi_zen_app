@@ -15,13 +15,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: AppColors.whiteColor,
         title: Text(
           'Medical Record',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 22,
-            color: AppColors.blackColor,
+            color: AppColors.primaryColor,
           ),
         ),
         centerTitle: true,
@@ -33,20 +33,20 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildTabItem('Encounters'),
-                  SizedBox(width: 15),
+                  _buildSpacer(),
                   _buildTabItem('Conditions'),
-                  SizedBox(width: 15),
+                  _buildSpacer(),
                   _buildTabItem('Observations'),
-                  SizedBox(width: 15),
+                  _buildSpacer(),
                   _buildTabItem('Diagnostic Reports'),
-                  SizedBox(width: 15),
+                  _buildSpacer(),
                   _buildTabItem('Medication Requests'),
-                  SizedBox(width: 15),
+                  _buildSpacer(),
                   _buildTabItem('Allergies'),
-                  SizedBox(width: 15),
+                  _buildSpacer(),
                   _buildTabItem('Chronic Diseases'),
                 ],
               ),
@@ -77,14 +77,17 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              color: _selectedTab == tabName ? Colors.blue : Colors.black,
+              color:
+                  _selectedTab == tabName
+                      ? AppColors.primaryColor
+                      : AppColors.blackColor,
             ),
           ),
           if (_selectedTab == tabName)
             Container(
               height: 2,
               width: 50,
-              color: Colors.blue,
+              color: AppColors.primaryColor,
               margin: EdgeInsets.only(top: 4),
             ),
         ],
@@ -92,8 +95,12 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
     );
   }
 
+  Widget _buildSpacer() {
+    return SizedBox(width: 15);
+  }
+
   Widget _buildAppointmentList() {
-    List<Widget> appointmentTiles = [];
+    List<Widget> appointmentTiles;
 
     switch (_selectedTab) {
       case 'Encounters':
@@ -123,7 +130,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
             'Default Doctor',
             'Default Clinic',
             'Default Time',
-            ' assets/images/clinic/photo_doctor8.png',
+            'assets/images/clinic/photo_doctor8.png',
           ),
         ];
     }
@@ -143,6 +150,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -179,7 +193,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       _buildEncounterTile(
         doctorName: 'Dr. Raul Zirkind',
         clinicName: 'Inpatient Clinic',
-        time: 'Dec 12. 2025 | 16:00 PM',
+        time: 'Dec 12, 2025 | 16:00 PM',
         imageUrl: AppAssetImages.photoDoctor1,
         reason: 'Follow-up visit',
         diagnosis: 'Hypertension',
@@ -263,6 +277,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,6 +341,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,6 +377,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,6 +410,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -401,6 +443,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,6 +476,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -453,6 +509,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
