@@ -59,16 +59,16 @@ class SomeDoctors extends StatelessWidget with DoctorMixin {
                     child: Column(
                       children: [
                         CircleAvatar(
-                          backgroundImage: AssetImage(doctor.imageUrl!),
+                          backgroundImage: AssetImage(doctor.avatar),
                           radius: 30,
                         ),
                         Gap(10),
                         Text(
-                          doctor.name!,
+                          doctor.fName,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          doctor.specialization!,
+                          doctor.text,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -96,7 +96,7 @@ class SomeDoctors extends StatelessWidget with DoctorMixin {
                                       ),
                                       Gap(4),
                                       Text(
-                                        doctor.rating.toString(),
+                                        doctor.id.toString(),
                                         style: TextStyle(
                                           color: Theme.of(
                                             context,
@@ -119,7 +119,7 @@ class SomeDoctors extends StatelessWidget with DoctorMixin {
                                 ),
                                 Gap(4),
                                 Text(
-                                  doctor.location!,
+                                  doctor.address,
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 10,

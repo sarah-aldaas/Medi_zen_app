@@ -6,35 +6,13 @@ import '../../../../base/constant/app_images.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
 import '../../cubit/clinic.dart';
-import '../../cubit/clinics_cubit.dart';
-import '../../cubit/clinics_state.dart';
 import '../home_page_body.dart';
 import 'clinic_card.dart';
 
 class ClinicsPage extends StatelessWidget {
+  List clinics=[];
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ClinicCubit()..loadClinics(),
-      child: Scaffold(
-        body: BlocBuilder<ClinicCubit, ClinicState>(
-          builder: (context, state) {
-            if (state is ClinicLoading) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is ClinicLoaded) {
-              return _buildClinicsList(context, state.clinics);
-            } else if (state is ClinicError) {
-              return Center(child: Text('Error: ${state.errorMessage}'));
-            } else {
-              return Container();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildClinicsList(BuildContext context, List<Clinic> clinics) {
     return Column(
       children: [
         _buildHeader(context),

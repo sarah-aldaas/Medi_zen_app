@@ -63,8 +63,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
         // Cancel the timer when the last page is reached
         timer.cancel();
         // Mark first install as handled
-        final storageService = serviceLocator<StorageService>();
-        storageService.saveToDisk(StorageKey.firstInstall, false);
+        serviceLocator<StorageService>().saveToDisk(StorageKey.firstInstall, false);
         // Navigate to the welcome screen
         if (mounted) {
           context.goNamed(AppRouter.welcomeScreen.name);
@@ -162,8 +161,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      final storageService = serviceLocator<StorageService>();
-                      storageService.saveToDisk(StorageKey.firstInstall, false);
+                    serviceLocator<StorageService>().saveToDisk(StorageKey.firstInstall, false);
                       if (mounted) {
                         context.pushNamed(AppRouter.welcomeScreen.name);
                       }

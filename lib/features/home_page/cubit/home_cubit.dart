@@ -3,31 +3,25 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import '../../../base/constant/app_images.dart';
-import '../../clinics/models/clinic_model.dart';
-import 'home_state.dart';
+import '../../clinics/data/models/clinic_model.dart';
 
-
+part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
   final PageController _pageController = PageController();
-  final List<String> _sliderImages = [
-    AppAssetImages.photoDoctor1,
-    AppAssetImages.photoDoctor1,
-
-  ];
+  final List<String> _sliderImages = [AppAssetImages.photoDoctor1, AppAssetImages.photoDoctor1];
   Timer? _timer;
 
   PageController get pageController => _pageController;
+
   List<String> get sliderImages => _sliderImages;
 
   void loadHome() async {
     emit(HomeLoading());
     try {
-      List<ClinicModel> clinics = List.generate(
-          10, (index) => ClinicModel(imageUrl: AppAssetImages.clinic1, title: 'Clinic $index', description: 'Some descriptions', daysAgo: '1', location: 'Damascus'));
-
+      List<ClinicModel> clinics = [];
       emit(HomeLoaded(clinics, 0));
       _startAutoSlide();
     } catch (e) {
@@ -46,11 +40,7 @@ class HomeCubit extends Cubit<HomeState> {
       if (state is HomeLoaded) {
         int currentImage = (state as HomeLoaded).currentImage;
         int nextImage = (currentImage + 1) % _sliderImages.length;
-        _pageController.animateToPage(
-          nextImage,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.ease,
-        );
+        _pageController.animateToPage(nextImage, duration: Duration(milliseconds: 500), curve: Curves.ease);
         emit(HomeLoaded((state as HomeLoaded).clinics, nextImage));
       }
     });

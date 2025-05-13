@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/clinics_page.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/definition_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/greeting_widget.dart';
@@ -9,7 +10,9 @@ import 'package:medizen_app/features/home_page/pages/widgets/search_field.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_articles.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 
+import '../../../main.dart';
 import '../../doctor/doctor_screen.dart';
+import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
 import '../../services/Services.dart';
 
 class HomePageBody extends StatefulWidget {
@@ -36,28 +39,12 @@ class _HomePageBodyState extends State<HomePageBody> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "homePage.specialties.title".tr(context),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
+                      Text("homePage.specialties.title".tr(context), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ClinicsPage(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicsPage()));
                         },
-                        child: Text(
-                          "homePage.specialties.seeAll".tr(context),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
+                        child: Text("homePage.specialties.seeAll".tr(context), style: TextStyle(color: Theme.of(context).primaryColor)),
                       ),
                     ],
                   ),
@@ -71,117 +58,51 @@ class _HomePageBodyState extends State<HomePageBody> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
                         },
-                        child: _buildSpecialityItem(
-                          Icons.local_hospital_outlined,
-                          "homePage.specialties.items.general".tr(context),
-                        ),
+                        child: _buildSpecialityItem(Icons.local_hospital_outlined, "homePage.specialties.items.general".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
                         },
-                        child: _buildSpecialityItem(
-                          Icons.density_medium_outlined,
-                          "homePage.specialties.items.dentist".tr(context),
-                        ),
+                        child: _buildSpecialityItem(Icons.density_medium_outlined, "homePage.specialties.items.dentist".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
                         },
-                        child: _buildSpecialityItem(
-                          Icons.remove_red_eye_outlined,
-                          "homePage.specialties.items.ophthalmology".tr(
-                            context,
-                          ),
-                        ),
+                        child: _buildSpecialityItem(Icons.remove_red_eye_outlined, "homePage.specialties.items.ophthalmology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
                         },
-                        child: _buildSpecialityItem(
-                          Icons.fastfood_outlined,
-                          "homePage.specialties.items.nutrition".tr(context),
-                        ),
+                        child: _buildSpecialityItem(Icons.fastfood_outlined, "homePage.specialties.items.nutrition".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
                         },
-                        child: _buildSpecialityItem(
-                          Icons.psychology_outlined,
-                          "homePage.specialties.items.neurology".tr(context),
-                        ),
+                        child: _buildSpecialityItem(Icons.psychology_outlined, "homePage.specialties.items.neurology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
                         },
-                        child: _buildSpecialityItem(
-                          Icons.child_friendly_outlined,
-                          "homePage.specialties.items.pediatrics".tr(context),
-                        ),
+                        child: _buildSpecialityItem(Icons.child_friendly_outlined, "homePage.specialties.items.pediatrics".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
                         },
-                        child: _buildSpecialityItem(
-                          Icons.waves_outlined,
-                          "homePage.specialties.items.radiology".tr(context),
-                        ),
+                        child: _buildSpecialityItem(Icons.waves_outlined, "homePage.specialties.items.radiology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
                         },
-                        child: _buildSpecialityItem(
-                          Icons.more_horiz,
-                          "homePage.specialties.items.more".tr(context),
-                        ),
+                        child: _buildSpecialityItem(Icons.more_horiz, "homePage.specialties.items.more".tr(context)),
                       ),
                     ],
                   ),
@@ -203,6 +124,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    PatientModel myPatientModel = loadingPatientModel();
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -210,17 +132,11 @@ class _HomePageBodyState extends State<HomePageBody> {
         children: [
           Row(
             children: [
-              const CircleAvatar(radius: 20, child: Icon(Icons.person)),
+              AvatarImage(imageUrl: myPatientModel.avatar, radius: 20),
               const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GreetingWidget(),
-                  Text(
-                    "homePage.header.userName".tr(context),
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
+                children: [GreetingWidget(), Text("${myPatientModel.fName} ${myPatientModel.lName}", style: TextStyle(fontWeight: FontWeight.bold))],
               ),
             ],
           ),
@@ -231,10 +147,7 @@ class _HomePageBodyState extends State<HomePageBody> {
               IconButton(
                 icon: const Icon(Icons.favorite_border, size: 25),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyFavorite()),
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyFavorite()));
                 },
               ),
             ],
@@ -248,11 +161,7 @@ class _HomePageBodyState extends State<HomePageBody> {
     return SizedBox(
       width: (MediaQuery.of(context).size.width - (2 * 16) - (3 * 20)) / 5,
       child: Column(
-        children: [
-          Icon(icon, size: 30, color: Theme.of(context).primaryColor),
-          const SizedBox(height: 4.0),
-          Text(label, style: const TextStyle(fontSize: 12)),
-        ],
+        children: [Icon(icon, size: 30, color: Theme.of(context).primaryColor), const SizedBox(height: 4.0), Text(label, style: const TextStyle(fontSize: 12))],
       ),
     );
   }

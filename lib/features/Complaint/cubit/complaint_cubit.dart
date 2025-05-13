@@ -18,8 +18,8 @@ class ComplaintCubit extends Cubit<ComplaintState> {
   }
 
   void submitComplaint() {
-    print('العيادة: ${state.selectedClinic}');
-    print('الطبيب: ${state.selectedDoctor}');
-    print('محتوى الشكوى: ${state.complaintContent}');
+    // print('العيادة: ${state.selectedClinic}');
+    // print('الطبيب: ${state.selectedDoctor}');
+    // print('محتوى الشكوى: ${state.complaintContent}');
   }
 }

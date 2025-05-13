@@ -8,7 +8,7 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
-import '../cubit/telecom_cubit.dart';
+import '../cubit/telecom_cubit/telecom_cubit.dart';
 
 class TelecomPage extends StatefulWidget {
   const TelecomPage({super.key});
@@ -316,7 +316,7 @@ class _TelecomPageState extends State<TelecomPage> {
           );
         }
 
-        final telecoms = state is TelecomSuccess ? state.telecoms : [];
+        final telecoms = state is TelecomSuccess ? state.paginatedResponse.paginatedData.items : [];
         final filteredTelecoms = telecoms.where((telecom) => telecom.type!.id == type.id).toList();
 
         return SingleChildScrollView(
