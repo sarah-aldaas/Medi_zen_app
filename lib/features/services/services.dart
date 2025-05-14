@@ -33,7 +33,6 @@ class SomeServices extends StatelessWidget with ServicesMixin {
       "Support Groups",
     ],
   };
-
   @override
   Widget build(BuildContext context) {
     return Column(
