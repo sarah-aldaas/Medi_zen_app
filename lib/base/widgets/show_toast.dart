@@ -36,4 +36,6 @@ class ShowToast {
     );
   }
 
+  static void showToasts({required String message}) {}
+
 }

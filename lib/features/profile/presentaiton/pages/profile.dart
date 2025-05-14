@@ -11,6 +11,7 @@ import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/presentation/logout/cubit/logout_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:medizen_app/main.dart';
+// import 'package:share_apps/share_apps.dart';
 
 import '../../../../base/blocs/localization_bloc/localization_bloc.dart';
 import '../../../../base/constant/storage_key.dart';
@@ -195,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text('profilePage.inviteFriends'.tr(context)),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
-                    // Navigate to invite friends
+                    // ShareApps.sendInvitation(context: context);                    // Navigate to invite friends
                   },
                 ),
                 BlocConsumer<LogoutCubit, LogoutState>(

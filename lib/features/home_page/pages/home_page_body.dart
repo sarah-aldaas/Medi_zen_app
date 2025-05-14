@@ -124,7 +124,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    PatientModel myPatientModel = loadingPatientModel();
+    PatientModel? myPatientModel = loadingPatientModel();
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -136,7 +136,7 @@ class _HomePageBodyState extends State<HomePageBody> {
               const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [GreetingWidget(), Text("${myPatientModel.fName} ${myPatientModel.lName}", style: TextStyle(fontWeight: FontWeight.bold))],
+                children: [GreetingWidget(), Text("${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}", style: TextStyle(fontWeight: FontWeight.bold))],
               ),
             ],
           ),

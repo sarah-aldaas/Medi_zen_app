@@ -7,6 +7,7 @@ class UpdateProfileRequestModel extends Equatable {
   final File? avatar;
   final String? genderId;
   final String? maritalStatusId;
+  final String? image;
 
   const UpdateProfileRequestModel({
     this.fName,
@@ -14,25 +15,35 @@ class UpdateProfileRequestModel extends Equatable {
     this.avatar,
     this.genderId,
     this.maritalStatusId,
+    this.image,
   });
 
   factory UpdateProfileRequestModel.fromJson(Map<String, dynamic> json) {
     return UpdateProfileRequestModel(
       fName: json['f_name']?.toString(),
       lName: json['l_name']?.toString(),
-      avatar: json['avatar'] != null ? File(json['avatar'] as String) : null, // Handle if API returns file path
+      avatar: json['avatar'] != null ? File(json['avatar'] as String) : null,
       genderId: json['gender_id']?.toString(),
       maritalStatusId: json['marital_status_id']?.toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> data = {
       'f_name': fName,
       'l_name': lName,
       'gender_id': genderId,
       'marital_status_id': maritalStatusId,
     };
+    // Only include avatar if it has been changed (non-null in this context means changed)
+    if (image == null) {
+      if (avatar != null) {
+        data['avatar'] = avatar!.path;
+      } else {
+        data['avatar'] = null;
+      }
+    }
+    return data;
   }
 
   @override
