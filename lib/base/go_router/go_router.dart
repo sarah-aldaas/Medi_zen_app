@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/data/models/code_type_model.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
-import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/authentication/presentation/forget_password/view/otp_verify_password.dart';
 import 'package:medizen_app/features/authentication/presentation/otp/verified.dart';
 import 'package:medizen_app/features/authentication/presentation/reset_password/view/reset_password_screen.dart';
 import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/profile_details_page.dart';
-import 'package:medizen_app/features/profile/presentaiton/pages/update_profile.dart';
-
 import '../../features/Complaint/view/complaint_list_screen.dart';
 import '../../features/articles/pages/articles.dart';
 import '../../features/articles/pages/my_book_mark.dart';
@@ -18,11 +14,10 @@ import '../../features/authentication/presentation/forget_password/view/forget_p
 import '../../features/authentication/presentation/login/view/login_screen.dart';
 import '../../features/authentication/presentation/otp/otp_verification_screen.dart';
 import '../../features/authentication/presentation/signup/view/signup_screen.dart';
-import '../../features/clinics/pages/clinics.dart';
 import '../../features/doctor/pages/doctor.dart';
 import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
-import '../../features/home_page/pages/widgets/clinics_page.dart';
+import '../../features/clinics/pages/clinics_page.dart';
 import '../../features/notifications/pages/notification_settings.dart';
 import '../../features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 import '../../features/profile/presentaiton/pages/edit_profile_screen.dart';
@@ -151,7 +146,7 @@ GoRouter goRouter() {
             path: "/clinics",
             name: AppRouter.clinics.name,
             builder: (BuildContext context, GoRouterState state) {
-              return Clinics();
+              return ClinicsPage();
             },
           ),
           GoRoute(

@@ -24,10 +24,7 @@ class TelecomCubit extends Cubit<TelecomState> {
       paginationCount: paginationCount,
     );
     if (result is Success<PaginatedResponse<TelecomModel>>) {
-      emit(TelecomSuccess(
-        paginatedResponse: result.data,
-        currentPage: page,
-      ));
+      emit(TelecomSuccess(paginatedResponse: result.data, currentPage: page));
     } else if (result is ResponseError<PaginatedResponse<TelecomModel>>) {
       emit(TelecomError(error: result.message ?? 'Failed to fetch telecoms'));
     }
@@ -37,19 +34,24 @@ class TelecomCubit extends Cubit<TelecomState> {
     if (state is TelecomSuccess) {
       final currentState = state as TelecomSuccess;
       final nextPage = currentState.currentPage + 1;
-      if (nextPage <= currentState.paginatedResponse.meta.lastPage) {
+      if (nextPage <= currentState.paginatedResponse.meta!.lastPage) {
         emit(TelecomLoading());
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
-          paginationCount: currentState.paginatedResponse.meta.perPage.toString(),
+          paginationCount:
+              currentState.paginatedResponse.meta!.perPage.toString(),
         );
         if (result is Success<PaginatedResponse<TelecomModel>>) {
-          emit(TelecomSuccess(
-            paginatedResponse: result.data,
-            currentPage: nextPage,
-          ));
+          emit(
+            TelecomSuccess(
+              paginatedResponse: result.data,
+              currentPage: nextPage,
+            ),
+          );
         } else if (result is ResponseError<PaginatedResponse<TelecomModel>>) {
-          emit(TelecomError(error: result.message ?? 'Failed to fetch next page'));
+          emit(
+            TelecomError(error: result.message ?? 'Failed to fetch next page'),
+          );
         }
       }
     }
@@ -63,15 +65,22 @@ class TelecomCubit extends Cubit<TelecomState> {
         emit(TelecomLoading());
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
-          paginationCount: currentState.paginatedResponse.meta.perPage.toString(),
+          paginationCount:
+              currentState.paginatedResponse.meta!.perPage.toString(),
         );
         if (result is Success<PaginatedResponse<TelecomModel>>) {
-          emit(TelecomSuccess(
-            paginatedResponse: result.data,
-            currentPage: prevPage,
-          ));
+          emit(
+            TelecomSuccess(
+              paginatedResponse: result.data,
+              currentPage: prevPage,
+            ),
+          );
         } else if (result is ResponseError<PaginatedResponse<TelecomModel>>) {
-          emit(TelecomError(error: result.message ?? 'Failed to fetch previous page'));
+          emit(
+            TelecomError(
+              error: result.message ?? 'Failed to fetch previous page',
+            ),
+          );
         }
       }
     }
@@ -79,32 +88,48 @@ class TelecomCubit extends Cubit<TelecomState> {
 
   Future<void> createTelecom({required TelecomModel telecomModel}) async {
     emit(TelecomLoading());
-    final result = await remoteDataSource.createTelecom(telecomModel: telecomModel);
+    final result = await remoteDataSource.createTelecom(
+      telecomModel: telecomModel,
+    );
     if (result is Success<PublicResponseModel>) {
       if (result.data.status) {
         await fetchTelecoms(rank: '1', paginationCount: '100'); // Refresh list
       } else {
         ShowToast.showToastError(message: result.data.msg);
-        emit(TelecomError(error: result.data.msg ?? 'Failed to create telecom'));
+        emit(
+          TelecomError(error: result.data.msg ?? 'Failed to create telecom'),
+        );
       }
     } else if (result is ResponseError<PublicResponseModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to create telecom');
+      ShowToast.showToastError(
+        message: result.message ?? 'Failed to create telecom',
+      );
       emit(TelecomError(error: result.message ?? 'Failed to create telecom'));
     }
   }
 
-  Future<void> updateTelecom({required String id, required TelecomModel telecomModel}) async {
+  Future<void> updateTelecom({
+    required String id,
+    required TelecomModel telecomModel,
+  }) async {
     emit(TelecomLoading());
-    final result = await remoteDataSource.updateTelecom(id: id, telecomModel: telecomModel);
+    final result = await remoteDataSource.updateTelecom(
+      id: id,
+      telecomModel: telecomModel,
+    );
     if (result is Success<PublicResponseModel>) {
       if (result.data.status) {
         await fetchTelecoms(rank: '1', paginationCount: '100'); // Refresh list
       } else {
         ShowToast.showToastError(message: result.data.msg);
-        emit(TelecomError(error: result.data.msg ?? 'Failed to update telecom'));
+        emit(
+          TelecomError(error: result.data.msg ?? 'Failed to update telecom'),
+        );
       }
     } else if (result is ResponseError<PublicResponseModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to update telecom');
+      ShowToast.showToastError(
+        message: result.message ?? 'Failed to update telecom',
+      );
       emit(TelecomError(error: result.message ?? 'Failed to update telecom'));
     }
   }
@@ -117,10 +142,14 @@ class TelecomCubit extends Cubit<TelecomState> {
         await fetchTelecoms(rank: '1', paginationCount: '100'); // Refresh list
       } else {
         ShowToast.showToastError(message: result.data.msg);
-        emit(TelecomError(error: result.data.msg ?? 'Failed to delete telecom'));
+        emit(
+          TelecomError(error: result.data.msg ?? 'Failed to delete telecom'),
+        );
       }
     } else if (result is ResponseError<PublicResponseModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to delete telecom');
+      ShowToast.showToastError(
+        message: result.message ?? 'Failed to delete telecom',
+      );
       emit(TelecomError(error: result.message ?? 'Failed to delete telecom'));
     }
   }
@@ -131,8 +160,14 @@ class TelecomCubit extends Cubit<TelecomState> {
     if (result is Success<TelecomModel>) {
       return result.data;
     } else if (result is ResponseError<TelecomModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to fetch telecom details');
-      emit(TelecomError(error: result.message ?? 'Failed to fetch telecom details'));
+      ShowToast.showToastError(
+        message: result.message ?? 'Failed to fetch telecom details',
+      );
+      emit(
+        TelecomError(
+          error: result.message ?? 'Failed to fetch telecom details',
+        ),
+      );
       return null;
     }
     return null;

@@ -64,6 +64,12 @@ PatientModel loadingPatientModel() {
   );
   final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
   myPatientModel = PatientModel.fromJson(jsonMap);
+  if (myPatientModel.fName == null) {
+    serviceLocator<StorageService>().removeFromDisk(
+    StorageKey.token,
+  );
+    token = null;
+  }
   return myPatientModel;
 }
 

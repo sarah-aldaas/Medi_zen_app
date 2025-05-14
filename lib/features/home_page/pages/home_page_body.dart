@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
-import 'package:medizen_app/features/home_page/pages/widgets/clinics_page.dart';
+import 'package:medizen_app/features/clinics/pages/clinics_page.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/definition_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/greeting_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/my_favorite.dart';
