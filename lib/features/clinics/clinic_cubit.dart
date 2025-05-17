@@ -1,29 +1,20 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../clinic_model.dart';
-
-class ClinicsCubit extends Cubit<List<Clinic>> {
-  final Dio dio;
-
-  ClinicsCubit(this.dio) : super([]);
-
-  Future<void> fetchClinics() async {
-    try {
-      final response = await dio.get(
-        'https://medizen.online/api/clinics?page=1',
-      );
-      if (response.data['status']) {
-        List<Clinic> clinics =
-            (response.data['clinics']['data'] as List)
-                .map((clinic) => Clinic.fromJson(clinic))
-                .toList();
-        emit(clinics);
-      } else {
-        emit([]);
-      }
-    } catch (e) {
-      emit([]);
-    }
-  }
-}
+// import 'package:flutter_bloc/flutter_bloc.dart';
+//
+//
+// import 'clinic_state.dart';
+//
+// class ClinicsCubit extends Cubit<ClinicsState> {
+//  // final ClinicsService _clinicsService;
+//
+//   ClinicsCubit(this._clinicsService) : super(ClinicsInitial());
+//
+//   Future<void> fetchClinics() async {
+//     emit(ClinicsLoading());
+//     try {
+//       final clinicsResponse = await _clinicsService.getClinics();
+//       emit(ClinicsLoaded(clinics: clinicsResponse.clinics));
+//     } catch (error) {
+//       emit(ClinicsError(error: error.toString()));
+//     }
+//   }
+// }

@@ -1,4 +1,4 @@
-part of 'telecom_cubit.dart';
+import '../../data/models/telecom_model.dart';
 
 abstract class TelecomState {}
 

@@ -86,4 +86,66 @@ class NetworkClient {
       );
     }
   }
+
+  Future<Response> invokeMultipart(
+      String url,
+      RequestType requestType, {
+        Map<String, dynamic>? queryParameters,
+        Map<String, dynamic>? headers,
+        required FormData formData,
+      }) async {
+    logger.i(url);
+    String? token = storageService.getFromDisk(StorageKey.token);
+    logger.f(token);
+    dio.options.headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    });
+    Response? response;
+    try {
+      switch (requestType) {
+        case RequestType.post:
+          response = await dio.post(
+            AppConfig.baseUrl + url,
+            queryParameters: queryParameters,
+            data: formData,
+            options: Options(headers: headers),
+          );
+          break;
+        case RequestType.put:
+          response = await dio.put(
+            AppConfig.baseUrl + url,
+            queryParameters: queryParameters,
+            data: formData,
+            options: Options(headers: headers),
+          );
+          break;
+        case RequestType.patch:
+          response = await dio.patch(
+            AppConfig.baseUrl + url,
+            queryParameters: queryParameters,
+            data: formData,
+            options: Options(headers: headers),
+          );
+          break;
+        default:
+          throw ServerException(
+            message: 'Multipart request not supported for $requestType',
+            statusCode: null,
+            responseData: null,
+          );
+      }
+      return response;
+    } on DioException catch (dioException) {
+      logger.e('$runtimeType on DioException:- $dioException', StackTrace.current);
+      throw ServerException.fromDioException(dioException);
+    } on SocketException catch (exception) {
+      logger.e('$runtimeType on SocketException:- $exception', StackTrace.current);
+      throw ServerException(
+        message: 'No internet connection. Please check your network.',
+        statusCode: null,
+        responseData: null,
+      );
+    }
+  }
 }

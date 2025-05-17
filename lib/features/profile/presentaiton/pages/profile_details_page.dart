@@ -2,20 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
-import 'package:medizen_app/base/extensions/media_query_extension.dart';
-import 'package:medizen_app/base/services/di/injection_container_common.dart';
+import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
-import 'package:get_it/get_it.dart';
-import 'package:medizen_app/features/profile/presentaiton/cubit/telecom_cubit.dart';
-import 'package:medizen_app/features/profile/presentaiton/pages/address_page.dart';
-import 'package:medizen_app/features/profile/presentaiton/pages/telecom_page.dart';
-import 'package:medizen_app/features/profile/presentaiton/widgets/avatar_image_widget.dart';
-import '../../../../base/data/models/code_type_model.dart';
-import '../../data/models/telecom_model.dart';
-import '../cubit/profile_cubit.dart';
-import '../cubit/profile_state.dart';
+import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
+import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
+
+import '../../../../base/theme/app_color.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -29,40 +22,72 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     final dob = DateTime.parse(dateOfBirthStr);
     final today = DateTime.now();
     int age = today.year - dob.year;
-    if (today.month < dob.month || (today.month == dob.month && today.day < dob.day)) {
+    if (today.month < dob.month ||
+        (today.month == dob.month && today.day < dob.day)) {
       age--;
     }
     return age;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: IconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
-        ),
-        actions: [
-          BlocBuilder<ProfileCubit, ProfileState>(
-            builder: (context, state) {
-              if (state.status == ProfileStatus.success && state.patient != null) {
-                return IconButton(
-                  onPressed: () {
-                    // Navigate to an edit page or show a dialog to edit the profile
-                    // context.pushNamed('editProfile', extra: state.patient);
-                  },
-                  icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                );
-              }
-              return const SizedBox.shrink();
-            },
+  Widget _buildInfoTile(IconData icon, String title, String value) {
+    return ListTile(
+      leading: Icon(icon, color: Theme.of(context).primaryColor),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+      subtitle: Text(value, style: const TextStyle(color: Colors.grey)),
+      dense: true,
+    );
+  }
+
+  Widget _buildSectionTitle(String title, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+      child: Row(
+        children: [
+          Icon(icon, color: Theme.of(context).primaryColor),
+          const Gap(8),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildNavigationItem(String title, IconData icon, VoidCallback onTap) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+          child: Row(
+            children: [
+              Icon(icon, color: Theme.of(context).primaryColor),
+              const Gap(12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           if (state.status == ProfileStatus.error) {
@@ -80,288 +105,276 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
 
           if (state.status == ProfileStatus.success && state.patient != null) {
             final patient = state.patient!;
-            return Container(
-              width: context.width,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    AvatarImage(imageUrl: patient.avatar, radius: 70),
-                    const Gap(30),
-                    Text("${patient.fName ?? 'N/A'} ${patient.lName ?? 'N/A'}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                    Text(patient.email),
-                    const Gap(30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 200.0,
+                  floating: false,
+                  pinned: true,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text(
+                      "${patient.fName ?? 'N/A'} ${patient.lName ?? 'N/A'}",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    background: Stack(
+                      fit: StackFit.expand,
                       children: [
-                        if (patient.bloodType != null && patient.bloodType!.display != null)
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  const Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.bloodtype)),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Text(patient.bloodType!.display, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                const Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.person)),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Text(patient.gender.display, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        if (patient.active != null)
+                          Image.network(
+                            patient.active!,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) => const Icon(
+                                  Icons.person,
+                                  size: 60,
+                                  color: Colors.white70,
                                 ),
-                              ],
-                            ),
+                          )
+                        else
+                          const Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.white70,
                           ),
-                        ),
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                const Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.favorite)),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Text(patient.maritalStatus.display, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                ),
-                              ],
+                        const DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [Colors.black, Colors.transparent],
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const Gap(30),
-                    Container(
-                      width: context.width,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Theme.of(context).primaryColor)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Bio",
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              decoration: TextDecoration.underline,
+                  ),
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        context.pushNamed(
+                          AppRouter.editProfile.name,
+                          extra: {
+                            'patientModel': UpdateProfileRequestModel(
+                              image: patient.active,
+                              genderId: patient.genderId,
+                              maritalStatusId: patient.maritalStatusId,
+                              fName: patient.fName,
+                              lName: patient.lName,
                             ),
-                          ),
-                          Text(patient.text ?? 'No bio available', maxLines: 4, style: const TextStyle(overflow: TextOverflow.ellipsis)),
-                        ],
-                      ),
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.edit, color: Colors.white),
                     ),
-                    const Gap(30),
-                    Row(
-                      children: [
-                        Text(
-                          "Telecom",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        Icon(Icons.phone, color: Theme.of(context).primaryColor, size: 15),
-                      ],
-                    ),
-                    const Gap(10),
-                    MultiBlocProvider(
-                      providers: [
-                        BlocProvider(create: (context) => serviceLocator<CodeTypesCubit>()),
-                        BlocProvider(create: (context) => serviceLocator<TelecomCubit>()),
-                      ],
-                      child: const TelecomPage(),
-                    ),
-                    const Gap(30),
-                    Row(
-                      children: [
-                        Text(
-                          "Address",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        Icon(Icons.home, color: Theme.of(context).primaryColor, size: 15),
-                      ],
-                    ),
-                    const Gap(10),
-                    AddressPage(addressModel: patient.addressModel),
-                    const Gap(30),
-                    Row(
-                      children: [
-                        Text(
-                          "Health Information",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Gap(10),
-                    SizedBox(
-                      width: context.width,
-                      child: Table(
-                        border: TableBorder.all(color: Theme.of(context).primaryColor, width: 1),
-                        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                        columnWidths: const {
-                          0: FixedColumnWidth(60), // Icon column
-                          1: IntrinsicColumnWidth(), // Attribute column
-                          2: IntrinsicColumnWidth(), // Value column
-                          3: FixedColumnWidth(80), // Image column
-                        },
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.1)),
-                            children: [
-                              Padding(padding: const EdgeInsets.all(8.0), child: Icon(Icons.info, color: Theme.of(context).primaryColor)),
-                              const Padding(padding: EdgeInsets.all(8.0), child: Text("Attribute", style: TextStyle(fontWeight: FontWeight.bold))),
-                              const Padding(padding: EdgeInsets.all(8.0), child: Text("Value", style: TextStyle(fontWeight: FontWeight.bold))),
-                              const Padding(padding: EdgeInsets.all(8.0), child: Text("Image", style: TextStyle(fontWeight: FontWeight.bold))),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(padding: const EdgeInsets.all(8.0), child: Icon(Icons.height, color: Theme.of(context).primaryColor)),
-                              const Padding(padding: EdgeInsets.all(8.0), child: Text("Height")),
-                              Padding(padding: const EdgeInsets.all(8.0), child: Text("${patient.height ?? 'N/A'} cm")),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  child: Image.asset(
-                                    "assets/images/height.jpg",
-                                    width: 40,
-                                    height: 80,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.height, size: 40); // Fallback icon
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(padding: const EdgeInsets.all(8.0), child: Icon(Icons.fitness_center, color: Theme.of(context).primaryColor)),
-                              const Padding(padding: EdgeInsets.all(8.0), child: Text("Weight")),
-                              Padding(padding: const EdgeInsets.all(8.0), child: Text("${patient.weight ?? 'N/A'} kg")),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  child: Image.asset(
-                                    "assets/images/weight.jpg",
-                                    width: 40,
-                                    height: 80,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.fitness_center, size: 40); // Fallback icon
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(padding: const EdgeInsets.all(8.0), child: Icon(Icons.cake, color: Theme.of(context).primaryColor)),
-                              const Padding(padding: EdgeInsets.all(8.0), child: Text("Birth and Age")),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text("${patient.dateOfBirth != null ? _calculateAge(patient.dateOfBirth!) : 'N/A'} years"),
-                                    const Gap(5),
-                                    Text(patient.dateOfBirth ?? 'N/A'),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  child: Image.asset(
-                                    "assets/images/age.png",
-                                    width: 40,
-                                    height: 80,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.cake, size: 40); // Fallback icon
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(padding: const EdgeInsets.all(8.0), child: Icon(Icons.smoking_rooms, color: Theme.of(context).primaryColor)),
-                              const Padding(padding: EdgeInsets.all(8.0), child: Text("Smoker")),
-                              Padding(padding: const EdgeInsets.all(8.0), child: Text(patient.smoker == true ? 'Yes' : 'No')),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  child: Image.asset(
-                                    "assets/images/smoker.jpg",
-                                    width: 40,
-                                    height: 80,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.smoking_rooms, size: 40); // Fallback icon
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(padding: const EdgeInsets.all(8.0), child: Icon(Icons.local_drink, color: Theme.of(context).primaryColor)),
-                              const Padding(padding: EdgeInsets.all(8.0), child: Text("Alcohol Drinker")),
-                              Padding(padding: const EdgeInsets.all(8.0), child: Text(patient.alcoholDrinker == true ? 'Yes' : 'No')),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  child: Image.asset(
-                                    "assets/images/drink.png",
-                                    width: 40,
-                                    height: 80,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.local_drink, size: 40); // Fallback icon
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Gap(40),
+                    const Gap(8),
                   ],
                 ),
-              ),
+                SliverPadding(
+                  padding: const EdgeInsets.all(16.0),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildInfoTile(
+                                Icons.email_outlined,
+                                "Email",
+                                patient.email,
+                              ),
+                              _buildInfoTile(
+                                Icons.person_outline,
+                                "Gender",
+                                patient.gender.display,
+                              ),
+                              _buildInfoTile(
+                                Icons.favorite_outline,
+                                "Marital Status",
+                                patient.maritalStatus.display,
+                              ),
+                              if (patient.dateOfBirth != null)
+                                _buildInfoTile(
+                                  Icons.cake_outlined,
+                                  "Age",
+                                  '${_calculateAge(patient.dateOfBirth!)} years',
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Gap(16),
+                      _buildSectionTitle("About Me", Icons.info_outline),
+                      Card(
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            patient.text ?? 'No bio available',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const Gap(16),
+                      _buildSectionTitle(
+                        "Health Snapshot",
+                        Icons.healing_outlined,
+                      ),
+                      Card(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 16,
+                        ),
+                        child: ExpansionTile(
+                          leading: const Icon(
+                            Icons.medical_information_outlined,
+                            color: AppColors.primaryColor,
+                          ),
+                          title: const Text(
+                            "Health Information",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          children: <Widget>[
+                            if (patient.bloodType != null &&
+                                patient.bloodType!.display != null)
+                              Column(
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.bloodtype,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    title: Text(
+                                      "Blood Type: ${patient.bloodType!.display}",
+                                    ),
+                                  ),
+                                  const Divider(indent: 16.0, endIndent: 16.0),
+                                ],
+                              ),
+                            Column(
+                              children: [
+                                ListTile(
+                                  leading: const Icon(
+                                    Icons.height,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "Height: ${patient.height ?? 'N/A'} cm",
+                                  ),
+                                ),
+                                const Divider(indent: 16.0, endIndent: 16.0),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                ListTile(
+                                  leading: const Icon(
+                                    Icons.fitness_center,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "Weight: ${patient.weight ?? 'N/A'} kg",
+                                  ),
+                                ),
+                                const Divider(indent: 16.0, endIndent: 16.0),
+                              ],
+                            ),
+                            if (patient.dateOfBirth != null)
+                              Column(
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.calendar_today_outlined,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    title: Text(
+                                      "Birth Date: ${patient.dateOfBirth!}",
+                                    ),
+                                  ),
+                                  const Divider(indent: 16.0, endIndent: 16.0),
+                                ],
+                              ),
+                            Column(
+                              children: [
+                                ListTile(
+                                  leading: const Icon(
+                                    Icons.smoke_free,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "Smoker: ${patient.smoker == true ? 'Yes' : 'No'}",
+                                  ),
+                                ),
+                                const Divider(indent: 16.0, endIndent: 16.0),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                ListTile(
+                                  leading: const Icon(
+                                    Icons.local_bar_outlined,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "Alcohol: ${patient.alcoholDrinker == true ? 'Yes' : 'No'}",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Gap(16),
+                      _buildSectionTitle(
+                        "Contact Information",
+                        Icons.contact_phone,
+                      ),
+                      _buildNavigationItem("Telecom", Icons.phone, () {
+                        context.pushNamed(AppRouter.telecomDetails.name);
+                      }),
+                      _buildNavigationItem("Address", Icons.home, () {
+                        if (patient.addressModel != null) {
+                          context.pushNamed(
+                            AppRouter
+                                .addressDetails
+                                .name, // تأكد من أن هذا هو نفس الاسم المستخدم في تعريف الـ GoRoute
+                            extra: {
+                              'addressModel':
+                                  patient
+                                      .addressModel!, // تمرير الـ AddressModel هنا
+                            },
+                          );
+                        } else {
+                          ShowToast.showToastInfo(
+                            message: "No address information available.",
+                          );
+                        }
+                      }),
+
+                      // else {
+                      //   ShowToast.showToastInfo(
+                      //     message: "No address information available.",
+                      //   );
+                      // }
+                      //            }
+                      const Gap(40),
+                    ]),
+                  ),
+                ),
+              ],
             );
           }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/clinics_page.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/definition_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/greeting_widget.dart';
@@ -9,8 +10,10 @@ import 'package:medizen_app/features/home_page/pages/widgets/search_field.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_articles.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 
+import '../../../main.dart';
 import '../../doctor/doctor_screen.dart';
-import '../../services/Services.dart';
+import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
+import '../services/Services.dart';
 
 class HomePageBody extends StatefulWidget {
   const HomePageBody({super.key});
@@ -203,6 +206,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    PatientModel? myPatientModel = loadingPatientModel();
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -210,14 +214,14 @@ class _HomePageBodyState extends State<HomePageBody> {
         children: [
           Row(
             children: [
-              const CircleAvatar(radius: 20, child: Icon(Icons.person)),
+              AvatarImage(imageUrl: myPatientModel.avatar, radius: 20),
               const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GreetingWidget(),
                   Text(
-                    "homePage.header.userName".tr(context),
+                    "${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],

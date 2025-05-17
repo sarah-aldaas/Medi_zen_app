@@ -1,18 +1,23 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/theme.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/presentation/logout/cubit/logout_cubit.dart';
-import 'package:get_it/get_it.dart';
 import 'package:medizen_app/main.dart';
 
+// import 'package:share_apps/share_apps.dart';
+
 import '../../../../base/blocs/localization_bloc/localization_bloc.dart';
+import '../../../../base/constant/app_images.dart';
+import '../../../../base/constant/storage_key.dart';
+import '../../../../base/services/di/injection_container_common.dart';
+import '../../../../base/services/storage/storage_service.dart';
 import '../../../authentication/data/models/patient_model.dart';
 import '../widgets/avatar_image_widget.dart';
 
@@ -25,14 +30,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int? _selectedLogoutOption; // 0 for This Device, 1 for All Devices
-  PatientModel? myPatientModel;
-@override
-  void initState() {
-  myPatientModel=loadingPatientModel();
-  super.initState();
-  }
+
   @override
   Widget build(BuildContext context) {
+    PatientModel myPatientModel = loadingPatientModel();
     return BlocProvider(
       create: (context) => GetIt.I<LogoutCubit>(),
       child: Scaffold(
@@ -62,10 +63,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 Center(
                   child: Column(
                     children: [
-                      AvatarImage(imageUrl: myPatientModel!.avatar,radius: 50,),
+                      AvatarImage(imageUrl: myPatientModel!.avatar, radius: 50),
                       SizedBox(height: 16),
                       Text(
-                        myPatientModel==null?"": "${myPatientModel!.fName??""} ${myPatientModel!.lName??""}",
+                        myPatientModel == null
+                            ? ""
+                            : "${myPatientModel!.fName ?? ""} ${myPatientModel!.lName ?? ""}",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -196,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text('profilePage.inviteFriends'.tr(context)),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
-                    // Navigate to invite friends
+                    // ShareApps.sendInvitation(context: context);                    // Navigate to invite friends
                   },
                 ),
                 BlocConsumer<LogoutCubit, LogoutState>(
@@ -206,11 +209,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       // ScaffoldMessenger.of(context).showSnackBar(
                       //   SnackBar(content: Text(state.message)),
                       // );
+
                       context.goNamed(AppRouter.welcomeScreen.name);
                     } else if (state is LogoutError) {
                       _selectedLogoutOption = null;
                       ShowToast.showToastError(message: state.error);
-
+                      serviceLocator<StorageService>().removeFromDisk(
+                        StorageKey.patientModel,
+                      );
+                      context.goNamed(AppRouter.welcomeScreen.name);
                       // ScaffoldMessenger.of(context).showSnackBar(
                       //   SnackBar(content: Text(state.error)),
                       // );

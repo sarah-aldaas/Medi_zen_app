@@ -31,18 +31,24 @@ class AddressModel {
 
   factory AddressModel.fromJson(Map<String, dynamic> json) {
     return AddressModel(
-      id: json['id'].toString(),
-      country: json['country'].toString(),
-      city: json['city'].toString(),
-      state: json['state'].toString(),
-      district: json['district'].toString(),
-      line: json['line'].toString(),
-      text: json['text'].toString(),
-      postalCode: json['postal_code'].toString(),
-      startDate: json['start_date'].toString(),
-      endDate: json['end_date'].toString(),
-      use: CodeModel.fromJson(json['use_id'] as Map<String, dynamic>),
-      type: CodeModel.fromJson(json['type_id'] as Map<String, dynamic>),
+      id: json['id']?.toString(),
+      country: json['country']?.toString(),
+      city: json['city']?.toString(),
+      state: json['state']?.toString(),
+      district: json['district']?.toString(),
+      line: json['line']?.toString(),
+      text: json['text']?.toString(),
+      postalCode: json['postal_code']?.toString(),
+      startDate: json['start_date']?.toString(),
+      endDate: json['end_date']?.toString(),
+      use:
+          json['use_id'] != null
+              ? CodeModel.fromJson(json['use_id'] as Map<String, dynamic>)
+              : null,
+      type:
+          json['type_id'] != null
+              ? CodeModel.fromJson(json['type_id'] as Map<String, dynamic>)
+              : null,
     );
   }
 
@@ -58,8 +64,8 @@ class AddressModel {
       'postal_code': postalCode,
       'start_date': startDate,
       'end_date': endDate,
-      'use_id': use!.toJson(),
-      'type_id': type!.toJson(),
+      'use_id': use?.toJson(), // استخدام ?. لتجنب الخطأ إذا كان use null
+      'type_id': type?.toJson(), // استخدام ?. لتجنب الخطأ إذا كان type null
     };
   }
 }

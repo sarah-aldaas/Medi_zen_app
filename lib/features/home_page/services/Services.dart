@@ -33,7 +33,6 @@ class SomeServices extends StatelessWidget with ServicesMixin {
       "Support Groups",
     ],
   };
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -84,7 +83,7 @@ class SomeServices extends StatelessWidget with ServicesMixin {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.asset(
-                            'assets/images/default_image.png',
+                            'assets/images/age.png',
                             fit: BoxFit.cover,
                           ),
                         ),

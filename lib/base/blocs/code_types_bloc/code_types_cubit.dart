@@ -12,7 +12,6 @@ import '../../data/models/respons_model.dart';
 
 part 'code_types_state.dart';
 
-
 class CodeTypesCubit extends Cubit<CodeTypesState> {
   final RemoteDataSourcePublic remoteDataSource;
 
@@ -26,13 +25,16 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     if (cachedCodeTypes == null || cachedCodeTypes.isEmpty) {
       await fetchCodeTypes();
     } else {
-      emit(CodeTypesSuccess(codeTypes: cachedCodeTypes, codes: []));
-       await _fetchInitialCodes();
+      if (!isClosed) {
+        emit(CodeTypesSuccess(codeTypes: cachedCodeTypes, codes: []));
+      }
+      await _fetchInitialCodes();
     }
   }
 
   // Fetch all code types and save to storage
   Future<void> fetchCodeTypes() async {
+    if (isClosed) return;
     emit(CodeTypesLoading());
     try {
       final result = await remoteDataSource.getCodeTypes();
@@ -40,15 +42,23 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
         final codeTypes = result.data.codeTypes;
         final codeTypesJson = jsonEncode(codeTypes.map((e) => e.toJson()).toList());
         serviceLocator<StorageService>().saveToDisk(StorageKey.codeTypesKey, codeTypesJson);
-        emit(CodeTypesSuccess(codeTypes: codeTypes, codes: []));
+        if (!isClosed) {
+          emit(CodeTypesSuccess(codeTypes: codeTypes, codes: []));
+        }
         await _fetchInitialCodes();
       } else if (result is ResponseError<CodeTypesResponseModel>) {
-        emit(CodeTypesError(error: result.message ?? 'Failed to fetch code types'));
+        if (!isClosed) {
+          emit(CodeTypesError(error: result.message ?? 'Failed to fetch code types'));
+        }
       }
     } on ServerException catch (e) {
-      emit(CodeTypesError(error: e.message));
+      if (!isClosed) {
+        emit(CodeTypesError(error: e.message));
+      }
     } catch (e) {
-      emit(CodeTypesError(error: 'Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(CodeTypesError(error: 'Unexpected error: ${e.toString()}'));
+      }
     }
   }
 
@@ -102,7 +112,6 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     return [];
   }
 
-
   // Fetch and return telecom use codes
   Future<List<CodeModel>> getTelecomUseCodes() async {
     final codeTypes = state is CodeTypesSuccess ? (state as CodeTypesSuccess).codeTypes : await getCachedCodeTypes();
@@ -124,7 +133,6 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     }
     return [];
   }
-
 
   // Fetch and return marital status codes
   Future<List<CodeModel>> getMaritalStatusCodes() async {
@@ -152,23 +160,32 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
   }
 
   Future<void> fetchCodes({required int codeTypeId, required List<CodeTypeModel> codeTypes}) async {
+    if (isClosed) return;
     emit(CodesLoading());
     try {
       final result = await remoteDataSource.getCodes(codeTypeId: codeTypeId);
       if (result is Success<CodesResponseModel>) {
         final currentState = state;
         final existingCodes = (currentState is CodeTypesSuccess ? currentState.codes : null) ?? [];
-        emit(CodeTypesSuccess(
-          codeTypes: codeTypes,
-          codes: [...existingCodes, ...result.data.codes],
-        ));
+        if (!isClosed) {
+          emit(CodeTypesSuccess(
+            codeTypes: codeTypes,
+            codes: [...existingCodes, ...result.data.codes],
+          ));
+        }
       } else if (result is ResponseError<CodesResponseModel>) {
-        emit(CodesError(error: result.message ?? 'Failed to fetch codes'));
+        if (!isClosed) {
+          emit(CodesError(error: result.message ?? 'Failed to fetch codes'));
+        }
       }
     } on ServerException catch (e) {
-      emit(CodesError(error: e.message));
+      if (!isClosed) {
+        emit(CodesError(error: e.message));
+      }
     } catch (e) {
-      emit(CodesError(error: 'Unexpected error: ${e.toString()}'));
+      if (!isClosed) {
+        emit(CodesError(error: 'Unexpected error: ${e.toString()}'));
+      }
     }
   }
 

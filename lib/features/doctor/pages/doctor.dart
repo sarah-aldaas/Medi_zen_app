@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
-import '../model/docotr_model.dart';
+import '../data/model/doctor_model.dart';
 import 'mixin/doctor_mixin.dart';
 
 class DoctorsPage extends StatefulWidget with DoctorMixin {
@@ -100,7 +100,7 @@ class allDoctorsPageState extends State<DoctorsPage> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.asset(
-                        doctor.imageUrl!,
+                        doctor.avatar!,
                         height: 100,
                         width: 100,
                         fit: BoxFit.fill
@@ -114,7 +114,7 @@ class allDoctorsPageState extends State<DoctorsPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                            doctor.name!,
+                            doctor.fName!,
                             style: TextStyle(fontWeight: FontWeight.bold)
                         ),
                         Spacer(),
@@ -125,7 +125,7 @@ class allDoctorsPageState extends State<DoctorsPage> {
                         ),
                         Divider(),
                         Text(
-                          '${doctor.specialization} | ${doctor.hospital}',
+                          '${doctor.text} | ${doctor.text}',
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
@@ -136,7 +136,7 @@ class allDoctorsPageState extends State<DoctorsPage> {
                                 size: 16,
                                 color: Theme.of(context).primaryColor
                             ),
-                            Text('${doctor.rating} (${doctor.reviews} ${"doctorsPage.reviews".tr(context)})')
+                            Text('${doctor.id} (${doctor.id} ${"doctorsPage.reviews".tr(context)})')
                           ],
                         ),
                       ],
@@ -155,7 +155,7 @@ class allDoctorsPageState extends State<DoctorsPage> {
     if (_selectedFilter == 0) return widget.allDoctors;
 
     return widget.allDoctors.where((doctor) =>
-    doctor.specialization!.toLowerCase() == _getFilterText(_selectedFilter).toLowerCase()
+    doctor.text!.toLowerCase() == _getFilterText(_selectedFilter).toLowerCase()
     ).toList();
   }
 

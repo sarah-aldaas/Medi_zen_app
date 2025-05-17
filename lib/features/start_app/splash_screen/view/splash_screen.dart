@@ -24,8 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Timer? _navigationTimer;
 
   Future<void> _checkFirstLaunchAndPatient() async {
-    final storageService = serviceLocator<StorageService>();
-    final isFirst = storageService.getFromDisk(StorageKey.firstInstall) ?? true;
+    final isFirst = serviceLocator<StorageService>().getFromDisk(StorageKey.firstInstall) ?? true;
 
     if (mounted) {
       setState(() {

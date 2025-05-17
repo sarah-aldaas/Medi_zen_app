@@ -38,7 +38,9 @@ dependencies:
   flutter_bloc:
   shared_preferences:
   logger:
+#  share_apps:
   animated_theme_switcher:
+  image_picker:
   responsive_framework:
   oktoast:
   go_router:

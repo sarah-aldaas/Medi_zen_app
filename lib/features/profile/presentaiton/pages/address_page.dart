@@ -1,110 +1,144 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/features/profile/data/models/address_model.dart';
 
 class AddressPage extends StatelessWidget {
   const AddressPage({super.key, required this.addressModel});
 
-  final AddressModel? addressModel;
+  final AddressModel addressModel;
 
   @override
   Widget build(BuildContext context) {
-    return addressModel!= null?Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Theme.of(context).primaryColor)),
-      child: Column(
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_outlined,
+            color: AppColors.primaryColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(
+          'Address',
+          style: TextStyle(
+            color: AppColors.primaryColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        backgroundColor: AppColors.whiteColor,
+        shadowColor: AppColors.lightGrey,
+        foregroundColor: colorScheme.onPrimary,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          elevation: 1,
+          color: AppColors.card,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildAddressInfoRow(context, 'Country', addressModel.country),
+                _buildAddressInfoRow(context, 'City', addressModel.city),
+                _buildAddressInfoRow(context, 'State', addressModel.state),
+                _buildAddressInfoRow(
+                  context,
+                  'District',
+                  addressModel.district,
+                ),
+                _buildAddressInfoRow(context, 'Line ', addressModel.line),
+                _buildAddressInfoRow(
+                  context,
+                  'Postal Code',
+                  addressModel.postalCode,
+                ),
+
+                _buildAddressInfoRow(
+                  context,
+                  'Usage Type',
+                  addressModel.use?.display,
+                ),
+                _buildAddressInfoRow(
+                  context,
+                  'Address Type',
+                  addressModel.type?.display,
+                ),
+                const Gap(12),
+                Text(
+                  'Full Description:',
+                  style: TextStyle(
+                    color: AppColors.secondaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Gap(8),
+                Text(
+                  addressModel.text ?? 'No description available.',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                const Gap(20),
+                SizedBox(
+                  width: double.infinity,
+                  height: context.height / 3.5,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image(
+                      image: AssetImage("assets/images/map.jpg"),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(child: Text('Could not load map'));
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddressInfoRow(
+    BuildContext context,
+    String label,
+    String? value,
+  ) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.all(20),
-
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  spacing: 5,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                  children: [
-                    Row(
-                      children: [
-                        Text("Country: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                        Text("${addressModel!.country ?? ""}"),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("City: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                        Text("${addressModel!.city ?? ""}"),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("State: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                        Text("${addressModel!.state ?? ""}"),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("District: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                        Text("${addressModel!.district ?? ""}"),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  spacing: 5,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text("Line: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                        Text("${addressModel!.line ?? ""}"),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Postal Code: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                        Text("${addressModel!.postalCode ?? ""}"),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Type: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                        Text("${addressModel!.type!.display ?? ""}"),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Use: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                        Text("${addressModel!.use!.display ?? ""}"),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+          Text(
+            '$label: ',
+            style: TextStyle(
+              color: AppColors.secondaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              children: [
-                Text("Text: ", style: TextStyle(color: Theme.of(context).primaryColor.withValues(alpha: 0.8), fontWeight: FontWeight.bold)),
-                Text("${addressModel!.text ?? ""}"),
-              ],
-            ),
-          ),
-
-          Gap(20),
-          SizedBox(
-            width: context.width,
-            height: context.height / 3.5,
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-              child: Image(image: AssetImage("assets/images/map.jpg"), fit: BoxFit.fill),
+          Expanded(
+            child: Text(
+              value ?? 'Not available',
+              style: theme.textTheme.bodyMedium,
             ),
           ),
         ],
       ),
-    ):Container();
+    );
   }
 }

@@ -1,16 +1,17 @@
 import 'package:bloc/bloc.dart';
+import 'package:medizen_app/base/data/models/public_response_model.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/profile/data/data_sources/profile_remote_data_sources.dart';
-import 'package:medizen_app/features/profile/presentaiton/cubit/profile_state.dart';
+import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 
-import '../../../../base/constant/storage_key.dart';
-import '../../../../base/services/di/injection_container_common.dart';
-import '../../../../base/services/storage/storage_service.dart';
-
-
+import '../../../../../base/constant/storage_key.dart';
+import '../../../../../base/services/di/injection_container_common.dart';
+import '../../../../../base/services/storage/storage_service.dart';
+import '../../data/models/update_profile_request_Model.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit({required this.remoteDataSource}) : super(ProfileState.initial());
+  ProfileCubit({required this.remoteDataSource})
+    : super(ProfileState.initial());
 
   final ProfileRemoteDataSource remoteDataSource;
 
@@ -21,10 +22,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       result.fold(
         success: (PatientModel patient) {
           serviceLocator<StorageService>().savePatient(
-            StorageKey.patientModel,patient,
+            StorageKey.patientModel,
+            patient,
           );
           emit(ProfileState.success(patient));
-
         },
         error: (String? message, int? code, PatientModel? data) {
           emit(ProfileState.error(message ?? 'Failed to fetch profile'));
@@ -35,15 +36,19 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> updateMyProfile({required PatientModel patientModel}) async {
+  Future<void> updateMyProfile({
+    required UpdateProfileRequestModel updateProfileRequestModel,
+  }) async {
     emit(ProfileState.loading());
     try {
-      final result = await remoteDataSource.updateMyProfile(patientModel: patientModel);
+      final result = await remoteDataSource.updateMyProfile(
+        updateProfileRequestModel: updateProfileRequestModel,
+      );
       result.fold(
-        success: (PatientModel updatedPatient) {
-          emit(ProfileState.success(updatedPatient));
+        success: (PublicResponseModel updatedPatient) {
+          emit(ProfileState.success(null));
         },
-        error: (String? message, int? code, PatientModel? data) {
+        error: (String? message, int? code, PublicResponseModel? data) {
           emit(ProfileState.error(message ?? 'Failed to update profile'));
         },
       );

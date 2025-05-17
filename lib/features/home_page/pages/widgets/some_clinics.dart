@@ -21,14 +21,18 @@ class SomeClinics extends StatelessWidget with ClinicListMixin {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("someClinics.title".tr(context),
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              Text(
+                "someClinics.title".tr(context),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
               TextButton(
                 onPressed: () {
                   context.pushNamed(AppRouter.clinics.name);
                 },
-                child: Text("someClinics.seeAll".tr(context),
-                    style: TextStyle(color: Theme.of(context).primaryColor)),
+                child: Text(
+                  "someClinics.seeAll".tr(context),
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
               ),
             ],
           ),
@@ -36,71 +40,91 @@ class SomeClinics extends StatelessWidget with ClinicListMixin {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: someClinics.map((clinic) {
-              return Container(
-                width: context.width / 2,
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.symmetric(horizontal: 8.0),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Image.asset(clinic.imageUrl, fit: BoxFit.fill)),
-                    Gap(10),
-                    Text(clinic.title,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(clinic.description,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12, color: Colors.grey)),
-                    Gap(8),
-                    Row(
+            children:
+                someClinics.map((clinic) {
+                  return Container(
+                    width: context.width / 2,
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ThemeSwitcher.withTheme(
-                          builder: (_, switcher, theme) {
-                            return Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: theme.brightness == Brightness.light
-                                    ? Colors.grey.shade200
-                                    : AppColors.backGroundLogo,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.date_range,
-                                      color: Theme.of(context).primaryColor,
-                                      size: 10),
-                                  Gap(4),
-                                  Text(clinic.daysAgo,
-                                      style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontSize: 10)),
-                                ],
-                              ),
-                            );
-                          },
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.asset(clinic.photo, fit: BoxFit.fill),
+                        ),
+                        Gap(10),
+                        Text(
+                          clinic.name,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          clinic.description,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                         Gap(8),
                         Row(
                           children: [
-                            Icon(Icons.location_on,
-                                color: Colors.grey, size: 10),
-                            Gap(4),
-                            Text(clinic.location,
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 10)),
+                            ThemeSwitcher.withTheme(
+                              builder: (_, switcher, theme) {
+                                return Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color:
+                                        theme.brightness == Brightness.light
+                                            ? Colors.grey.shade200
+                                            : AppColors.backGroundLogo,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.date_range,
+                                        color: Theme.of(context).primaryColor,
+                                        size: 10,
+                                      ),
+                                      Gap(4),
+                                      Text(
+                                        clinic.description,
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            Gap(8),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  color: Colors.grey,
+                                  size: 10,
+                                ),
+                                Gap(4),
+                                Text(
+                                  clinic.description,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
           ),
         ),
       ],

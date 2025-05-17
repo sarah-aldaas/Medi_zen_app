@@ -1,4 +1,4 @@
-import '../../clinic_model.dart';
+import '../home_page/cubit/clinic.dart';
 
 abstract class ClinicsState {}
 
@@ -13,7 +13,7 @@ class ClinicsLoaded extends ClinicsState {
 }
 
 class ClinicsError extends ClinicsState {
-  final String? message;
+  final String error;
 
-  ClinicsError({this.message});
+  ClinicsError({required this.error});
 }

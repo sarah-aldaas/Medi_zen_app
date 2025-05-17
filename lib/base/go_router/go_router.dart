@@ -5,6 +5,7 @@ import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/features/authentication/presentation/forget_password/view/otp_verify_password.dart';
 import 'package:medizen_app/features/authentication/presentation/otp/verified.dart';
 import 'package:medizen_app/features/authentication/presentation/reset_password/view/reset_password_screen.dart';
+import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/profile_details_page.dart';
 
 import '../../features/Complaint/view/complaint_list_screen.dart';
@@ -20,8 +21,11 @@ import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
 import '../../features/home_page/pages/widgets/clinics_page.dart';
 import '../../features/notifications/pages/notification_settings.dart';
-import '../../features/profile/presentaiton/cubit/profile_cubit.dart';
+import '../../features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
+import '../../features/profile/presentaiton/pages/address_page.dart';
+import '../../features/profile/presentaiton/pages/edit_profile_screen.dart';
 import '../../features/profile/presentaiton/pages/profile.dart';
+import '../../features/profile/presentaiton/pages/telecom_page.dart';
 import '../../features/start_app/on_boarding/view/on_boarding_screen.dart';
 import '../../features/start_app/splash_screen/view/splash_screen.dart';
 import '../../features/start_app/welcome/view/welcome_screen.dart';
@@ -40,6 +44,7 @@ enum AppRouter {
   changeLang,
   homePage,
   profile,
+  editProfile,
   notificationSettings,
   helpCenter,
   articles,
@@ -53,6 +58,8 @@ enum AppRouter {
   verifyPasswordOtp,
   resetPassword,
   profileDetails,
+  addressDetails,
+  telecomDetails,
 }
 
 GoRouter goRouter() {
@@ -220,6 +227,31 @@ GoRouter goRouter() {
                         serviceLocator<ProfileCubit>()..fetchMyProfile(),
                 child: ProfileDetailsPage(),
               );
+            },
+          ),
+          GoRoute(
+            path: '/edit-profile',
+            name: AppRouter.editProfile.name,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              UpdateProfileRequestModel patientModel = extra?['patientModel'];
+              return EditProfileScreen(patientModel: patientModel);
+            },
+          ),
+          GoRoute(
+            path: "/telecomDetails",
+            name: AppRouter.telecomDetails.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return TelecomPage();
+            },
+          ),
+          GoRoute(
+            name: AppRouter.addressDetails.name,
+            path: '/addressDetails',
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              final addressModel = extra?['addressModel'];
+              return AddressPage(addressModel: addressModel!);
             },
           ),
         ],
