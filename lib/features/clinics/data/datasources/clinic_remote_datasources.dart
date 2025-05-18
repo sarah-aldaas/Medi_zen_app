@@ -9,8 +9,11 @@ import '../../../../base/services/network/resource.dart';
 import '../../../../base/services/network/response_handler.dart';
 
 abstract class ClinicRemoteDataSource {
-  Future<Resource<PaginatedResponse<ClinicModel>>> getAllClinics();
-  Future<Resource<PaginatedResponse<DoctorModel>>> getDoctorsOfClinic({required String clinicId});
+  Future<Resource<PaginatedResponse<ClinicModel>>> getAllClinics({
+    String? searchQuery,
+    int page = 1,
+    int perPage = 10,
+  });
 
   Future<Resource<ClinicModel>> getSpecificClinic({required String id});
 }
@@ -21,31 +24,44 @@ class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
   ClinicRemoteDataSourceImpl({required this.networkClient});
 
   @override
-  Future<Resource<PaginatedResponse<ClinicModel>>> getAllClinics() async {
-    final response = await networkClient.invoke(ClinicEndPoints.getAllClinics, RequestType.get);
-    return ResponseHandler<PaginatedResponse<ClinicModel>>(response).processResponse(
+  Future<Resource<PaginatedResponse<ClinicModel>>> getAllClinics({
+    String? searchQuery,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = {
+      'page': page,
+      'pagination_count': perPage,
+      if (searchQuery != null && searchQuery.isNotEmpty)
+        'search_query': searchQuery,
+    };
+
+    final response = await networkClient.invoke(
+      ClinicEndPoints.getAllClinics,
+      RequestType.get,
+      queryParameters: queryParams,
+    );
+
+    return ResponseHandler<PaginatedResponse<ClinicModel>>(
+      response,
+    ).processResponse(
       fromJson:
-          (json) => PaginatedResponse<ClinicModel>.fromJson(json, 'clinics', (dataJson) {
+          (json) => PaginatedResponse<ClinicModel>.fromJson(json, 'clinics', (
+            dataJson,
+          ) {
             return ClinicModel.fromJson(dataJson);
           }),
     );
   }
 
-
-  @override
-  Future<Resource<PaginatedResponse<DoctorModel>>> getDoctorsOfClinic({required String clinicId}) async {
-    final response = await networkClient.invoke(ClinicEndPoints.getDoctorsOfClinic(clinicId: clinicId), RequestType.get);
-    return ResponseHandler<PaginatedResponse<DoctorModel>>(response).processResponse(
-      fromJson:
-          (json) => PaginatedResponse<DoctorModel>.fromJson(json, 'doctors', (dataJson) {
-        return DoctorModel.fromJson(dataJson);
-      }),
-    );
-  }
-
   @override
   Future<Resource<ClinicModel>> getSpecificClinic({required String id}) async {
-    final response = await networkClient.invoke(ClinicEndPoints.getSpecificClinics(id: id), RequestType.get);
-    return ResponseHandler<ClinicModel>(response).processResponse(fromJson: (json) => ClinicModel.fromJson(json));
+    final response = await networkClient.invoke(
+      ClinicEndPoints.getSpecificClinics(id: id),
+      RequestType.get,
+    );
+    return ResponseHandler<ClinicModel>(
+      response,
+    ).processResponse(fromJson: (json) => ClinicModel.fromJson(json['clinic']));
   }
 }

@@ -1,5 +1,5 @@
-// lib/features/authentication/signup/cubit/signup_state.dart
-part of 'signup_cubit.dart';
+// lib/features/authentication/signup/cubit/edit_profile_state.dart
+part of 'edit_profile_cubit.dart';
 
 abstract class SignupState {}
 

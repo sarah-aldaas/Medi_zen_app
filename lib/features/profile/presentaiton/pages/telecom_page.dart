@@ -316,7 +316,7 @@ class _TelecomPageState extends State<TelecomPage> {
           );
         }
 
-        final telecoms = state is TelecomSuccess ? state.paginatedResponse.paginatedData.items : [];
+        final telecoms = state is TelecomSuccess ? state.paginatedResponse.paginatedData!.items : [];
         final filteredTelecoms = telecoms.where((telecom) => telecom.type!.id == type.id).toList();
 
         return SingleChildScrollView(

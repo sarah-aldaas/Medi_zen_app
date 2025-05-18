@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/medical_record/pages/services_mixin.dart';
 
@@ -84,7 +85,7 @@ class SomeServices extends StatelessWidget with ServicesMixin {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.asset(
-                            'assets/images/age.png',
+                            AppAssetImages.article1,
                             fit: BoxFit.cover,
                           ),
                         ),

@@ -1,4 +1,4 @@
-part of 'signup_form_cubit.dart';
+part of 'edit_profile_form_cubit.dart';
 
 
 sealed class SignupFormState {}

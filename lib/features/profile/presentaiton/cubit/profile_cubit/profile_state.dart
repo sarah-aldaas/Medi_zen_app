@@ -1,5 +1,6 @@
 part of 'profile_cubit.dart';
-enum ProfileStatus { initial, loading, success, error }
+
+enum ProfileStatus { initial, loading, success, error, loadignUpdate }
 
 class ProfileState extends Equatable {
   final ProfileStatus status;
@@ -20,12 +21,19 @@ class ProfileState extends Equatable {
     return const ProfileState(status: ProfileStatus.loading);
   }
 
+  factory ProfileState.loadingUpdate() {
+    return const ProfileState(status: ProfileStatus.loadignUpdate);
+  }
+
   factory ProfileState.success(PatientModel? patient) {
     return ProfileState(status: ProfileStatus.success, patient: patient);
   }
 
   factory ProfileState.error(String errorMessage) {
-    return ProfileState(status: ProfileStatus.error, errorMessage: errorMessage);
+    return ProfileState(
+      status: ProfileStatus.error,
+      errorMessage: errorMessage,
+    );
   }
 
   @override

@@ -31,7 +31,7 @@ class allDoctorsPageState extends State<DoctorsPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: Colors.grey),
-            tooltip: "doctorsPage.actions.search".tr(context),
+            tooltip: "search",
             onPressed: () {
               // Handle search
             },

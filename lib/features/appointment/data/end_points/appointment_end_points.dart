@@ -1,5 +1,6 @@
 class AppointmentEndPoints {
   static String getSlots({required String practitionerId, required String date}) => "/patient/slots/generate?practitioner_id=$practitionerId&date=$date";
+  static String getDaysWorkDoctor({required String doctorId}) => "/patient/get-days/$doctorId";
 
   static String getMyAppointment() => "/patient/my-appointments-patient";
 

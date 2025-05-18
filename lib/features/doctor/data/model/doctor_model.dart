@@ -1,5 +1,6 @@
 import 'package:medizen_app/base/data/models/code_type_model.dart';
 import 'package:medizen_app/features/doctor/data/model/qualification_model.dart';
+import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
 
 import 'communication_model.dart';
 
@@ -19,10 +20,10 @@ class DoctorModel {
   final String email;
   final String? emailVerifiedAt;
   final bool active;
-  final CodeModel gender;
-  final List<CodeModel> telecoms;
-  final List<CommunicationModel> communications;
-  final List<QualificationModel> qualifications;
+  final CodeModel? gender;
+  final List<TelecomModel>? telecoms;
+  final List<CommunicationModel>? communications;
+  final List<QualificationModel>? qualifications;
 
   DoctorModel({
     required this.id,
@@ -63,10 +64,10 @@ class DoctorModel {
       email: json['email'] as String,
       emailVerifiedAt: json['email_verified_at'] as String?,
       active: (json['active'] as int) == 1,
-      gender: CodeModel.fromJson(json['gender'] as Map<String, dynamic>),
-      telecoms: (json['telecoms'] as List).map((item) => CodeModel.fromJson(item as Map<String, dynamic>)).toList(),
-      communications: (json['communications'] as List).map((item) => CommunicationModel.fromJson(item as Map<String, dynamic>)).toList(),
-      qualifications: (json['qualifications'] as List).map((item) => QualificationModel.fromJson(item as Map<String, dynamic>)).toList(),
+      gender:json['gender']!=null? CodeModel.fromJson(json['gender'] as Map<String, dynamic>):null,
+      telecoms:json['telecoms']!=null? (json['telecoms'] as List).map((item) => TelecomModel.fromJson(item as Map<String, dynamic>)).toList():null,
+      communications:json['communications']!=null? (json['communications'] as List).map((item) => CommunicationModel.fromJson(item as Map<String, dynamic>)).toList():null,
+      qualifications:json['qualifications']!=null? (json['qualifications'] as List).map((item) => QualificationModel.fromJson(item as Map<String, dynamic>)).toList():null,
     );
   }
 
@@ -87,10 +88,10 @@ class DoctorModel {
       'email': email,
       'email_verified_at': emailVerifiedAt,
       'active': active ? 1 : 0,
-      'gender': gender.toJson(),
-      'telecoms': telecoms.map((t) => t.toJson()).toList(),
-      'communications': communications.map((c) => c.toJson()).toList(),
-      'qualifications': qualifications.map((q) => q.toJson()).toList(),
+      'gender': gender!.toJson(),
+      'telecoms': telecoms!.map((t) => t.toJson()).toList(),
+      'communications': communications!.map((c) => c.toJson()).toList(),
+      'qualifications': qualifications!.map((q) => q.toJson()).toList(),
     };
   }
 

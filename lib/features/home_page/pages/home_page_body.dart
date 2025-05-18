@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
-import 'package:medizen_app/features/home_page/pages/widgets/clinics_page.dart';
+import 'package:medizen_app/features/clinics/pages/clinic_details_page.dart';
+import 'package:medizen_app/features/clinics/pages/clinics_page.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/definition_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/greeting_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/my_favorite.dart';
@@ -11,7 +12,6 @@ import 'package:medizen_app/features/home_page/pages/widgets/some_articles.dart'
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 
 import '../../../main.dart';
-import '../../doctor/doctor_screen.dart';
 import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
 import '../../services/Services.dart';
 
@@ -23,6 +23,9 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
+  ///modify clinic id
+  final String clinicId="1";
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -58,49 +61,49 @@ class _HomePageBodyState extends State<HomePageBody> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
                         },
                         child: _buildSpecialityItem(Icons.local_hospital_outlined, "homePage.specialties.items.general".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
                         },
                         child: _buildSpecialityItem(Icons.density_medium_outlined, "homePage.specialties.items.dentist".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
                         },
                         child: _buildSpecialityItem(Icons.remove_red_eye_outlined, "homePage.specialties.items.ophthalmology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
                         },
                         child: _buildSpecialityItem(Icons.fastfood_outlined, "homePage.specialties.items.nutrition".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
                         },
                         child: _buildSpecialityItem(Icons.psychology_outlined, "homePage.specialties.items.neurology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
                         },
                         child: _buildSpecialityItem(Icons.child_friendly_outlined, "homePage.specialties.items.pediatrics".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
                         },
                         child: _buildSpecialityItem(Icons.waves_outlined, "homePage.specialties.items.radiology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Doctorscreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
                         },
                         child: _buildSpecialityItem(Icons.more_horiz, "homePage.specialties.items.more".tr(context)),
                       ),
@@ -124,7 +127,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    PatientModel myPatientModel = loadingPatientModel();
+    PatientModel? myPatientModel = loadingPatientModel();
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -136,7 +139,7 @@ class _HomePageBodyState extends State<HomePageBody> {
               const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [GreetingWidget(), Text("${myPatientModel.fName} ${myPatientModel.lName}", style: TextStyle(fontWeight: FontWeight.bold))],
+                children: [GreetingWidget(), Text("${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}", style: TextStyle(fontWeight: FontWeight.bold))],
               ),
             ],
           ),

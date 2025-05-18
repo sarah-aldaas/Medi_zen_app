@@ -1,21 +1,19 @@
 import 'package:medizen_app/base/services/network/network_client.dart';
-import 'package:medizen_app/features/services/data/model/health_care_service_eligibility_codes_model.dart';
 import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
 import 'package:medizen_app/features/services/data/services_end_points.dart';
-
 import '../../../../base/data/models/pagination_model.dart';
 import '../../../../base/helpers/enums.dart';
 import '../../../../base/services/network/resource.dart';
 import '../../../../base/services/network/response_handler.dart';
 
 abstract class ServicesRemoteDataSource {
-  Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices();
+  Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices({int page = 1, int perPage = 10});
 
   Future<Resource<HealthCareServiceModel>> getSpecificHealthCareServices({required String id});
 
-  Future<Resource<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>> getAllHealthCareServiceEligibilityCodes();
+  // Future<Resource<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>> getAllHealthCareServiceEligibilityCodes({int page = 1, int perPage = 10});
 
-  Future<Resource<HealthCareServiceEligibilityCodesModel>> getSpecificHealthCareServiceEligibilityCodes({required String id});
+  // Future<Resource<HealthCareServiceEligibilityCodesModel>> getSpecificHealthCareServiceEligibilityCodes({required String id});
 }
 
 class ServicesRemoteDataSourceImpl implements ServicesRemoteDataSource {
@@ -24,38 +22,44 @@ class ServicesRemoteDataSourceImpl implements ServicesRemoteDataSource {
   ServicesRemoteDataSourceImpl({required this.networkClient});
 
   @override
-  Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices() async {
-    final response = await networkClient.invoke(ServicesEndPoints.getAllHealthCareServices, RequestType.get);
-    return ResponseHandler<PaginatedResponse<HealthCareServiceModel>>(response).processResponse(
-      fromJson:
-          (json) => PaginatedResponse<HealthCareServiceModel>.fromJson(json, 'healthCareServices', (dataJson) {
-            return HealthCareServiceModel.fromJson(dataJson);
-          }),
-    );
-  }
-
-  @override
   Future<Resource<HealthCareServiceModel>> getSpecificHealthCareServices({required String id}) async {
     final response = await networkClient.invoke(ServicesEndPoints.getSpecificHealthCareServices(id: id), RequestType.get);
-    return ResponseHandler<HealthCareServiceModel>(response).processResponse(fromJson: (json) => HealthCareServiceModel.fromJson(json));
+    return ResponseHandler<HealthCareServiceModel>(response).processResponse(fromJson: (json) => HealthCareServiceModel.fromJson(json['healthCareService']));
   }
 
   @override
-  Future<Resource<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>> getAllHealthCareServiceEligibilityCodes() async {
-    final response = await networkClient.invoke(ServicesEndPoints.getAllHealthCareServiceEligibilityCodes, RequestType.get);
-    return ResponseHandler<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>(response).processResponse(
+  Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices({int page = 1, int perPage = 10}) async {
+    final queryParams = {'page': page, 'pagination_count': perPage};
+
+    final response = await networkClient.invoke(ServicesEndPoints.getAllHealthCareServices, RequestType.get, queryParameters: queryParams);
+
+    return ResponseHandler<PaginatedResponse<HealthCareServiceModel>>(response).processResponse(
       fromJson:
-          (json) => PaginatedResponse<HealthCareServiceEligibilityCodesModel>.fromJson(json, 'healthCareServiceEligibilityCodes', (dataJson) {
-            return HealthCareServiceEligibilityCodesModel.fromJson(dataJson);
-          }),
+          (json) => PaginatedResponse<HealthCareServiceModel>.fromJson(json, 'healthCareServices', (dataJson) => HealthCareServiceModel.fromJson(dataJson)),
     );
   }
 
-  @override
-  Future<Resource<HealthCareServiceEligibilityCodesModel>> getSpecificHealthCareServiceEligibilityCodes({required String id}) async {
-    final response = await networkClient.invoke(ServicesEndPoints.getSpecificHealthCareServiceEligibilityCodes(id: id), RequestType.get);
-    return ResponseHandler<HealthCareServiceEligibilityCodesModel>(
-      response,
-    ).processResponse(fromJson: (json) => HealthCareServiceEligibilityCodesModel.fromJson(json));
-  }
+  // @override
+  // Future<Resource<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>> getAllHealthCareServiceEligibilityCodes({int page = 1, int perPage = 10}) async {
+  //   final queryParams = {'page': page, 'pagination_count': perPage};
+  //
+  //   final response = await networkClient.invoke(ServicesEndPoints.getAllHealthCareServiceEligibilityCodes, RequestType.get, queryParameters: queryParams);
+  //
+  //   return ResponseHandler<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>(response).processResponse(
+  //     fromJson:
+  //         (json) => PaginatedResponse<HealthCareServiceEligibilityCodesModel>.fromJson(
+  //           json,
+  //           'healthCareServiceEligibilityCodes',
+  //           (dataJson) => HealthCareServiceEligibilityCodesModel.fromJson(dataJson),
+  //         ),
+  //   );
+  // }
+
+  // @override
+  // Future<Resource<HealthCareServiceEligibilityCodesModel>> getSpecificHealthCareServiceEligibilityCodes({required String id}) async {
+  //   final response = await networkClient.invoke(ServicesEndPoints.getSpecificHealthCareServiceEligibilityCodes(id: id), RequestType.get);
+  //   return ResponseHandler<HealthCareServiceEligibilityCodesModel>(
+  //     response,
+  //   ).processResponse(fromJson: (json) => HealthCareServiceEligibilityCodesModel.fromJson(json));
+  // }
 }

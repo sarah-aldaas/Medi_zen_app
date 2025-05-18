@@ -9,9 +9,9 @@ import '../../../../../base/services/storage/storage_service.dart';
 import '../../../data/models/update_profile_request_Model.dart';
 part 'profile_state.dart';
 
-
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit({required this.remoteDataSource}) : super(ProfileState.initial());
+  ProfileCubit({required this.remoteDataSource})
+    : super(ProfileState.initial());
 
   final ProfileRemoteDataSource remoteDataSource;
 
@@ -22,10 +22,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       result.fold(
         success: (PatientModel patient) {
           serviceLocator<StorageService>().savePatient(
-            StorageKey.patientModel,patient,
+            StorageKey.patientModel,
+            patient,
           );
           emit(ProfileState.success(patient));
-
         },
         error: (String? message, int? code, PatientModel? data) {
           emit(ProfileState.error(message ?? 'Failed to fetch profile'));
@@ -36,10 +36,14 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> updateMyProfile({required UpdateProfileRequestModel updateProfileRequestModel}) async {
-    emit(ProfileState.loading());
+  Future<void> updateMyProfile({
+    required UpdateProfileRequestModel updateProfileRequestModel,
+  }) async {
+    emit(ProfileState.loadingUpdate());
     try {
-      final result = await remoteDataSource.updateMyProfile(updateProfileRequestModel: updateProfileRequestModel);
+      final result = await remoteDataSource.updateMyProfile(
+        updateProfileRequestModel: updateProfileRequestModel,
+      );
       result.fold(
         success: (PublicResponseModel updatedPatient) {
           emit(ProfileState.success(null));

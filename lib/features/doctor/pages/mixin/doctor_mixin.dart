@@ -1,8 +1,202 @@
 import '../../../../base/constant/app_images.dart';
+import '../../../../base/data/models/code_type_model.dart';
+import '../../data/model/communication_model.dart';
 import '../../data/model/doctor_model.dart';
+import '../../data/model/qualification_model.dart';
 
 mixin DoctorMixin {
-  final List<DoctorModel> allDoctors = [];
+  final List<DoctorModel> allDoctors = [
+    // DoctorModel(
+    //   id: 1,
+    //   fName: "John",
+    //   lName: "Doe",
+    //   text: "Dr. John Doe, MD",
+    //   family: "Doe",
+    //   given: "John",
+    //   prefix: "Dr.",
+    //   suffix: "MD",
+    //   avatar: AppAssetImages.photoDoctor1,
+    //   address: "123 Medical Center Dr, Boston, MA 02115",
+    //   dateOfBirth: "1980-05-15",
+    //   deceasedDate: null,
+    //   email: "john.doe@example.com",
+    //   emailVerifiedAt: "2023-01-10T08:30:00Z",
+    //   active: true,
+    //   gender: CodeModel(
+    //     id: "1",
+    //     code: "male",
+    //     display: "Male",
+    //     description: "Male gender",
+    //     codeTypeId: "1",
+    //     createdAt: "2020-01-01",
+    //     updatedAt: "2020-01-01",
+    //     codeTypeModel: CodeTypeModel(id: 1, name: "Gender", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //   ),
+    //   telecoms: [
+    //     CodeModel(
+    //       id: "2",
+    //       code: "phone",
+    //       display: "Phone",
+    //       description: "Primary phone number",
+    //       codeTypeId: "2",
+    //       createdAt: "2020-01-01",
+    //       updatedAt: "2020-01-01",
+    //       codeTypeModel: CodeTypeModel(id: 2, name: "Contact Type", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //     ),
+    //   ],
+    //   communications: [
+    //     CommunicationModel(
+    //       id: 1,
+    //       preferred: true,
+    //       language: CodeModel(
+    //         id: "3",
+    //         code: "en",
+    //         display: "English",
+    //         description: "English language",
+    //         codeTypeId: "3",
+    //         createdAt: "2020-01-01",
+    //         updatedAt: "2020-01-01",
+    //         codeTypeModel: CodeTypeModel(id: 3, name: "Language", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //       ),
+    //     ),
+    //   ],
+    //   qualifications: [
+    //     QualificationModel(
+    //       id: 1,
+    //       issuer: "Harvard Medical School",
+    //       startDate: "2005-09-01",
+    //       endDate: "2009-06-30",
+    //       pdf: "https://example.com/qualifications/john_doe_md.pdf",
+    //       type: CodeModel(
+    //         id: "4",
+    //         code: "MD",
+    //         display: "Medical Doctor",
+    //         description: "Doctor of Medicine",
+    //         codeTypeId: "4",
+    //         createdAt: "2020-01-01",
+    //         updatedAt: "2020-01-01",
+    //         codeTypeModel: CodeTypeModel(id: 4, name: "Qualification Type", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //       ),
+    //     ),
+    //   ],
+    // ),
+    //
+    // DoctorModel(
+    //   id: 2,
+    //   fName: "Sarah",
+    //   lName: "Smith",
+    //   text: "Dr. Sarah Smith, PhD",
+    //   family: "Smith",
+    //   given: "Sarah",
+    //   prefix: "Dr.",
+    //   suffix: "PhD",
+    //   avatar: AppAssetImages.photoDoctor2,
+    //   address: "456 Health Ave, New York, NY 10001",
+    //   dateOfBirth: "1975-11-22",
+    //   deceasedDate: null,
+    //   email: "sarah.smith@example.com",
+    //   emailVerifiedAt: "2022-05-15T10:15:00Z",
+    //   active: true,
+    //   gender: CodeModel(
+    //     id: "2",
+    //     code: "female",
+    //     display: "Female",
+    //     description: "Female gender",
+    //     codeTypeId: "1",
+    //     createdAt: "2020-01-01",
+    //     updatedAt: "2020-01-01",
+    //     codeTypeModel: CodeTypeModel(id: 1, name: "Gender", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //   ),
+    //   telecoms: [
+    //     CodeModel(
+    //       id: "2",
+    //       code: "phone",
+    //       display: "Phone",
+    //       description: "Primary phone number",
+    //       codeTypeId: "2",
+    //       createdAt: "2020-01-01",
+    //       updatedAt: "2020-01-01",
+    //       codeTypeModel: CodeTypeModel(id: 2, name: "Contact Type", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //     ),
+    //     CodeModel(
+    //       id: "5",
+    //       code: "email",
+    //       display: "Email",
+    //       description: "Primary email",
+    //       codeTypeId: "2",
+    //       createdAt: "2020-01-01",
+    //       updatedAt: "2020-01-01",
+    //       codeTypeModel: CodeTypeModel(id: 2, name: "Contact Type", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //     ),
+    //   ],
+    //   communications: [
+    //     CommunicationModel(
+    //       id: 2,
+    //       preferred: true,
+    //       language: CodeModel(
+    //         id: "3",
+    //         code: "en",
+    //         display: "English",
+    //         description: "English language",
+    //         codeTypeId: "3",
+    //         createdAt: "2020-01-01",
+    //         updatedAt: "2020-01-01",
+    //         codeTypeModel: CodeTypeModel(id: 3, name: "Language", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //       ),
+    //     ),
+    //     CommunicationModel(
+    //       id: 3,
+    //       preferred: false,
+    //       language: CodeModel(
+    //         id: "6",
+    //         code: "es",
+    //         display: "Spanish",
+    //         description: "Spanish language",
+    //         codeTypeId: "3",
+    //         createdAt: "2020-01-01",
+    //         updatedAt: "2020-01-01",
+    //         codeTypeModel: CodeTypeModel(id: 3, name: "Language", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //       ),
+    //     ),
+    //   ],
+    //   qualifications: [
+    //     QualificationModel(
+    //       id: 2,
+    //       issuer: "Stanford University",
+    //       startDate: "1998-09-01",
+    //       endDate: "2002-06-30",
+    //       pdf: "https://example.com/qualifications/sarah_smith_phd.pdf",
+    //       type: CodeModel(
+    //         id: "5",
+    //         code: "PHD",
+    //         display: "Doctor of Philosophy",
+    //         description: "PhD in Psychology",
+    //         codeTypeId: "4",
+    //         createdAt: "2020-01-01",
+    //         updatedAt: "2020-01-01",
+    //         codeTypeModel: CodeTypeModel(id: 4, name: "Qualification Type", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //       ),
+    //     ),
+    //     QualificationModel(
+    //       id: 3,
+    //       issuer: "American Board of Psychiatry",
+    //       startDate: "2003-01-15",
+    //       endDate: null,
+    //       pdf: "https://example.com/qualifications/sarah_smith_board.pdf",
+    //       type: CodeModel(
+    //         id: "6",
+    //         code: "BOARD",
+    //         display: "Board Certified",
+    //         description: "Board Certification in Psychiatry",
+    //         codeTypeId: "4",
+    //         createdAt: "2020-01-01",
+    //         updatedAt: "2020-01-01",
+    //         codeTypeModel: CodeTypeModel(id: 4, name: "Qualification Type", createdAt: DateTime.parse("2020-01-01"), updatedAt: DateTime.parse("2020-01-01")),
+    //       ),
+    //     ),
+    //   ],
+    // ),
+  ];
 
   final List<DoctorModel> topDoctors = [];
 }
