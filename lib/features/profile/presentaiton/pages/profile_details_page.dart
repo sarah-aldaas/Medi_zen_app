@@ -150,7 +150,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
                                   child: Text(
-                                    patient.gender.display,
+                                    patient.gender!.display,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -172,7 +172,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
                                   child: Text(
-                                    patient.maritalStatus.display,
+                                    patient.maritalStatus!.display,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),

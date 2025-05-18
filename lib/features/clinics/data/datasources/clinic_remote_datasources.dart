@@ -14,9 +14,6 @@ abstract class ClinicRemoteDataSource {
     int page = 1,
     int perPage = 10,
   });
-  Future<Resource<PaginatedResponse<DoctorModel>>> getDoctorsOfClinic({
-    required String clinicId,
-  });
 
   Future<Resource<ClinicModel>> getSpecificClinic({required String id});
 }
@@ -58,26 +55,6 @@ class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
   }
 
   @override
-  Future<Resource<PaginatedResponse<DoctorModel>>> getDoctorsOfClinic({
-    required String clinicId,
-  }) async {
-    final response = await networkClient.invoke(
-      ClinicEndPoints.getDoctorsOfClinic(clinicId: clinicId),
-      RequestType.get,
-    );
-    return ResponseHandler<PaginatedResponse<DoctorModel>>(
-      response,
-    ).processResponse(
-      fromJson:
-          (json) => PaginatedResponse<DoctorModel>.fromJson(json, 'doctors', (
-            dataJson,
-          ) {
-            return DoctorModel.fromJson(dataJson);
-          }),
-    );
-  }
-
-  @override
   Future<Resource<ClinicModel>> getSpecificClinic({required String id}) async {
     final response = await networkClient.invoke(
       ClinicEndPoints.getSpecificClinics(id: id),
@@ -85,6 +62,6 @@ class ClinicRemoteDataSourceImpl implements ClinicRemoteDataSource {
     );
     return ResponseHandler<ClinicModel>(
       response,
-    ).processResponse(fromJson: (json) => ClinicModel.fromJson(json));
+    ).processResponse(fromJson: (json) => ClinicModel.fromJson(json['clinic']));
   }
 }

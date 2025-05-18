@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
+import 'package:medizen_app/features/appointment/pages/appointment_details.dart';
 import 'package:medizen_app/features/authentication/presentation/forget_password/view/otp_verify_password.dart';
 import 'package:medizen_app/features/authentication/presentation/otp/verified.dart';
 import 'package:medizen_app/features/authentication/presentation/reset_password/view/reset_password_screen.dart';
+import 'package:medizen_app/features/clinics/pages/clinic_details_page.dart';
+import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
 import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/profile_details_page.dart';
+import 'package:medizen_app/features/services/pages/health_care_service_details_page.dart';
 import '../../features/Complaint/view/complaint_list_screen.dart';
 import '../../features/articles/pages/articles.dart';
 import '../../features/articles/pages/my_book_mark.dart';
@@ -14,7 +18,8 @@ import '../../features/authentication/presentation/forget_password/view/forget_p
 import '../../features/authentication/presentation/login/view/login_screen.dart';
 import '../../features/authentication/presentation/otp/otp_verification_screen.dart';
 import '../../features/authentication/presentation/signup/view/signup_screen.dart';
-import '../../features/doctor/pages/doctor.dart';
+import '../../features/doctor/pages/details_doctor.dart';
+import '../../features/doctor/pages/doctors_page.dart';
 import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
 import '../../features/clinics/pages/clinics_page.dart';
@@ -54,6 +59,10 @@ enum AppRouter {
   verifyPasswordOtp,
   resetPassword,
   profileDetails,
+  clinicDetails,
+  healthServiceDetails,
+  doctorDetails,
+  appointmentDetails
 }
 
 GoRouter goRouter() {
@@ -230,6 +239,42 @@ GoRouter goRouter() {
               final extra = state.extra as Map<String, dynamic>?;
               UpdateProfileRequestModel patientModel = extra?['patientModel'];
               return EditProfileScreen(patientModel: patientModel);
+            },
+          ),
+          GoRoute(
+            path: '/clinic_details',
+            name: AppRouter.clinicDetails.name,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              String clinicId = extra?['clinicId']??"1";
+              return ClinicDetailsPage(clinicId: clinicId);
+            },
+          ),
+          GoRoute(
+            path: '/health_service_details',
+            name: AppRouter.healthServiceDetails.name,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              String serviceId = extra?['serviceId']??"4";
+              return HealthCareServiceDetailsPage(serviceId: serviceId);
+            },
+          ),
+          GoRoute(
+            path: '/doctor_details',
+            name: AppRouter.doctorDetails.name,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              DoctorModel doctorModel = extra?['doctorModel'];
+              return DoctorDetailsPage(doctorModel: doctorModel);
+            },
+          ),
+          GoRoute(
+            path: '/appointment_details',
+            name: AppRouter.appointmentDetails.name,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              String appointmentId = extra?['appointmentId']??"1";
+              return AppointmentDetailsPage(appointmentId: appointmentId,);
             },
           ),
         ],

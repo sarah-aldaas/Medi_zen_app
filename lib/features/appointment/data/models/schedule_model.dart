@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:medizen_app/features/appointment/data/models/repeat_model.dart';
 
 import '../../../doctor/data/model/doctor_model.dart';
@@ -23,16 +25,17 @@ class ScheduleModel {
     required this.practitioner,
   });
 
-  factory ScheduleModel.fromJson(Map<String, dynamic> json) {
+  factory ScheduleModel.fromJson(Map<String, dynamic> jsonData) {
+    Map<String, dynamic> jsonMapRepeat =jsonData['repeat'].runtimeType == String? json.decode(jsonData['repeat']):jsonData['repeat'];
     return ScheduleModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      active: (json['active'] as int) == 1,
-      planningHorizonStart: json['planning_horizon_start'] as String,
-      planningHorizonEnd: json['planning_horizon_end'] as String,
-      repeat: RepeatModel.fromJson(json['repeat'] as Map<String, dynamic>),
-      comment: json['comment'] as String?,
-      practitioner: DoctorModel.fromJson(json['practitioner'] as Map<String, dynamic>),
+      id: jsonData['id'] as int,
+      name: jsonData['name'] as String,
+      active: (jsonData['active'] as int) == 1,
+      planningHorizonStart: jsonData['planning_horizon_start'] as String,
+      planningHorizonEnd: jsonData['planning_horizon_end'] as String,
+      repeat: RepeatModel.fromJson(jsonMapRepeat),
+      comment: jsonData['comment'] as String?,
+      practitioner: DoctorModel.fromJson(jsonData['practitioner'] as Map<String, dynamic>),
     );
   }
 
@@ -74,3 +77,5 @@ class ScheduleModel {
     practitioner,
   );
 }
+
+

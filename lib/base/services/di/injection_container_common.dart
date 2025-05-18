@@ -11,6 +11,7 @@ import 'package:medizen_app/features/authentication/presentation/reset_password/
 import 'package:medizen_app/features/authentication/presentation/signup/cubit/signup_cubit.dart';
 import 'package:medizen_app/features/clinics/data/datasources/clinic_remote_datasources.dart';
 import 'package:medizen_app/features/doctor/data/datasource/doctor_remote_datasource.dart';
+import 'package:medizen_app/features/doctor/pages/cubit/doctor_cubit/doctor_cubit.dart';
 import 'package:medizen_app/features/profile/data/data_sources/address_remote_data_sources.dart';
 import 'package:medizen_app/features/profile/data/data_sources/telecom_remote_data_sources.dart';
 import 'package:medizen_app/features/profile/data/data_sources/profile_remote_data_sources.dart';
@@ -78,4 +79,5 @@ Future<void> _initBloc() async {
   serviceLocator.registerFactory<AppointmentCubit>(() => AppointmentCubit(remoteDataSource: serviceLocator()));
   serviceLocator.registerFactory<ClinicCubit>(() => ClinicCubit(remoteDataSource: serviceLocator()));
   serviceLocator.registerFactory<ServiceCubit>(() => ServiceCubit(remoteDataSource: serviceLocator()));
+  serviceLocator.registerFactory<DoctorCubit>(() => DoctorCubit(remoteDataSource: serviceLocator()));
 }

@@ -29,6 +29,7 @@ import 'base/services/di/injection_container_gen.dart';
 import 'base/services/localization/app_localization_service.dart';
 import 'base/services/storage/storage_service.dart';
 import 'base/theme/theme.dart';
+import 'features/appointment/pages/cubit/appointment_cubit/appointment_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -107,6 +108,10 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider<ServiceCubit>(
                   create: (context) => serviceLocator<ServiceCubit>(),
+                  lazy: false,
+                ),
+                BlocProvider<AppointmentCubit>(
+                  create: (context) => serviceLocator<AppointmentCubit>(),
                   lazy: false,
                 ),
                 BlocProvider<ClinicCubit>(

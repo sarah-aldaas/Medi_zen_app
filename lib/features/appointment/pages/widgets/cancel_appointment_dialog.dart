@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
-class CancelAppointmentDialog extends StatelessWidget {
+class CancelAppointmentDialog extends StatefulWidget {
+  final String appointmentId;
+
+  const CancelAppointmentDialog({super.key, required this.appointmentId});
+
+  @override
+  State<CancelAppointmentDialog> createState() => _CancelAppointmentDialogState();
+}
+
+class _CancelAppointmentDialogState extends State<CancelAppointmentDialog> {
+  final _reasonController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _reasonController.dispose();
+    super.dispose();
+  }
+@override
+  void initState() {
+    _reasonController.text="Because I want choose another time.";
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -16,9 +38,9 @@ class CancelAppointmentDialog extends StatelessWidget {
 
   Widget _buildDialogContent(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
@@ -34,41 +56,48 @@ class CancelAppointmentDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "cancelAppointment.title".tr(context), // Translated
-            style: TextStyle(
+            "cancelAppointment.title".tr(context),
+            style: const TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           Text(
-            "cancelAppointment.message".tr(context), // Translated
-            style: TextStyle(fontSize: 16.0),
+            "cancelAppointment.message".tr(context),
+            style: const TextStyle(fontSize: 16.0),
           ),
-          SizedBox(height: 8.0),
-          Text(
-            "cancelAppointment.refundNote".tr(context), // Translated
-            style: TextStyle(fontSize: 16.0),
+          const SizedBox(height: 16.0),
+          TextField(
+            controller: _reasonController,
+            decoration: InputDecoration(
+              labelText: "Reason cancel",
+              border: const OutlineInputBorder(),
+            ),
           ),
-          SizedBox(height: 24.0),
-          Row(
+          const SizedBox(height: 24.0),
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("cancelAppointment.backButton".tr(context)), // Translated
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                ),
+                onPressed: () => Navigator.pop(context),
+                child: Text("cancelAppointment.backButton".tr(context)),
               ),
-              SizedBox(width: 16.0),
+              const SizedBox(width: 16.0),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text("cancelAppointment.confirmButton".tr(context)), // Translated
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.blue,
-                  backgroundColor: Colors.white,
-                ),
+                onPressed: () async {
+                  if (_reasonController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Please enter a cancellation reason")),
+                    );
+                    return;
+                  }
+                  setState(() => _isLoading = true);
+                  Navigator.of(context).pop(_reasonController.text);
+                },
+                child: Text("cancelAppointment.confirmButton".tr(context)),
               ),
             ],
           ),

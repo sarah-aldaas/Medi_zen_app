@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../base/theme/app_color.dart';
-import '../../base/theme/app_style.dart';
+import '../../../base/theme/app_color.dart';
+import '../../../base/theme/app_style.dart';
 
 class DoctorCard extends StatelessWidget {
   final String doctorName;

@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_update_model.dart';
+import 'package:medizen_app/features/appointment/data/models/days_work_doctor_model.dart';
 import 'package:medizen_app/features/appointment/data/models/slots_model.dart';
 import 'package:meta/meta.dart';
-
+import 'package:flutter/foundation.dart';
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/data/models/public_response_model.dart';
 import '../../../../../base/services/network/resource.dart';
@@ -18,40 +19,80 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
   AppointmentCubit({required this.remoteDataSource}) : super(AppointmentInitial());
 
-
-  Future<void> geSlotsAppointment({required String practitionerId,required String date}) async {
-    emit(AppointmentLoading());
+  Future<void> geSlotsAppointment({required String practitionerId, required String date}) async {
+    emit(SlotsAppointmentLoading());
     final result = await remoteDataSource.getAllSlots(practitionerId: practitionerId, date: date);
-    if (result is Success<List<SlotModel>>) {
-      emit(SlotsAppointmentSuccess(
-        listSlots: result.data,
-      ));
-    } else if (result is ResponseError<List<SlotModel>>) {
-      emit(AppointmentError(error: result.message ?? 'Failed to fetch Appointments'));
+    if (result is Success<AllSlotModel>) {
+      emit(SlotsAppointmentSuccess(listSlots: result.data.listSlots!));
+    } else if (result is ResponseError<AllSlotModel>) {
+      emit(AppointmentError(error: result.message ?? 'Failed to fetch slots'));
     }
   }
 
-  Future<void> getMyAppointment() async {
-    emit(AppointmentLoading());
-    final result = await remoteDataSource.getMyAppointment();
+  Future<void> getDaysWorkDoctor({required String doctorId}) async {
+    emit(DaysWorkDoctorLoading());
+    final result = await remoteDataSource.getDaysWorkDoctor(doctorId: doctorId);
+    if (result is Success<DaysWorkDoctorModel>) {
+      emit(DaysWorkDoctorSuccess(days: result.data));
+    } else if (result is ResponseError<DaysWorkDoctorModel>) {
+      emit(AppointmentError(error: result.message ?? 'Failed to fetch days'));
+    }
+  }
+
+  int _currentPage = 1;
+  bool _hasMore = true;
+  Map<String, dynamic> _currentFilters = {};
+  List<AppointmentModel> _allAppointments = [];
+
+  Future<void> getMyAppointment({Map<String, dynamic>? filters, bool loadMore = false}) async {
+    if (!loadMore) {
+      _currentPage = 1;
+      _hasMore = true;
+      _allAppointments = [];
+      emit(AppointmentLoading());
+    } else if (!_hasMore) {
+      return;
+    }
+
+    if (filters != null) {
+      _currentFilters = filters;
+    }
+
+    final result = await remoteDataSource.getMyAppointment(filters: _currentFilters, page: _currentPage, perPage: 5);
+
     if (result is Success<PaginatedResponse<AppointmentModel>>) {
-      emit(AppointmentSuccess(
-        paginatedResponse: result.data,
-      ));
+     try {
+        _allAppointments.addAll(result.data.paginatedData!.items);
+        _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _currentPage++;
+
+        emit(
+          AppointmentSuccess(
+            hasMore: _hasMore,
+            paginatedResponse: PaginatedResponse<AppointmentModel>(
+              paginatedData: PaginatedData<AppointmentModel>(items: _allAppointments),
+              meta: result.data.meta,
+              links: result.data.links,
+            ),
+          ),
+        );
+      }catch(e){
+       emit(AppointmentError(error:result.data.msg ?? 'Failed to fetch Appointments'));
+
+     }
     } else if (result is ResponseError<PaginatedResponse<AppointmentModel>>) {
       emit(AppointmentError(error: result.message ?? 'Failed to fetch Appointments'));
     }
   }
 
   Future<void> createAppointment({required AppointmentCreateModel appointmentModel}) async {
-    emit(AppointmentLoading());
+    emit(AppointmentLoading(isLoadMore: false));
     final result = await remoteDataSource.createAppointment(appointmentModel: appointmentModel);
     if (result is Success<PublicResponseModel>) {
       if (result.data.status) {
-        await getMyAppointment();
+        emit(CreateAppointmentSuccess());
       } else {
-        ShowToast.showToastError(message: result.data.msg);
-        emit(AppointmentError(error: result.data.msg ));
+        emit(AppointmentError(error: result.data.msg));
       }
     } else if (result is ResponseError<PublicResponseModel>) {
       ShowToast.showToastError(message: result.message ?? 'Failed to create appointment');
@@ -60,7 +101,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   }
 
   Future<void> updateAppointment({required String id, required AppointmentUpdateModel appointmentModel}) async {
-    emit(AppointmentLoading());
+    emit(AppointmentLoading(isLoadMore: false));
     final result = await remoteDataSource.updateAppointment(id: id, appointmentModel: appointmentModel);
     if (result is Success<PublicResponseModel>) {
       if (result.data.status) {
@@ -75,9 +116,9 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> cancelAppointment({required String id,required String cancellationReason }) async {
-    emit(AppointmentLoading());
-    final result = await remoteDataSource.cancelAppointment(id: id,cancellationReason:cancellationReason );
+  Future<void> cancelAppointment({required String id, required String cancellationReason}) async {
+    emit(AppointmentLoading(isLoadMore: false));
+    final result = await remoteDataSource.cancelAppointment(id: id, cancellationReason: cancellationReason);
     if (result is Success<PublicResponseModel>) {
       if (result.data.status) {
         await getMyAppointment();
@@ -91,16 +132,16 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<AppointmentModel?> getDetailsAppointment({required String id}) async {
-    emit(AppointmentLoading());
+  Future<void> getDetailsAppointment({required String id}) async {
+    emit(AppointmentLoading(isLoadMore: false));
     final result = await remoteDataSource.getDetailsAppointment(id: id);
     if (result is Success<AppointmentModel>) {
-      return result.data;
+      emit(AppointmentDetailsSuccess(appointmentModel: result.data));
     } else if (result is ResponseError<AppointmentModel>) {
       ShowToast.showToastError(message: result.message ?? 'Failed to fetch appointment details');
       emit(AppointmentError(error: result.message ?? 'Failed to fetch appointment details'));
-      return null;
     }
-    return null;
   }
 }
+
+

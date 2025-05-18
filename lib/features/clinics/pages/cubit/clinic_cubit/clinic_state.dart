@@ -24,9 +24,10 @@ class ClinicSuccess extends ClinicState {
   ClinicSuccess({required this.clinics});
 }
 
-class DoctorsOfClinicSuccess extends ClinicState {
-  final PaginatedResponse<DoctorModel> paginatedResponse;
-  DoctorsOfClinicSuccess({required this.paginatedResponse});
+class ClinicLoadedSuccess extends ClinicState {
+  final ClinicModel clinic;
+
+  ClinicLoadedSuccess({required this.clinic});
 }
 
 class ClinicError extends ClinicState {

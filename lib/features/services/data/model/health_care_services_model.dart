@@ -1,19 +1,18 @@
+import 'package:medizen_app/base/data/models/code_type_model.dart';
 import '../../../clinics/data/models/clinic_model.dart';
-import 'category_model.dart';
-import 'eligibility_model.dart';
 
 class HealthCareServiceModel {
-  final int id;
-  final String name;
-  final String comment;
+  final String? id;
+  final String? name;
+  final String? comment;
   final String? extraDetails;
   final String? photo;
-  final bool appointmentRequired;
-  final double price;
-  final bool active;
-  final CategoryModel category;
-  final ClinicModel clinic;
-  final List<EligibilityModel> eligibilities;
+  final bool? appointmentRequired;
+  final String? price;
+  final bool? active;
+  final CodeModel? category;
+  final ClinicModel? clinic;
+  final List<CodeModel>? eligibilities;
 
   HealthCareServiceModel({
     required this.id,
@@ -24,26 +23,26 @@ class HealthCareServiceModel {
     required this.appointmentRequired,
     required this.price,
     required this.active,
-    required this.category,
-    required this.clinic,
-    required this.eligibilities,
+     this.category,
+     this.clinic,
+     this.eligibilities,
   });
 
   factory HealthCareServiceModel.fromJson(Map<String, dynamic> json) {
     return HealthCareServiceModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      comment: json['comment'] as String,
-      extraDetails: json['extra_details'] as String?,
-      photo: json['photo'] as String?,
-      appointmentRequired: (json['appointmentRequired'] as int) == 1,
-      price: double.parse(json['price'] as String),
-      active: (json['active'] as int) == 1,
-      category: CategoryModel.fromJson(json['category'] as Map<String, dynamic>),
-      clinic: ClinicModel.fromJson(json['clinic'] as Map<String, dynamic>),
-      eligibilities: (json['eligibilities'] as List)
-          .map((item) => EligibilityModel.fromJson(item as Map<String, dynamic>))
-          .toList(),
+      id: json['id'].toString(),
+      name: json['name'].toString(),
+      comment: json['comment'].toString(),
+      extraDetails: json['extra_details'].toString(),
+      photo: json['photo'].toString(),
+      appointmentRequired: (json['appointmentRequired'].toString()) == "1",
+      price: json['price'].toString(),
+      active: json['active'].toString()=="1"?true:false,
+      category:json['category']!=null? CodeModel.fromJson(json['category'] as Map<String, dynamic>):null,
+      clinic:json['clinic']!=null?  ClinicModel.fromJson(json['clinic'] as Map<String, dynamic>):null,
+      eligibilities:json['eligibilities']!=null? (json['eligibilities'] as List)
+          .map((item) => CodeModel.fromJson(item as Map<String, dynamic>))
+          .toList():null,
     );
   }
 
@@ -54,12 +53,12 @@ class HealthCareServiceModel {
       'comment': comment,
       'extra_details': extraDetails,
       'photo': photo,
-      'appointmentRequired': appointmentRequired ? 1 : 0,
-      'price': price.toStringAsFixed(2),
-      'active': active ? 1 : 0,
-      'category': category.toJson(),
-      'clinic': clinic.toJson(),
-      'eligibilities': eligibilities.map((e) => e.toJson()).toList(),
+      'appointmentRequired': appointmentRequired.toString()=="1" ? 1 : 0,
+      'price': price.toString(),
+      'active': active.toString()=="1" ? 1 : 0,
+      'category': category!.toJson(),
+      'clinic': clinic!.toJson(),
+      'eligibilities': eligibilities!.map((e) => e.toJson()).toList(),
     };
   }
 

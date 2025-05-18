@@ -17,8 +17,15 @@ class ClinicCubit extends Cubit<ClinicState> {
   bool isLoading = false; // Add loading state tracking
   String? currentSearchQuery;
   List<ClinicModel> allClinics = [];
+  bool _isClosed = false;
 
   ClinicCubit({required this.remoteDataSource}) : super(ClinicInitial());
+
+  @override
+  Future<void> close() {
+    _isClosed = true;
+    return super.close();
+  }
 
   Future<void> fetchClinics({
     String? searchQuery, 
@@ -46,14 +53,14 @@ class ClinicCubit extends Cubit<ClinicState> {
       final result = await remoteDataSource.getAllClinics(
         searchQuery: currentSearchQuery,
         page: currentPage,
-        perPage: 10,
+        perPage: 15,
       );
 
       if (result is Success<PaginatedResponse<ClinicModel>>) {
-        if (!result.data.status || result.data.paginatedData == null) {
+        if (!result.data.status! || result.data.paginatedData == null) {
           hasMore = false;
           emit(allClinics.isEmpty
-              ? ClinicEmpty(message: result.data.msg)
+              ? ClinicEmpty(message: result.data.msg!)
               : ClinicSuccess(clinics: allClinics));
           return;
         }
@@ -66,7 +73,7 @@ class ClinicCubit extends Cubit<ClinicState> {
                 existingClinic.id == newClinic.id)).toList();
 
         allClinics.addAll(newUniqueClinics);
-        hasMore = newClinics.length >= 10;
+        hasMore = newClinics.length >= 15;
 
         emit(ClinicSuccess(clinics: allClinics));
       } else if (result is ResponseError<PaginatedResponse<ClinicModel>>) {
@@ -78,36 +85,28 @@ class ClinicCubit extends Cubit<ClinicState> {
     }
   }
 
-  Future<ClinicModel?> getSpecificClinic({required String id}) async {
+
+  Future<void> getSpecificClinic({required String id}) async {
+    if (_isClosed) return;
+
     emit(ClinicLoading());
-    final result = await remoteDataSource.getSpecificClinic(id: id);
-    if (result is Success<ClinicModel>) {
-      return result.data;
-    } else if (result is ResponseError<ClinicModel>) {
-      ShowToast.showToastError(
-        message: result.message ?? 'Failed to fetch clinic details',
-      );
-      emit(
-        ClinicError(error: result.message ?? 'Failed to fetch clinic details'),
-      );
-      return null;
+    try {
+      final result = await remoteDataSource.getSpecificClinic(id: id);
+      if (_isClosed) return;
+
+      if (result is Success<ClinicModel>) {
+        emit(ClinicLoadedSuccess(clinic: result.data));
+      } else if (result is ResponseError<ClinicModel>) {
+        ShowToast.showToastError(
+          message: result.message ?? 'Failed to fetch clinic details',
+        );
+        emit(ClinicError(error: result.message ?? 'Failed to fetch clinic details'));
+      }
+    } catch (e) {
+      if (!_isClosed) {
+        emit(ClinicError(error: 'An unexpected error occurred'));
+      }
     }
-    return null;
   }
 
-  Future<void> getDoctorsOfClinic({required String clinicId}) async {
-    emit(ClinicLoading());
-    final result = await remoteDataSource.getDoctorsOfClinic(
-      clinicId: clinicId,
-    );
-    if (result is Success<PaginatedResponse<DoctorModel>>) {
-      emit(DoctorsOfClinicSuccess(paginatedResponse: result.data));
-    } else if (result is ResponseError<PaginatedResponse<DoctorModel>>) {
-      emit(
-        ClinicError(
-          error: result.message ?? 'Failed to fetch doctors of clinic',
-        ),
-      );
-    }
-  }
 }

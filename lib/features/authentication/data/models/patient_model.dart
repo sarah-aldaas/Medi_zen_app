@@ -27,8 +27,8 @@ class PatientModel extends Equatable {
   final String? bloodId;
   final String createdAt;
   final String updatedAt;
-  final CodeModel gender;
-  final CodeModel maritalStatus;
+  final CodeModel? gender;
+  final CodeModel? maritalStatus;
   final CodeModel? bloodType;
   final AddressModel? addressModel; // Single address or null
   final List<TelecomModel>? telecoms; // List of telecoms
@@ -57,8 +57,8 @@ class PatientModel extends Equatable {
     this.bloodId,
     required this.createdAt,
     required this.updatedAt,
-    required this.gender,
-    required this.maritalStatus,
+     this.gender,
+     this.maritalStatus,
     this.bloodType,
     this.addressModel,
     this.telecoms,
@@ -89,8 +89,8 @@ class PatientModel extends Equatable {
       bloodId: json['blood_id']?.toString(),
       createdAt: json['created_at']?.toString() ?? '',
       updatedAt: json['updated_at']?.toString() ?? '',
-      gender: CodeModel.fromJson(json['gender'] as Map<String, dynamic>),
-      maritalStatus: CodeModel.fromJson(json['marital_status'] as Map<String, dynamic>),
+      gender:json['gender']!=null? CodeModel.fromJson(json['gender'] as Map<String, dynamic>):null,
+      maritalStatus: json['marital_status']!=null?CodeModel.fromJson(json['marital_status'] as Map<String, dynamic>):null,
       bloodType:
           json['blood_type'] != null
               ? CodeModel.fromJson(json['blood_type'] as Map<String, dynamic>)
@@ -137,8 +137,8 @@ class PatientModel extends Equatable {
       'blood_id': bloodId,
       'created_at': createdAt,
       'updated_at': updatedAt,
-      'gender': gender.toJson(),
-      'marital_status': maritalStatus.toJson(),
+      'gender': gender!.toJson(),
+      'marital_status': maritalStatus!.toJson(),
       'blood_type': bloodType?.toJson(),
       'blood': bloodType?.toJson(),
       'addresses': addressModel?.toJson(), // Convert single address to JSON

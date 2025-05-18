@@ -1,15 +1,15 @@
 class PaginatedResponse<T> {
-  final bool status;
-  final int errNum;
-  final String msg;
+  final bool? status;
+  final int? errNum;
+  final String? msg;
   final PaginatedData<T>? paginatedData;
   final MetaModel? meta;
   final LinksModel? links;
 
   PaginatedResponse({
-    required this.status,
-    required this.errNum,
-    required this.msg,
+     this.status,
+     this.errNum,
+     this.msg,
     this.paginatedData,
     this.meta,
     this.links,
@@ -30,12 +30,12 @@ class PaginatedResponse<T> {
               fromJsonT,
             )
           : null,
-      meta: json['meta'] != null
-          ? MetaModel.fromJson(json['meta'])
-          : null,
-      links: json['links'] != null
-          ? LinksModel.fromJson(json['links'])
-          : null,
+      meta:json[dataKey] != null? json[dataKey]['meta'] != null
+          ? MetaModel.fromJson(json[dataKey]['meta'])
+          : null:null,
+      links:json[dataKey] != null? json[dataKey]['links'] != null
+          ? LinksModel.fromJson(json[dataKey]['links'])
+          : null:null,
     );
   }
 }

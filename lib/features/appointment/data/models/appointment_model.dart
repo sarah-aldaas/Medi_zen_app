@@ -5,19 +5,19 @@ import '../../../authentication/data/models/patient_model.dart';
 import '../../../doctor/data/model/doctor_model.dart';
 
 class AppointmentModel {
-  final int id;
-  final String reason;
-  final String description;
-  final String startDate;
-  final String endDate;
-  final int minutesDuration;
+  final String? id;
+  final String? reason;
+  final String? description;
+  final String? startDate;
+  final String? endDate;
+  final String? minutesDuration;
   final String? note;
   final String? cancellationDate;
   final String? cancellationReason;
-  final CodeModel type;
-  final CodeModel status;
-  final DoctorModel doctor;
-  final PatientModel patient;
+  final CodeModel? type;
+  final CodeModel? status;
+  final DoctorModel? doctor;
+  final PatientModel? patient;
   final dynamic previousAppointment;
   final dynamic createdByPractitioner;
 
@@ -41,19 +41,19 @@ class AppointmentModel {
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
     return AppointmentModel(
-      id: json['id'] as int,
-      reason: json['reason'] as String,
-      description: json['description'] as String,
-      startDate: json['start_date'] as String,
-      endDate: json['end_date'] as String,
-      minutesDuration: json['minutes_duration'] as int,
-      note: json['note'] as String?,
-      cancellationDate: json['cancellation_date'] as String?,
-      cancellationReason: json['cancellation_reason'] as String?,
-      type: CodeModel.fromJson(json['type'] as Map<String, dynamic>),
-      status: CodeModel.fromJson(json['status'] as Map<String, dynamic>),
-      doctor: DoctorModel.fromJson(json['doctor'] as Map<String, dynamic>),
-      patient: PatientModel.fromJson(json['patient'] as Map<String, dynamic>),
+      id: json['id'].toString(),
+      reason: json['reason'].toString(),
+      description: json['description'].toString(),
+      startDate: json['start_date'].toString(),
+      endDate: json['end_date'].toString(),
+      minutesDuration: json['minutes_duration'].toString(),
+      note: json['note'].toString(),
+      cancellationDate: json['cancellation_date'].toString(),
+      cancellationReason: json['cancellation_reason'].toString(),
+      type: json['type']!=null?CodeModel.fromJson(json['type'] as Map<String, dynamic>):null,
+      status:json['status']!=null? CodeModel.fromJson(json['status'] as Map<String, dynamic>):null,
+      doctor:json['doctor']!=null? DoctorModel.fromJson(json['doctor'] as Map<String, dynamic>):null,
+      patient:json['patient']!=null? PatientModel.fromJson(json['patient'] as Map<String, dynamic>):null,
       previousAppointment: json['previous_appointment'],
       createdByPractitioner: json['created_by_practitioner'],
     );
@@ -70,10 +70,10 @@ class AppointmentModel {
       'note': note,
       'cancellation_date': cancellationDate,
       'cancellation_reason': cancellationReason,
-      'type': type.toJson(),
-      'status': status.toJson(),
-      'doctor': doctor.toJson(),
-      'patient': patient.toJson(),
+      'type': type!.toJson(),
+      'status': status!.toJson(),
+      'doctor': doctor!.toJson(),
+      'patient': patient!.toJson(),
       'previous_appointment': previousAppointment,
       'created_by_practitioner': createdByPractitioner,
     };
