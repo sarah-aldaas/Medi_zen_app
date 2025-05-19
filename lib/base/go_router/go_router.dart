@@ -10,6 +10,7 @@ import 'package:medizen_app/features/clinics/pages/clinic_details_page.dart';
 import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
 import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/profile_details_page.dart';
+import 'package:medizen_app/features/profile/presentaiton/widgets/address/address_list_page.dart';
 import 'package:medizen_app/features/services/pages/health_care_service_details_page.dart';
 import '../../features/Complaint/view/complaint_list_screen.dart';
 import '../../features/articles/pages/articles.dart';
@@ -62,7 +63,8 @@ enum AppRouter {
   clinicDetails,
   healthServiceDetails,
   doctorDetails,
-  appointmentDetails
+  appointmentDetails,
+  addressListPage,
 }
 
 GoRouter goRouter() {
@@ -275,6 +277,13 @@ GoRouter goRouter() {
               final extra = state.extra as Map<String, dynamic>?;
               String appointmentId = extra?['appointmentId']??"1";
               return AppointmentDetailsPage(appointmentId: appointmentId,);
+            },
+          ),
+          GoRoute(
+            path: '/address_list_page',
+            name: AppRouter.addressListPage.name,
+            builder: (context, state) {
+              return AddressListPage();
             },
           ),
         ],
