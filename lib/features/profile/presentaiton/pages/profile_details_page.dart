@@ -10,10 +10,10 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/telecom_cubit/telecom_cubit.dart';
-import 'package:medizen_app/features/profile/presentaiton/pages/address_page.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/telecom_page.dart';
 
 import '../cubit/profile_cubit/profile_cubit.dart';
+import '../widgets/address/address_list_page.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -270,7 +270,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                       ],
                     ),
                     const Gap(10),
-                    AddressPage(addressModel: patient.addressModel),
+                    SizedBox(
+                        height: context.height/1.5,
+                        child: AddressListPage()),
+                    // AddressPage(addressModel: patient.addressModel),
                     const Gap(30),
                     Row(
                       children: [
