@@ -12,7 +12,7 @@ part 'clinic_state.dart';
 
 class ClinicCubit extends Cubit<ClinicState> {
   final ClinicRemoteDataSource remoteDataSource;
- int currentPage = 1;
+  int currentPage = 1;
   bool hasMore = true;
   bool isLoading = false; // Add loading state tracking
   String? currentSearchQuery;
@@ -28,7 +28,7 @@ class ClinicCubit extends Cubit<ClinicState> {
   }
 
   Future<void> fetchClinics({
-    String? searchQuery, 
+    String? searchQuery,
     bool loadMore = false,
   }) async {
     // Prevent multiple simultaneous requests
@@ -59,18 +59,26 @@ class ClinicCubit extends Cubit<ClinicState> {
       if (result is Success<PaginatedResponse<ClinicModel>>) {
         if (!result.data.status! || result.data.paginatedData == null) {
           hasMore = false;
-          emit(allClinics.isEmpty
-              ? ClinicEmpty(message: result.data.msg!)
-              : ClinicSuccess(clinics: allClinics));
+          emit(
+            allClinics.isEmpty
+                ? ClinicEmpty(message: result.data.msg!)
+                : ClinicSuccess(clinics: allClinics),
+          );
           return;
         }
 
         final newClinics = result.data.paginatedData!.items;
-        
+
         // Filter out any duplicates before adding
-        final newUniqueClinics = newClinics.where((newClinic) => 
-            !allClinics.any((existingClinic) => 
-                existingClinic.id == newClinic.id)).toList();
+        final newUniqueClinics =
+            newClinics
+                .where(
+                  (newClinic) =>
+                      !allClinics.any(
+                        (existingClinic) => existingClinic.id == newClinic.id,
+                      ),
+                )
+                .toList();
 
         allClinics.addAll(newUniqueClinics);
         hasMore = newClinics.length >= 15;
@@ -100,7 +108,11 @@ class ClinicCubit extends Cubit<ClinicState> {
         ShowToast.showToastError(
           message: result.message ?? 'Failed to fetch clinic details',
         );
-        emit(ClinicError(error: result.message ?? 'Failed to fetch clinic details'));
+        emit(
+          ClinicError(
+            error: result.message ?? 'Failed to fetch clinic details',
+          ),
+        );
       }
     } catch (e) {
       if (!_isClosed) {

@@ -7,19 +7,19 @@ class PaginatedResponse<T> {
   final LinksModel? links;
 
   PaginatedResponse({
-     this.status,
-     this.errNum,
-     this.msg,
+    this.status,
+    this.errNum,
+    this.msg,
     this.paginatedData,
     this.meta,
     this.links,
   });
 
   factory PaginatedResponse.fromJson(
-    Map<String, dynamic> json,
-    String dataKey,
-    T Function(Map<String, dynamic>) fromJsonT,
-  ) {
+      Map<String, dynamic> json,
+      String dataKey,
+      T Function(Map<String, dynamic>) fromJsonT,
+      ) {
     return PaginatedResponse<T>(
       status: json['status'] as bool,
       errNum: json['errNum'] as int,

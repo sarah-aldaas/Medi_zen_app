@@ -12,15 +12,15 @@ class ClinicLoading extends ClinicState {
 }
 
 class ClinicEmpty extends ClinicState {
-    final String message;
-  
+  final String message;
+
   ClinicEmpty({required this.message});
 
 }
 
 class ClinicSuccess extends ClinicState {
   final List<ClinicModel> clinics;
-  
+
   ClinicSuccess({required this.clinics});
 }
 

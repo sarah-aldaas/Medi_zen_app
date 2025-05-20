@@ -10,8 +10,8 @@ import 'package:medizen_app/features/clinics/pages/clinic_details_page.dart';
 import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
 import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/profile_details_page.dart';
-import 'package:medizen_app/features/profile/presentaiton/widgets/address/address_list_page.dart';
 import 'package:medizen_app/features/services/pages/health_care_service_details_page.dart';
+
 import '../../features/Complaint/view/complaint_list_screen.dart';
 import '../../features/articles/pages/articles.dart';
 import '../../features/articles/pages/my_book_mark.dart';
@@ -19,6 +19,7 @@ import '../../features/authentication/presentation/forget_password/view/forget_p
 import '../../features/authentication/presentation/login/view/login_screen.dart';
 import '../../features/authentication/presentation/otp/otp_verification_screen.dart';
 import '../../features/authentication/presentation/signup/view/signup_screen.dart';
+import '../../features/clinics/pages/clinics_page.dart';
 import '../../features/doctor/pages/details_doctor.dart';
 import '../../features/doctor/pages/doctors_page.dart';
 import '../../features/help_center/pages/help_center.dart';
@@ -28,6 +29,8 @@ import '../../features/notifications/pages/notification_settings.dart';
 import '../../features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 import '../../features/profile/presentaiton/pages/edit_profile_screen.dart';
 import '../../features/profile/presentaiton/pages/profile.dart';
+import '../../features/profile/presentaiton/pages/address_page.dart';
+import '../../features/profile/presentaiton/pages/telecom_page.dart';
 import '../../features/start_app/on_boarding/view/on_boarding_screen.dart';
 import '../../features/start_app/splash_screen/view/splash_screen.dart';
 import '../../features/start_app/welcome/view/welcome_screen.dart';
@@ -65,6 +68,9 @@ enum AppRouter {
   doctorDetails,
   appointmentDetails,
   addressListPage,
+  clinicService,
+  addressDetails,
+  telecomDetails,
 }
 
 GoRouter goRouter() {
@@ -229,7 +235,7 @@ GoRouter goRouter() {
               return BlocProvider(
                 create:
                     (context) =>
-                        serviceLocator<ProfileCubit>()..fetchMyProfile(),
+                serviceLocator<ProfileCubit>()..fetchMyProfile(),
                 child: ProfileDetailsPage(),
               );
             },
@@ -248,7 +254,8 @@ GoRouter goRouter() {
             name: AppRouter.clinicDetails.name,
             builder: (context, state) {
               final extra = state.extra as Map<String, dynamic>?;
-              String clinicId = extra?['clinicId']??"1";
+
+              String clinicId = extra?['clinicId'] ?? "1";
               return ClinicDetailsPage(clinicId: clinicId);
             },
           ),
@@ -257,7 +264,7 @@ GoRouter goRouter() {
             name: AppRouter.healthServiceDetails.name,
             builder: (context, state) {
               final extra = state.extra as Map<String, dynamic>?;
-              String serviceId = extra?['serviceId']??"4";
+              String serviceId = extra?['serviceId'] ?? "4";
               return HealthCareServiceDetailsPage(serviceId: serviceId);
             },
           ),
@@ -283,9 +290,19 @@ GoRouter goRouter() {
             path: '/address_list_page',
             name: AppRouter.addressListPage.name,
             builder: (context, state) {
+
               return AddressListPage();
             },
           ),
+          GoRoute(
+            path: "/telecomDetails",
+            name: AppRouter.telecomDetails.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return TelecomPage();
+            },
+          ),
+
+
         ],
       ),
     ],

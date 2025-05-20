@@ -17,6 +17,7 @@ import 'package:medizen_app/features/profile/data/data_sources/telecom_remote_da
 import 'package:medizen_app/features/profile/data/data_sources/profile_remote_data_sources.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/address_cubit/address_cubit.dart';
 import 'package:medizen_app/features/services/pages/cubits/service_cubit/service_cubit.dart';
+
 import '../../../features/authentication/data/datasource/auth_remote_data_source.dart';
 import '../../../features/authentication/presentation/login/cubit/login_cubit.dart';
 import '../../../features/authentication/presentation/otp/cubit/otp_cubit.dart';
@@ -57,7 +58,6 @@ Future<void> _initDataSource() async {
   serviceLocator.registerLazySingleton<AppointmentRemoteDataSource>(() => AppointmentRemoteDataSourceImpl(networkClient: serviceLocator()));
   serviceLocator.registerLazySingleton<ClinicRemoteDataSource>(() => ClinicRemoteDataSourceImpl(networkClient: serviceLocator()));
   serviceLocator.registerLazySingleton<DoctorRemoteDataSource>(() => DoctorRemoteDataSourceImpl(networkClient: serviceLocator()));
-
   serviceLocator.registerLazySingleton<ServicesRemoteDataSource>(() => ServicesRemoteDataSourceImpl(networkClient: serviceLocator()));
 }
 
@@ -70,9 +70,7 @@ Future<void> _initBloc() async {
   serviceLocator.registerFactory<LoginCubit>(() => LoginCubit(authRemoteDataSource: serviceLocator()));
 
   serviceLocator.registerFactory<LogoutCubit>(() => LogoutCubit(authRemoteDataSource: serviceLocator()));
-
   serviceLocator.registerFactory<CodeTypesCubit>(() => CodeTypesCubit(remoteDataSource: serviceLocator()));
-
   serviceLocator.registerFactory<ProfileCubit>(() => ProfileCubit(remoteDataSource: serviceLocator()));
   serviceLocator.registerFactory<TelecomCubit>(() => TelecomCubit(remoteDataSource: serviceLocator()));
   serviceLocator.registerFactory<AddressCubit>(() => AddressCubit(remoteDataSource: serviceLocator()));

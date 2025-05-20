@@ -13,7 +13,6 @@ import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 
 import '../../../main.dart';
 import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
-import '../../services/Services.dart';
 
 class HomePageBody extends StatefulWidget {
   const HomePageBody({super.key});
@@ -23,8 +22,7 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-  ///modify clinic id
-  final String clinicId="1";
+  final String clinicId = "1";
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +115,6 @@ class _HomePageBodyState extends State<HomePageBody> {
                 const Gap(20),
                 SomeArticles(),
                 const Gap(20),
-                SomeServices(),
               ],
             ),
           ),
@@ -139,7 +136,10 @@ class _HomePageBodyState extends State<HomePageBody> {
               const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [GreetingWidget(), Text("${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}", style: TextStyle(fontWeight: FontWeight.bold))],
+                children: [
+                  GreetingWidget(),
+                  Text("${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}", style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
               ),
             ],
           ),

@@ -75,13 +75,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
         throw Exception('Invalid PDF URL');
       }
 
-      // Update progress state
       setState(() {
         _downloadProgress[qualificationId] = 0;
         _downloadComplete[qualificationId] = false;
       });
 
-      // Request storage permission (Android only)
       if (Platform.isAndroid) {
         final status = await Permission.storage.request();
         if (!status.isGranted) {
@@ -89,11 +87,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
         }
       }
 
-      // Get temporary directory
       final directory = await getTemporaryDirectory();
       final filePath = '${directory.path}/qualification_$qualificationId.pdf';
 
-      // Download the file
       await _dio.download(
         pdfUrl,
         filePath,
@@ -306,7 +302,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                             _availableSlots.map((slot) {
                               final startTime = DateTime.parse(slot.startDate);
                               final endTime = DateTime.parse(slot.endDate);
-                              final timeStr = '${DateFormat('hh:mm a').format(startTime)}';
+                              final timeStr = '${DateFormat('hh:mm a').format(startTime)}'; // - ${DateFormat('hh:mm a').format(endTime)}';
                               final isSelected = _selectedTime?.hour == startTime.hour && _selectedTime?.minute == startTime.minute;
                               final isBooked = slot.status.code != 'available';
 
@@ -426,25 +422,6 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                       margin: EdgeInsets.all(5),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
                       child: ListTile(
-                        title: Text("${widget.doctorModel.qualifications![index].type.display}"),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text("${widget.doctorModel.qualifications![index].issuer}"),
-                              Row(
-                                children: [
-                                  Icon(Icons.date_range_outlined),
-                                  Text(
-                                    " ${widget.doctorModel.qualifications![index].startDate} - ${widget.doctorModel.qualifications![index].endDate ?? "continue"}",
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
                         trailing: Stack(
                           alignment: Alignment.center,
                           children: [
@@ -476,11 +453,30 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                             ),
                           ],
                         ),
+                        title: Text("${widget.doctorModel.qualifications![index].type.display}"),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("${widget.doctorModel.qualifications![index].issuer}"),
+                              Row(
+                                children: [
+                                  Icon(Icons.date_range_outlined),
+                                  Text(
+                                    " ${widget.doctorModel.qualifications![index].startDate} - ${widget.doctorModel.qualifications![index].endDate ?? "continue"}",
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   }),
                 ),
-              if (widget.doctorModel.qualifications!.isEmpty) Text("There are no qualifications"),
+              if (widget.doctorModel.qualifications!.isEmpty) Text("There are not any qualifications"),
               Divider(),
             ],
           ),
@@ -607,4 +603,3 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     );
   }
 }
-
