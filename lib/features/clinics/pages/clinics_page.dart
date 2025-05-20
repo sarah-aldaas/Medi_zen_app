@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -8,19 +7,13 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
 import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
-import 'package:medizen_app/features/home_page/pages/widgets/search_field.dart';
-import 'package:medizen_app/base/go_router/go_router.dart';
-import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
-import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
-import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
+
 class ClinicsPage extends StatefulWidget {
   const ClinicsPage({Key? key}) : super(key: key);
 

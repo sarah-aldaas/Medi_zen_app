@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
 import '../data/model/health_care_services_model.dart';
@@ -49,7 +50,7 @@ class _HealthCareServiceDetailsPageState
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: subTextColor),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.pop(),
         ),
         elevation: 3, // ظل أكثر بروزًا
         shape: const RoundedRectangleBorder(

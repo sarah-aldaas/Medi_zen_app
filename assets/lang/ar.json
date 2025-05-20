@@ -436,7 +436,9 @@
   },
   "someClinics": {
     "seeAll": "عرض الكل",
-    "title": "بعض العيادات"
+    "title": "بعض العيادات",
+    "no_result": "لا يوجد نتائج لـ ",
+    "retry": "اعادة المحاولة"
   },
   "some_doctors": {
     "top_doctors": "أفضل الأطباء",
