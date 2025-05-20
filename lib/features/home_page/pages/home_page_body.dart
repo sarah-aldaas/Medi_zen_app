@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
-import 'package:medizen_app/features/home_page/pages/widgets/clinics_page.dart';
+import 'package:medizen_app/features/clinics/pages/clinic_details_page.dart';
+import 'package:medizen_app/features/clinics/pages/clinics_page.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/definition_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/greeting_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/my_favorite.dart';
@@ -11,7 +12,6 @@ import 'package:medizen_app/features/home_page/pages/widgets/some_articles.dart'
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 
 import '../../../main.dart';
-import '../../doctor/doctor_screen.dart';
 import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
 import '../services/Services.dart';
 
@@ -23,6 +23,9 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
+  ///modify clinic id
+  final String clinicId = "1";
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -77,7 +80,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
                             ),
                           );
                         },
@@ -91,7 +96,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
                             ),
                           );
                         },
@@ -105,7 +112,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
                             ),
                           );
                         },
@@ -121,7 +130,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
                             ),
                           );
                         },
@@ -135,7 +146,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
                             ),
                           );
                         },
@@ -149,7 +162,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
                             ),
                           );
                         },
@@ -163,7 +178,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
                             ),
                           );
                         },
@@ -177,7 +194,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Doctorscreen(),
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
                             ),
                           );
                         },

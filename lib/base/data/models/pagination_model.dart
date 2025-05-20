@@ -1,52 +1,57 @@
 class PaginatedResponse<T> {
-  final bool status;
-  final int errNum;
-  final String msg;
-  final PaginatedData paginatedData;
-  final MetaModel meta;
-  final LinksModel links;
+  final bool? status;
+  final int? errNum;
+  final String? msg;
+  final PaginatedData<T>? paginatedData;
+  final MetaModel? meta;
+  final LinksModel? links;
 
   PaginatedResponse({
-    required this.status,
-    required this.errNum,
-    required this.msg,
-    required this.paginatedData,
-    required this.meta,
-    required this.links,
+    this.status,
+    this.errNum,
+    this.msg,
+    this.paginatedData,
+    this.meta,
+    this.links,
   });
 
   factory PaginatedResponse.fromJson(
-    Map<String, dynamic> json,
-    String dataKey, // Dynamic key for the data
-    T Function(Map<String, dynamic>) fromJsonT,
-  ) {
-    final dataJson = json[dataKey] as Map<String, dynamic>;
-
+      Map<String, dynamic> json,
+      String dataKey,
+      T Function(Map<String, dynamic>) fromJsonT,
+      ) {
     return PaginatedResponse<T>(
       status: json['status'] as bool,
       errNum: json['errNum'] as int,
       msg: json['msg'] as String,
-      paginatedData: PaginatedData.fromJson(dataJson, fromJsonT),
-      meta: MetaModel.fromJson(dataJson['meta']),
-      links: LinksModel.fromJson(dataJson['links']),
+      paginatedData: json[dataKey] != null
+          ? PaginatedData<T>.fromJson(
+        json[dataKey] as Map<String, dynamic>,
+        fromJsonT,
+      )
+          : null,
+      meta:json[dataKey] != null? json[dataKey]['meta'] != null
+          ? MetaModel.fromJson(json[dataKey]['meta'])
+          : null:null,
+      links:json[dataKey] != null? json[dataKey]['links'] != null
+          ? LinksModel.fromJson(json[dataKey]['links'])
+          : null:null,
     );
   }
 }
-
-class PaginatedData {
-  final List items;
+class PaginatedData<T> {
+  final List<T> items;
 
   PaginatedData({required this.items});
 
   factory PaginatedData.fromJson(
-    Map<String, dynamic> json,
-    Function(Map<String, dynamic>) fromJsonT,
-  ) {
-    List ito =
-        json['data'].map((item) {
-          return fromJsonT(item as Map<String, dynamic>);
-        }).toList();
-    return PaginatedData(items: ito);
+      Map<String, dynamic> json,
+      T Function(Map<String, dynamic>) fromJsonT,
+      ) {
+    final items = (json['data'] as List<dynamic>)
+        .map((item) => fromJsonT(item as Map<String, dynamic>))
+        .toList();
+    return PaginatedData<T>(items: items);
   }
 }
 
@@ -58,14 +63,7 @@ class MetaModel {
   final int to;
   final int total;
 
-  MetaModel({
-    required this.currentPage,
-    required this.from,
-    required this.lastPage,
-    required this.perPage,
-    required this.to,
-    required this.total,
-  });
+  MetaModel({required this.currentPage, required this.from, required this.lastPage, required this.perPage, required this.to, required this.total});
 
   factory MetaModel.fromJson(Map<String, dynamic> json) {
     return MetaModel(
@@ -88,11 +86,6 @@ class LinksModel {
   LinksModel({required this.first, required this.last, this.prev, this.next});
 
   factory LinksModel.fromJson(Map<String, dynamic> json) {
-    return LinksModel(
-      first: json['first'] as String,
-      last: json['last'] as String,
-      prev: json['prev'] as String?,
-      next: json['next'] as String?,
-    );
+    return LinksModel(first: json['first'] as String, last: json['last'] as String, prev: json['prev'] as String?, next: json['next'] as String?);
   }
 }

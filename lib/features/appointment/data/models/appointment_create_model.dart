@@ -2,10 +2,10 @@ class AppointmentCreateModel {
   final String reason;
   final String description;
   final String? note;
-  final int doctorId;
-  final int patientId;
-  final dynamic previousAppointment;
-  final int slotId;
+  final String doctorId;
+  final String patientId;
+  final String? previousAppointment;
+  final String slotId;
 
   AppointmentCreateModel({
     required this.reason,
@@ -19,25 +19,25 @@ class AppointmentCreateModel {
 
   factory AppointmentCreateModel.fromJson(Map<String, dynamic> json) {
     return AppointmentCreateModel(
-      reason: json['reason'] as String,
-      description: json['description'] as String,
-      note: json['note'] as String?,
-      doctorId: json['doctor_id'] as int,
-      patientId: json['patient_id'] as int,
-      previousAppointment: json['previous_appointment'],
-      slotId: json['slot_id'] as int,
+      reason: json['reason'].toString(),
+      description: json['description'].toString(),
+      note: json['note'].toString(),
+      doctorId: json['doctor_id'].toString(),
+      patientId: json['patient_id'].toString(),
+      previousAppointment: json['previous_appointment'].toString(),
+      slotId: json['slot_id'].toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'reason': reason,
-      'description': description,
-      'note': note,
-      'doctor_id': doctorId,
-      'patient_id': patientId,
-      'previous_appointment': previousAppointment,
-      'slot_id': slotId,
+      'reason': reason.toString(),
+      'description': description.toString(),
+      'note': note.toString(),
+      'doctor_id': doctorId.toString(),
+      'patient_id': patientId.toString(),
+      // 'previous_appointment': previousAppointment,
+      'slot_id': slotId.toString(),
     };
   }
 

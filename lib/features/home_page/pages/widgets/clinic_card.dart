@@ -4,7 +4,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import '../../../../base/constant/app_images.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
-import '../../../doctor/doctor_screen.dart';
+import '../../../doctor/pages/doctor.dart';
 
 class ClinicCard extends StatelessWidget {
   final String clinicName;
@@ -59,7 +59,7 @@ class ClinicCard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Doctorscreen(),
+                            builder: (context) => DoctorsPage(),
                           ),
                         );
                       },

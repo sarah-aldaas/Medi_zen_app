@@ -1,10 +1,12 @@
+import '../../../home_page/services/data/model/health_care_services_model.dart';
+
 class ClinicModel {
-  final int id;
+  final String id;
   final String name;
   final String description;
   final String photo;
   final bool active;
-  final List<dynamic>? healthCareServices;
+  final List<HealthCareServiceModel>? healthCareServices;
 
   ClinicModel({
     required this.id,
@@ -17,12 +19,21 @@ class ClinicModel {
 
   factory ClinicModel.fromJson(Map<String, dynamic> json) {
     return ClinicModel(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      description: json['description'] as String,
-      photo: json['photo'] as String,
-      active: (json['active'] as int) == 1,
-      healthCareServices: json['healthCareServices'] as List<dynamic>?,
+      id: json['id'].toString(),
+      name: json['name'].toString(),
+      description: json['description'].toString(),
+      photo: json['photo'].toString(),
+      active: (json['active'].toString()) == "1",
+      healthCareServices:
+          json['healthCareServices'] != null
+              ? (json['healthCareServices'] as List)
+                  .map(
+                    (item) => HealthCareServiceModel.fromJson(
+                      item as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList()
+              : [],
     );
   }
 
@@ -40,14 +51,15 @@ class ClinicModel {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is ClinicModel &&
-              id == other.id &&
-              name == other.name &&
-              description == other.description &&
-              photo == other.photo &&
-              active == other.active &&
-              healthCareServices == other.healthCareServices;
+      other is ClinicModel &&
+          id == other.id &&
+          name == other.name &&
+          description == other.description &&
+          photo == other.photo &&
+          active == other.active &&
+          healthCareServices == other.healthCareServices;
 
   @override
-  int get hashCode => Object.hash(id, name, description, photo, active, healthCareServices);
+  int get hashCode =>
+      Object.hash(id, name, description, photo, active, healthCareServices);
 }

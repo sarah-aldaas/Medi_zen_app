@@ -37,11 +37,11 @@ class TelecomCubit extends Cubit<TelecomState> {
     if (state is TelecomSuccess) {
       final currentState = state as TelecomSuccess;
       final nextPage = currentState.currentPage + 1;
-      if (nextPage <= currentState.paginatedResponse.meta.lastPage) {
+      if (nextPage <= currentState.paginatedResponse.meta!.lastPage) {
         emit(TelecomLoading());
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
-          paginationCount: currentState.paginatedResponse.meta.perPage.toString(),
+          paginationCount: currentState.paginatedResponse.meta!.perPage.toString(),
         );
         if (result is Success<PaginatedResponse<TelecomModel>>) {
           emit(TelecomSuccess(
@@ -63,7 +63,7 @@ class TelecomCubit extends Cubit<TelecomState> {
         emit(TelecomLoading());
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
-          paginationCount: currentState.paginatedResponse.meta.perPage.toString(),
+          paginationCount: currentState.paginatedResponse.meta!.perPage.toString(),
         );
         if (result is Success<PaginatedResponse<TelecomModel>>) {
           emit(TelecomSuccess(

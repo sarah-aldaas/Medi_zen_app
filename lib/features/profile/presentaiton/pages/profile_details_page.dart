@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart'; // استيراد الامتداد
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
@@ -29,16 +30,19 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     return age;
   }
 
-  Widget _buildInfoTile(IconData icon, String title, String value) {
+  Widget _buildInfoTile(IconData icon, String titleKey, String value) {
     return ListTile(
       leading: Icon(icon, color: Theme.of(context).primaryColor),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(
+        titleKey.tr(context),
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
       subtitle: Text(value, style: const TextStyle(color: Colors.grey)),
       dense: true,
     );
   }
 
-  Widget _buildSectionTitle(String title, IconData icon) {
+  Widget _buildSectionTitle(String titleKey, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       child: Row(
@@ -46,7 +50,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           Icon(icon, color: Theme.of(context).primaryColor),
           const Gap(8),
           Text(
-            title,
+            titleKey.tr(context),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
@@ -58,7 +62,11 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     );
   }
 
-  Widget _buildNavigationItem(String title, IconData icon, VoidCallback onTap) {
+  Widget _buildNavigationItem(
+    String titleKey,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       child: InkWell(
@@ -70,7 +78,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               Icon(icon, color: Theme.of(context).primaryColor),
               const Gap(12),
               Text(
-                title,
+                titleKey.tr(context),
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -114,7 +122,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                   backgroundColor: Theme.of(context).primaryColor,
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(
-                      "${patient.fName ?? 'N/A'} ${patient.lName ?? 'N/A'}",
+                      "${patient.fName ?? 'profileDetailsPage.noAddressAvailable'.tr(context)} ${patient.lName ?? 'profileDetailsPage.noAddressAvailable'.tr(context)}",
                       style: const TextStyle(color: Colors.white),
                     ),
                     background: Stack(
@@ -186,31 +194,34 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                             children: [
                               _buildInfoTile(
                                 Icons.email_outlined,
-                                "Email",
+                                "profileDetailsPage.email",
                                 patient.email,
                               ),
                               _buildInfoTile(
                                 Icons.person_outline,
-                                "Gender",
+                                "profileDetailsPage.gender",
                                 patient.gender.display,
                               ),
                               _buildInfoTile(
                                 Icons.favorite_outline,
-                                "Marital Status",
+                                "profileDetailsPage.maritalStatus",
                                 patient.maritalStatus.display,
                               ),
                               if (patient.dateOfBirth != null)
                                 _buildInfoTile(
                                   Icons.cake_outlined,
-                                  "Age",
-                                  '${_calculateAge(patient.dateOfBirth!)} years',
+                                  "profileDetailsPage.age",
+                                  '${_calculateAge(patient.dateOfBirth!)} ${"profileDetailsPage.age".tr(context).toLowerCase().replaceAll(':', '')}',
                                 ),
                             ],
                           ),
                         ),
                       ),
                       const Gap(16),
-                      _buildSectionTitle("About Me", Icons.info_outline),
+                      _buildSectionTitle(
+                        "profileDetailsPage.aboutMe",
+                        Icons.info_outline,
+                      ),
                       Card(
                         elevation: 1,
                         shape: RoundedRectangleBorder(
@@ -220,14 +231,15 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            patient.text ?? 'No bio available',
+                            patient.text ??
+                                'profileDetailsPage.noBioAvailable'.tr(context),
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
                       const Gap(16),
                       _buildSectionTitle(
-                        "Health Snapshot",
+                        "profileDetailsPage.healthSnapshot",
                         Icons.healing_outlined,
                       ),
                       Card(
@@ -240,9 +252,9 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                             Icons.medical_information_outlined,
                             color: AppColors.primaryColor,
                           ),
-                          title: const Text(
-                            "Health Information",
-                            style: TextStyle(
+                          title: Text(
+                            "profileDetailsPage.healthInformation".tr(context),
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -258,7 +270,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                       color: AppColors.primaryColor,
                                     ),
                                     title: Text(
-                                      "Blood Type: ${patient.bloodType!.display}",
+                                      "${"profileDetailsPage.bloodType".tr(context)}: ${patient.bloodType!.display}",
                                     ),
                                   ),
                                   const Divider(indent: 16.0, endIndent: 16.0),
@@ -272,7 +284,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                     color: AppColors.primaryColor,
                                   ),
                                   title: Text(
-                                    "Height: ${patient.height ?? 'N/A'} cm",
+                                    "${"profileDetailsPage.height".tr(context)}: ${patient.height ?? 'N/A'} cm",
                                   ),
                                 ),
                                 const Divider(indent: 16.0, endIndent: 16.0),
@@ -286,7 +298,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                     color: AppColors.primaryColor,
                                   ),
                                   title: Text(
-                                    "Weight: ${patient.weight ?? 'N/A'} kg",
+                                    "${"profileDetailsPage.weight".tr(context)}: ${patient.weight ?? 'N/A'} kg",
                                   ),
                                 ),
                                 const Divider(indent: 16.0, endIndent: 16.0),
@@ -301,7 +313,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                       color: AppColors.primaryColor,
                                     ),
                                     title: Text(
-                                      "Birth Date: ${patient.dateOfBirth!}",
+                                      "${"profileDetailsPage.birthDate".tr(context)}: ${patient.dateOfBirth!}",
                                     ),
                                   ),
                                   const Divider(indent: 16.0, endIndent: 16.0),
@@ -315,7 +327,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                     color: AppColors.primaryColor,
                                   ),
                                   title: Text(
-                                    "Smoker: ${patient.smoker == true ? 'Yes' : 'No'}",
+                                    "${"profileDetailsPage.smoker".tr(context)}: ${patient.smoker == true ? 'Yes' : 'No'}",
                                   ),
                                 ),
                                 const Divider(indent: 16.0, endIndent: 16.0),
@@ -329,7 +341,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                     color: AppColors.primaryColor,
                                   ),
                                   title: Text(
-                                    "Alcohol: ${patient.alcoholDrinker == true ? 'Yes' : 'No'}",
+                                    "${"profileDetailsPage.alcohol".tr(context)}: ${patient.alcoholDrinker == true ? 'Yes' : 'No'}",
                                   ),
                                 ),
                               ],
@@ -339,37 +351,33 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                       ),
                       const Gap(16),
                       _buildSectionTitle(
-                        "Contact Information",
+                        "profileDetailsPage.contactInformation",
                         Icons.contact_phone,
                       ),
-                      _buildNavigationItem("Telecom", Icons.phone, () {
-                        context.pushNamed(AppRouter.telecomDetails.name);
-                      }),
-                      _buildNavigationItem("Address", Icons.home, () {
-                        if (patient.addressModel != null) {
-                          context.pushNamed(
-                            AppRouter
-                                .addressDetails
-                                .name, // تأكد من أن هذا هو نفس الاسم المستخدم في تعريف الـ GoRoute
-                            extra: {
-                              'addressModel':
-                                  patient
-                                      .addressModel!, // تمرير الـ AddressModel هنا
-                            },
-                          );
-                        } else {
-                          ShowToast.showToastInfo(
-                            message: "No address information available.",
-                          );
-                        }
-                      }),
-
-                      // else {
-                      //   ShowToast.showToastInfo(
-                      //     message: "No address information available.",
-                      //   );
-                      // }
-                      //            }
+                      _buildNavigationItem(
+                        "profileDetailsPage.telecom",
+                        Icons.phone,
+                        () {
+                          context.pushNamed(AppRouter.telecomDetails.name);
+                        },
+                      ),
+                      _buildNavigationItem(
+                        "profileDetailsPage.address",
+                        Icons.home,
+                        () {
+                          if (patient.addressModel != null) {
+                            context.pushNamed(
+                              AppRouter.addressDetails.name,
+                              extra: {'addressModel': patient.addressModel!},
+                            );
+                          } else {
+                            ShowToast.showToastInfo(
+                              message: "profileDetailsPage.noAddressAvailable"
+                                  .tr(context),
+                            );
+                          }
+                        },
+                      ),
                       const Gap(40),
                     ]),
                   ),
@@ -378,7 +386,9 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             );
           }
 
-          return const Center(child: Text("No data available"));
+          return Center(
+            child: Text("profileDetailsPage.noDataAvailable".tr(context)),
+          );
         },
       ),
     );

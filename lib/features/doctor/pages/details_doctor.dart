@@ -1,351 +1,1176 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/features/appointment/data/models/appointment_create_model.dart';
+import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
+import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
+import 'package:medizen_app/main.dart';
 
 import '../../../base/theme/app_style.dart';
 import '../../Complaint/view/complaint_submission_screen.dart';
+import '../../appointment/data/models/days_work_doctor_model.dart';
+import '../../appointment/data/models/slots_model.dart';
+import '../../appointment/pages/cubit/appointment_cubit/appointment_cubit.dart';
 
 class DoctorDetailsPage extends StatefulWidget {
-  const DoctorDetailsPage({super.key});
+  const DoctorDetailsPage({super.key, required this.doctorModel});
+
+  final DoctorModel doctorModel;
 
   @override
   State<DoctorDetailsPage> createState() => _DoctorDetailsPageState();
 }
 
+
 class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay? _selectedTime;
+  List<SlotModel> _availableSlots = [];
+  bool _isLoadingSlots = false;
+  DaysWorkDoctorModel? _doctorAvailability;
+  bool _isLoadingAvailability = false;
 
-  List<DateTime> _generateDays() {
-    final now = DateTime.now();
-    return List.generate(7, (index) => now.add(Duration(days: index)));
+  @override
+  void initState() {
+    super.initState();
+    _fetchDoctorAvailability();
   }
 
-  final List<String> _bookedTimes = ["10:00 AM", "03:00 PM"];
+  Future<void> _fetchDoctorAvailability() async {
+    setState(() => _isLoadingAvailability = true);
+    await context.read<AppointmentCubit>().getDaysWorkDoctor(doctorId: widget.doctorModel.id.toString());
+  }
 
-  List<String> _availableTimes = [
-    "08:00 AM",
-    "10:00 AM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-    "07:00 PM",
-  ];
+  void _fetchSlotsForDate(DateTime date) {
+    final formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    final isAvailable = _doctorAvailability?.availability.any(
+            (day) => DateFormat('yyyy-MM-dd').format(day.date) == formattedDate && day.isAvailable) ??
+        false;
+
+    if (!isAvailable) return;
+
+    setState(() {
+      _isLoadingSlots = true;
+      _availableSlots = [];
+      _selectedTime = null;
+    });
+
+    context.read<AppointmentCubit>().geSlotsAppointment(
+        practitionerId: widget.doctorModel.id.toString(), date: formattedDate);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final days = _generateDays();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('doctorDetails.doctorName'.tr(context)),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.grey),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.grey),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage(AppAssetImages.photoDoctor1),
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'doctorDetails.doctorName'.tr(context),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text('doctorDetails.specialty'.tr(context)),
-                    Text('doctorDetails.hospital'.tr(context)),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildInfoColumn(
-                  Icons.people,
-                  '5.000+',
-                  'doctorDetails.patients',
-                  context,
-                ),
-                _buildInfoColumn(
-                  Icons.calendar_today,
-                  '10+',
-                  'doctorDetails.yearsExperience',
-                  context,
-                ),
-                _buildInfoColumn(
-                  Icons.star,
-                  '4.8',
-                  'doctorDetails.rating',
-                  context,
-                ),
-                _buildInfoColumn(
-                  Icons.rate_review,
-                  '4.942',
-                  'doctorDetails.reviews',
-                  context,
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'doctorDetails.aboutMe'.tr(context),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text('doctorDetails.aboutMeDescription'.tr(context)),
-            const SizedBox(height: 20),
-            Text(
-              'doctorDetails.workingTime'.tr(context),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text('doctorDetails.workingHours'.tr(context)),
-            const SizedBox(height: 30),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 60,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: days.length,
-                    separatorBuilder:
-                        (context, index) => const SizedBox(width: 8),
-                    itemBuilder: (context, index) {
-                      final day = days[index];
-                      final isSelected =
-                          day.day == _selectedDate.day &&
-                          day.month == _selectedDate.month &&
-                          day.year == _selectedDate.year;
+    return BlocListener<AppointmentCubit, AppointmentState>(
+      listener: (context, state) {
+        if (state is DaysWorkDoctorSuccess) {
+          final sortedAvailability = state.days.availability
+            ..sort((a, b) => a.date.compareTo(b.date));
+          setState(() {
+            _doctorAvailability = state.days.copyWith(availability: sortedAvailability);
+            _isLoadingAvailability = false;
+          });
 
-                      return InkWell(
-                        onTap: () {
-                          setState(() {
-                            _selectedDate = day;
-                            _selectedTime = null;
-                          });
-                        },
-                        child: Container(
-                          width: 45,
-                          decoration: BoxDecoration(
-                            color:
-                                isSelected
-                                    ? const Color(0xFF00CBA9)
-                                    : Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                DateFormat('E').format(day).substring(0, 3),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color:
-                                      isSelected
-                                          ? Colors.white
-                                          : Colors.grey[600],
+          // Check if availability is not empty before setting date and fetching slots
+          if (_doctorAvailability!.availability.isNotEmpty) {
+            final firstAvailable = sortedAvailability.firstWhere(
+                    (day) => day.isAvailable,
+                orElse: () => sortedAvailability.first);
+            setState(() {
+              _selectedDate = firstAvailable.date;
+            });
+            _fetchSlotsForDate(_selectedDate);
+          }
+        }
+        if (state is SlotsAppointmentSuccess) {
+          setState(() {
+            _availableSlots = state.listSlots!;
+            _isLoadingSlots = false;
+          });
+        } else if (state is AppointmentError) {
+          setState(() {
+            _isLoadingSlots = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(backgroundColor: Colors.red, content: Text(state.error)));
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Text("${widget.doctorModel.fName} ${widget.doctorModel.lName}"),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.favorite_border, color: Colors.grey),
+                onPressed: () {}),
+            IconButton(
+                icon: const Icon(Icons.more_vert, color: Colors.grey),
+                onPressed: () {}),
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const CircleAvatar(
+                      radius: 40, backgroundImage: AssetImage(AppAssetImages.photoDoctor1)),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${widget.doctorModel.fName} ${widget.doctorModel.lName}",
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(widget.doctorModel.email),
+                      Text(widget.doctorModel.address),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildInfoColumn(
+                      Icons.people, '5.000+', 'patients', context),
+                  _buildInfoColumn(Icons.calendar_today,
+                      widget.doctorModel.dateOfBirth, 'birthday', context),
+                  _buildInfoColumn(Icons.star, '4.8', 'rating', context),
+                  _buildInfoColumn(Icons.emoji_people,
+                      widget.doctorModel.gender!.display, "gender", context),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Text('doctorDetails.aboutMe'.tr(context),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(widget.doctorModel.text),
+              const SizedBox(height: 20),
+              Text('doctorDetails.workingTime'.tr(context),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_isLoadingAvailability) Center(child: LoadingButton()),
+                  if (!_isLoadingAvailability &&
+                      _doctorAvailability?.availability.isEmpty == true)
+                    const Text('No available days for this doctor'),
+                  if (!_isLoadingAvailability &&
+                      _doctorAvailability?.availability.isNotEmpty == true)
+                    SizedBox(
+                      height: 60,
+                      child: Center(
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _doctorAvailability!.availability.length,
+                          separatorBuilder: (context, index) =>
+                          const SizedBox(width: 8),
+                          itemBuilder: (context, index) {
+                            final day = _doctorAvailability!.availability[index];
+                            final isSelected = day.date.day == _selectedDate.day &&
+                                day.date.month == _selectedDate.month &&
+                                day.date.year == _selectedDate.year;
+
+                            return InkWell(
+                              onTap: day.isAvailable
+                                  ? () {
+                                _fetchSlotsForDate(day.date);
+                                setState(() {
+                                  _selectedDate = day.date;
+                                  _selectedTime = null;
+                                });
+                              }
+                                  : null,
+                              child: Container(
+                                width: 45,
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? const Color(0xFF00CBA9)
+                                      : day.isAvailable
+                                      ? Colors.grey[200]
+                                      : Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      DateFormat('E').format(day.date).substring(0, 3),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : day.isAvailable
+                                            ? Colors.grey[600]
+                                            : Colors.grey[400],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      DateFormat('d').format(day.date),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : day.isAvailable
+                                            ? Colors.black
+                                            : Colors.grey[400],
+                                      ),
+                                    ),
+                                    if (!day.isAvailable)
+                                      const Icon(Icons.block,
+                                          size: 12, color: Colors.red),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                DateFormat('d').format(day),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      isSelected ? Colors.white : Colors.black,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 20),
+                  if (_isLoadingAvailability) Center(child: LoadingButton()),
+                  if (_isLoadingSlots) Center(child: LoadingButton()),
+                  if (!_isLoadingSlots && _availableSlots.isEmpty)
+                    const Text('No available slots for this day'),
+                  if (!_isLoadingSlots && _availableSlots.isNotEmpty)
+                    SizedBox(
+                      width: context.width,
+                      child: Wrap(
+                        spacing: 8.0,
+                        alignment: WrapAlignment.spaceBetween,
+                        runSpacing: 8.0,
+                        children: _availableSlots.map((slot) {
+                          final startTime = DateTime.parse(slot.startDate);
+                          final endTime = DateTime.parse(slot.endDate);
+                          final timeStr =
+                              '${DateFormat('hh:mm a').format(startTime)}'; // - ${DateFormat('hh:mm a').format(endTime)}';
+                          final isSelected = _selectedTime?.hour == startTime.hour &&
+                              _selectedTime?.minute == startTime.minute;
+                          final isBooked = slot.status.code != 'available';
+
+                          return InkWell(
+                            onTap: isBooked
+                                ? null
+                                : () {
+                              setState(() {
+                                _selectedTime = TimeOfDay.fromDateTime(startTime);
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? const Color(0xFF00CBA9)
+                                    : isBooked
+                                    ? Colors.grey[300]
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(timeStr,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: isSelected || isBooked
+                                          ? Colors.white
+                                          : Colors.black)),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  const SizedBox(height: 20),
+                  if (_selectedDate != null && _selectedTime != null)
+                    Text(
+                      '${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _selectedTime == null
+                      ? null
+                      : () async {
+                    await _showAppointmentDialog(
+                      context: context,
+                      title:
+                      'Booking appointment on ${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    disabledBackgroundColor: Colors.grey[400],
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+                  ),
+                  child: Text('doctorDetails.bookAppointment'.tr(context),
+                      style: const TextStyle(fontSize: 18, color: Colors.white)),
+                ),
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ComplaintSubmissionScreen()));
+                  },
+                  child: Text('doctorDetails.SubmitAComplaint'.tr(context),
+                      style: AppStyles.complaintTextStyle),
+                ),
+              ),
+              Divider(),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text("Telecom",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold))
+                  ]),
+              if (widget.doctorModel.telecoms!.isNotEmpty)
+                Column(
+                  children:
+                  List.generate(widget.doctorModel.telecoms!.length, (index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        subtitle: Text(
+                            "${widget.doctorModel.telecoms![index].type!.display} :${widget.doctorModel.telecoms![index].value!}"),
+                        title:
+                        Text("${widget.doctorModel.telecoms![index].use!.display}"),
+                      ),
+                    );
+                  }),
+                ),
+              if (widget.doctorModel.telecoms!.isEmpty)
+                Text("There are not any telecoms"),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("Communications",
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold))
+                ],
+              ),
+              if (widget.doctorModel.communications!.isNotEmpty)
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(
+                        widget.doctorModel.communications!.length, (index) {
+                      return Container(
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.all(5),
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: widget.doctorModel.communications![index].preferred
+                              ? Theme.of(context).primaryColor
+                              : Colors.grey,
+                        ),
+                        child: Center(
+                            child: Text(
+                                widget.doctorModel.communications![index].language
+                                    .display,
+                                style: TextStyle(color: Colors.white))),
+                      );
+                    }),
+                  ),
+                ),
+              if (widget.doctorModel.communications!.isEmpty)
+                Text("There are not any communications"),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("Qualifications",
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold))
+                ],
+              ),
+              if (widget.doctorModel.qualifications!.isNotEmpty)
+                Column(
+                  children: List.generate(
+                      widget.doctorModel.qualifications!.length, (index) {
+                    return Container(
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                      child: ListTile(
+                        trailing: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                  appBar: AppBar(title: const Text('PDF Viewer')),
+                                  body: PDFView(
+                                    filePath:
+                                    widget.doctorModel.qualifications![index].pdf,
+                                    enableSwipe: true,
+                                    swipeHorizontal: false,
+                                    autoSpacing: true,
+                                    pageFling: true,
+                                    onError: (error) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text('Error: $error')));
+                                    },
+                                  ),
                                 ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.picture_as_pdf),
+                        ),
+                        title: Text(
+                            "${widget.doctorModel.qualifications![index].type.display}"),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                  "${widget.doctorModel.qualifications![index].issuer}"),
+                              Row(
+                                children: [
+                                  Icon(Icons.date_range_outlined),
+                                  Text(
+                                    " ${widget.doctorModel.qualifications![index].startDate} - ${widget.doctorModel.qualifications![index].endDate ?? "continue"}",
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  }),
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: context.width,
-                  child: Wrap(
-                    spacing: 8.0,
-                    alignment: WrapAlignment.spaceBetween,
-                    runSpacing: 8.0,
-                    children:
-                        _availableTimes.map((timeStr) {
-                          final parsedTime = DateFormat(
-                            "hh:mm a",
-                          ).parse(timeStr);
-                          final timeOfDay = TimeOfDay.fromDateTime(parsedTime);
-                          final isSelected = _selectedTime == timeOfDay;
-                          final isBooked = _bookedTimes.contains(timeStr);
-
-                          return InkWell(
-                            onTap:
-                                isBooked
-                                    ? null
-                                    : () {
-                                      setState(() {
-                                        _selectedTime = timeOfDay;
-                                      });
-                                    },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color:
-                                    isSelected
-                                        ? const Color(0xFF00CBA9)
-                                        : isBooked
-                                        ? Colors.grey[300]
-                                        : Colors.grey[200],
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                timeStr,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color:
-                                      isSelected || isBooked
-                                          ? Colors.white
-                                          : Colors.black,
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                if (_selectedDate != null && _selectedTime != null)
-                  Text(
-                    '${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Center(
-              child: ElevatedButton(
-                onPressed:
-                    _selectedTime == null
-                        ? null
-                        : () {
-                          print(
-                            'Booking appointment on $_selectedDate at ${_selectedTime!.format(context)}',
-                          );
-                        },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  disabledBackgroundColor: Colors.grey[400],
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 50,
-                    vertical: 16,
-                  ),
-                ),
-                child: Text(
-                  'doctorDetails.bookAppointment'.tr(context),
-                  style: const TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ComplaintSubmissionScreen(),
-                    ),
-                  );
-                },
-                child: Text(
-                  'doctorDetails.SubmitaComplaint'.tr(context),
-                  style: AppStyles.complaintTextStyle,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'doctorDetails.reviewsTitle'.tr(context),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'doctorDetails.seeAll'.tr(context),
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ),
-                ),
-              ],
-            ),
-            ListTile(
-              title: Text('doctorDetails.reviewAuthor'.tr(context)),
-              subtitle: Text('doctorDetails.reviewText'.tr(context)),
-              trailing: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [Icon(Icons.star, color: Colors.amber), Text('5')],
-              ),
-            ),
-            const Gap(30),
-          ],
+              if (widget.doctorModel.qualifications!.isEmpty)
+                Text("There are not any qualifications"),
+              Divider(),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildInfoColumn(
-    IconData icon,
-    String value,
-    String labelKey,
-    BuildContext context,
-  ) {
+      IconData icon, String value, String labelKey, BuildContext context) {
     return Column(
       children: [
         Icon(icon, color: Theme.of(context).primaryColor),
         Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-        Text(labelKey.tr(context)),
+        Text(labelKey)
       ],
     );
   }
+
+  Future<void> _showAppointmentDialog(
+      {required BuildContext context, required String title}) async {
+    final formKey = GlobalKey<FormState>();
+    String reason = 'I am sick.';
+    String description = 'I need some medical treatment.';
+    String note = 'No thing,Thanks.';
+    PatientModel patientModel = loadingPatientModel();
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return BlocListener<AppointmentCubit, AppointmentState>(
+          listener: (context, state) {
+            if (state is CreateAppointmentSuccess) {
+              Navigator.pop(context);
+              _fetchDoctorAvailability();
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text('Appointment booked successfully')));
+            } else if (state is AppointmentError) {
+              Navigator.pop(context);
+              _fetchDoctorAvailability();
+            }
+          },
+          child: AlertDialog(
+            content: SizedBox(
+              width: context.width,
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(title,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      const Gap(20),
+                      TextFormField(
+                        initialValue: reason,
+                        decoration: const InputDecoration(
+                            labelText: 'Reason*',
+                            hintText: 'Why are you booking this appointment?'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a reason';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => reason = value ?? '',
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        initialValue: description,
+                        decoration: const InputDecoration(
+                            labelText: 'Description*',
+                            hintText: 'Describe your symptoms or concerns'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a description';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => description = value ?? '',
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        initialValue: note,
+                        decoration: const InputDecoration(
+                            labelText: 'Note (Optional)',
+                            hintText: 'Any additional information'),
+                        onSaved: (value) => note = value ?? '',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+              BlocBuilder<AppointmentCubit, AppointmentState>(
+                builder: (context, state) {
+                  if (state is AppointmentLoading) {
+                    return LoadingButton();
+                  }
+                  return ElevatedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        formKey.currentState!.save();
+
+                        final selectedSlot = _availableSlots.firstWhere((slot) {
+                          final slotTime =
+                          TimeOfDay.fromDateTime(DateTime.parse(slot.startDate));
+                          return slotTime.hour == _selectedTime!.hour &&
+                              slotTime.minute == _selectedTime!.minute;
+                        });
+
+                        final appointment = AppointmentCreateModel(
+                          reason: reason,
+                          description: description,
+                          note: note.isNotEmpty ? note : "No thing,Thanks.",
+                          doctorId: widget.doctorModel.id.toString(),
+                          patientId: patientModel.id!,
+                          previousAppointment: null,
+                          slotId: selectedSlot.id.toString(),
+                        );
+
+                        await context
+                            .read<AppointmentCubit>()
+                            .createAppointment(appointmentModel: appointment);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                    ),
+                    child: const Text('Confirm', style: TextStyle(color: Colors.white)),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:flutter_pdfview/flutter_pdfview.dart';
+// import 'package:gap/gap.dart';
+// import 'package:intl/intl.dart';
+// import 'package:medizen_app/base/constant/app_images.dart';
+// import 'package:medizen_app/base/extensions/localization_extensions.dart';
+// import 'package:medizen_app/base/extensions/media_query_extension.dart';
+// import 'package:medizen_app/base/widgets/loading_page.dart';
+// import 'package:medizen_app/features/appointment/data/models/appointment_create_model.dart';
+// import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
+// import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
+// import 'package:medizen_app/main.dart';
+// import '../../../base/theme/app_style.dart';
+// import '../../Complaint/view/complaint_submission_screen.dart';
+// import '../../appointment/data/models/days_work_doctor_model.dart';
+// import '../../appointment/data/models/slots_model.dart';
+// import '../../appointment/pages/cubit/appointment_cubit/appointment_cubit.dart';
+//
+// class DoctorDetailsPage extends StatefulWidget {
+//   const DoctorDetailsPage({super.key, required this.doctorModel});
+//
+//   final DoctorModel doctorModel;
+//
+//   @override
+//   State<DoctorDetailsPage> createState() => _DoctorDetailsPageState();
+// }
+//
+// class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
+//   DateTime _selectedDate = DateTime.now();
+//   TimeOfDay? _selectedTime;
+//   List<SlotModel> _availableSlots = [];
+//   bool _isLoadingSlots = false;
+//   DaysWorkDoctorModel? _doctorAvailability;
+//   bool _isLoadingAvailability = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _fetchDoctorAvailability().then((_) {
+//       if (_doctorAvailability != null && _doctorAvailability!.availability.isNotEmpty) {
+//         final firstAvailable = _doctorAvailability!.availability.firstWhere((day) => day.isAvailable, orElse: () => _doctorAvailability!.availability.first);
+//
+//         setState(() {
+//           _selectedDate = firstAvailable.date;
+//         });
+//         _fetchSlotsForDate(_selectedDate);
+//       }
+//     });
+//   }
+//
+//   Future<void> _fetchDoctorAvailability() async {
+//     setState(() => _isLoadingAvailability = true);
+//     context.read<AppointmentCubit>().getDaysWorkDoctor(doctorId: widget.doctorModel.id.toString());
+//   }
+//
+//   void _fetchSlotsForDate(DateTime date) {
+//     final formattedDate = DateFormat('yyyy-MM-dd').format(date);
+//     final isAvailable = _doctorAvailability?.availability.any((day) => DateFormat('yyyy-MM-dd').format(day.date) == formattedDate && day.isAvailable) ?? false;
+//
+//     if (!isAvailable) return;
+//
+//     setState(() {
+//       _isLoadingSlots = true;
+//       _availableSlots = [];
+//       _selectedTime = null;
+//     });
+//
+//     context.read<AppointmentCubit>().geSlotsAppointment(practitionerId: widget.doctorModel.id.toString(), date: formattedDate);
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocListener<AppointmentCubit, AppointmentState>(
+//       listener: (context, state) {
+//         if (state is DaysWorkDoctorSuccess) {
+//           final sortedAvailability = state.days.availability..sort((a, b) => a.date.compareTo(b.date));
+//           setState(() {
+//             _doctorAvailability = state.days.copyWith(availability: sortedAvailability);
+//             _isLoadingAvailability = false;
+//             final firstAvailable =sortedAvailability.firstWhere((day) => day.isAvailable, orElse: () => sortedAvailability.first);
+//             _selectedDate = firstAvailable.date;
+//           });
+//
+//           // Fetch slots for initial date
+//           _fetchSlotsForDate(_selectedDate);
+//         }
+//         if (state is SlotsAppointmentSuccess) {
+//           setState(() {
+//             _availableSlots = state.listSlots!;
+//             _isLoadingSlots = false;
+//           });
+//         } else if (state is AppointmentError) {
+//           setState(() {
+//             _isLoadingSlots = false;
+//           });
+//           ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red, content: Text(state.error)));
+//         }
+//       },
+//       child: Scaffold(
+//         appBar: AppBar(
+//           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+//           title: Text("${widget.doctorModel.fName} ${widget.doctorModel.lName}"),
+//           leading: IconButton(
+//             icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
+//             onPressed: () {
+//               Navigator.pop(context);
+//             },
+//           ),
+//           actions: [
+//             IconButton(icon: const Icon(Icons.favorite_border, color: Colors.grey), onPressed: () {}),
+//             IconButton(icon: const Icon(Icons.more_vert, color: Colors.grey), onPressed: () {}),
+//           ],
+//         ),
+//         body: SingleChildScrollView(
+//           padding: const EdgeInsets.all(16.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Row(
+//                 children: [
+//                   const CircleAvatar(radius: 40, backgroundImage: AssetImage(AppAssetImages.photoDoctor1)),
+//                   const SizedBox(width: 16),
+//                   Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text("${widget.doctorModel.fName} ${widget.doctorModel.lName}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+//                       Text(widget.doctorModel.email),
+//                       Text(widget.doctorModel.address),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 20),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                 children: [
+//                   _buildInfoColumn(Icons.people, '5.000+', 'patients', context),
+//                   _buildInfoColumn(Icons.calendar_today, widget.doctorModel.dateOfBirth, 'birthday', context),
+//                   _buildInfoColumn(Icons.star, '4.8', 'rating', context),
+//                   _buildInfoColumn(Icons.emoji_people, widget.doctorModel.gender!.display, "gender", context),
+//                 ],
+//               ),
+//               const SizedBox(height: 20),
+//               Text('doctorDetails.aboutMe'.tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+//               const SizedBox(height: 8),
+//               Text(widget.doctorModel.text),
+//               const SizedBox(height: 20),
+//               Text('doctorDetails.workingTime'.tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+//               const SizedBox(height: 8),
+//
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   if (_isLoadingAvailability) Center(child: LoadingButton()),
+//                   if (!_isLoadingAvailability && _doctorAvailability!.availability.isEmpty) const Text('No available days for this doctor'),
+//                   if (!_isLoadingAvailability && _doctorAvailability!.availability.isNotEmpty)
+//                     SizedBox(
+//                       height: 60,
+//                       child: Center(
+//                         child: ListView.separated(
+//                           shrinkWrap: true,
+//                           physics: const ClampingScrollPhysics(),
+//                           scrollDirection: Axis.horizontal,
+//                           itemCount: _doctorAvailability!.availability.length,
+//                           separatorBuilder: (context, index) => const SizedBox(width: 8),
+//                           itemBuilder: (context, index) {
+//                             final day = _doctorAvailability!.availability[index];
+//                             final isSelected =
+//                                 day.date.day == _selectedDate.day && day.date.month == _selectedDate.month && day.date.year == _selectedDate.year;
+//
+//                             return InkWell(
+//                               onTap:
+//                                   day.isAvailable
+//                                       ? () {
+//                                         _fetchSlotsForDate(day.date);
+//                                         setState(() {
+//                                           _selectedDate = day.date;
+//                                           _selectedTime = null;
+//                                         });
+//                                       }
+//                                       : null,
+//                               child: Container(
+//                                 width: 45,
+//                                 decoration: BoxDecoration(
+//                                   color:
+//                                       isSelected
+//                                           ? const Color(0xFF00CBA9)
+//                                           : day.isAvailable
+//                                           ? Colors.grey[200]
+//                                           : Colors.grey[100],
+//                                   borderRadius: BorderRadius.circular(8),
+//                                 ),
+//                                 child: Column(
+//                                   mainAxisAlignment: MainAxisAlignment.center,
+//                                   children: [
+//                                     Text(
+//                                       DateFormat('E').format(day.date).substring(0, 3),
+//                                       style: TextStyle(
+//                                         fontSize: 12,
+//                                         color:
+//                                             isSelected
+//                                                 ? Colors.white
+//                                                 : day.isAvailable
+//                                                 ? Colors.grey[600]
+//                                                 : Colors.grey[400],
+//                                       ),
+//                                     ),
+//                                     const SizedBox(height: 4),
+//                                     Text(
+//                                       DateFormat('d').format(day.date),
+//                                       style: TextStyle(
+//                                         fontSize: 16,
+//                                         fontWeight: FontWeight.bold,
+//                                         color:
+//                                             isSelected
+//                                                 ? Colors.white
+//                                                 : day.isAvailable
+//                                                 ? Colors.black
+//                                                 : Colors.grey[400],
+//                                       ),
+//                                     ),
+//                                     if (!day.isAvailable) const Icon(Icons.block, size: 12, color: Colors.red),
+//                                   ],
+//                                 ),
+//                               ),
+//                             );
+//                           },
+//                         ),
+//                       ),
+//                     ),
+//                   const SizedBox(height: 20),
+//                   if (_isLoadingAvailability) Center(child: LoadingButton()),
+//                   if (_isLoadingSlots) Center(child: LoadingButton()),
+//
+//                   if (!_isLoadingSlots && _availableSlots.isEmpty) const Text('No available slots for this day'),
+//
+//                   if (!_isLoadingSlots && _availableSlots.isNotEmpty)
+//                     SizedBox(
+//                       width: context.width,
+//                       child: Wrap(
+//                         spacing: 8.0,
+//                         alignment: WrapAlignment.spaceBetween,
+//                         runSpacing: 8.0,
+//                         children:
+//                             _availableSlots.map((slot) {
+//                               final startTime = DateTime.parse(slot.startDate);
+//                               final endTime = DateTime.parse(slot.endDate);
+//                               final timeStr = '${DateFormat('hh:mm a').format(startTime)}'; // - ${DateFormat('hh:mm a').format(endTime)}';
+//                               final isSelected = _selectedTime?.hour == startTime.hour && _selectedTime?.minute == startTime.minute;
+//                               final isBooked = slot.status.code != 'available'; // Assuming 'available' is the code for free slots
+//
+//                               return InkWell(
+//                                 onTap:
+//                                     isBooked
+//                                         ? null
+//                                         : () {
+//                                           setState(() {
+//                                             _selectedTime = TimeOfDay.fromDateTime(startTime);
+//                                           });
+//                                         },
+//                                 child: Container(
+//                                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//                                   decoration: BoxDecoration(
+//                                     color:
+//                                         isSelected
+//                                             ? const Color(0xFF00CBA9)
+//                                             : isBooked
+//                                             ? Colors.grey[300]
+//                                             : Colors.grey[200],
+//                                     borderRadius: BorderRadius.circular(20),
+//                                   ),
+//                                   child: Text(timeStr, style: TextStyle(fontSize: 14, color: isSelected || isBooked ? Colors.white : Colors.black)),
+//                                 ),
+//                               );
+//                             }).toList(),
+//                       ),
+//                     ),
+//
+//                   const SizedBox(height: 20),
+//                   if (_selectedDate != null && _selectedTime != null)
+//                     Text(
+//                       '${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
+//                       style: const TextStyle(fontWeight: FontWeight.bold),
+//                     ),
+//                 ],
+//               ),
+//
+//               const SizedBox(height: 30),
+//               Center(
+//                 child: ElevatedButton(
+//                   onPressed:
+//                       _selectedTime == null
+//                           ? null
+//                           : () async {
+//                             await _showAppointmentDialog(
+//                               context: context,
+//                               title:
+//                                   'Booking appointment on ${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
+//                             );
+//                           },
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Theme.of(context).primaryColor,
+//                     disabledBackgroundColor: Colors.grey[400],
+//                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+//                   ),
+//                   child: Text('doctorDetails.bookAppointment'.tr(context), style: const TextStyle(fontSize: 18, color: Colors.white)),
+//                 ),
+//               ),
+//               SizedBox(height: 20),
+//               Center(
+//                 child: TextButton(
+//                   onPressed: () {
+//                     Navigator.push(context, MaterialPageRoute(builder: (context) => ComplaintSubmissionScreen()));
+//                   },
+//                   child: Text('doctorDetails.SubmitAComplaint'.tr(context), style: AppStyles.complaintTextStyle),
+//                 ),
+//               ),
+//
+//               Divider(),
+//               Row(mainAxisAlignment: MainAxisAlignment.start, children: [Text("Telecom", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))]),
+//               if (widget.doctorModel.telecoms!.isNotEmpty)
+//                 Column(
+//                   children: List.generate(widget.doctorModel.telecoms!.length, (index) {
+//                     return Padding(
+//                       padding: const EdgeInsets.all(8.0),
+//                       child: ListTile(
+//                         subtitle: Text("${widget.doctorModel.telecoms![index].type!.display} :${widget.doctorModel.telecoms![index].value!}"),
+//                         title: Text("${widget.doctorModel.telecoms![index].use!.display}"),
+//                       ),
+//                     );
+//                   }),
+//                 ),
+//               if (widget.doctorModel.telecoms!.isEmpty) Text("There are not any telecoms"),
+//               Divider(),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [Text("Communications", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))],
+//               ),
+//               if (widget.doctorModel.communications!.isNotEmpty)
+//                 SingleChildScrollView(
+//                   scrollDirection: Axis.horizontal,
+//                   child: Row(
+//                     children: List.generate(widget.doctorModel.communications!.length, (index) {
+//                       return Container(
+//                         padding: EdgeInsets.all(10),
+//                         margin: EdgeInsets.all(5),
+//                         width: 100,
+//                         decoration: BoxDecoration(
+//                           borderRadius: BorderRadius.circular(20),
+//                           color: widget.doctorModel.communications![index].preferred ? Theme.of(context).primaryColor : Colors.grey,
+//                         ),
+//                         child: Center(child: Text(widget.doctorModel.communications![index].language.display, style: TextStyle(color: Colors.white))),
+//                       );
+//                     }),
+//                   ),
+//                 ),
+//
+//               if (widget.doctorModel.communications!.isEmpty) Text("There are not any communications"),
+//               Divider(),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [Text("Qualifications", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))],
+//               ),
+//               if (widget.doctorModel.qualifications!.isNotEmpty)
+//                 Column(
+//                   children: List.generate(widget.doctorModel.qualifications!.length, (index) {
+//                     return Container(
+//                       padding: EdgeInsets.all(10),
+//                       margin: EdgeInsets.all(5),
+//                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+//                       child: ListTile(
+//                         trailing: IconButton(
+//                           onPressed: () {
+//                             Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                 builder:
+//                                     (context) => Scaffold(
+//                                       appBar: AppBar(title: const Text('PDF Viewer')),
+//                                       body: PDFView(
+//                                         filePath: widget.doctorModel.qualifications![index].pdf,
+//                                         enableSwipe: true,
+//                                         swipeHorizontal: false,
+//                                         autoSpacing: true,
+//                                         pageFling: true,
+//                                         onError: (error) {
+//                                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red, content: Text('Error: $error')));
+//                                         },
+//                                       ),
+//                                     ),
+//                               ),
+//                             );
+//                           },
+//                           icon: Icon(Icons.picture_as_pdf),
+//                         ),
+//                         title: Text("${widget.doctorModel.qualifications![index].type.display}"),
+//
+//                         subtitle: Padding(
+//                           padding: const EdgeInsets.only(left: 10),
+//                           child: Column(
+//                             crossAxisAlignment: CrossAxisAlignment.start,
+//                             mainAxisSize: MainAxisSize.min,
+//                             children: [
+//                               Text("${widget.doctorModel.qualifications![index].issuer}"),
+//                               Row(
+//                                 children: [
+//                                   Icon(Icons.date_range_outlined),
+//                                   Text(
+//                                     " ${widget.doctorModel.qualifications![index].startDate} - ${widget.doctorModel.qualifications![index].endDate ?? "continue"}",
+//                                   ),
+//                                 ],
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ),
+//                     );
+//                   }),
+//                 ),
+//
+//               if (widget.doctorModel.qualifications!.isEmpty) Text("There are not any qualifications"),
+//               Divider(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildInfoColumn(IconData icon, String value, String labelKey, BuildContext context) {
+//     return Column(
+//       children: [Icon(icon, color: Theme.of(context).primaryColor), Text(value, style: const TextStyle(fontWeight: FontWeight.bold)), Text(labelKey)],
+//     );
+//   }
+//
+//   Future<void> _showAppointmentDialog({required BuildContext context, required String title}) async {
+//     final formKey = GlobalKey<FormState>();
+//     String reason = 'I am sick.';
+//     String description = 'I need some medical treatment.';
+//     String note = 'No thing,Thanks.';
+//     PatientModel patientModel = loadingPatientModel();
+//
+//     return showDialog(
+//       context: context,
+//       builder: (context) {
+//         return BlocListener<AppointmentCubit, AppointmentState>(
+//           listener: (context, state) {
+//             if (state is CreateAppointmentSuccess) {
+//               Navigator.pop(context);
+//               _fetchDoctorAvailability();
+//               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(backgroundColor: Colors.green, content: Text('Appointment booked successfully')));
+//             } else if (state is AppointmentError) {
+//               Navigator.pop(context);
+//               _fetchDoctorAvailability();
+//             }
+//           },
+//           child: AlertDialog(
+//             content: SizedBox(
+//               width: context.width,
+//               child: Form(
+//                 key: formKey,
+//                 child: SingleChildScrollView(
+//                   child: Column(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     crossAxisAlignment: CrossAxisAlignment.center,
+//                     children: [
+//                       Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+//                       const Gap(20),
+//                       TextFormField(
+//                         initialValue: reason,
+//                         decoration: const InputDecoration(labelText: 'Reason*', hintText: 'Why are you booking this appointment?'),
+//                         validator: (value) {
+//                           if (value == null || value.isEmpty) {
+//                             return 'Please enter a reason';
+//                           }
+//                           return null;
+//                         },
+//                         onSaved: (value) => reason = value ?? '',
+//                       ),
+//                       const SizedBox(height: 16),
+//                       TextFormField(
+//                         initialValue: description,
+//                         decoration: const InputDecoration(labelText: 'Description*', hintText: 'Describe your symptoms or concerns'),
+//                         validator: (value) {
+//                           if (value == null || value.isEmpty) {
+//                             return 'Please enter a description';
+//                           }
+//                           return null;
+//                         },
+//                         onSaved: (value) => description = value ?? '',
+//                       ),
+//                       const SizedBox(height: 16),
+//                       TextFormField(
+//                         initialValue: note,
+//                         decoration: const InputDecoration(labelText: 'Note (Optional)', hintText: 'Any additional information'),
+//                         onSaved: (value) => note = value ?? '',
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             actions: [
+//               TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+//               BlocBuilder<AppointmentCubit, AppointmentState>(
+//                 builder: (context, state) {
+//                   if (state is AppointmentLoading) {
+//                     return LoadingButton();
+//                   }
+//                   return ElevatedButton(
+//                     onPressed: () async {
+//                       if (formKey.currentState!.validate()) {
+//                         formKey.currentState!.save();
+//
+//                         final selectedSlot = _availableSlots.firstWhere((slot) {
+//                           final slotTime = TimeOfDay.fromDateTime(DateTime.parse(slot.startDate));
+//                           return slotTime.hour == _selectedTime!.hour && slotTime.minute == _selectedTime!.minute;
+//                         });
+//
+//                         final appointment = AppointmentCreateModel(
+//                           reason: reason,
+//                           description: description,
+//                           note: note.isNotEmpty ? note : "No thing,Thanks.",
+//                           doctorId: widget.doctorModel.id.toString(),
+//                           patientId: patientModel.id!,
+//                           previousAppointment: null,
+//                           slotId: selectedSlot.id.toString(),
+//                         );
+//
+//                         await context.read<AppointmentCubit>().createAppointment(appointmentModel: appointment);
+//                       }
+//                     },
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: Theme.of(context).primaryColor,
+//                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+//                     ),
+//                     child: const Text('Confirm', style: TextStyle(color: Colors.white)),
+//                   );
+//                 },
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }

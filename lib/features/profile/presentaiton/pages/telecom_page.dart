@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
@@ -92,7 +93,7 @@ class _TelecomPageState extends State<TelecomPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Update Telecom',
+                                'telecomPage.updateTelecom'.tr(context),
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 18,
@@ -101,7 +102,7 @@ class _TelecomPageState extends State<TelecomPage> {
                               ),
                               IconButton(
                                 onPressed: () => Navigator.pop(context),
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.dangerous_outlined,
                                   color: AppColors.secondaryColor,
                                 ),
@@ -111,8 +112,8 @@ class _TelecomPageState extends State<TelecomPage> {
                           TextField(
                             controller: valueController,
                             style: TextStyle(fontSize: 15),
-                            decoration: const InputDecoration(
-                              labelText: 'Value',
+                            decoration: InputDecoration(
+                              labelText: 'telecomPage.value'.tr(context),
                             ),
                           ),
                           DropdownButtonFormField<CodeModel>(
@@ -127,8 +128,8 @@ class _TelecomPageState extends State<TelecomPage> {
                                     .toList(),
                             onChanged:
                                 (value) => setState(() => selectedType = value),
-                            decoration: const InputDecoration(
-                              labelText: 'Type',
+                            decoration: InputDecoration(
+                              labelText: 'telecomPage.typeLabel'.tr(context),
                             ),
                             value: selectedType,
                           ),
@@ -144,7 +145,9 @@ class _TelecomPageState extends State<TelecomPage> {
                                     .toList(),
                             onChanged:
                                 (value) => setState(() => selectedUse = value),
-                            decoration: const InputDecoration(labelText: 'Use'),
+                            decoration: InputDecoration(
+                              labelText: 'telecomPage.useLabel'.tr(context),
+                            ),
                             value: selectedUse,
                           ),
                           Row(
@@ -153,8 +156,8 @@ class _TelecomPageState extends State<TelecomPage> {
                             children: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: const Text(
-                                  'Cancel',
+                                child: Text(
+                                  'telecomPage.cancel'.tr(context),
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: AppColors.primaryColor,
@@ -184,12 +187,13 @@ class _TelecomPageState extends State<TelecomPage> {
                                     Navigator.pop(context);
                                   } else {
                                     ShowToast.showToastError(
-                                      message: "All fields are required",
+                                      message: 'telecomPage.allFieldsRequired'
+                                          .tr(context),
                                     );
                                   }
                                 },
-                                child: const Text(
-                                  'Update',
+                                child: Text(
+                                  'telecomPage.update'.tr(context),
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: AppColors.primaryColor,
@@ -250,7 +254,7 @@ class _TelecomPageState extends State<TelecomPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Create new telecom',
+                                'telecomPage.createNewTelecom'.tr(context),
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.bold,
@@ -269,8 +273,8 @@ class _TelecomPageState extends State<TelecomPage> {
                           TextField(
                             controller: valueController,
                             style: TextStyle(fontSize: 13),
-                            decoration: const InputDecoration(
-                              labelText: 'Value',
+                            decoration: InputDecoration(
+                              labelText: 'telecomPage.valueLabel'.tr(context),
                             ),
                           ),
                           DropdownButtonFormField<CodeModel>(
@@ -284,8 +288,8 @@ class _TelecomPageState extends State<TelecomPage> {
                                     )
                                     .toList(),
                             onChanged: (value) => selectedType = value,
-                            decoration: const InputDecoration(
-                              labelText: 'Type',
+                            decoration: InputDecoration(
+                              labelText: 'telecomPage.typeLabel'.tr(context),
                             ),
                             value: selectedType,
                           ),
@@ -300,7 +304,9 @@ class _TelecomPageState extends State<TelecomPage> {
                                     )
                                     .toList(),
                             onChanged: (value) => selectedUse = value,
-                            decoration: const InputDecoration(labelText: 'Use'),
+                            decoration: InputDecoration(
+                              labelText: 'telecomPage.use'.tr(context),
+                            ),
                             value: selectedUse,
                           ),
                           Row(
@@ -309,8 +315,8 @@ class _TelecomPageState extends State<TelecomPage> {
                             children: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: const Text(
-                                  'Cancel',
+                                child: Text(
+                                  'telecomPage.cancel'.tr(context),
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: AppColors.primaryColor,
@@ -339,12 +345,13 @@ class _TelecomPageState extends State<TelecomPage> {
                                     Navigator.pop(context);
                                   } else {
                                     ShowToast.showToastError(
-                                      message: "All fields are required",
+                                      message: 'telecomPage.allFieldsRequired'
+                                          .tr(context),
                                     );
                                   }
                                 },
-                                child: const Text(
-                                  'Create',
+                                child: Text(
+                                  'telecomPage.create'.tr(context),
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: AppColors.primaryColor,
@@ -377,7 +384,7 @@ class _TelecomPageState extends State<TelecomPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Telecom Details',
+                  'telecomPage.telecomDetails'.tr(context),
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 22,
@@ -386,7 +393,7 @@ class _TelecomPageState extends State<TelecomPage> {
                 ),
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
-                  child: const Icon(Icons.close, color: AppColors.blackColor),
+                  child: Icon(Icons.close, color: AppColors.blackColor),
                 ),
               ],
             ),
@@ -395,11 +402,26 @@ class _TelecomPageState extends State<TelecomPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildDetailRow('Value: ', telecom.value ?? 'N/A'),
-                  _buildDetailRow('Type: ', telecom.type?.display ?? 'N/A'),
-                  _buildDetailRow('Use: ', telecom.use?.display ?? 'N/A'),
-                  _buildDetailRow('Start Date: ', telecom.startDate ?? 'N/A'),
-                  _buildDetailRow('End Date: ', telecom.endDate ?? 'N/A'),
+                  _buildDetailRow(
+                    'telecomPage.value : ',
+                    telecom.value ?? 'N/A'.tr(context),
+                  ),
+                  _buildDetailRow(
+                    'telecomPage.type : ',
+                    telecom.type?.display ?? 'N/A'.tr(context),
+                  ),
+                  _buildDetailRow(
+                    'telecomPage.use : ',
+                    telecom.use?.display ?? 'N/A'.tr(context),
+                  ),
+                  _buildDetailRow(
+                    'telecomPage.startDateLabel : ',
+                    telecom.startDate ?? 'N/A'.tr(context),
+                  ),
+                  _buildDetailRow(
+                    'telecomPage.endDateLabel : ',
+                    telecom.endDate ?? 'N/A'.tr(context),
+                  ),
                 ],
               ),
             ),
@@ -413,7 +435,7 @@ class _TelecomPageState extends State<TelecomPage> {
                   ),
                 ),
                 child: Text(
-                  'Cancel',
+                  'telecomPage.cancel'.tr(context),
                   style: TextStyle(
                     fontSize: 15,
                     color: AppColors.whiteColor,
@@ -458,7 +480,7 @@ class _TelecomPageState extends State<TelecomPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Manage Telecom',
+                  'telecomPage.manageTelecom'.tr(context),
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
@@ -478,7 +500,7 @@ class _TelecomPageState extends State<TelecomPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Value: ${telecom.value ?? 'N/A'}',
+                  'telecomPage.value: ${telecom.value ?? 'N/A'}'.tr(context),
                   style: TextStyle(fontSize: 18),
                 ),
                 const Gap(13),
@@ -496,8 +518,8 @@ class _TelecomPageState extends State<TelecomPage> {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.all(5),
-                    child: const Text(
-                      'Update',
+                    child: Text(
+                      'telecomPage.update'.tr(context),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
@@ -520,8 +542,8 @@ class _TelecomPageState extends State<TelecomPage> {
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      'Delete',
+                    child: Text(
+                      'telecomPage.delete'.tr(context),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
@@ -554,10 +576,12 @@ class _TelecomPageState extends State<TelecomPage> {
         children: [
           Row(
             children: [
-              const Icon(Icons.tag),
+              Icon(Icons.tag),
               const Gap(8),
               Text(
-                'Type: ${telecom.type?.display ?? 'N/A'}',
+                'telecomPage.type: ${telecom.type?.display ?? 'N/A'}'.tr(
+                  context,
+                ),
                 style: TextStyle(fontSize: 16),
               ),
             ],
@@ -568,7 +592,7 @@ class _TelecomPageState extends State<TelecomPage> {
               const Icon(Icons.label),
               const Gap(8),
               Text(
-                'Use: ${telecom.use?.display ?? 'N/A'}',
+                'telecomPage.use: ${telecom.use?.display ?? 'N/A'}'.tr(context),
                 style: TextStyle(fontSize: 16),
               ),
             ],
@@ -622,10 +646,10 @@ class _TelecomPageState extends State<TelecomPage> {
 
         final telecoms =
             state is TelecomSuccess
-                ? state.paginatedResponse.paginatedData.items
+                ? state.paginatedResponse.paginatedData?.items
                 : [];
         final filteredTelecoms =
-            telecoms.where((telecom) => telecom.type?.id == type.id).toList();
+            telecoms?.where((telecom) => telecom.type?.id == type.id).toList();
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
@@ -647,11 +671,11 @@ class _TelecomPageState extends State<TelecomPage> {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.add, color: AppColors.blackColor),
                       Gap(8),
                       Text(
-                        'Add New Telecom',
+                        'telecomPage.addNewTelecom'.tr(context),
                         style: TextStyle(
                           color: AppColors.blackColor,
                           fontWeight: FontWeight.bold,
@@ -662,7 +686,7 @@ class _TelecomPageState extends State<TelecomPage> {
                   ),
                 ),
               ),
-              filteredTelecoms.isEmpty
+              filteredTelecoms!.isEmpty
                   ? const Center(child: Text('No telecoms of this type.'))
                   : ListView.builder(
                     shrinkWrap: true,
@@ -690,8 +714,8 @@ class _TelecomPageState extends State<TelecomPage> {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Telecoms',
+          title: Text(
+            'telecomPage.telecoms'.tr(context),
             style: TextStyle(
               color: AppColors.primaryColor,
               fontWeight: FontWeight.bold,

@@ -9,7 +9,7 @@ class CodeTypesLoading extends CodeTypesState {}
 
 class CodeTypesSuccess extends CodeTypesState {
   final List<CodeTypeModel> codeTypes;
-  final List<CodeModel>? codes; // Nullable to handle partial data
+  final List<CodeModel>? codes;
 
   CodeTypesSuccess({required this.codeTypes, this.codes});
 }
