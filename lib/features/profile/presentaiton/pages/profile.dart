@@ -1,19 +1,17 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/theme.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/presentation/logout/cubit/logout_cubit.dart';
-import 'package:get_it/get_it.dart';
 import 'package:medizen_app/main.dart';
-// import 'package:share_apps/share_apps.dart';
-
 import '../../../../base/blocs/localization_bloc/localization_bloc.dart';
+import '../../../../base/constant/app_images.dart';
 import '../../../../base/constant/storage_key.dart';
 import '../../../../base/services/di/injection_container_common.dart';
 import '../../../../base/services/storage/storage_service.dart';
@@ -32,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-   PatientModel myPatientModel=loadingPatientModel();
+    PatientModel myPatientModel = loadingPatientModel();
     return BlocProvider(
       create: (context) => GetIt.I<LogoutCubit>(),
       child: Scaffold(
@@ -62,10 +60,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 Center(
                   child: Column(
                     children: [
-                      AvatarImage(imageUrl: myPatientModel!.avatar,radius: 50,),
+                      AvatarImage(imageUrl: myPatientModel!.avatar, radius: 50),
                       SizedBox(height: 16),
                       Text(
-                        myPatientModel==null?"": "${myPatientModel!.fName??""} ${myPatientModel!.lName??""}",
+                        myPatientModel == null
+                            ? ""
+                            : "${myPatientModel!.fName ?? ""} ${myPatientModel!.lName ?? ""}",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

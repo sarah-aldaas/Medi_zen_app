@@ -23,7 +23,11 @@ class HomePageBody extends StatefulWidget {
 
 class _HomePageBodyState extends State<HomePageBody> {
   ///modify clinic id
-  final String clinicId="1";
+// <<<<<<< HEAD
+//   final String clinicId="1";
+// =======
+  final String clinicId = "1";
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
 
   @override
   Widget build(BuildContext context) {
@@ -60,49 +64,137 @@ class _HomePageBodyState extends State<HomePageBody> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// <<<<<<< HEAD
+//                           Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// =======
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
+                            ),
+                          );
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                         },
                         child: _buildSpecialityItem(Icons.local_hospital_outlined, "homePage.specialties.items.general".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// <<<<<<< HEAD
+//                           Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// =======
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
+                            ),
+                          );
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                         },
                         child: _buildSpecialityItem(Icons.density_medium_outlined, "homePage.specialties.items.dentist".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// <<<<<<< HEAD
+//                           Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// =======
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
+                            ),
+                          );
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                         },
                         child: _buildSpecialityItem(Icons.remove_red_eye_outlined, "homePage.specialties.items.ophthalmology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// <<<<<<< HEAD
+//                           Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// =======
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
+                            ),
+                          );
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                         },
                         child: _buildSpecialityItem(Icons.fastfood_outlined, "homePage.specialties.items.nutrition".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// <<<<<<< HEAD
+//                           Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// =======
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
+                            ),
+                          );
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                         },
                         child: _buildSpecialityItem(Icons.psychology_outlined, "homePage.specialties.items.neurology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// <<<<<<< HEAD
+//                           Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// =======
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
+                            ),
+                          );
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                         },
                         child: _buildSpecialityItem(Icons.child_friendly_outlined, "homePage.specialties.items.pediatrics".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// <<<<<<< HEAD
+//                           Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// =======
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
+                            ),
+                          );
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                         },
                         child: _buildSpecialityItem(Icons.waves_outlined, "homePage.specialties.items.radiology".tr(context)),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// <<<<<<< HEAD
+//                           Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicDetailsPage(clinicId: clinicId)));
+// =======
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      ClinicDetailsPage(clinicId: clinicId),
+                            ),
+                          );
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                         },
                         child: _buildSpecialityItem(Icons.more_horiz, "homePage.specialties.items.more".tr(context)),
                       ),
@@ -138,7 +230,17 @@ class _HomePageBodyState extends State<HomePageBody> {
               const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [GreetingWidget(), Text("${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}", style: TextStyle(fontWeight: FontWeight.bold))],
+// <<<<<<< HEAD
+//                 children: [GreetingWidget(), Text("${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}", style: TextStyle(fontWeight: FontWeight.bold))],
+// =======
+                children: [
+                  GreetingWidget(),
+                  Text(
+                    "${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
               ),
             ],
           ),

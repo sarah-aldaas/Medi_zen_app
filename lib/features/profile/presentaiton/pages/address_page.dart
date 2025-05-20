@@ -1,15 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
+
 import '../../../../../base/widgets/show_toast.dart';
-import '../../cubit/address_cubit/address_cubit.dart';
-import 'add_edit_address_page.dart';
-import 'address_card.dart';
-import 'empty_state.dart';
-import 'error_state.dart';
+import '../cubit/address_cubit/address_cubit.dart';
+import '../widgets/address/add_edit_address_page.dart';
+import '../widgets/address/address_card.dart';
+import '../widgets/address/empty_state.dart';
+import '../widgets/address/error_state.dart';
 
 class AddressListPage extends StatefulWidget {
   const AddressListPage({super.key});
@@ -38,12 +38,10 @@ class _AddressListPageState extends State<AddressListPage> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.9
-        ) {
+        _scrollController.position.maxScrollExtent * 0.9) {
       context.read<AddressCubit>().fetchAddresses(loadMore: true);
     }
   }
-
 
   @override
   void dispose() {
@@ -80,10 +78,11 @@ class _AddressListPageState extends State<AddressListPage> {
           ),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
-            ).then((_) => context.read<AddressCubit>().fetchAddresses()),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
+                ).then((_) => context.read<AddressCubit>().fetchAddresses()),
           ),
         ],
       ),
@@ -94,7 +93,8 @@ class _AddressListPageState extends State<AddressListPage> {
           }
         },
         builder: (context, state) {
-          if (state is AddressInitial || (state is AddressLoading && state.isFirstFetch)) {
+          if (state is AddressInitial ||
+              (state is AddressLoading && state.isFirstFetch)) {
             return const Center(child: LoadingPage());
           } else if (state is AddressError) {
             return ErrorState(
@@ -102,7 +102,8 @@ class _AddressListPageState extends State<AddressListPage> {
               onRetry: () => context.read<AddressCubit>().fetchAddresses(),
             );
           } else if (state is AddressSuccess) {
-            final addresses = state.paginatedResponse.paginatedData?.items ?? [];
+            final addresses =
+                state.paginatedResponse.paginatedData?.items ?? [];
 
             if (addresses.isEmpty) {
               return EmptyState(
@@ -110,22 +111,28 @@ class _AddressListPageState extends State<AddressListPage> {
                 title: 'No Addresses',
                 message: 'You haven\'t added any addresses yet',
                 actionText: 'Add Address',
-                onAction: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
-                ).then((_) => context.read<AddressCubit>().fetchAddresses()),
+                onAction:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AddEditAddressPage(),
+                      ),
+                    ).then(
+                      (_) => context.read<AddressCubit>().fetchAddresses(),
+                    ),
               );
             }
 
             return RefreshIndicator(
-              onRefresh: () async => context.read<AddressCubit>().fetchAddresses(),
+              onRefresh:
+                  () async => context.read<AddressCubit>().fetchAddresses(),
               child: ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.all(16),
                 itemCount: addresses.length + (state.isLoadingMore ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index >= addresses.length) {
-                    return  Padding(
+                    return Padding(
                       padding: EdgeInsets.all(16),
                       child: Center(child: LoadingButton()),
                     );
@@ -136,12 +143,17 @@ class _AddressListPageState extends State<AddressListPage> {
                     child: AddressCard(
                       key: ValueKey(address.id), // Important for proper updates
                       address: address,
-                      onEdit: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => AddEditAddressPage(address: address),
-                        ),
-                      ).then((_) => context.read<AddressCubit>().fetchAddresses()),
+                      onEdit:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => AddEditAddressPage(address: address),
+                            ),
+                          ).then(
+                            (_) =>
+                                context.read<AddressCubit>().fetchAddresses(),
+                          ),
                       onDelete: () => _showDeleteDialog(context, address.id!),
                     ),
                   );
@@ -158,23 +170,29 @@ class _AddressListPageState extends State<AddressListPage> {
   void _showDeleteDialog(BuildContext context, String addressId) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Address'),
-        content: const Text('Are you sure you want to delete this address?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Delete Address'),
+            content: const Text(
+              'Are you sure you want to delete this address?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<AddressCubit>().deleteAddress(id: addressId);
+                },
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              context.read<AddressCubit>().deleteAddress(id: addressId);
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -219,7 +237,10 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: Container(
         padding: const EdgeInsets.all(16.0),
-        constraints: BoxConstraints(maxWidth: 400, maxHeight: MediaQuery.of(context).size.height * 0.8),
+        constraints: BoxConstraints(
+          maxWidth: 400,
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(16.0),
@@ -249,28 +270,39 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                   children: [
                     const Text(
                       "Address Use",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
                       builder: (context, state) {
                         List<CodeModel> addressUses = [];
                         if (state is CodeTypesSuccess) {
-                          addressUses = state.codes
-                              ?.where((code) => code.codeTypeModel?.name == 'address_use')
-                              .fold<Map<String, CodeModel>>(
-                            {},
-                                (map, code) => map..[code.id] = code,
-                          )
-                              .values
-                              .toList() ??
+                          addressUses =
+                              state.codes
+                                  ?.where(
+                                    (code) =>
+                                        code.codeTypeModel?.name ==
+                                        'address_use',
+                                  )
+                                  .fold<Map<String, CodeModel>>(
+                                    {},
+                                    (map, code) => map..[code.id] = code,
+                                  )
+                                  .values
+                                  .toList() ??
                               [];
                         }
                         if (state is CodeTypesLoading) {
-                          return  Center(child: LoadingButton());
+                          return Center(child: LoadingButton());
                         }
                         if (addressUses.isEmpty) {
-                          return const Text("No address uses available", style: TextStyle(color: Colors.grey));
+                          return const Text(
+                            "No address uses available",
+                            style: TextStyle(color: Colors.grey),
+                          );
                         }
                         return Column(
                           children: [
@@ -285,7 +317,10 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                             ),
                             ...addressUses.map((use) {
                               return RadioListTile<String>(
-                                title: Text(use.display, style: const TextStyle(fontSize: 14)),
+                                title: Text(
+                                  use.display,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
                                 value: use.id,
                                 groupValue: _selectedUseId,
                                 activeColor: Theme.of(context).primaryColor,
@@ -301,28 +336,39 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                     const SizedBox(height: 16),
                     const Text(
                       "Address Type",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
                       builder: (context, state) {
                         List<CodeModel> addressTypes = [];
                         if (state is CodeTypesSuccess) {
-                          addressTypes = state.codes
-                              ?.where((code) => code.codeTypeModel?.name == 'address_type')
-                              .fold<Map<String, CodeModel>>(
-                            {},
-                                (map, code) => map..[code.id] = code,
-                          )
-                              .values
-                              .toList() ??
+                          addressTypes =
+                              state.codes
+                                  ?.where(
+                                    (code) =>
+                                        code.codeTypeModel?.name ==
+                                        'address_type',
+                                  )
+                                  .fold<Map<String, CodeModel>>(
+                                    {},
+                                    (map, code) => map..[code.id] = code,
+                                  )
+                                  .values
+                                  .toList() ??
                               [];
                         }
                         if (state is CodeTypesLoading) {
-                          return  Center(child: LoadingButton());
+                          return Center(child: LoadingButton());
                         }
                         if (addressTypes.isEmpty) {
-                          return const Text("No address types available", style: TextStyle(color: Colors.grey));
+                          return const Text(
+                            "No address types available",
+                            style: TextStyle(color: Colors.grey),
+                          );
                         }
                         return Column(
                           children: [
@@ -337,7 +383,10 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                             ),
                             ...addressTypes.map((type) {
                               return RadioListTile<String>(
-                                title: Text(type.display, style: const TextStyle(fontSize: 14)),
+                                title: Text(
+                                  type.display,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
                                 value: type.id,
                                 groupValue: _selectedTypeId,
                                 activeColor: Theme.of(context).primaryColor,
@@ -365,7 +414,10 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                       _selectedUseId = null;
                     });
                   },
-                  child: const Text("Clear Filters", style: TextStyle(color: Colors.red)),
+                  child: const Text(
+                    "Clear Filters",
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
                 Row(
                   children: [
@@ -386,7 +438,9 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                       child: const Text("Apply"),
                     ),

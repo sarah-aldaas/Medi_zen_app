@@ -9,22 +9,16 @@ class AddressLoading extends AddressState {
   final bool isFirstFetch;
   final bool isLoadingMore;
 
-   AddressLoading({
-    this.isFirstFetch = false,
-    this.isLoadingMore = false
-  });
+  AddressLoading({this.isFirstFetch = false, this.isLoadingMore = false});
 }
 
 class AddressSuccess extends AddressState {
   final PaginatedResponse<AddressModel> paginatedResponse;
   final bool isLoadingMore;
 
-   AddressSuccess({
-    required this.paginatedResponse,
-     this.isLoadingMore = false,
-  });
+  AddressSuccess({required this.paginatedResponse, this.isLoadingMore = false});
+}
 
- }
 class AddressError extends AddressState {
   final String error;
 

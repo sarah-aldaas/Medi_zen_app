@@ -41,6 +41,7 @@ dependencies:
 #  share_apps:
   image_picker:
   animated_theme_switcher:
+  flutter_pdfview:
   responsive_framework:
   oktoast:
   open_filex:

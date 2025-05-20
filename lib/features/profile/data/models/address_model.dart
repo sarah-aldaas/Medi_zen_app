@@ -64,9 +64,6 @@ class AddressModel {
   }
 }
 
-
-
-
 class AddOrUpdateAddressModel {
   final String? id;
   final String? country;
@@ -107,7 +104,7 @@ class AddOrUpdateAddressModel {
       text: json['text'].toString(),
       postalCode: json['postal_code'].toString(),
       startDate: json['start_date'].toString(),
-      endDate:json['end_date']!=null? json['end_date'].toString():null,
+      endDate: json['end_date'] != null ? json['end_date'].toString() : null,
       use: CodeModel.fromJson(json['use_id'] as Map<String, dynamic>),
       type: CodeModel.fromJson(json['type_id'] as Map<String, dynamic>),
     );

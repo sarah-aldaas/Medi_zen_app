@@ -16,11 +16,8 @@ import 'package:medizen_app/features/profile/presentaiton/cubit/address_cubit/ad
 import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/telecom_cubit/telecom_cubit.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/edit_profile_screen.dart';
-import 'package:medizen_app/features/services/pages/cubits/service_cubit/service_cubit.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-// import 'package:share_apps/share_apps.dart';
-
 import 'base/blocs/localization_bloc/localization_bloc.dart';
 import 'base/constant/storage_key.dart';
 import 'base/go_router/go_router.dart';
@@ -30,6 +27,7 @@ import 'base/services/localization/app_localization_service.dart';
 import 'base/services/storage/storage_service.dart';
 import 'base/theme/theme.dart';
 import 'features/appointment/pages/cubit/appointment_cubit/appointment_cubit.dart';
+import 'features/services/pages/cubits/service_cubit/service_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -110,10 +108,6 @@ class MyApp extends StatelessWidget {
                   create: (context) => serviceLocator<ServiceCubit>(),
                   lazy: false,
                 ),
-                BlocProvider<AppointmentCubit>(
-                  create: (context) => serviceLocator<AppointmentCubit>(),
-                  lazy: false,
-                ),
                 BlocProvider<ClinicCubit>(
                   create: (context) => serviceLocator<ClinicCubit>(),
                   lazy: false,
@@ -124,6 +118,11 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider<AddressCubit>(
                   create: (context) => serviceLocator<AddressCubit>(),
+                  lazy: false,
+                ),
+
+                BlocProvider<AppointmentCubit>(
+                  create: (context) => serviceLocator<AppointmentCubit>(),
                   lazy: false,
                 ),
                 BlocProvider<EditProfileFormCubit>(
@@ -161,3 +160,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
