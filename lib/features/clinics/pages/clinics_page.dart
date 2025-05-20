@@ -41,13 +41,6 @@ class _ClinicsPageState extends State<ClinicsPage> {
             onPressed: () {
               context.pop();
             },
-// <<<<<<< HEAD
-//             icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
-//           ),
-//           toolbarHeight: 80,
-//           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-//           title: Text("Doctor speciality", style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20, fontWeight: FontWeight.bold)),
-// =======
             icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
           ),
           toolbarHeight: 80,
@@ -61,7 +54,6 @@ class _ClinicsPageState extends State<ClinicsPage> {
             ),
           ),
           centerTitle: true,
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
           actions: [
             IconButton(
               onPressed: () {
@@ -69,11 +61,8 @@ class _ClinicsPageState extends State<ClinicsPage> {
                   isVisible = !isVisible;
                 });
               },
-// <<<<<<< HEAD
-//               icon: Icon(Icons.search, color: Colors.grey),
-// =======
+
               icon: const Icon(Icons.search, color: AppColors.primaryColor),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
             ),
           ],
         ),
@@ -106,13 +95,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   }
 
   void _scrollListener() {
-// <<<<<<< HEAD
-//     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
-// =======
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
       _isLoadingMore = true;
       context.read<ClinicCubit>().fetchClinics(loadMore: true).then((_) {
         _isLoadingMore = false;
@@ -125,13 +110,10 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   void _onSearchChanged() {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 500), () {
-// <<<<<<< HEAD
-//       context.read<ClinicCubit>().fetchClinics(searchQuery: _searchController.text);
-// =======
+
       context.read<ClinicCubit>().fetchClinics(
         searchQuery: _searchController.text,
       );
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
     });
   }
 
@@ -143,16 +125,12 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-// <<<<<<< HEAD
-//               Visibility(visible: widget.isVisible, child: SearchFieldClinics(controller: _searchController)),
-//               Gap(20),
-// =======
+
               Visibility(
                 visible: widget.isVisible,
                 child: SearchFieldClinics(controller: _searchController),
               ),
               const Gap(20),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
               Expanded(child: _buildClinicList(state)),
             ],
           ),
@@ -174,15 +152,12 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
             const Icon(Icons.search_off, size: 50, color: Colors.grey),
             const SizedBox(height: 16),
             Text(
-// <<<<<<< HEAD
-//               _searchController.text.isEmpty ? state.message : 'No results found for "${_searchController.text}"',
-// =======
               _searchController.text.isEmpty
                   ? state.message
                   : 'No results found for "${_searchController.text}"'.tr(
                     context,
                   ),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
+
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
@@ -191,12 +166,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
     } else if (state is ClinicSuccess) {
       return NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
-// <<<<<<< HEAD
-//           if (scrollNotification is ScrollEndNotification && _scrollController.position.extentAfter == 0) {
-// =======
+
           if (scrollNotification is ScrollEndNotification &&
               _scrollController.position.extentAfter == 0) {
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
             context.read<ClinicCubit>().fetchClinics(loadMore: true);
           }
           return false;
@@ -204,28 +176,17 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
         child: GridView.builder(
           controller: _scrollController,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-// <<<<<<< HEAD
-//             crossAxisCount: 3,
-//             crossAxisSpacing: 16.0,
-//             mainAxisSpacing: 16.0,
-//             childAspectRatio: 0.8,
-// =======
             crossAxisCount: 2,
             crossAxisSpacing: 16.0,
             mainAxisSpacing: 16.0,
             childAspectRatio: 0.9,
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
           ),
           itemCount: state.clinics.length + 1,
           itemBuilder: (context, index) {
             if (index >= state.clinics.length) {
-// <<<<<<< HEAD
-//               return context.read<ClinicCubit>().hasMore ? Center(child: LoadingButton(isWhite: false)) : const SizedBox.shrink();
-// =======
               return context.read<ClinicCubit>().hasMore
                   ? Center(child: LoadingButton(isWhite: false))
                   : const SizedBox.shrink();
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
             }
             return _buildClinicGridItem(state.clinics[index], context);
           },
@@ -235,9 +196,6 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-// <<<<<<< HEAD
-//           children: [Text(state.error), ElevatedButton(onPressed: () => context.read<ClinicCubit>().fetchClinics(), child: const Text('Retry'))],
-// =======
           children: [
             Text(state.error),
             ElevatedButton(
@@ -245,7 +203,6 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
               child: const Text('Retry'),
             ),
           ],
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
         ),
       );
     }
@@ -253,28 +210,6 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   }
 
   Widget _buildClinicGridItem(ClinicModel clinic, BuildContext context) {
-// <<<<<<< HEAD
-//     return GestureDetector(
-//       onTap: () => context.pushNamed(AppRouter.clinicDetails.name, extra: {"clinicId": clinic.id}),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           CircleAvatar(radius: 50, backgroundImage: AssetImage(AppAssetImages.clinic2)),
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: SizedBox(
-//               width: context.width / 4,
-//               child: Text(
-//                 clinic.name,
-//                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-//                 textAlign: TextAlign.center,
-//                 maxLines: 1,
-//                 overflow: TextOverflow.ellipsis,
-//               ),
-//             ),
-//           ),
-//         ],
-// =======
     return Card(
       elevation: 2.0,
       color: Colors.teal.shade50,
@@ -321,7 +256,6 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
             ),
           ],
         ),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
       ),
     );
   }
@@ -351,16 +285,6 @@ class SearchFieldClinics extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               filled: true,
-// <<<<<<< HEAD
-//               fillColor: theme.brightness == Brightness.dark ? Colors.black12 : Colors.grey.shade50,
-//               hintText: 'searchField.title'.tr(context),
-//               hintStyle: TextStyle(color: Colors.grey.withValues(alpha: _opacityLevel)),
-//               border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0), borderSide: BorderSide(color: Colors.transparent)),
-//               enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0), borderSide: BorderSide(color: Colors.transparent)),
-//               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0), borderSide: BorderSide(color: Theme.of(context).primaryColor)),
-//               contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-//               prefixIcon: Icon(Icons.search, color: Colors.grey.withValues(alpha: _opacityLevel)),
-// =======
               fillColor:
                   theme.brightness == Brightness.dark
                       ? Colors.black12
@@ -389,7 +313,6 @@ class SearchFieldClinics extends StatelessWidget {
                 Icons.search,
                 color: Colors.grey.withValues(alpha: _opacityLevel),
               ),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
             ),
           );
         },

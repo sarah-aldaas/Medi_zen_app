@@ -20,36 +20,16 @@ class HealthCareServiceDetailsPage extends StatefulWidget {
 
 class _HealthCareServiceDetailsPageState
     extends State<HealthCareServiceDetailsPage> {
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
   @override
   void initState() {
     super.initState();
-    // Fetch service details when the page loads
-// <<<<<<< HEAD
-//     context.read<ServiceCubit>().getSpecificServiceHealthCare(id: widget.serviceId);
-// =======
     context.read<ServiceCubit>().getSpecificServiceHealthCare(
       id: widget.serviceId,
     );
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
   }
 
   @override
   Widget build(BuildContext context) {
-// <<<<<<< HEAD
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-//         title:  Text('Service Details',style: TextStyle(
-//           color: Theme.of(context).primaryColor,
-//           fontSize: 20
-//         ),),
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back_ios,color: Colors.grey,),
-//           onPressed: () => Navigator.pop(context),
-//         ),
-//       ),
-// =======
     final primaryColor = Theme.of(context).primaryColor;
     final secondaryColor = Colors.tealAccent.shade400; // لون ثانوي منعش
     final backgroundColor = Colors.white;
@@ -79,7 +59,6 @@ class _HealthCareServiceDetailsPageState
         ),
       ),
       backgroundColor: Colors.grey.shade100,
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
       body: BlocConsumer<ServiceCubit, ServiceState>(
         listener: (context, state) {
           if (state is ServiceHealthCareError) {
@@ -88,30 +67,17 @@ class _HealthCareServiceDetailsPageState
         },
         builder: (context, state) {
           if (state is ServiceHealthCareModelSuccess) {
-// <<<<<<< HEAD
-//             return _buildServiceDetails(state.healthCareServiceModel);
-// =======
             return _buildServiceDetails(
               state.healthCareServiceModel,
               primaryColor,
               textColor,
               subTextColor,
             );
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
           } else if (state is ServiceHealthCareError) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-// <<<<<<< HEAD
-//                   Text(state.error),
-//                   const SizedBox(height: 16),
-//                   ElevatedButton(
-//                     onPressed: () {
-//                       context.read<ServiceCubit>().getSpecificServiceHealthCare(id: widget.serviceId);
-//                     },
-//                     child: const Text('Retry'),
-// =======
                   Icon(Icons.error_outline, size: 70, color: Colors.redAccent),
                   const SizedBox(height: 16),
                   Text(
@@ -139,7 +105,6 @@ class _HealthCareServiceDetailsPageState
                       textStyle: const TextStyle(fontSize: 18),
                     ),
                     child: const Text('Retry Loading'),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                   ),
                 ],
               ),
@@ -150,12 +115,6 @@ class _HealthCareServiceDetailsPageState
       ),
     );
   }
-
-// <<<<<<< HEAD
-//   Widget _buildServiceDetails(HealthCareServiceModel service) {
-//     return SingleChildScrollView(
-//       padding: const EdgeInsets.all(16.0),
-// =======
   Widget _buildServiceDetails(
     HealthCareServiceModel service,
     Color primaryColor,
@@ -164,93 +123,11 @@ class _HealthCareServiceDetailsPageState
   ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0), // زيادة حجم التباعد
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (service.photo != null)
             Center(
-// <<<<<<< HEAD
-//               child: Image.network(
-//                 service.photo!,
-//                 height: 200,
-//                 fit: BoxFit.cover,
-//                 errorBuilder: (context, error, stackTrace) =>
-//                 const Icon(Icons.medical_services, size: 100),
-//               ),
-//             ),
-//           const SizedBox(height: 16),
-//           Text(
-//             service.name!,
-//             style: Theme.of(context).textTheme.headlineSmall,
-//           ),
-//           const SizedBox(height: 8),
-//           Text(service.comment!),
-//           const SizedBox(height: 16),
-//           const Divider(),
-//           Text(
-//             'Details',
-//             style: Theme.of(context).textTheme.titleLarge,
-//           ),
-//           Text(service.extraDetails ?? 'No additional details'),
-//           const SizedBox(height: 16),
-//           const Divider(),
-//           Text(
-//             'Price: ${service.price}',
-//             style: Theme.of(context).textTheme.titleMedium,
-//           ),
-//           const SizedBox(height: 16),
-//           if (service.category != null) ...[
-//             const Divider(),
-//             Text(
-//               'Category',
-//               style: Theme.of(context).textTheme.titleLarge,
-//             ),
-//             Text(
-//               service.category!.display,
-//               style: Theme.of(context).textTheme.titleMedium,
-//             ),
-//             Text(service.category!.description),
-//           ],
-//           const SizedBox(height: 16),
-//           if (service.clinic != null) ...[
-//             const Divider(),
-//             Text(
-//               'Clinic',
-//               style: Theme.of(context).textTheme.titleLarge,
-//             ),
-//             Text(
-//               service.clinic!.name,
-//               style: Theme.of(context).textTheme.titleMedium,
-//             ),
-//             Text(service.clinic!.description),
-//             if (service.clinic!.photo != null)
-//               Padding(
-//                 padding: const EdgeInsets.only(top: 8.0),
-//                 child: CircleAvatar(
-//                   child: Image.network(
-//                     service.clinic!.photo!,
-//                     height: 100,
-//                     fit: BoxFit.cover,
-//                   ),
-//                 ),
-//               ),
-//           ],
-//           const SizedBox(height: 16),
-//           if (service.eligibilities != null && service.eligibilities!.isNotEmpty) ...[
-//             const Divider(),
-//             Text(
-//               'Eligibility Requirements',
-//               style: Theme.of(context).textTheme.titleLarge,
-//             ),
-//             ...service.eligibilities!.map((e) => Card(
-//               margin: const EdgeInsets.symmetric(vertical: 4.0),
-//               child: ListTile(
-//                 title: Text(e.display),
-//                 subtitle: Text(e.description),
-//               ),
-//             )),
-// =======
               child: Card(
                 elevation: 5, // ظل أكثر وضوحًا
                 shape: RoundedRectangleBorder(
@@ -453,14 +330,9 @@ class _HealthCareServiceDetailsPageState
               ),
             ),
             const Gap(30),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
           ],
         ],
       ),
     );
   }
-// <<<<<<< HEAD
-// }
-// =======
 }
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d

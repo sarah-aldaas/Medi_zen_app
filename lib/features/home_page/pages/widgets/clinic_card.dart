@@ -77,4 +77,3 @@ class ClinicCard extends StatelessWidget {
     );
   }
 }
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d

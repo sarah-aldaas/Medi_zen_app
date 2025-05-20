@@ -30,19 +30,12 @@ class EditProfileScreen extends StatelessWidget {
           create: (context) => ProfileCubit(remoteDataSource: serviceLocator()),
         ),
         BlocProvider(
-// <<<<<<< HEAD
-//           create: (context) => CodeTypesCubit(remoteDataSource: serviceLocator()),
-//         ),
-//         BlocProvider(
-//           create: (context) => EditProfileFormCubit(context.read<CodeTypesCubit>()),
-// =======
-          create:
+       create:
               (context) => CodeTypesCubit(remoteDataSource: serviceLocator()),
         ),
         BlocProvider(
           create:
               (context) => EditProfileFormCubit(context.read<CodeTypesCubit>()),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
         ),
       ],
       child: Scaffold(
@@ -52,22 +45,6 @@ class EditProfileScreen extends StatelessWidget {
           centerTitle: true,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(1.0),
-// <<<<<<< HEAD
-//             child: Container(color: Colors.grey.shade400, height: 1.0),
-//           ),
-//           leadingWidth: 100,
-//           leading: TextButton(
-//             onPressed: () => context.goNamed(AppRouter.profileDetails.name),
-//             child: const Text(
-//               'Cancel',
-//               style: TextStyle(color: Colors.grey),
-//             ),
-//           ),
-//           title: Text(
-//             "Edit profile",
-//             style: TextStyle(
-//               fontSize: 17,
-// =======
             child: Container(color: AppColors.whiteColor, height: 1.0),
           ),
           leadingWidth: 100,
@@ -82,7 +59,6 @@ class EditProfileScreen extends StatelessWidget {
             "Edit Profile",
             style: TextStyle(
               fontSize: 18,
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
               fontWeight: FontWeight.bold,
               color: Theme.of(context).primaryColor,
             ),
@@ -94,20 +70,6 @@ class EditProfileScreen extends StatelessWidget {
                 builder: (context, formState) {
                   final cubit = context.read<EditProfileFormCubit>();
                   return TextButton(
-// <<<<<<< HEAD
-//                     onPressed: cubit.isFormValid() ? () => cubit.submitForm(context) : null,
-//                     child: context.read<ProfileCubit>().state.status == ProfileStatus.loadignUpdate
-//                         ?  LoadingButton(isWhite: false)
-//                         : Text(
-//                             'Update',
-//                             style: TextStyle(
-//                               color: cubit.isFormValid()
-//                                   ? Theme.of(context).primaryColor
-//                                   : Colors.grey,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-// =======
                     onPressed:
                         cubit.isFormValid()
                             ? () => cubit.submitForm(context)
@@ -127,7 +89,6 @@ class EditProfileScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                   );
                 },
               ),
@@ -139,14 +100,7 @@ class EditProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-// <<<<<<< HEAD
-//               children: const <Widget>[
-//                 SizedBox(height: 20),
-//                 EditProfileForm(),
-//               ],
-// =======
               children: const <Widget>[SizedBox(height: 20), EditProfileForm()],
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
             ),
           ),
         ),
@@ -190,12 +144,8 @@ class _EditProfileFormState extends State<EditProfileForm> {
           context.pushNamed(AppRouter.profileDetails.name);
         } else if (state.errorMessage.isNotEmpty) {
           ShowToast.showToastError(message: state.errorMessage);
-// <<<<<<< HEAD
-//         } else if (state.status == ProfileStatus.success && state.patient != null) {
-// =======
         } else if (state.status == ProfileStatus.success &&
             state.patient != null) {
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
           _cubit.preFillForm(
             firstName: state.patient!.fName,
             lastName: state.patient!.lName,
@@ -211,12 +161,8 @@ class _EditProfileFormState extends State<EditProfileForm> {
       builder: (context, profileState) {
         return BlocBuilder<EditProfileFormCubit, EditProfileFormState>(
           builder: (context, formState) {
-// <<<<<<< HEAD
-//             if (formState.isLoadingCodes || profileState.status == ProfileStatus.loadignUpdate) {
-// =======
             if (formState.isLoadingCodes ||
                 profileState.status == ProfileStatus.loadignUpdate) {
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
               return const Center(child: LoadingPage());
             }
 
@@ -231,20 +177,14 @@ class _EditProfileFormState extends State<EditProfileForm> {
                     'sign_up_page.first_name',
                     Icons.person,
                   ),
-// <<<<<<< HEAD
-// =======
                   const Gap(12),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                   const SizedBox(height: 20),
                   _buildTextField(
                     'lastName',
                     'sign_up_page.last_name',
                     Icons.person,
                   ),
-// <<<<<<< HEAD
-// =======
                   const Gap(12),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                   const SizedBox(height: 20),
                   _buildDropdown(
                     'genderId',
@@ -253,10 +193,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                     (value) => _cubit.updateGenderId(value),
                     formState.genderId,
                   ),
-// <<<<<<< HEAD
-// =======
                   const Gap(12),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                   const SizedBox(height: 20),
                   _buildDropdown(
                     'maritalStatusId',
@@ -267,7 +204,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
                   ),
 
                   const SizedBox(height: 60),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                 ],
               ),
             );
@@ -284,23 +220,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
           avatar != null
               ? CircleAvatar(radius: 80, backgroundImage: FileImage(avatar))
               : image != null && image!.isNotEmpty
-// <<<<<<< HEAD
-//                   ? AvatarImage(imageUrl: image, radius: 80, key: ValueKey(image))
-//                   : CircleAvatar(
-//                       radius: 80,
-//                       backgroundImage: const AssetImage("assets/images/person.jpg"),
-//                       backgroundColor: Colors.transparent,
-//                       child: Container(
-//                         decoration: BoxDecoration(
-//                           shape: BoxShape.circle,
-//                           border: Border.all(
-//                             color: Theme.of(context).primaryColor,
-//                             width: 4.0,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-// =======
               ? AvatarImage(imageUrl: image, radius: 80, key: ValueKey(image))
               : CircleAvatar(
                 radius: 80,
@@ -316,7 +235,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
                   ),
                 ),
               ),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
           Positioned(
             bottom: 0,
             right: 0,
@@ -369,32 +287,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0)),
       ),
-// <<<<<<< HEAD
-//       items: codes.map((code) {
-//         return DropdownMenuItem<String>(
-//           value: code.id.toString(),
-//           child: key == 'genderId'
-//               ? Row(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     Padding(
-//                       padding: const EdgeInsets.only(left: 8.0),
-//                       child: Icon(
-//                         code.display.toLowerCase() == 'male' ? Icons.male : Icons.female,
-//                         color: code.display.toLowerCase() == 'male' ? Colors.blue : Colors.pink,
-//                       ),
-//                     ),
-//                     Text(code.display),
-//                   ],
-//                 )
-//               : Text(code.display),
-//         );
-//       }).toList(),
-//       onChanged: onChanged,
-//       validator: (value) {
-//         if (value == null) {
-//           return 'sign_up_page.validation.${key.split('Id')[0]}_required'.tr(context);
-// =======
       items:
           codes.map((code) {
             return DropdownMenuItem<String>(
@@ -434,7 +326,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
           return 'sign_up_page.validation.${key.split('Id')[0]}_required'.tr(
             context,
           );
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
         }
         return null;
       },
@@ -444,72 +335,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
   void _showImageSourceDialog() {
     showDialog(
       context: context,
-// <<<<<<< HEAD
-//       builder: (context) => AlertDialog(
-//         title: const Text('Select Image Source'),
-//         content: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             ListTile(
-//               leading: const Icon(Icons.camera),
-//               title: const Text('Camera'),
-//               onTap: () async {
-//                 Navigator.pop(context);
-//                 final pickedFile = await ImagePicker().pickImage(
-//                   source: ImageSource.camera,
-//                 );
-//                 if (pickedFile != null) {
-//                   setState(() {
-//                     avatarChanged = true;
-//                     image = null;
-//                     debugPrint('Image cleared, new avatar: ${pickedFile.path}');
-//                   });
-//                   _cubit.updateAvatar(File(pickedFile.path));
-//                 }
-//               },
-//             ),
-//             ListTile(
-//               leading: const Icon(Icons.photo_library),
-//               title: const Text('Gallery'),
-//               onTap: () async {
-//                 Navigator.pop(context);
-//                 final pickedFile = await ImagePicker().pickImage(
-//                   source: ImageSource.gallery,
-//                 );
-//                 if (pickedFile != null) {
-//                   setState(() {
-//                     avatarChanged = true;
-//                     image = null;
-//                     debugPrint('Image cleared, new avatar: ${pickedFile.path}');
-//                   });
-//                   _cubit.updateAvatar(File(pickedFile.path));
-//                 }
-//               },
-//             ),
-//             if (_cubit.state.avatar != null || image != null)
-//               ListTile(
-//                 leading: const Icon(Icons.remove_circle, color: Colors.red),
-//                 title: const Text('Remove Image'),
-//                 onTap: () {
-//                   Navigator.pop(context);
-//                   setState(() {
-//                     avatarChanged = true;
-//                     image = null;
-//                     debugPrint('Image removed');
-//                   });
-//                   _cubit.updateAvatar(null);
-//                 },
-//               ),
-//           ],
-//         ),
-//         actions: [
-//           TextButton(
-//             onPressed: () => Navigator.pop(context),
-//             child: const Text('Cancel'),
-//           ),
-//         ],
-//       ),
-// =======
       builder:
           (context) => AlertDialog(
             backgroundColor: AppColors.whiteColor,
@@ -605,7 +430,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
               ),
             ],
           ),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
     );
   }
 }
@@ -679,12 +503,6 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
       }
 
       debugPrint('Gender Codes: ${uniqueGenderCodes.values.toList()}');
-// <<<<<<< HEAD
-//       debugPrint('Marital Status Codes: ${uniqueMaritalStatusCodes.values.toList()}');
-//
-//       if (uniqueGenderCodes.isEmpty || uniqueMaritalStatusCodes.isEmpty) {
-//         ShowToast.showToastError(message: 'Failed to load gender or marital status options');
-// =======
       debugPrint(
         'Marital Status Codes: ${uniqueMaritalStatusCodes.values.toList()}',
       );
@@ -693,7 +511,6 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
         ShowToast.showToastError(
           message: 'Failed to load gender or marital status options',
         );
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
         return;
       }
 
@@ -702,16 +519,10 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
           genderCodes: uniqueGenderCodes.values.toList(),
           maritalStatusCodes: uniqueMaritalStatusCodes.values.toList(),
           isLoadingCodes: false,
-// <<<<<<< HEAD
-//           genderId: state.genderId ??
-//               uniqueGenderCodes.values.first.id.toString(),
-//           maritalStatusId: state.maritalStatusId ??
-// =======
           genderId:
               state.genderId ?? uniqueGenderCodes.values.first.id.toString(),
           maritalStatusId:
               state.maritalStatusId ??
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
               uniqueMaritalStatusCodes.values.first.id.toString(),
         ),
       );
@@ -747,19 +558,6 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
     debugPrint(
       'Pre-filling form: firstName=$firstName, lastName=$lastName, genderId=$genderId, maritalStatusId=$maritalStatusId, image=$image',
     );
-// <<<<<<< HEAD
-//     final newFormData = Map<String, String>.from(state.formData)
-//       ..['firstName'] = firstName ?? ''
-//       ..['lastName'] = lastName ?? '';
-//     final validGenderId = state.genderCodes.any((code) => code.id.toString() == genderId)
-//         ? genderId
-//         : state.genderCodes.isNotEmpty
-//             ? state.genderCodes.first.id.toString()
-//             : null;
-//     final validMaritalStatusId = state.maritalStatusCodes.any((code) => code.id.toString() == maritalStatusId)
-//         ? maritalStatusId
-//         : state.maritalStatusCodes.isNotEmpty
-// =======
     final newFormData =
         Map<String, String>.from(state.formData)
           ..['firstName'] = firstName ?? ''
@@ -776,7 +574,6 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
             )
             ? maritalStatusId
             : state.maritalStatusCodes.isNotEmpty
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
             ? state.maritalStatusCodes.first.id.toString()
             : null;
     emit(

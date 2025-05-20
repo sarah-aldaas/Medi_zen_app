@@ -160,40 +160,6 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
     return BlocBuilder<DoctorCubit, DoctorState>(
       bloc: _doctorCubit,
       builder: (context, state) {
-// <<<<<<< HEAD
-//         if (state is LoadedDoctorsOfClinicSuccess) {
-//           return Column(
-//             children: [
-//               Row(
-//                 children: [
-//                   Icon(Icons.healing, color: Theme.of(context).primaryColor),
-//                   const Gap(10),
-//                   Text(
-//                     "Doctors (${state.allDoctors.length})",
-//                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
-//                   ),
-//                 ],
-//               ),
-//               const Gap(10),
-//               if (state.allDoctors.isEmpty)
-//                 const Text("No doctors available in this clinic")
-//               else
-//                 Column(
-//                   children: [
-//                     ...state.allDoctors.map((doctor) => _buildDoctorItem(doctor)),
-//                     if (state.hasMore)
-//                       Padding(
-//                         padding: const EdgeInsets.all(8.0),
-//                         child: TextButton(
-//                           onPressed: () {
-//                             _doctorCubit.getDoctorsOfClinic(clinicId: widget.clinicId);
-//                           },
-//                           child: const Text("Load More Doctors"),
-//                         ),
-//                       ),
-//                     if (_doctorCubit.isLoading) Padding(padding: EdgeInsets.all(8.0), child: LoadingButton(isWhite: false)),
-//                   ],
-// =======
         Widget content;
         if (state is LoadedDoctorsOfClinicSuccess) {
           content = Column(
@@ -210,8 +176,8 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                   Text(
                     "Our Dedicated Doctors (${state.allDoctors.length})",
                     style: const TextStyle(
-                      fontSize: 20, // حجم خط أكبر قليلاً
-                      fontWeight: FontWeight.bold, // خط أكثر بروزًا
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
@@ -222,7 +188,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
-                    "No doctors available in this clinic at the moment.", // رسالة أوضح
+                    "No doctors available in this clinic at the moment.",
                     style: TextStyle(color: Colors.grey, fontSize: 16),
                     textAlign: TextAlign.center,
                   ),
@@ -263,28 +229,10 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                       return const SizedBox.shrink();
                     }
                   },
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                 ),
             ],
           );
         } else if (state is DoctorError) {
-// <<<<<<< HEAD
-//           return Column(
-//             children: [
-//               Text(state.error),
-//               TextButton(
-//                 onPressed: () {
-//                   _doctorCubit.getDoctorsOfClinic(clinicId: widget.clinicId);
-//                 },
-//                 child: const Text("Retry"),
-//               ),
-//             ],
-//           );
-//         } else if (state is DoctorLoading) {
-//           return const Center(child: LoadingPage());
-//         }
-//         return Center(child: LoadingButton());
-// =======
           content = Center(
             child: Column(
               children: [
@@ -319,93 +267,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: content,
         );
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
       },
     );
   }
-
-// <<<<<<< HEAD
-//   Widget _buildServicesSection(ClinicModel clinic) {
-//     return Column(
-//       children: [
-//         Row(
-//           children: [
-//             Icon(Icons.health_and_safety, color: Theme.of(context).primaryColor),
-//             const Gap(10),
-//             Text("Health Care Services", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
-//           ],
-//         ),
-//         const Gap(10),
-//         if (clinic.healthCareServices == null || clinic.healthCareServices!.isEmpty)
-//           const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.home_repair_service_outlined), Gap(10), Text("No services available")])
-//         else
-//           Column(children: clinic.healthCareServices!.map((service) => _buildServiceItem(service)).toList()),
-//       ],
-//     );
-//   }
-//
-//   Widget _buildDoctorItem(DoctorModel doctor) {
-//     return GestureDetector(
-//       onTap: () {
-//         context.pushNamed(AppRouter.doctorDetails.name, extra: {"doctorModel": doctor});
-//       },
-//       child: Column(
-//         children: [
-//           Container(
-//             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-//             child: Card(
-//               child: Padding(
-//                 padding: const EdgeInsets.all(20.0),
-//                 child: Row(
-//                   children: [
-//                     ClipRRect(
-//                       borderRadius: BorderRadius.circular(8.0),
-//                       child: Image.network(
-//                         doctor.avatar,
-//                         height: 100,
-//                         width: 100,
-//                         fit: BoxFit.cover,
-//                         errorBuilder: (context, error, stackTrace) => Image.asset(AppAssetImages.photoDoctor1, height: 100, width: 100),
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       width: context.width / 1.9,
-//                       child: Column(
-//                         children: [
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                             children: [
-//                               Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: [
-//                                   Text("${doctor.fName} ${doctor.lName}", style: const TextStyle(fontWeight: FontWeight.bold)),
-//                                   const Gap(5),
-//                                   SizedBox(width: context.width / 2.5, child: Text(doctor.text, overflow: TextOverflow.ellipsis, maxLines: 2)),
-//                                 ],
-//                               ),
-//                               const Spacer(),
-//                               IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border)),
-//                             ],
-//                           ),
-//                           const Divider(),
-//                           Row(
-//                             children: [
-//                               Icon(Icons.phone, color: Theme.of(context).primaryColor, size: 20),
-//                               const Gap(10),
-//                               Text(doctor.telecoms!.isNotEmpty ? doctor.telecoms![0].value! : "No contact"),
-//                             ],
-//                           ),
-//                           const Gap(10),
-//                           Row(
-//                             children: [
-//                               Icon(Icons.home, color: Theme.of(context).primaryColor, size: 20),
-//                               const Gap(10),
-//                               SizedBox(width: context.width / 3, child: Text(doctor.address, overflow: TextOverflow.ellipsis, maxLines: 1)),
-//                             ],
-//                           ),
-//                         ],
-//                       ),
-// =======
   Widget _buildDoctorItem(DoctorModel doctor) {
     return Card(
       elevation: 2, // زيادة الظل قليلاً
@@ -606,67 +470,12 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                       Icons.arrow_forward_ios,
                       color: Colors.grey,
                       size: 18,
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
                     ),
                   ],
                 ),
               ),
             ),
           ),
-// <<<<<<< HEAD
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildServiceItem(HealthCareServiceModel service) {
-//     return Container(
-//       margin: const EdgeInsets.all(5),
-//       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Theme.of(context).primaryColor)),
-//       child: ExpansionTile(
-//         expandedCrossAxisAlignment: CrossAxisAlignment.start,
-//         leading: CircleAvatar(radius: 50, backgroundImage: NetworkImage(service.photo!)),
-//         title: Text(service.name!, style: const TextStyle(fontWeight: FontWeight.bold)),
-//         subtitle: Text(service.comment!),
-//         children: <Widget>[
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Column(
-//               children: [
-//                 Text(service.extraDetails!),
-//                 const Gap(10),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                   children: [
-//                     Row(
-//                       children: [
-//                         const Text("Appointment required: "),
-//                         service.appointmentRequired!
-//                             ? const Icon(Icons.check_circle_rounded, color: Colors.green)
-//                             : const Icon(Icons.highlight_remove, color: Colors.orange),
-//                       ],
-//                     ),
-//                     Row(children: [const Icon(Icons.monetization_on, color: Colors.grey), const Gap(10), Text(service.price!)]),
-//                   ],
-//                 ),
-//                 const Gap(10),
-//                 GestureDetector(
-//                   onTap: () {
-//                     context.pushNamed(AppRouter.healthServiceDetails.name, extra: {"serviceId": service.id.toString()});
-//                   },
-//                   child: Container(
-//                     width: context.width / 2,
-//                     padding: const EdgeInsets.all(8),
-//                     margin: const EdgeInsets.all(8),
-//                     decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(20)),
-//                     child: const Center(child: Text("Show details", style: TextStyle(color: Colors.white))),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-// =======
       ],
     );
   }
@@ -854,7 +663,6 @@ class ClinicServicesPage extends StatelessWidget {
             );
           },
         ),
-// >>>>>>> 03a3a97f92820df17326cce7cfc14ea9f76ceb6d
       ),
     );
   }
