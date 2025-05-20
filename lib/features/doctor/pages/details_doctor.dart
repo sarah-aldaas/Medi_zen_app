@@ -56,7 +56,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
 
   void _fetchSlotsForDate(DateTime date) {
     final formattedDate = DateFormat('yyyy-MM-dd').format(date);
-    final isAvailable = _doctorAvailability?.availability.any((day) => DateFormat('yyyy-MM-dd').format(day.date) == formattedDate && day.isAvailable) ?? false;
+    final isAvailable = _doctorAvailability?.availability.any(
+            (day) => DateFormat('yyyy-MM-dd').format(day.date) == formattedDate && day.isAvailable) ??
+        false;
 
     if (!isAvailable) return;
 
@@ -66,57 +68,95 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       _selectedTime = null;
     });
 
-    context.read<AppointmentCubit>().geSlotsAppointment(practitionerId: widget.doctorModel.id.toString(), date: formattedDate);
+    context.read<AppointmentCubit>().geSlotsAppointment(
+        practitionerId: widget.doctorModel.id.toString(), date: formattedDate);
   }
 
   Future<void> downloadAndViewPdf(String pdfUrl, String qualificationId) async {
     try {
+      // Validate URL
       if (!Uri.parse(pdfUrl).isAbsolute) {
         throw Exception('Invalid PDF URL');
       }
 
+      // Update progress state
       setState(() {
-        _downloadProgress[qualificationId] = 0;
+        _downloadProgress[qualificationId] = 0.0;
         _downloadComplete[qualificationId] = false;
       });
 
+      // Request storage permissions for Android
       if (Platform.isAndroid) {
         final status = await Permission.storage.request();
         if (!status.isGranted) {
-          throw Exception('Storage permission denied');
+          throw Exception('Storage permission denied. Please allow storage access.');
         }
       }
 
-      final directory = await getTemporaryDirectory();
-      final filePath = '${directory.path}/qualification_$qualificationId.pdf';
+      // Get appropriate directory
+      Directory directory;
+      if (Platform.isAndroid) {
+        directory = await getExternalStorageDirectory() ?? await getTemporaryDirectory();
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
 
+      final filePath = '${directory.path}/qualification_$qualificationId.pdf';
+      final file = File(filePath);
+
+      // Ensure file doesn't exist before downloading
+      if (await file.exists()) {
+        await file.delete();
+      }
+
+      // Download the file with Dio
       await _dio.download(
         pdfUrl,
         filePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
+            final progress = received / total;
+            print('Download progress: $progress for $qualificationId');
             setState(() {
-              _downloadProgress[qualificationId] = received / total;
+              _downloadProgress[qualificationId] = progress;
             });
           }
         },
-        options: Options(responseType: ResponseType.bytes, followRedirects: true, validateStatus: (status) => status! < 500),
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: true,
+          validateStatus: (status) => status! < 500,
+        ),
       );
 
+      // Verify file exists and is not empty
+      if (!await file.exists() || (await file.length()) == 0) {
+        throw Exception('Downloaded file is invalid or empty');
+      }
+
+      // Update state to indicate download completion
       setState(() {
         _downloadComplete[qualificationId] = true;
       });
 
+
       // Open the PDF
-      final result = await OpenFilex.open(filePath);
+      final result = await OpenFilex.open(filePath, type: 'application/pdf');
       if (result.type != ResultType.done) {
         throw Exception('Failed to open PDF: ${result.message}');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      // Log error for debugging
+      print('Error downloading/opening PDF: $e\n$stackTrace');
+
       // Show error notification
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Colors.red, duration: Duration(seconds: 3)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
     } finally {
       // Clean up progress state
       setState(() {
@@ -228,25 +268,19 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                 day.date.day == _selectedDate.day && day.date.month == _selectedDate.month && day.date.year == _selectedDate.year;
 
                             return InkWell(
-                              onTap:
-                                  day.isAvailable
-                                      ? () {
-                                        _fetchSlotsForDate(day.date);
-                                        setState(() {
-                                          _selectedDate = day.date;
-                                          _selectedTime = null;
-                                        });
-                                      }
-                                      : null,
+                              onTap: day.isAvailable
+                                  ? () {
+                                _fetchSlotsForDate(day.date);
+                                setState(() {
+                                  _selectedDate = day.date;
+                                  _selectedTime = null;
+                                });
+                              }
+                                  : null,
                               child: Container(
                                 width: 45,
                                 decoration: BoxDecoration(
-                                  color:
-                                      isSelected
-                                          ? const Color(0xFF00CBA9)
-                                          : day.isAvailable
-                                          ? Colors.grey[200]
-                                          : Colors.grey[100],
+                                  color: isSelected ? const Color(0xFF00CBA9) : day.isAvailable ? Colors.grey[200] : Colors.grey[100],
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
@@ -256,12 +290,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                       DateFormat('E').format(day.date).substring(0, 3),
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color:
-                                            isSelected
-                                                ? Colors.white
-                                                : day.isAvailable
-                                                ? Colors.grey[600]
-                                                : Colors.grey[400],
+                                        color: isSelected ? Colors.white : day.isAvailable ? Colors.grey[600] : Colors.grey[400],
                                       ),
                                     ),
                                     const SizedBox(height: 4),
@@ -270,12 +299,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color:
-                                            isSelected
-                                                ? Colors.white
-                                                : day.isAvailable
-                                                ? Colors.black
-                                                : Colors.grey[400],
+                                        color: isSelected ? Colors.white : day.isAvailable ? Colors.black : Colors.grey[400],
                                       ),
                                     ),
                                     if (!day.isAvailable) const Icon(Icons.block, size: 12, color: Colors.red),
@@ -298,38 +322,31 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                         spacing: 8.0,
                         alignment: WrapAlignment.spaceBetween,
                         runSpacing: 8.0,
-                        children:
-                            _availableSlots.map((slot) {
-                              final startTime = DateTime.parse(slot.startDate);
-                              final endTime = DateTime.parse(slot.endDate);
-                              final timeStr = '${DateFormat('hh:mm a').format(startTime)}'; // - ${DateFormat('hh:mm a').format(endTime)}';
-                              final isSelected = _selectedTime?.hour == startTime.hour && _selectedTime?.minute == startTime.minute;
-                              final isBooked = slot.status.code != 'available';
+                        children: _availableSlots.map((slot) {
+                          final startTime = DateTime.parse(slot.startDate);
+                          final endTime = DateTime.parse(slot.endDate);
+                          final timeStr = '${DateFormat('hh:mm a').format(startTime)}';
+                          final isSelected = _selectedTime?.hour == startTime.hour && _selectedTime?.minute == startTime.minute;
+                          final isBooked = slot.status.code != 'available';
 
-                              return InkWell(
-                                onTap:
-                                    isBooked
-                                        ? null
-                                        : () {
-                                          setState(() {
-                                            _selectedTime = TimeOfDay.fromDateTime(startTime);
-                                          });
-                                        },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        isSelected
-                                            ? const Color(0xFF00CBA9)
-                                            : isBooked
-                                            ? Colors.grey[300]
-                                            : Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(timeStr, style: TextStyle(fontSize: 14, color: isSelected || isBooked ? Colors.white : Colors.black)),
-                                ),
-                              );
-                            }).toList(),
+                          return InkWell(
+                            onTap: isBooked
+                                ? null
+                                : () {
+                              setState(() {
+                                _selectedTime = TimeOfDay.fromDateTime(startTime);
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isSelected ? const Color(0xFF00CBA9) : isBooked ? Colors.grey[300] : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(timeStr, style: TextStyle(fontSize: 14, color: isSelected || isBooked ? Colors.white : Colors.black)),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
                   const SizedBox(height: 20),
@@ -343,16 +360,14 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
-                  onPressed:
-                      _selectedTime == null
-                          ? null
-                          : () async {
-                            await _showAppointmentDialog(
-                              context: context,
-                              title:
-                                  'Booking appointment on ${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
-                            );
-                          },
+                  onPressed: _selectedTime == null
+                      ? null
+                      : () async {
+                    await _showAppointmentDialog(
+                      context: context,
+                      title: 'Booking appointment on ${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     disabledBackgroundColor: Colors.grey[400],
@@ -417,6 +432,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               if (widget.doctorModel.qualifications!.isNotEmpty)
                 Column(
                   children: List.generate(widget.doctorModel.qualifications!.length, (index) {
+                    final qualificationId = widget.doctorModel.qualifications![index].id.toString();
                     return Container(
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.all(5),
@@ -437,18 +453,18 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                               ),
                             IconButton(
                               onPressed:
-                                  _downloadProgress.containsKey(widget.doctorModel.qualifications![index].id.toString())
-                                      ? null
-                                      : () => downloadAndViewPdf(
-                                        widget.doctorModel.qualifications![index].pdf.toString(),
-                                        widget.doctorModel.qualifications![index].id.toString(),
-                                      ),
+                              _downloadProgress.containsKey(widget.doctorModel.qualifications![index].id.toString())
+                                  ? null
+                                  : () => downloadAndViewPdf(
+                                widget.doctorModel.qualifications![index].pdf.toString(),
+                                widget.doctorModel.qualifications![index].id.toString(),
+                              ),
                               icon: Icon(
                                 _downloadComplete[widget.doctorModel.qualifications![index].id.toString()] == true ? Icons.check_circle : Icons.picture_as_pdf,
                                 color:
-                                    _downloadComplete[widget.doctorModel.qualifications![index].id.toString()] == true
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.grey,
+                                _downloadComplete[widget.doctorModel.qualifications![index].id.toString()] == true
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey,
                               ),
                             ),
                           ],
@@ -476,7 +492,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     );
                   }),
                 ),
-              if (widget.doctorModel.qualifications!.isEmpty) Text("There are not any qualifications"),
+              if (widget.doctorModel.qualifications!.isEmpty) Text("There are no qualifications"),
               Divider(),
             ],
           ),
