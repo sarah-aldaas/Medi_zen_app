@@ -18,10 +18,9 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
   @override
   void initState() {
     super.initState();
-    // Load initial data
+
     context.read<ServiceCubit>().getAllServiceHealthCare();
 
-    // Add scroll listener for infinite scroll (optional)
     _scrollController.addListener(_onScroll);
   }
 
@@ -34,7 +33,6 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
   void _onScroll() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      // Load more when scrolled to bottom
       context.read<ServiceCubit>().getAllServiceHealthCare(loadMore: true);
     }
   }
@@ -42,9 +40,8 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Health Care Services'),
-      ),
+      appBar: AppBar(title: const Text('Health Care Services')),
+      backgroundColor: Colors.grey.shade100,
       body: BlocBuilder<ServiceCubit, ServiceState>(
         builder: (context, state) {
           if (state is ServiceHealthCareSuccess) {
@@ -79,7 +76,9 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () {
-                context.read<ServiceCubit>().getAllServiceHealthCare(loadMore: true);
+                context.read<ServiceCubit>().getAllServiceHealthCare(
+                  loadMore: true,
+                );
               },
               child: const Text('Load More'),
             ),
@@ -92,26 +91,40 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
     return Card(
       margin: const EdgeInsets.all(8.0),
       child: ListTile(
-        leading: service.photo != null
-            ? Image.network(service.photo!, width: 50, height: 50, fit: BoxFit.cover)
-            : const Icon(Icons.medical_services, size: 50),
+        leading:
+            service.photo != null
+                ? Image.network(
+                  service.photo!,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                )
+                : const Icon(Icons.medical_services, size: 50),
         title: Text(service.name!),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(service.comment!),
             Text('Price: \$${service.price}'),
-            if (service.category != null) Text('Category: ${service.category!.display}'),
+            if (service.category != null)
+              Text('Category: ${service.category!.display}'),
           ],
         ),
-        trailing: service.appointmentRequired!
-            ? const Icon(Icons.calendar_today)
-            : const Icon(Icons.ac_unit),
+        trailing:
+            service.appointmentRequired!
+                ? const Icon(Icons.calendar_today)
+                : const Icon(Icons.ac_unit),
         onTap: () {
           // Navigate to service details
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) => HealthCareServiceDetailsPage(serviceId: service.id.toString()),
-          ));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => HealthCareServiceDetailsPage(
+                    serviceId: service.id.toString(),
+                  ),
+            ),
+          );
         },
       ),
     );

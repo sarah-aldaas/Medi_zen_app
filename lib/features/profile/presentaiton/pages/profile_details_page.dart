@@ -367,7 +367,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         () {
                           if (patient.addressModel != null) {
                             context.pushNamed(
-                              AppRouter.addressDetails.name,
+                              AppRouter.addressListPage.name,
                               extra: {'addressModel': patient.addressModel!},
                             );
                           } else {

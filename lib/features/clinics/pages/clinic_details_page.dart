@@ -55,7 +55,6 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
@@ -128,7 +127,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             const Gap(32),
             _buildDoctorsSection(),
             const Gap(32),
-            _buildServicesSection(clinic.healthCareServices as List<HealthCareServiceModel> ?? []),
+            _buildServicesSection(
+              clinic.healthCareServices as List<HealthCareServiceModel> ?? [],
+            ),
           ],
         ),
       ),
@@ -149,7 +150,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             fit: BoxFit.cover,
             errorBuilder:
                 (context, error, stackTrace) =>
-                Image.asset(AppAssetImages.clinic6, fit: BoxFit.cover),
+                    Image.asset(AppAssetImages.clinic6, fit: BoxFit.cover),
           ),
         ),
       ),
@@ -168,8 +169,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
               Row(
                 children: [
                   Icon(
-                    Icons
-                        .medical_services_outlined,
+                    Icons.medical_services_outlined,
                     color: Theme.of(context).primaryColor,
                   ),
                   const Gap(8),
@@ -207,22 +207,22 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: Center(
                           child:
-                          _doctorCubit.isLoading
-                              ? const CircularProgressIndicator()
-                              : TextButton(
-                            onPressed: () {
-                              _doctorCubit.getDoctorsOfClinic(
-                                clinicId: widget.clinicId,
-                              );
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.blueAccent,
-                            ),
-                            child: const Text(
-                              "Load More Doctors",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
+                              _doctorCubit.isLoading
+                                  ? const CircularProgressIndicator()
+                                  : TextButton(
+                                    onPressed: () {
+                                      _doctorCubit.getDoctorsOfClinic(
+                                        clinicId: widget.clinicId,
+                                      );
+                                    },
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.blueAccent,
+                                    ),
+                                    child: const Text(
+                                      "Load More Doctors",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
                         ),
                       );
                     } else {
@@ -270,13 +270,12 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
       },
     );
   }
+
   Widget _buildDoctorItem(DoctorModel doctor) {
     return Card(
-      elevation: 2, // زيادة الظل قليلاً
-      margin: const EdgeInsets.symmetric(vertical: 8.0), // إضافة هامش عمودي
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ), // حواف أكثر دائرية
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
         onTap: () {
           context.pushNamed(
@@ -291,20 +290,18 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
               Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      12.0,
-                    ), // حواف دائرية للصورة
+                    borderRadius: BorderRadius.circular(12.0),
                     child: Image.network(
                       doctor.avatar,
-                      height: 100, // زيادة ارتفاع الصورة
-                      width: 100, // زيادة عرض الصورة
+                      height: 100,
+                      width: 100,
                       fit: BoxFit.cover,
                       errorBuilder:
                           (context, error, stackTrace) => const Icon(
-                        Icons.person_outline,
-                        size: 60,
-                        color: Colors.grey,
-                      ),
+                            Icons.person_outline,
+                            size: 60,
+                            color: Colors.grey,
+                          ),
                     ),
                   ),
                   Positioned(
@@ -453,7 +450,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16.0,
-                  vertical: 12.0,
+                  vertical: 16.0,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -505,164 +502,164 @@ class ClinicServicesPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child:
-        services.isEmpty
-            ? const Center(
-          child: Text(
-            "No services available at the moment.",
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        )
-            : ListView.separated(
-          itemCount: services.length,
-          separatorBuilder: (context, index) => const Divider(),
-          itemBuilder: (context, index) {
-            final service = services[index];
-            return Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              service.photo!,
-                              fit: BoxFit.cover,
-                              errorBuilder:
-                                  (
-                                  context,
-                                  error,
-                                  stackTrace,
-                                  ) => const Icon(
-                                Icons.image_not_supported_outlined,
-                                size: 40,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Gap(16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                service.name!,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const Gap(4),
-                              Text(
-                                service.comment ?? "",
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Gap(12),
-                    Text(
-                      service.extraDetails ??
-                          "No extra details provided.",
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    const Gap(12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              "Appointment: ",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            const Gap(4),
-                            Icon(
-                              service.appointmentRequired!
-                                  ? Icons.check_circle_outline
-                                  : Icons.cancel_outlined,
-                              color:
-                              service.appointmentRequired!
-                                  ? Colors.green
-                                  : Colors.redAccent,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.monetization_on_outlined,
-                              color: Colors.grey,
-                            ),
-                            const Gap(8),
-                            Text(
-                              service.price ?? "Free",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Gap(16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.pushNamed(
-                            AppRouter.healthServiceDetails.name,
-                            extra: {"serviceId": service.id.toString()},
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor
-                              .withOpacity(0.7),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30,
-                            vertical: 15,
-                          ),
-                          textStyle: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          elevation: 3,
-                        ),
-                        child: const Text('View Details'),
+            services.isEmpty
+                ? const Center(
+                  child: Text(
+                    "No services available at the moment.",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                )
+                : ListView.separated(
+                  itemCount: services.length,
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemBuilder: (context, index) {
+                    final service = services[index];
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                  ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      service.photo!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                          ) => const Icon(
+                                            Icons.image_not_supported_outlined,
+                                            size: 40,
+                                            color: Colors.grey,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                                const Gap(16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        service.name!,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black87,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const Gap(4),
+                                      Text(
+                                        service.comment ?? "",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Gap(25),
+                            Text(
+                              service.extraDetails ??
+                                  "No extra details provided.",
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            const Gap(30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "Appointment: ",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const Gap(10),
+                                    Icon(
+                                      service.appointmentRequired!
+                                          ? Icons.check_circle_outline
+                                          : Icons.cancel_outlined,
+                                      color:
+                                          service.appointmentRequired!
+                                              ? Colors.green
+                                              : Colors.redAccent,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.monetization_on_outlined,
+                                      color: Colors.grey,
+                                    ),
+                                    const Gap(12),
+                                    Text(
+                                      service.price ?? "Free",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const Gap(40),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  context.pushNamed(
+                                    AppRouter.healthServiceDetails.name,
+                                    extra: {"serviceId": service.id.toString()},
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor
+                                      .withOpacity(0.7),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30,
+                                    vertical: 15,
+                                  ),
+                                  textStyle: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  elevation: 3,
+                                ),
+                                child: const Text('View Details'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              ),
-            );
-          },
-        ),
       ),
     );
   }

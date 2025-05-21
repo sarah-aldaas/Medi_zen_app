@@ -103,7 +103,7 @@ class _TelecomPageState extends State<TelecomPage> {
                               IconButton(
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(
-                                  Icons.dangerous_outlined,
+                                  Icons.cancel_rounded,
                                   color: AppColors.secondaryColor,
                                 ),
                               ),
@@ -164,7 +164,7 @@ class _TelecomPageState extends State<TelecomPage> {
                                   ),
                                 ),
                               ),
-                              TextButton(
+                              ElevatedButton(
                                 onPressed: () {
                                   if (valueController.text.isNotEmpty &&
                                       selectedType != null &&
@@ -192,11 +192,28 @@ class _TelecomPageState extends State<TelecomPage> {
                                     );
                                   }
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor
+                                      .withOpacity(0.7),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30,
+                                    vertical: 15,
+                                  ),
+                                  textStyle: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  elevation: 3,
+                                ),
                                 child: Text(
                                   'telecomPage.update'.tr(context),
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: AppColors.primaryColor,
+                                    color: AppColors.whiteColor,
                                   ),
                                 ),
                               ),
@@ -216,154 +233,233 @@ class _TelecomPageState extends State<TelecomPage> {
   void _showCreateDialog(BuildContext context) {
     final telecomCubit = context.read<TelecomCubit>();
     final valueController = TextEditingController();
-    CodeModel? selectedType;
-    CodeModel? selectedUse;
+    final ValueNotifier<CodeModel?> selectedTypeNotifier = ValueNotifier(null);
+    final ValueNotifier<CodeModel?> selectedUseNotifier = ValueNotifier(null);
 
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            content: FutureBuilder<List<CodeModel>>(
-              future: Future.wait([
-                telecomTypesFuture,
-                telecomUseFuture,
-              ]).then((results) => results[0]),
-              builder: (context, typeSnapshot) {
-                return FutureBuilder<List<CodeModel>>(
-                  future: telecomUseFuture,
-                  builder: (context, useSnapshot) {
-                    if (typeSnapshot.connectionState ==
-                            ConnectionState.waiting ||
-                        useSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                      return Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Center(child: LoadingButton(isWhite: false)),
-                      );
-                    }
+            surfaceTintColor: Colors.white,
+            contentPadding: const EdgeInsets.all(
+              25,
+            ), // Increased overall padding
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            content: FutureBuilder<List<List<CodeModel>>>(
+              future: Future.wait([telecomTypesFuture, telecomUseFuture]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SizedBox(
+                    height: 180, // Slightly more height for loading state
+                    child: Center(child: LoadingButton(isWhite: false)),
+                  );
+                }
 
-                    final telecomTypes = typeSnapshot.data ?? [];
-                    final telecomUses = useSnapshot.data ?? [];
+                if (snapshot.hasError) {
+                  return SizedBox(
+                    height: 180,
+                    child: Center(
+                      child: Text('telecomPage.errorLoadingData'.tr(context)),
+                    ),
+                  );
+                }
 
-                    return SingleChildScrollView(
-                      child: Column(
-                        spacing: 20,
-                        mainAxisSize: MainAxisSize.min,
+                final telecomTypes = snapshot.data![0];
+                final telecomUses = snapshot.data![1];
+
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'telecomPage.createNewTelecom'.tr(context),
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () => Navigator.pop(context),
-                                icon: const Icon(
-                                  Icons.dangerous_outlined,
-                                  color: AppColors.secondaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          TextField(
-                            controller: valueController,
-                            style: TextStyle(fontSize: 13),
-                            decoration: InputDecoration(
-                              labelText: 'telecomPage.valueLabel'.tr(context),
+                          Text(
+                            'telecomPage.createNewTelecom'.tr(context),
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22, // Slightly larger title
                             ),
                           ),
-                          DropdownButtonFormField<CodeModel>(
+                          IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: const Icon(
+                              Icons.close_rounded,
+                              color: AppColors.secondaryColor,
+                              size: 30, // Larger close icon
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Gap(30), // Increased space after title
+                      TextField(
+                        controller: valueController,
+                        style: const TextStyle(fontSize: 16),
+                        decoration: InputDecoration(
+                          labelText: 'telecomPage.valueLabel'.tr(context),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(
+                              12,
+                            ), // Slightly more rounded corners
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 14,
+                          ), // More internal padding
+                        ),
+                      ),
+                      const Gap(
+                        20,
+                      ), // Increased space between text field and first dropdown
+                      ValueListenableBuilder<CodeModel?>(
+                        valueListenable: selectedTypeNotifier,
+                        builder: (context, selectedType, child) {
+                          return DropdownButtonFormField<CodeModel>(
                             items:
                                 telecomTypes
                                     .map(
                                       (type) => DropdownMenuItem(
                                         value: type,
-                                        child: Text(type.display),
+                                        child: Text(
+                                          type.display,
+                                          style: const TextStyle(fontSize: 15),
+                                        ),
                                       ),
                                     )
                                     .toList(),
-                            onChanged: (value) => selectedType = value,
+                            onChanged: (value) {
+                              selectedTypeNotifier.value = value;
+                            },
                             decoration: InputDecoration(
                               labelText: 'telecomPage.typeLabel'.tr(context),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 14,
+                              ),
                             ),
                             value: selectedType,
-                          ),
-                          DropdownButtonFormField<CodeModel>(
+                            hint: Text('telecomPage.selectType'.tr(context)),
+                          );
+                        },
+                      ),
+                      const Gap(20), // Increased space between dropdowns
+                      ValueListenableBuilder<CodeModel?>(
+                        valueListenable: selectedUseNotifier,
+                        builder: (context, selectedUse, child) {
+                          return DropdownButtonFormField<CodeModel>(
                             items:
                                 telecomUses
                                     .map(
                                       (use) => DropdownMenuItem(
                                         value: use,
-                                        child: Text(use.display),
+                                        child: Text(
+                                          use.display,
+                                          style: const TextStyle(fontSize: 15),
+                                        ),
                                       ),
                                     )
                                     .toList(),
-                            onChanged: (value) => selectedUse = value,
+                            onChanged: (value) {
+                              selectedUseNotifier.value = value;
+                            },
                             decoration: InputDecoration(
                               labelText: 'telecomPage.use'.tr(context),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 14,
+                              ),
                             ),
                             value: selectedUse,
+                            hint: Text('telecomPage.selectUse'.tr(context)),
+                          );
+                        },
+                      ),
+                      const Gap(40), // Increased space before buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.primaryColor,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 25,
+                                vertical: 12,
+                              ), // Larger button padding
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'telecomPage.cancel'.tr(context),
+                              style: const TextStyle(
+                                fontSize: 17, // Slightly larger button text
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 30,
-                            children: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text(
-                                  'telecomPage.cancel'.tr(context),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: AppColors.primaryColor,
+                          const Gap(20), // Increased space between buttons
+                          ElevatedButton(
+                            onPressed: () {
+                              if (valueController.text.isNotEmpty &&
+                                  selectedTypeNotifier.value != null &&
+                                  selectedUseNotifier.value != null) {
+                                final newTelecom = TelecomModel(
+                                  id: '',
+                                  value: valueController.text,
+                                  rank: '1',
+                                  startDate: null,
+                                  endDate: null,
+                                  type: selectedTypeNotifier.value!,
+                                  use: selectedUseNotifier.value!,
+                                  typeId: selectedTypeNotifier.value!.id,
+                                  useId: selectedUseNotifier.value!.id,
+                                );
+                                telecomCubit.createTelecom(
+                                  telecomModel: newTelecom,
+                                );
+                                Navigator.pop(context);
+                              } else {
+                                ShowToast.showToastError(
+                                  message: 'telecomPage.allFieldsRequired'.tr(
+                                    context,
                                   ),
-                                ),
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 30,
+                                vertical: 14,
+                              ), // Larger button padding
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  if (valueController.text.isNotEmpty &&
-                                      selectedType != null &&
-                                      selectedUse != null) {
-                                    final newTelecom = TelecomModel(
-                                      id: '',
-                                      value: valueController.text,
-                                      rank: '1',
-                                      startDate: null,
-                                      endDate: null,
-                                      type: selectedType,
-                                      use: selectedUse,
-                                      typeId: selectedType!.id,
-                                      useId: selectedUse!.id,
-                                    );
-                                    telecomCubit.createTelecom(
-                                      telecomModel: newTelecom,
-                                    );
-                                    Navigator.pop(context);
-                                  } else {
-                                    ShowToast.showToastError(
-                                      message: 'telecomPage.allFieldsRequired'
-                                          .tr(context),
-                                    );
-                                  }
-                                },
-                                child: Text(
-                                  'telecomPage.create'.tr(context),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                ),
+                              elevation: 3,
+                            ),
+                            child: Text(
+                              'telecomPage.create'.tr(context),
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 );
               },
             ),
@@ -406,18 +502,22 @@ class _TelecomPageState extends State<TelecomPage> {
                     'telecomPage.value : ',
                     telecom.value ?? 'N/A'.tr(context),
                   ),
+                  Gap(30),
                   _buildDetailRow(
                     'telecomPage.type : ',
                     telecom.type?.display ?? 'N/A'.tr(context),
                   ),
+                  Gap(30),
                   _buildDetailRow(
                     'telecomPage.use : ',
                     telecom.use?.display ?? 'N/A'.tr(context),
                   ),
+                  Gap(30),
                   _buildDetailRow(
                     'telecomPage.startDateLabel : ',
                     telecom.startDate ?? 'N/A'.tr(context),
                   ),
+                  Gap(30),
                   _buildDetailRow(
                     'telecomPage.endDateLabel : ',
                     telecom.endDate ?? 'N/A'.tr(context),
@@ -560,65 +660,110 @@ class _TelecomPageState extends State<TelecomPage> {
 
   Widget _buildTelecomCard(TelecomModel telecom) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      // Increased horizontal margin and vertical margin for more separation between cards
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      // Increased borderRadius significantly for much more rounded corners
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ), // <-- Changed from 10 to 20
+      // Added elevation for a subtle shadow effect, making the card pop out more
+      elevation:
+          5, // You can adjust this value (e.g., 8, 10) for more/less shadow
       child: ExpansionTile(
-        leading: const Icon(Icons.phone_android, color: AppColors.gallery),
+        // Larger icon for better visibility
+        leading: const Icon(
+          Icons.phone_android,
+          color: AppColors.gallery,
+          size: 30,
+        ),
         title: Text(
           telecom.value ?? 'N/A',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          // Larger font size for the title
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ), // <-- Changed from 18 to 20
         ),
         subtitle: Text(
           '${telecom.type?.display ?? 'N/A'} - ${telecom.use?.display ?? 'N/A'}',
-          style: TextStyle(fontSize: 16),
+          // Larger font size for the subtitle
+          style: const TextStyle(fontSize: 18), // <-- Changed from 16 to 18
         ),
-        childrenPadding: const EdgeInsets.all(16),
+        // Increased childrenPadding for more internal space
+        childrenPadding: const EdgeInsets.all(20), // <-- Changed from 16 to 20
         children: [
           Row(
             children: [
-              Icon(Icons.tag),
-              const Gap(8),
+              // Larger icon
+              Icon(Icons.tag, size: 25), // <-- Added size: 25
+              // Increased gap
+              const Gap(12),
               Text(
                 'telecomPage.type: ${telecom.type?.display ?? 'N/A'}'.tr(
                   context,
                 ),
-                style: TextStyle(fontSize: 16),
+                // Larger font size
+                style: TextStyle(fontSize: 17),
               ),
             ],
           ),
-          const Gap(8),
+          // Increased gap
+          const Gap(12), // <-- Changed from 8 to 12
           Row(
             children: [
-              const Icon(Icons.label),
-              const Gap(8),
+              // Larger icon
+              const Icon(Icons.label, size: 25), // <-- Added size: 25
+              // Increased gap
+              const Gap(12), // <-- Changed from 8 to 12
               Text(
                 'telecomPage.use: ${telecom.use?.display ?? 'N/A'}'.tr(context),
-                style: TextStyle(fontSize: 16),
+                // Larger font size
+                style: TextStyle(fontSize: 17),
               ),
             ],
           ),
-          const Gap(16),
+          // Increased gap
+          const Gap(25),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: const Icon(Icons.edit, color: Colors.cyan),
+                // Larger icon
+                icon: const Icon(
+                  Icons.edit,
+                  color: Colors.cyan,
+                  size: 30,
+                ), // <-- Added size: 30
                 onPressed:
                     () => _showUpdateDialog(
                       telecom,
                       context.read<TelecomCubit>(),
                     ),
               ),
+              // Added gap between icons for more visual separation
+              const Gap(10),
               IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
+                // Larger icon
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                  size: 30,
+                ), // <-- Added size: 30
                 onPressed:
                     () => _showUpdateDeleteDialog(
                       telecom,
                       context.read<TelecomCubit>(),
                     ),
               ),
+              // Added gap between icons
+              const Gap(10),
               IconButton(
-                icon: const Icon(Icons.info_outline, color: Colors.blueGrey),
+                // Larger icon
+                icon: const Icon(
+                  Icons.info_outline,
+                  color: Colors.blueGrey,
+                  size: 30,
+                ), // <-- Added size: 30
                 onPressed: () => _showDetailsDialog(telecom),
               ),
             ],
@@ -644,45 +789,44 @@ class _TelecomPageState extends State<TelecomPage> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final telecoms = state is TelecomSuccess ? state.paginatedResponse.paginatedData!.items : [];
-        final filteredTelecoms = telecoms.where((telecom) => telecom.type!.id == type.id).toList();
-
+        final telecoms =
+            state is TelecomSuccess
+                ? state.paginatedResponse.paginatedData!.items
+                : [];
+        final filteredTelecoms =
+            telecoms.where((telecom) => telecom.type!.id == type.id).toList();
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () => _showCreateDialog(context),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 16,
+              const Gap(30),
+              SizedBox(
+                width: 350,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _showCreateDialog(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor.withOpacity(0.7),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 15,
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    elevation: 3,
                   ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Theme.of(context).primaryColor),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add, color: AppColors.blackColor),
-                      Gap(8),
-                      Text(
-                        'telecomPage.addNewTelecom'.tr(context),
-                        style: TextStyle(
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: Text('telecomPage.addNewTelecom'.tr(context)),
                 ),
               ),
+              const Gap(30),
               filteredTelecoms!.isEmpty
                   ? const Center(child: Text('No telecoms of this type.'))
                   : ListView.builder(

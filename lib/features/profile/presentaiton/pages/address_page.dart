@@ -5,6 +5,7 @@ import 'package:medizen_app/base/data/models/code_type_model.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../../../../base/widgets/show_toast.dart';
+import '../../../../base/theme/app_color.dart';
 import '../cubit/address_cubit/address_cubit.dart';
 import '../widgets/address/add_edit_address_page.dart';
 import '../widgets/address/address_card.dart';
@@ -70,7 +71,14 @@ class _AddressListPageState extends State<AddressListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Addresses'),
+        title: const Text(
+          'My Addresses',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: AppColors.whiteColor,
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
