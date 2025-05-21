@@ -271,6 +271,52 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     return [];
   }
 
+
+
+
+
+  Future<List<CodeModel>> getServiceCategoryCodes() async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes();
+      return getServiceCategoryCodes();
+    }
+
+    final CategoryCodeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'categories',
+      orElse: () => throw Exception('Categories type code type not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess
+            ? (state as CodeTypesSuccess).codes
+            : null) ??
+            [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel!.id == CategoryCodeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: CategoryCodeType.id,
+        codeTypes: codeTypes,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where(
+            (code) => code.codeTypeModel!.id == CategoryCodeType.id,
+      )
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+
+
   Future<void> fetchCodes({
     required int codeTypeId,
     required List<CodeTypeModel> codeTypes,

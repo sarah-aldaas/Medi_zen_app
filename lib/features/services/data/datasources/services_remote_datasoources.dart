@@ -7,7 +7,7 @@ import '../../../../base/services/network/resource.dart';
 import '../../../../base/services/network/response_handler.dart';
 
 abstract class ServicesRemoteDataSource {
-  Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices({int page = 1, int perPage = 10});
+  Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices({int page = 1, int perPage = 10, Map<String, dynamic>? filters,});
 
   Future<Resource<HealthCareServiceModel>> getSpecificHealthCareServices({required String id});
 
@@ -28,17 +28,31 @@ class ServicesRemoteDataSourceImpl implements ServicesRemoteDataSource {
   }
 
   @override
-  Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices({int page = 1, int perPage = 10}) async {
-    final queryParams = {'page': page, 'pagination_count': perPage};
+  Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices({
+    int page = 1,
+    int perPage = 10,
+    Map<String, dynamic>? filters,
+  }) async {
+    final queryParams = {
+      'page': page,
+      'pagination_count': perPage,
+      if (filters != null) ...filters,
+    };
 
-    final response = await networkClient.invoke(ServicesEndPoints.getAllHealthCareServices, RequestType.get, queryParameters: queryParams);
+    final response = await networkClient.invoke(
+      ServicesEndPoints.getAllHealthCareServices,
+      RequestType.get,
+      queryParameters: queryParams,
+    );
 
     return ResponseHandler<PaginatedResponse<HealthCareServiceModel>>(response).processResponse(
-      fromJson:
-          (json) => PaginatedResponse<HealthCareServiceModel>.fromJson(json, 'healthCareServices', (dataJson) => HealthCareServiceModel.fromJson(dataJson)),
+      fromJson: (json) => PaginatedResponse<HealthCareServiceModel>.fromJson(
+        json,
+        'healthCareServices',
+            (dataJson) => HealthCareServiceModel.fromJson(dataJson),
+      ),
     );
   }
-
   // @override
   // Future<Resource<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>> getAllHealthCareServiceEligibilityCodes({int page = 1, int perPage = 10}) async {
   //   final queryParams = {'page': page, 'pagination_count': perPage};

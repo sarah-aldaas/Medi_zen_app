@@ -6,6 +6,7 @@ import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/clinics/data/datasources/clinic_remote_datasources.dart';
 import 'package:medizen_app/features/doctor/data/datasource/doctor_remote_datasource.dart';
 import 'package:medizen_app/features/doctor/pages/cubit/doctor_cubit/doctor_cubit.dart';
@@ -93,7 +94,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         bloc: _clinicCubit,
         builder: (context, clinicState) {
           if (clinicState is ClinicLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingPage());
           }
           if (clinicState is ClinicError) {
             return Center(child: Text(clinicState.error));
@@ -101,7 +102,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
           if (clinicState is ClinicLoadedSuccess) {
             return _buildClinicDetails(clinicState.clinic);
           }
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: LoadingPage());
         },
       ),
     );
@@ -208,7 +209,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                         child: Center(
                           child:
                           _doctorCubit.isLoading
-                              ? const CircularProgressIndicator()
+                              ?  LoadingButton()
                               : TextButton(
                             onPressed: () {
                               _doctorCubit.getDoctorsOfClinic(
@@ -258,7 +259,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             ),
           );
         } else if (state is DoctorLoading && !_doctorCubit.isLoading) {
-          content = const Center(child: CircularProgressIndicator());
+          content =  Center(child: LoadingButton());
         } else {
           content = const SizedBox.shrink();
         }
