@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/go_router/go_router.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
 import '../data/model/health_care_services_model.dart';
@@ -111,7 +113,7 @@ class _HealthCareServiceDetailsPageState
               ),
             );
           }
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: LoadingPage());
         },
       ),
     );
@@ -240,21 +242,29 @@ class _HealthCareServiceDetailsPageState
             ),
             const Gap(10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.local_hospital_outlined,
-                  color: primaryColor,
-                  size: 26,
+                Row(
+                  children: [
+                    Icon(
+                      Icons.local_hospital_outlined,
+                      color: primaryColor,
+                      size: 26,
+                    ),
+                    const Gap(10),
+                    Text(
+                      service.clinic!.name,
+                      style: TextStyle(
+                        fontSize: 19,
+                        color: primaryColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-                const Gap(10),
-                Text(
-                  service.clinic!.name,
-                  style: TextStyle(
-                    fontSize: 19,
-                    color: primaryColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                IconButton(onPressed: (){
+                  context.pushNamed(AppRouter.clinicDetails.name,extra:{"clinicId":service.clinic!.id} );
+                }, icon: Icon(Icons.arrow_circle_right,color: Colors.blue,))
               ],
             ),
             const Gap(8),
