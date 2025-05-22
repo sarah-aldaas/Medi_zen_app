@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/go_router/go_router.dart';
 
 import '../../../../services/data/model/health_care_services_model.dart';
 
@@ -16,12 +18,20 @@ class ServiceListItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              service.name ?? 'Service',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  service.name ?? 'Service',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                IconButton(onPressed: (){
+                  context.pushNamed(AppRouter.healthServiceDetails.name,extra:{"serviceId":service.id} );
+                }, icon: Icon(Icons.arrow_circle_right,color: Colors.blue,))
+              ],
             ),
             const SizedBox(height: 4),
             if (service.category?.display != null)
