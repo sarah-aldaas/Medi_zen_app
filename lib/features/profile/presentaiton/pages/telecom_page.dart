@@ -103,12 +103,13 @@ class _TelecomPageState extends State<TelecomPage> {
                               IconButton(
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(
-                                  Icons.cancel_rounded,
+                                  Icons.cancel,
                                   color: AppColors.secondaryColor,
                                 ),
                               ),
                             ],
                           ),
+                          const Gap(20),
                           TextField(
                             controller: valueController,
                             style: TextStyle(fontSize: 15),
@@ -116,6 +117,7 @@ class _TelecomPageState extends State<TelecomPage> {
                               labelText: 'telecomPage.value'.tr(context),
                             ),
                           ),
+                          const Gap(20),
                           DropdownButtonFormField<CodeModel>(
                             items:
                                 telecomTypes
@@ -133,6 +135,7 @@ class _TelecomPageState extends State<TelecomPage> {
                             ),
                             value: selectedType,
                           ),
+                          const Gap(20),
                           DropdownButtonFormField<CodeModel>(
                             items:
                                 telecomUses
@@ -150,6 +153,7 @@ class _TelecomPageState extends State<TelecomPage> {
                             ),
                             value: selectedUse,
                           ),
+                          const Gap(30),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             spacing: 30,
@@ -164,6 +168,7 @@ class _TelecomPageState extends State<TelecomPage> {
                                   ),
                                 ),
                               ),
+
                               ElevatedButton(
                                 onPressed: () {
                                   if (valueController.text.isNotEmpty &&
@@ -204,7 +209,7 @@ class _TelecomPageState extends State<TelecomPage> {
                                     vertical: 15,
                                   ),
                                   textStyle: const TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   elevation: 3,
@@ -294,7 +299,8 @@ class _TelecomPageState extends State<TelecomPage> {
                           ),
                         ],
                       ),
-                      const Gap(30), // Increased space after title
+                      const Gap(30),
+                      // Increased space after title
                       TextField(
                         controller: valueController,
                         style: const TextStyle(fontSize: 16),
@@ -311,9 +317,8 @@ class _TelecomPageState extends State<TelecomPage> {
                           ), // More internal padding
                         ),
                       ),
-                      const Gap(
-                        20,
-                      ), // Increased space between text field and first dropdown
+                      const Gap(30),
+                      // Increased space between text field and first dropdown
                       ValueListenableBuilder<CodeModel?>(
                         valueListenable: selectedTypeNotifier,
                         builder: (context, selectedType, child) {
@@ -348,7 +353,8 @@ class _TelecomPageState extends State<TelecomPage> {
                           );
                         },
                       ),
-                      const Gap(20), // Increased space between dropdowns
+                      const Gap(30),
+                      // Increased space between dropdowns
                       ValueListenableBuilder<CodeModel?>(
                         valueListenable: selectedUseNotifier,
                         builder: (context, selectedUse, child) {
@@ -383,7 +389,8 @@ class _TelecomPageState extends State<TelecomPage> {
                           );
                         },
                       ),
-                      const Gap(40), // Increased space before buttons
+                      const Gap(40),
+                      // Increased space before buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -442,7 +449,8 @@ class _TelecomPageState extends State<TelecomPage> {
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 30,
                                 vertical: 14,
-                              ), // Larger button padding
+                              ),
+                              // Larger button padding
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -498,29 +506,26 @@ class _TelecomPageState extends State<TelecomPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  _buildDetailRow('telecomPage.value:', telecom.value ?? 'N/A'),
+                  const SizedBox(height: 20),
                   _buildDetailRow(
-                    'telecomPage.value : ',
-                    telecom.value ?? 'N/A'.tr(context),
+                    'telecomPage.type:',
+                    telecom.type?.display ?? 'N/A',
                   ),
-                  Gap(30),
+                  const SizedBox(height: 20),
                   _buildDetailRow(
-                    'telecomPage.type : ',
-                    telecom.type?.display ?? 'N/A'.tr(context),
+                    'telecomPage.use:',
+                    telecom.use?.display ?? 'N/A',
                   ),
-                  Gap(30),
+                  const SizedBox(height: 20),
                   _buildDetailRow(
-                    'telecomPage.use : ',
-                    telecom.use?.display ?? 'N/A'.tr(context),
+                    'telecomPage.startDateLabel:',
+                    telecom.startDate ?? 'N/A',
                   ),
-                  Gap(30),
+                  const SizedBox(height: 20),
                   _buildDetailRow(
-                    'telecomPage.startDateLabel : ',
-                    telecom.startDate ?? 'N/A'.tr(context),
-                  ),
-                  Gap(30),
-                  _buildDetailRow(
-                    'telecomPage.endDateLabel : ',
-                    telecom.endDate ?? 'N/A'.tr(context),
+                    'telecomPage.endDateLabel:',
+                    telecom.endDate ?? 'N/A',
                   ),
                 ],
               ),
@@ -660,17 +665,11 @@ class _TelecomPageState extends State<TelecomPage> {
 
   Widget _buildTelecomCard(TelecomModel telecom) {
     return Card(
-      // Increased horizontal margin and vertical margin for more separation between cards
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      // Increased borderRadius significantly for much more rounded corners
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ), // <-- Changed from 10 to 20
-      // Added elevation for a subtle shadow effect, making the card pop out more
-      elevation:
-          5, // You can adjust this value (e.g., 8, 10) for more/less shadow
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+
+      elevation: 5,
       child: ExpansionTile(
-        // Larger icon for better visibility
         leading: const Icon(
           Icons.phone_android,
           color: AppColors.gallery,
@@ -678,46 +677,37 @@ class _TelecomPageState extends State<TelecomPage> {
         ),
         title: Text(
           telecom.value ?? 'N/A',
-          // Larger font size for the title
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ), // <-- Changed from 18 to 20
+
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
         subtitle: Text(
           '${telecom.type?.display ?? 'N/A'} - ${telecom.use?.display ?? 'N/A'}',
-          // Larger font size for the subtitle
-          style: const TextStyle(fontSize: 18), // <-- Changed from 16 to 18
+
+          style: const TextStyle(fontSize: 15),
         ),
-        // Increased childrenPadding for more internal space
-        childrenPadding: const EdgeInsets.all(20), // <-- Changed from 16 to 20
+
+        childrenPadding: const EdgeInsets.all(20),
         children: [
           Row(
             children: [
-              // Larger icon
-              Icon(Icons.tag, size: 25), // <-- Added size: 25
-              // Increased gap
+              Icon(Icons.tag, size: 25),
               const Gap(12),
               Text(
-                'telecomPage.type: ${telecom.type?.display ?? 'N/A'}'.tr(
-                  context,
-                ),
-                // Larger font size
+                'Type: ${telecom.type?.display ?? 'N/A'.tr(context)}',
                 style: TextStyle(fontSize: 17),
               ),
             ],
           ),
-          // Increased gap
-          const Gap(12), // <-- Changed from 8 to 12
+
+          const Gap(12),
           Row(
             children: [
-              // Larger icon
               const Icon(Icons.label, size: 25), // <-- Added size: 25
-              // Increased gap
-              const Gap(12), // <-- Changed from 8 to 12
+
+              const Gap(12),
               Text(
-                'telecomPage.use: ${telecom.use?.display ?? 'N/A'}'.tr(context),
-                // Larger font size
+                'Use: ${telecom.use?.display ?? 'N/A'}',
+
                 style: TextStyle(fontSize: 17),
               ),
             ],
@@ -728,42 +718,31 @@ class _TelecomPageState extends State<TelecomPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                // Larger icon
-                icon: const Icon(
-                  Icons.edit,
-                  color: Colors.cyan,
-                  size: 30,
-                ), // <-- Added size: 30
+                icon: const Icon(Icons.edit, color: Colors.cyan, size: 20),
                 onPressed:
                     () => _showUpdateDialog(
                       telecom,
                       context.read<TelecomCubit>(),
                     ),
               ),
-              // Added gap between icons for more visual separation
               const Gap(10),
               IconButton(
-                // Larger icon
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                  size: 30,
-                ), // <-- Added size: 30
+                icon: const Icon(Icons.delete, color: Colors.red, size: 20),
                 onPressed:
                     () => _showUpdateDeleteDialog(
                       telecom,
                       context.read<TelecomCubit>(),
                     ),
               ),
-              // Added gap between icons
+
               const Gap(10),
               IconButton(
                 // Larger icon
                 icon: const Icon(
                   Icons.info_outline,
                   color: Colors.blueGrey,
-                  size: 30,
-                ), // <-- Added size: 30
+                  size: 20,
+                ),
                 onPressed: () => _showDetailsDialog(telecom),
               ),
             ],

@@ -71,26 +71,34 @@ class _AddressListPageState extends State<AddressListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        backgroundColor: AppColors.whiteColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_outlined),
+          onPressed: () => Navigator.of(context).pop(),
+          color: AppColors.primaryColor,
+        ),
+        title: Text(
           'My Addresses',
           style: TextStyle(
+            color: AppColors.primaryColor,
             fontWeight: FontWeight.bold,
             fontSize: 22,
-            color: AppColors.whiteColor,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: Icon(Icons.filter_list, color: AppColors.primaryColor),
             onPressed: _showFilterDialog,
+            iconSize: 30,
           ),
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: Icon(Icons.add, color: AppColors.primaryColor),
             onPressed:
                 () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
                 ).then((_) => context.read<AddressCubit>().fetchAddresses()),
+            iconSize: 30,
           ),
         ],
       ),
@@ -180,23 +188,55 @@ class _AddressListPageState extends State<AddressListPage> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Delete Address'),
+            title: const Text(
+              'Delete Address',
+
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: AppColors.primaryColor,
+              ),
+            ),
             content: const Text(
               'Are you sure you want to delete this address?',
+              style: TextStyle(fontSize: 18),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.gallery,
+                  ),
+                ),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                   context.read<AddressCubit>().deleteAddress(id: addressId);
                 },
-                child: const Text(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor.withOpacity(0.7),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 15,
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  elevation: 3,
+                ),
+                child: Text(
                   'Delete',
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: AppColors.whiteColor),
                 ),
               ),
             ],

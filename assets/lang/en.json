@@ -175,7 +175,7 @@
   "articles": {
     "title": "Articles",
     "trending": "Trending",
-    "seeAll": "See All",
+    "seeAll": "See all",
     "filters": {
       "newest": "Newest",
       "health": "Health",
@@ -259,7 +259,7 @@
     "bookAppointment": "Book Appointment",
     "selected": "Selected",
     "reviewsTitle": "Reviews",
-    "seeAll": "See All",
+    "seeAll": "See all",
     "SubmitAComplaint": "Submit a complaint",
     "reviewAuthor": "Charolette Hanlin",
     "reviewText": "Dr. Jenny is very professional in her work and responsive. I have consulted and my problem is solved. 👍👍",
@@ -352,7 +352,7 @@
     },
     "specialties": {
       "title": "Doctor Speciality",
-      "seeAll": "See All",
+      "seeAll": "See all",
       "items": {
         "general": "General",
         "dentist": "Dentist",
@@ -436,7 +436,9 @@
   },
   "someClinics": {
     "seeAll": "See all",
-    "title": "Some clinics"
+    "title": "Some clinics",
+    "no_result": "No results found for ",
+    "retry": "Retry"
   },
   "some_doctors": {
     "top_doctors": "Top Doctors",
@@ -536,11 +538,11 @@
     "cancel": "Cancel",
     "update": "Update",
     "allFieldsRequired": "All fields are required",
-    "createNewTelecom": "Create new telecom",
+    "createNewTelecom": "Create New Telecom",
     "create": "Create",
     "telecomDetails": "Telecom Details",
     "valueLabel": "Value",
-    "notAvailable": "N/A",
+    "notAvailable": "Not available",
     "typeLabel": "Type",
     "useLabel": "Use",
     "startDateLabel": "Start Date",
@@ -548,7 +550,7 @@
     "manageTelecom": "Manage Telecom",
     "delete": "Delete",
     "addNewTelecom": "Add New Telecom",
-    "noTelecomsOfType": "No telecoms of this type."
-  }
+    "noTelecomsOfType": "No telecoms of this type"
 
+  }
 }

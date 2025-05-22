@@ -113,7 +113,7 @@ class _DefinitionWidgetState extends State<DefinitionWidget> {
                       Gap(10),
                       GestureDetector(
                         onTap: () {
-                          context.pushNamed(AppRouter.doctors.name);
+                          context.pushNamed(AppRouter.healthCareServicesPage.name);
                         },
                         child: Container(
                           decoration: BoxDecoration(

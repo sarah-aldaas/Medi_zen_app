@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/profile/data/models/address_model.dart';
+
 import '../../../../../base/blocs/code_types_bloc/code_types_cubit.dart';
 import '../../../../../base/data/models/code_type_model.dart';
 import '../../../../../base/theme/app_color.dart';
 import '../../cubit/address_cubit/address_cubit.dart';
 import 'app_dropdown.dart';
 import 'app_text_field.dart';
-
 
 class AddEditAddressPage extends StatefulWidget {
   final AddressModel? address;
@@ -77,7 +77,20 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.address == null ? 'Add Address' : 'Edit Address'),
+        backgroundColor: AppColors.whiteColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_outlined),
+          onPressed: () => Navigator.of(context).pop(),
+          color: AppColors.primaryColor,
+        ),
+        title: Text(
+          widget.address == null ? 'Add Address' : 'Edit Address',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: AppColors.primaryColor,
+          ),
+        ),
       ),
       body: BlocConsumer<CodeTypesCubit, CodeTypesState>(
         listener: (context, state) {
@@ -132,12 +145,12 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
       ),
     );
   }
+
   void _setInitialValues(
     List<CodeModel> addressUses,
     List<CodeModel> addressTypes,
   ) {
     if (widget.address != null) {
-      // Try to find matching use/type, or set to null if not found
       _selectedUse ??=
           addressUses.isNotEmpty
               ? addressUses.firstWhere(
@@ -153,7 +166,6 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
               )
               : null;
     } else {
-      // Set default to first item if available, otherwise null
       _selectedUse ??= addressUses.isNotEmpty ? addressUses.first : null;
       _selectedType ??= addressTypes.isNotEmpty ? addressTypes.first : null;
     }
@@ -178,7 +190,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
               validator:
                   (value) => value == null ? 'Please select address use' : null,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             AppDropdown<CodeModel>(
               label: 'Address Type',
               items: addressTypes,
@@ -189,7 +201,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                   (value) =>
                       value == null ? 'Please select address type' : null,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _countryController,
               label: 'Country',
@@ -197,7 +209,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                   (value) =>
                       value?.isEmpty ?? true ? 'Please enter country' : null,
             ),
-            const SizedBox(height: 23),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _cityController,
               label: 'City',
@@ -205,7 +217,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                   (value) =>
                       value?.isEmpty ?? true ? 'Please enter city' : null,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _stateController,
               label: 'State/Province',
@@ -215,7 +227,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                           ? 'Please enter state/province'
                           : null,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _districtController,
               label: 'District',
@@ -223,7 +235,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                   (value) =>
                       value?.isEmpty ?? true ? 'Please enter district' : null,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _lineController,
               label: 'Street Address',
@@ -233,7 +245,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                           ? 'Please enter street address'
                           : null,
             ),
-            const SizedBox(height: 23),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _postalCodeController,
               label: 'Postal Code',
@@ -244,7 +256,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                           ? 'Please enter postal code'
                           : null,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _textController,
               label: 'Description',
@@ -254,7 +266,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                           ? 'Please enter description'
                           : null,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _startDateController,
               label: 'Start Date',
@@ -267,7 +279,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                           ? 'Please select start date'
                           : null,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             AppTextField(
               controller: _endDateController,
               label: 'End Date (Optional)',
@@ -275,7 +287,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
               readOnly: true,
               onTap: () => _selectDate(context, _endDateController),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 50),
             GestureDetector(
               child: Container(
                 width: context.width,

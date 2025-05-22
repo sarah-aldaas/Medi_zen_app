@@ -92,14 +92,14 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
       margin: const EdgeInsets.all(8.0),
       child: ListTile(
         leading:
-            service.photo != null
-                ? Image.network(
-                  service.photo!,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                )
-                : const Icon(Icons.medical_services, size: 50),
+        service.photo != null
+            ? Image.network(
+          service.photo!,
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+        )
+            : const Icon(Icons.medical_services, size: 50),
         title: Text(service.name!),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,9 +111,9 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
           ],
         ),
         trailing:
-            service.appointmentRequired!
-                ? const Icon(Icons.calendar_today)
-                : const Icon(Icons.ac_unit),
+        service.appointmentRequired!
+            ? const Icon(Icons.calendar_today)
+            : const Icon(Icons.ac_unit),
         onTap: () {
           // Navigate to service details
           Navigator.push(
@@ -121,8 +121,8 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
             MaterialPageRoute(
               builder:
                   (context) => HealthCareServiceDetailsPage(
-                    serviceId: service.id.toString(),
-                  ),
+                serviceId: service.id.toString(),
+              ),
             ),
           );
         },

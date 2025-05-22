@@ -24,12 +24,14 @@ import '../../features/doctor/pages/details_doctor.dart';
 import '../../features/doctor/pages/doctors_page.dart';
 import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
+import '../../features/clinics/pages/clinics_page.dart';
 import '../../features/notifications/pages/notification_settings.dart';
 import '../../features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
-import '../../features/profile/presentaiton/pages/address_page.dart';
 import '../../features/profile/presentaiton/pages/edit_profile_screen.dart';
 import '../../features/profile/presentaiton/pages/profile.dart';
+import '../../features/profile/presentaiton/pages/address_page.dart';
 import '../../features/profile/presentaiton/pages/telecom_page.dart';
+import '../../features/services/pages/health_care_services_page.dart';
 import '../../features/start_app/on_boarding/view/on_boarding_screen.dart';
 import '../../features/start_app/splash_screen/view/splash_screen.dart';
 import '../../features/start_app/welcome/view/welcome_screen.dart';
@@ -70,6 +72,7 @@ enum AppRouter {
   clinicService,
   addressDetails,
   telecomDetails,
+  healthCareServicesPage
 }
 
 GoRouter goRouter() {
@@ -234,7 +237,7 @@ GoRouter goRouter() {
               return BlocProvider(
                 create:
                     (context) =>
-                        serviceLocator<ProfileCubit>()..fetchMyProfile(),
+                serviceLocator<ProfileCubit>()..fetchMyProfile(),
                 child: ProfileDetailsPage(),
               );
             },
@@ -281,14 +284,15 @@ GoRouter goRouter() {
             name: AppRouter.appointmentDetails.name,
             builder: (context, state) {
               final extra = state.extra as Map<String, dynamic>?;
-              String appointmentId = extra?['appointmentId'] ?? "1";
-              return AppointmentDetailsPage(appointmentId: appointmentId);
+              String appointmentId = extra?['appointmentId']??"1";
+              return AppointmentDetailsPage(appointmentId: appointmentId,);
             },
           ),
           GoRoute(
             path: '/address_list_page',
             name: AppRouter.addressListPage.name,
             builder: (context, state) {
+
               return AddressListPage();
             },
           ),
@@ -299,6 +303,15 @@ GoRouter goRouter() {
               return TelecomPage();
             },
           ),
+
+          GoRoute(
+            path: "/HealthCareServicesPage",
+            name: AppRouter.healthCareServicesPage.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return HealthCareServicesPage();
+            },
+          ),
+
         ],
       ),
     ],

@@ -89,7 +89,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+        _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       _isLoadingMore = true;
       context.read<ClinicCubit>().fetchClinics(loadMore: true).then((_) {
@@ -146,8 +146,8 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
               _searchController.text.isEmpty
                   ? state.message
                   : 'No results found for "${_searchController.text}"'.tr(
-                    context,
-                  ),
+                context,
+              ),
 
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
@@ -207,9 +207,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
       child: InkWell(
         onTap:
             () => context.pushNamed(
-              AppRouter.clinicDetails.name,
-              extra: {"clinicId": clinic.id},
-            ),
+          AppRouter.clinicDetails.name,
+          extra: {"clinicId": clinic.id},
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -276,9 +276,9 @@ class SearchFieldClinics extends StatelessWidget {
             decoration: InputDecoration(
               filled: true,
               fillColor:
-                  theme.brightness == Brightness.dark
-                      ? Colors.black12
-                      : Colors.grey.shade50,
+              theme.brightness == Brightness.dark
+                  ? Colors.black12
+                  : Colors.grey.shade50,
               hintText: 'searchField.title'.tr(context),
               hintStyle: TextStyle(
                 color: Colors.grey.withValues(alpha: _opacityLevel),

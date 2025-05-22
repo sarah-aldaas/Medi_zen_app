@@ -20,4 +20,5 @@ class AppColors {
   static const Color gallery = Color(0xFF9370DB);
   static const Color update = Color(0xFF003366);
   static const Color card = Color(0xC8FFFFFF);
+  static const Color cyan = Color(0xDD00BCD4);
 }
