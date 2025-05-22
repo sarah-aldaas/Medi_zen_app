@@ -136,10 +136,12 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AllergyDetailsPage(allergyId: allergyId),
+        builder: (context) => AllergyDetailsPage(allergyId: allergyId,appointmentId: widget.appointmentId,),
       ),
     ).then((value){
       _loadInitialAllergies();
     });
   }
 }
+
+
