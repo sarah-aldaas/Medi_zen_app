@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 
 class CancelAppointmentDialog extends StatefulWidget {
   final String appointmentId;
@@ -77,7 +78,7 @@ class _CancelAppointmentDialogState extends State<CancelAppointmentDialog> {
           ),
           const SizedBox(height: 24.0),
           _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ?  Center(child: LoadingButton())
               : Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[

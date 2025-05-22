@@ -23,12 +23,12 @@ class ReactionModel {
 
   factory ReactionModel.fromJson(Map<String, dynamic> json) {
     return ReactionModel(
-      id: json['id'],
-      substance: json['substance'],
-      manifestation: json['manifestation'],
-      description: json['description'],
-      onSet: json['on_set'],
-      note: json['note'],
+      id: json['id'].toString(),
+      substance: json['substance'].toString(),
+      manifestation: json['manifestation'].toString(),
+      description: json['description'].toString(),
+      onSet: json['on_set'].toString(),
+      note: json['note'].toString(),
       severity:json['severity']!=null? CodeModel.fromJson(json['severity']):null,
       exposureRoute:json['exposure_route']!=null? CodeModel.fromJson(json['exposure_route']):null,
     );

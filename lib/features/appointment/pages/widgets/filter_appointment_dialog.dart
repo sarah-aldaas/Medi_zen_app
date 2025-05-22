@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
 import '../../../../base/data/models/code_type_model.dart';
+import '../../../../base/widgets/loading_page.dart';
 import '../../data/models/appointment_filter.dart';
 
 class AppointmentFilterDialog extends StatefulWidget {
@@ -83,7 +84,7 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                           appointmentTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'type_appointment').toList() ?? [];
                         }
                         if (state is CodeTypesLoading) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         if (appointmentTypes.isEmpty) {
                           return const Text("No appointment types available", style: TextStyle(color: Colors.grey));
@@ -261,41 +262,6 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                         }
                       },
                     ),
-                    // const SizedBox(height: 16),
-                    // Doctor
-                    // const Text(
-                    //   "Doctor",
-                    //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    // ),
-                    // const SizedBox(height: 8),
-                    // FutureBuilder<List<DoctorModel>>(
-                    //   future: _fetchDoctors(),
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return const Center(child: CircularProgressIndicator());
-                    //     }
-                    //     if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-                    //       return const Text("No doctors available", style: TextStyle(color: Colors.grey));
-                    //     }
-                    //     return DropdownButtonFormField<int>(
-                    //       value: _filter.doctorId,
-                    //       decoration: InputDecoration(
-                    //         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-                    //         contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                    //       ),
-                    //       items: [
-                    //         const DropdownMenuItem(value: null, child: Text("All Doctors")),
-                    //         ...snapshot.data!.map((doctor) => DropdownMenuItem(
-                    //           value: doctor.id,
-                    //           child: Text("${doctor.fName} ${doctor.lName}"),
-                    //         )),
-                    //       ],
-                    //       onChanged: (value) => setState(() {
-                    //         _filter = _filter.copyWith(doctorId: value);
-                    //       }),
-                    //     );
-                    //   },
-                    // ),
                     const SizedBox(height: 16),
                     // Sort Order
                     const Text(

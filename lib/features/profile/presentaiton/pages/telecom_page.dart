@@ -641,7 +641,7 @@ class _TelecomPageState extends State<TelecomPage> {
         }
 
         if (state is TelecomLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return  Center(child: LoadingButton());
         }
 
         final telecoms = state is TelecomSuccess ? state.paginatedResponse.paginatedData!.items : [];
@@ -775,7 +775,7 @@ class _TelecomPageState extends State<TelecomPage> {
           future: telecomTypesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return  Center(child: LoadingButton());
             }
             final telecomTypes = snapshot.data ?? [];
             return _buildContentForTab(_selectedTab ?? telecomTypes.first);

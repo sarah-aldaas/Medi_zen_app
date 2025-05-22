@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
@@ -25,7 +26,7 @@ class PrimaryButton extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? const CircularProgressIndicator(color: Colors.white)
+            ?LoadingButton(isWhite: true,)
             : Text(
           text,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(

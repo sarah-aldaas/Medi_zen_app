@@ -13,6 +13,8 @@ import 'package:medizen_app/features/home_page/pages/widgets/search_field.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_articles.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_clinics.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
+import 'package:medizen_app/features/medical_records/encounter/presentation/pages/all_encounters_page.dart';
+import 'package:medizen_app/features/medical_records/reaction/presentation/pages/appointment_reactions_page.dart';
 
 import '../../../main.dart';
 import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
@@ -90,7 +92,18 @@ class _HomePageBodyState extends State<HomePageBody> {
                   if (value == 'favorites') {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => MyFavorite()));
                   } else if (value == 'services') {
-                    context.pushNamed(AppRouter.healthCareServicesPage.name);
+                    // context.pushNamed(AppRouter.healthCareServicesPage.name);
+                    context.pushNamed(AppRouter.allAllergiesPage.name);
+                  }
+                  else if (value == 'encounter') {
+                    // context.pushNamed(AppRouter.healthCareServicesPage.name);
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => AllEncountersPage()));
+
+                  }
+                  else if (value == 'reaction') {
+                    // context.pushNamed(AppRouter.healthCareServicesPage.name);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentReactionsPage(appointmentId: "1", allergyId: "1")));
+
                   }
                 },
                 itemBuilder: (BuildContext context) => [
@@ -108,6 +121,21 @@ class _HomePageBodyState extends State<HomePageBody> {
                       title: Text('Health services'),
                     ),
                   ),
+                  const PopupMenuItem<String>(
+                    value: 'encounter',
+                    child: ListTile(
+                      leading: Icon(Icons.health_and_safety),
+                      title: Text('encounter services'),
+                    ),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'reaction',
+                    child: ListTile(
+                      leading: Icon(Icons.health_and_safety),
+                      title: Text('reaction services'),
+                    ),
+                  ),
+
                 ],
               ),
 
