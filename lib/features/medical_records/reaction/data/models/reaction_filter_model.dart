@@ -14,13 +14,29 @@ class ReactionFilterModel {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'search_query': searchQuery,
-      'severity_id': severityId,
-      'exposure_route_id': exposureRouteId,
-      'pagination_count': paginationCount,
-      'key': key,
-    };
+    final map = <String, dynamic>{};
+
+    if (searchQuery != null && searchQuery!.isNotEmpty) {
+      map['search_query'] = searchQuery;
+    }
+
+    if (severityId != null) {
+      map['severity_id'] = severityId;
+    }
+
+    if (exposureRouteId != null) {
+      map['exposure_route_id'] = exposureRouteId;
+    }
+
+    if (paginationCount != null) {
+      map['pagination_count'] = paginationCount;
+    }
+
+    if (key != null && key!.isNotEmpty) {
+      map['key'] = key;
+    }
+
+    return map;
   }
 
   ReactionFilterModel copyWith({

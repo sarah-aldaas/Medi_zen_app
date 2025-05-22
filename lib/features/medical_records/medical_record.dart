@@ -1,21 +1,84 @@
 import 'package:flutter/material.dart';
-
+import 'package:medizen_app/features/medical_records/allergy/data/models/allergy_filter_model.dart';
+import 'package:medizen_app/features/medical_records/allergy/presentation/pages/all_allergies_page.dart';
+import 'package:medizen_app/features/medical_records/allergy/presentation/widgets/allergy_filter_dialog.dart';
+import 'package:medizen_app/features/medical_records/encounter/presentation/pages/all_encounters_page.dart';
 import '../../base/constant/app_images.dart';
 import '../../base/theme/app_color.dart';
+import 'encounter/data/models/encounter_filter_model.dart';
+import 'encounter/presentation/widgets/encounter_filter_dialog.dart';
+
 
 class MedicalRecordPage extends StatefulWidget {
   @override
   _MedicalRecordPageState createState() => _MedicalRecordPageState();
 }
 
-class _MedicalRecordPageState extends State<MedicalRecordPage> {
-  String _selectedTab = 'Encounters';
+class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  EncounterFilterModel _encounterFilter = EncounterFilterModel(); // Add this
+  AllergyFilterModel _allergyFilter = AllergyFilterModel(); // Add this
+
+  final List<String> _tabs = [
+    'Encounters',
+    'Allergies',
+    'Conditions',
+    'Observations',
+    'Diagnostic Reports',
+    'Medication Requests',
+    'Chronic Diseases',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController.addListener(_handleTabSelection); // Add this
+  }
+
+// Add this method
+  void _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      setState(() {
+      }); // Force rebuild when tab changes
+    }
+  }
+  Future<void> _showEncounterFilterDialog() async {
+    final result = await showDialog<EncounterFilterModel>(
+      context: context,
+      builder: (context) => EncounterFilterDialog(currentFilter: _encounterFilter),
+    );
+
+    if (result != null) {
+      setState(() => _encounterFilter = result);
+    }
+  }
+
+
+  Future<void> _showAllergyFilterDialog() async {
+    final result = await showDialog<AllergyFilterModel>(
+      context: context,
+      builder: (context) => AllergyFilterDialog(currentFilter: _allergyFilter),
+    );
+
+    if (result != null) {
+      setState(() => _allergyFilter = result);
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_handleTabSelection); // Clean up
+
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.whiteColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           'Medical Record',
           style: TextStyle(
@@ -25,241 +88,119 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
           ),
         ),
         centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _buildTabItem('Encounters'),
-                  _buildSpacer(),
-                  _buildTabItem('Conditions'),
-                  _buildSpacer(),
-                  _buildTabItem('Observations'),
-                  _buildSpacer(),
-                  _buildTabItem('Diagnostic Reports'),
-                  _buildSpacer(),
-                  _buildTabItem('Medication Requests'),
-                  _buildSpacer(),
-                  _buildTabItem('Allergies'),
-                  _buildSpacer(),
-                  _buildTabItem('Chronic Diseases'),
-                ],
-              ),
+        actions: [
+          if (_tabController.index == 0)
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showEncounterFilterDialog,
+              tooltip: 'Filter Encounters',
             ),
-          ),
-          Expanded(
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 300),
-              child: _buildAppointmentList(),
+          if (_tabController.index == 1)
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showAllergyFilterDialog,
+              tooltip: 'Filter Allergy',
             ),
-          ),
         ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(48),
+          child: Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: TabBar(
+              tabAlignment: TabAlignment.start,
+              controller: _tabController,
+              isScrollable: true,
+              labelColor: AppColors.primaryColor,
+              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              indicatorColor: AppColors.primaryColor,
+              tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+            ),
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            AllEncountersPage(filter: _encounterFilter), // Pass filter down
+            AllAllergiesPage(filter:_allergyFilter),
+            _buildObservationsList(),
+            _buildDiagnosticReportsList(),
+            _buildMedicationRequestsList(),
+            _buildAllergiesList(),
+            _buildChronicDiseasesList(),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildTabItem(String tabName) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedTab = tabName;
-        });
-      },
-      child: Column(
-        children: [
-          Text(
-            tabName,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color:
-                  _selectedTab == tabName
-                      ? AppColors.primaryColor
-                      : AppColors.blackColor,
-            ),
-          ),
-          if (_selectedTab == tabName)
-            Container(
-              height: 2,
-              width: 50,
-              color: AppColors.primaryColor,
-              margin: EdgeInsets.only(top: 4),
-            ),
-        ],
-      ),
+
+
+  Widget _buildObservationsList() {
+    return ListView(
+      padding: EdgeInsets.all(16),
+      children: [
+        _buildObservationTile(
+          observationName: 'Blood Pressure',
+          value: '120/80 mmHg',
+          date: '2023-11-20',
+        ),
+      ],
     );
   }
 
-  Widget _buildSpacer() {
-    return SizedBox(width: 15);
-  }
-
-  Widget _buildAppointmentList() {
-    List<Widget> appointmentTiles;
-
-    switch (_selectedTab) {
-      case 'Encounters':
-        appointmentTiles = _buildEncountersList();
-        break;
-      case 'Conditions':
-        appointmentTiles = _buildConditionsList();
-        break;
-      case 'Observations':
-        appointmentTiles = _buildObservationsList();
-        break;
-      case 'Diagnostic Reports':
-        appointmentTiles = _buildDiagnosticReportsList();
-        break;
-      case 'Medication Requests':
-        appointmentTiles = _buildMedicationRequestsList();
-        break;
-      case 'Allergies':
-        appointmentTiles = _buildAllergiesList();
-        break;
-      case 'Chronic Diseases':
-        appointmentTiles = _buildChronicDiseasesList();
-        break;
-      default:
-        appointmentTiles = [
-          _buildAppointmentTile(
-            'Default Doctor',
-            'Default Clinic',
-            'Default Time',
-            'assets/images/clinic/photo_doctor8.png',
-          ),
-        ];
-    }
-
-    return ListView(key: ValueKey(_selectedTab), children: appointmentTiles);
-  }
-
-  Widget _buildAppointmentTile(
-    String doctorName,
-    String clinicName,
-    String time,
-    String imagePath,
-  ) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      padding: EdgeInsets.all(18.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            child: Image.asset(
-              imagePath,
-              height: 80,
-              width: 80,
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(width: 16.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  doctorName,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Text(clinicName, style: TextStyle(fontSize: 16)),
-                Text(time, style: TextStyle(fontSize: 16)),
-              ],
-            ),
-          ),
-        ],
-      ),
+  Widget _buildDiagnosticReportsList() {
+    return ListView(
+      padding: EdgeInsets.all(16),
+      children: [
+        _buildDiagnosticReportTile(
+          reportName: 'X-Ray',
+          reportDate: '2023-11-15',
+          result: 'Normal findings.',
+        ),
+      ],
     );
   }
 
-  List<Widget> _buildEncountersList() {
-    return [
-      _buildEncounterTile(
-        doctorName: 'Dr. Raul Zirkind',
-        clinicName: 'Inpatient Clinic',
-        time: 'Dec 12, 2025 | 16:00 PM',
-        imageUrl: AppAssetImages.photoDoctor1,
-        reason: 'Follow-up visit',
-        diagnosis: 'Hypertension',
-        notes: 'Patient reported improved condition.',
-      ),
-    ];
+  Widget _buildMedicationRequestsList() {
+    return ListView(
+      padding: EdgeInsets.all(16),
+      children: [
+        _buildMedicationRequestTile(
+          medicationName: 'Metformin',
+          startDate: '2020-05-15',
+          dosage: '1000mg daily',
+        ),
+      ],
+    );
   }
 
-  List<Widget> _buildConditionsList() {
-    return [
-      _buildConditionTile(
-        conditionName: 'Diabetes',
-        diagnosisDate: '2020-05-15',
-        notes: 'Type 2 diabetes, managed with medication.',
-      ),
-    ];
+  Widget _buildAllergiesList() {
+    return ListView(
+      padding: EdgeInsets.all(16),
+      children: [
+        _buildAllergyTile(
+          allergyName: 'Penicillin',
+          reaction: 'Rash',
+          notes: 'Avoid penicillin-based medications.',
+        ),
+      ],
+    );
   }
 
-  List<Widget> _buildObservationsList() {
-    return [
-      _buildObservationTile(
-        observationName: 'Blood Pressure',
-        value: '120/80 mmHg',
-        date: '2023-11-20',
-      ),
-    ];
-  }
-
-  List<Widget> _buildDiagnosticReportsList() {
-    return [
-      _buildDiagnosticReportTile(
-        reportName: 'X-Ray',
-        reportDate: '2023-11-15',
-        result: 'Normal findings.',
-      ),
-    ];
-  }
-
-  List<Widget> _buildMedicationRequestsList() {
-    return [
-      _buildMedicationRequestTile(
-        medicationName: 'Metformin',
-        startDate: '2020-05-15',
-        dosage: '1000mg daily',
-      ),
-    ];
-  }
-
-  List<Widget> _buildAllergiesList() {
-    return [
-      _buildAllergyTile(
-        allergyName: 'Penicillin',
-        reaction: 'Rash',
-        notes: 'Avoid penicillin-based medications.',
-      ),
-    ];
-  }
-
-  List<Widget> _buildChronicDiseasesList() {
-    return [
-      _buildChronicDiseaseTile(
-        diseaseName: 'Asthma',
-        diagnosisDate: '2015-03-10',
-        notes: 'Managed with inhalers.',
-      ),
-    ];
+  Widget _buildChronicDiseasesList() {
+    return ListView(
+      padding: EdgeInsets.all(16),
+      children: [
+        _buildChronicDiseaseTile(
+          diseaseName: 'Asthma',
+          diagnosisDate: '2015-03-10',
+          notes: 'Managed with inhalers.',
+        ),
+      ],
+    );
   }
 
   Widget _buildEncounterTile({

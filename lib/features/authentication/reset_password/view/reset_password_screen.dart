@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
 import '../../change_password/view/change_password_page.dart';
@@ -109,7 +110,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           context.read<ResetPasswordCubit>().resetPassword(_otp.join());
                         },
                         child: state is ResetPasswordLoading
-                            ? CircularProgressIndicator(color: AppColors.whiteColor)
+                            ? LoadingButton(isWhite: true,)
                             : Text(
                           "resetPassword.buttons.reset".tr(context),
                           style: AppStyles.bodyText.copyWith(color: AppColors.whiteColor),

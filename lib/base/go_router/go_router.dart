@@ -25,6 +25,7 @@ import '../../features/doctor/pages/doctors_page.dart';
 import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
 import '../../features/clinics/pages/clinics_page.dart';
+import '../../features/medical_records/allergy/presentation/pages/all_allergies_page.dart';
 import '../../features/notifications/pages/notification_settings.dart';
 import '../../features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 import '../../features/profile/presentaiton/pages/edit_profile_screen.dart';
@@ -72,7 +73,8 @@ enum AppRouter {
   clinicService,
   addressDetails,
   telecomDetails,
-  healthCareServicesPage
+  healthCareServicesPage,
+  allAllergiesPage
 }
 
 GoRouter goRouter() {
@@ -311,7 +313,6 @@ GoRouter goRouter() {
               return HealthCareServicesPage();
             },
           ),
-
         ],
       ),
     ],

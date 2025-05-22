@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
+import '../../../../base/widgets/loading_page.dart';
 import '../../reset_password/view/reset_password_screen.dart';
 import '../cubit/change_password_cubit.dart';
 import '../cubit/change_password_state.dart';
@@ -110,7 +111,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         );
                       },
                       child: state is ChangePasswordLoading
-                          ? CircularProgressIndicator(color: AppColors.whiteColor)
+                          ? LoadingButton(isWhite: true,)
                           : Text("changePassword.button".tr(context),
                           style: AppStyles.bodyText.copyWith(color: AppColors.whiteColor)),
                       style: AppStyles.primaryButtonStyle,

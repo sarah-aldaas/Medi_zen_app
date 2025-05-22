@@ -27,11 +27,11 @@ class EncounterModel {
 
   factory EncounterModel.fromJson(Map<String, dynamic> json) {
     return EncounterModel(
-      id: json['id'],
-      reason: json['reason'],
-      actualStartDate: json['actual_start_date'],
-      actualEndDate: json['actual_end_date'],
-      specialArrangement: json['special_arrangement'],
+      id: json['id'].toString(),
+      reason: json['reason'].toString(),
+      actualStartDate: json['actual_start_date'].toString(),
+      actualEndDate: json['actual_end_date'].toString(),
+      specialArrangement: json['special_arrangement'].toString(),
       appointment:json['appointment']!=null? AppointmentModel.fromJson(json['appointment']):null,
       type:json['type']!=null? CodeModel.fromJson(json['type']):null,
       status: json['status']!=null?CodeModel.fromJson(json['status']):null,

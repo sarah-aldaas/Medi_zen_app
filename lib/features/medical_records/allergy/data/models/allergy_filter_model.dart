@@ -22,17 +22,40 @@ class AllergyFilterModel {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'search_query': searchQuery,
-      'is_discovered_during_encounter': isDiscoveredDuringEncounter,
-      'type_id': typeId,
-      'clinical_status_id': clinicalStatusId,
-      'verification_status_id': verificationStatusId,
-      'category_id': categoryId,
-      'criticality_id': criticalityId,
-      'sort': sort,
-      'pagination_count': paginationCount,
-    };
+    final map = <String, dynamic>{};
+
+    if (searchQuery != null && searchQuery!.isNotEmpty) {
+      map['search_query'] = searchQuery;
+    }
+
+    if (isDiscoveredDuringEncounter != null) {
+      map['is_discovered_during_encounter'] = isDiscoveredDuringEncounter!;
+    }
+
+    if (categoryId != null) {
+      map['category_id'] = categoryId;
+    }
+    if (typeId != null) {
+      map['type_id'] = typeId;
+    }
+
+    if (clinicalStatusId != null) {
+      map['clinical_status_id'] = clinicalStatusId;
+    }
+
+    if (verificationStatusId != null) {
+      map['verification_status_id'] = verificationStatusId!;
+    }
+
+    if (criticalityId != null) {
+      map['criticality_id'] = criticalityId;
+    }
+
+    if (sort != null) {
+      map['sort'] = sort;
+    }
+
+    return map;
   }
 
   AllergyFilterModel copyWith({

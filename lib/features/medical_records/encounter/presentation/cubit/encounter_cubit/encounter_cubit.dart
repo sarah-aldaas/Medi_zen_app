@@ -33,7 +33,7 @@ class EncounterCubit extends Cubit<EncounterState> {
       _currentFilters = filters;
     }
 
-    final result = await remoteDataSource.getAllMyEncounter(filters: _currentFilters, page: _currentPage, perPage: 5);
+    final result = await remoteDataSource.getAllMyEncounter(filters: _currentFilters, page: _currentPage, perPage: 10);
 
     if (result is Success<PaginatedResponse<EncounterModel>>) {
       try {
