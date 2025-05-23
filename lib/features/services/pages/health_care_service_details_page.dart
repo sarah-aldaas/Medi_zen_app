@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
 import '../data/model/health_care_services_model.dart';
@@ -12,6 +14,7 @@ class HealthCareServiceDetailsPage extends StatefulWidget {
   const HealthCareServiceDetailsPage({super.key, required this.serviceId});
 
   @override
+
   State<HealthCareServiceDetailsPage> createState() =>
       _HealthCareServiceDetailsPageState();
 }
@@ -29,7 +32,7 @@ class _HealthCareServiceDetailsPageState
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
-
+    final secondaryColor = Colors.tealAccent.shade400; // لون ثانوي منعش
     final backgroundColor = Colors.white;
     final textColor = Colors.black87;
     final subTextColor = Colors.grey.shade600;
@@ -42,16 +45,18 @@ class _HealthCareServiceDetailsPageState
           style: TextStyle(
             color: primaryColor,
             fontWeight: FontWeight.bold,
-            fontSize: 24,
+            fontSize: 24, // حجم خط أكبر للعنوان
           ),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: subTextColor),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.pop(),
         ),
-        elevation: 3,
+        elevation: 3, // ظل أكثر بروزًا
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(18)),
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(18),
+          ), // حواف أكثر دائرية
         ),
       ),
       backgroundColor: Colors.grey.shade100,
@@ -111,7 +116,6 @@ class _HealthCareServiceDetailsPageState
       ),
     );
   }
-
   Widget _buildServiceDetails(
     HealthCareServiceModel service,
     Color primaryColor,
@@ -119,22 +123,21 @@ class _HealthCareServiceDetailsPageState
     Color subTextColor,
   ) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0), // زيادة حجم التباعد
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (service.photo != null)
             Center(
               child: Card(
-                elevation: 5,
+                elevation: 5, // ظل أكثر وضوحًا
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
-                ),
+                ), // حواف أكثر دائرية
                 clipBehavior: Clip.antiAlias,
                 child: Image.network(
                   service.photo!,
-
-                  height: 350,
+                  height: 250, // ارتفاع أكبر للصورة
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder:
@@ -150,7 +153,7 @@ class _HealthCareServiceDetailsPageState
           Text(
             service.name!,
             style: TextStyle(
-              fontSize: 26,
+              fontSize: 26, // حجم خط أكبر لاسم الخدمة
               fontWeight: FontWeight.bold,
               color: textColor,
             ),
@@ -161,7 +164,10 @@ class _HealthCareServiceDetailsPageState
             style: TextStyle(fontSize: 17, color: subTextColor),
           ),
           const Gap(30),
-          Divider(thickness: 2, color: primaryColor.withOpacity(0.3)),
+          Divider(
+            thickness: 2,
+            color: primaryColor.withOpacity(0.3),
+          ), // فاصل بلون أساسي أخف
           const Gap(20),
           Text(
             'Details',
@@ -299,15 +305,11 @@ class _HealthCareServiceDetailsPageState
             ...service.eligibilities!.map(
               (e) => Card(
                 elevation: 2,
-                margin: const EdgeInsets.symmetric(vertical: 18),
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12.0,
-                    horizontal: 16.0,
-                  ), // Adjust vertical padding here
                   leading: Icon(
                     Icons.check_circle_outline,
                     color: primaryColor,

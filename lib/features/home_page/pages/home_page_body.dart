@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/clinics/pages/clinic_details_page.dart';
 import 'package:medizen_app/features/clinics/pages/clinics_page.dart';
@@ -29,23 +31,29 @@ class _HomePageBodyState extends State<HomePageBody> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildHeader(context),
+        body: SingleChildScrollView(
+          child: Column(
+            spacing: 10,
+            children: [
+              _buildHeader(context),
 
-                SomeClinics(),
-                const Gap(10),
-                DefinitionWidget(),
-                const Gap(10),
-                SomeDoctors(),
-                const Gap(20),
-                SomeArticles(),
-                const Gap(20),
-              ],
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SomeClinics(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: DefinitionWidget(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SomeDoctors(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SomeArticles(),
+              ),
+            ],
           ),
         ),
       ),
@@ -55,7 +63,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   Widget _buildHeader(BuildContext context) {
     PatientModel? myPatientModel = loadingPatientModel();
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(bottom: 16,top: 20,left: 16,right: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -76,12 +84,33 @@ class _HomePageBodyState extends State<HomePageBody> {
             children: [
               const Icon(Icons.notifications_outlined),
               const SizedBox(width: 16.0),
-              IconButton(
-                icon: const Icon(Icons.favorite_border, size: 25),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyFavorite()));
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert),
+                onSelected: (String value) {
+                  if (value == 'favorites') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyFavorite()));
+                  } else if (value == 'services') {
+                    context.pushNamed(AppRouter.healthCareServicesPage.name);
+                  }
                 },
+                itemBuilder: (BuildContext context) => [
+                  const PopupMenuItem<String>(
+                    value: 'favorites',
+                    child: ListTile(
+                      leading: Icon(Icons.favorite_border),
+                      title: Text('Favorites'),
+                    ),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'services',
+                    child: ListTile(
+                      leading: Icon(Icons.health_and_safety),
+                      title: Text('Health services'),
+                    ),
+                  ),
+                ],
               ),
+
             ],
           ),
         ],

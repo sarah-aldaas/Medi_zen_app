@@ -5,65 +5,172 @@ import 'package:meta/meta.dart';
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/services/network/resource.dart';
 import '../../../../../base/widgets/show_toast.dart';
+import '../../../data/model/health_care_service_filter.dart';
 
 part 'service_state.dart';
 
 class ServiceCubit extends Cubit<ServiceState> {
   final ServicesRemoteDataSource remoteDataSource;
-  int currentServicePage = 1;
-
-  // int currentEligibilityPage = 1;
-  bool hasMoreServices = true;
-
-  // bool hasMoreEligibility = true;
-  bool isLoadingServices = false;
-
-  // bool isLoadingEligibility = false;
-  List<HealthCareServiceModel> allServices = [];
-
-  // List<HealthCareServiceEligibilityCodesModel> allEligibilityCodes = [];
+  int _currentPage = 1;
+  bool _hasMore = true;
+  bool isLoading = false;
+  List<HealthCareServiceModel> _allServices = [];
+  HealthCareServiceFilter _currentFilter = HealthCareServiceFilter();
 
   ServiceCubit({required this.remoteDataSource}) : super(ServiceInitial());
 
-  Future<void> getAllServiceHealthCare({bool loadMore = false}) async {
-    if (isLoadingServices || (!loadMore && allServices.isNotEmpty)) return;
-    isLoadingServices = true;
+  // Future<void> getAllServiceHealthCare({bool loadMore = false, HealthCareServiceFilter? filter}) async {
+  //   if (isLoading || (!loadMore && _allServices.isNotEmpty)) return;
+  //   isLoading = true;
+  //
+  //   if (!loadMore) {
+  //     _currentPage = 1;
+  //     _hasMore = true;
+  //     _allServices.clear();
+  //     emit(ServiceHealthCareLoading());
+  //   }
+  //
+  //   if (filter != null) {
+  //     _currentFilter = filter;
+  //   }
+  //
+  //   // Convert filter to query parameters
+  //   final queryParams = _currentFilter.toJson();
+  //   queryParams['page'] = _currentPage;
+  //   queryParams['pagination_count'] = _currentFilter.paginationCount ?? 10;
+  //
+  //   try {
+  //     final result = await remoteDataSource.getAllHealthCareServices(
+  //       page: _currentPage,
+  //       perPage: _currentFilter.paginationCount ?? 10,
+  //       filters: queryParams, // Pass the complete query parameters
+  //     );
+  //     if (result is Success<PaginatedResponse<HealthCareServiceModel>>) {
+  //       final newServices = result.data.paginatedData?.items ?? [];
+  //       _allServices.addAll(newServices);
+  //
+  //       final totalPages = result.data.meta?.lastPage ?? 1;
+  //       _hasMore = _currentPage < totalPages;
+  //
+  //       if (loadMore) {
+  //         _currentPage++;
+  //       } else {
+  //         _currentPage = 2; // Set to 2 because we already loaded page 1
+  //       }
+  //
+  //       emit(ServiceHealthCareSuccess(
+  //         paginatedResponse: result.data,
+  //         allServices: _allServices,
+  //         hasMore: _hasMore,
+  //       ));
+  //     } else if (result is ResponseError<PaginatedResponse<HealthCareServiceModel>>) {
+  //       emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch health care services'));
+  //     }
+  //
+  //     // ... rest of your existing code ...
+  //   } finally {
+  //     isLoading = false;
+  //   }
+  // }
 
+
+  Map<String, dynamic> _currentFilters = {};
+  List<HealthCareServiceModel> allServices = [];
+
+  Future<void> getAllServiceHealthCare({Map<String, dynamic>? filters, bool loadMore = false}) async {
     if (!loadMore) {
-      currentServicePage = 1;
-      hasMoreServices = true;
-      allServices.clear();
+      _currentPage = 1;
+      _hasMore = true;
+      allServices = [];
       emit(ServiceHealthCareLoading());
+    } else if (!_hasMore) {
+      return;
     }
 
-    try {
-      final result = await remoteDataSource.getAllHealthCareServices(
-        page: currentServicePage,
-        perPage: 10, // Set your desired page size
-      );
+    if (filters != null) {
+      _currentFilters = filters;
+    }
 
-      if (result is Success<PaginatedResponse<HealthCareServiceModel>>) {
-        final newServices = result.data.paginatedData?.items ?? [];
-        allServices.addAll(newServices);
+    final result = await remoteDataSource.getAllHealthCareServices(filters: _currentFilters, page: _currentPage, perPage: 5);
 
-        // Update pagination info
-        final totalPages = result.data.meta?.lastPage ?? 1;
-        hasMoreServices = currentServicePage < totalPages;
+    if (result is Success<PaginatedResponse<HealthCareServiceModel>>) {
+      try {
+        allServices.addAll(result.data.paginatedData!.items);
+        _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _currentPage++;
 
-        // Only increment page if we're loading more
-        if (loadMore) {
-          currentServicePage++;
-        } else {
-          // For initial load, set to page 2 since we already loaded page 1
-          currentServicePage = 2;
-        }
+        emit(
+          ServiceHealthCareSuccess(
+            hasMore: _hasMore,
+            paginatedResponse: PaginatedResponse<HealthCareServiceModel>(
+              paginatedData: PaginatedData<HealthCareServiceModel>(items: allServices),
+              meta: result.data.meta,
+              links: result.data.links,
+            ),
+          ),
+        );
+      }catch(e){
+        emit(ServiceHealthCareError(error:result.data.msg ?? 'Failed to fetch Appointments'));
 
-        emit(ServiceHealthCareSuccess(paginatedResponse: result.data, allServices: allServices, hasMore: hasMoreServices));
-      } else if (result is ResponseError<PaginatedResponse<HealthCareServiceModel>>) {
-        emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch health care service'));
       }
-    } finally {
-      isLoadingServices = false;
+    } else if (result is ResponseError<PaginatedResponse<HealthCareServiceModel>>) {
+      emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch Appointments'));
+    }
+  }
+
+
+  // Future<void> getAllServiceHealthCare({bool loadMore = false, HealthCareServiceFilter? filter}) async {
+  //   if (isLoading || (!loadMore && _allServices.isNotEmpty)) return;
+  //   isLoading = true;
+  //
+  //   if (!loadMore) {
+  //     _currentPage = 1;
+  //     _hasMore = true;
+  //     _allServices.clear();
+  //     emit(ServiceHealthCareLoading());
+  //   }
+  //
+  //   if (filter != null) {
+  //     _currentFilter = filter;
+  //   }
+  //
+  //   try {
+  //     final result = await remoteDataSource.getAllHealthCareServices(
+  //       page: _currentPage,
+  //       perPage: _currentFilter.paginationCount ?? 10,
+  //       filters: _currentFilter.toJson(),
+  //     );
+  //
+  //     if (result is Success<PaginatedResponse<HealthCareServiceModel>>) {
+  //       final newServices = result.data.paginatedData?.items ?? [];
+  //       _allServices.addAll(newServices);
+  //
+  //       final totalPages = result.data.meta?.lastPage ?? 1;
+  //       _hasMore = _currentPage < totalPages;
+  //
+  //       if (loadMore) {
+  //         _currentPage++;
+  //       } else {
+  //         _currentPage = 2; // Set to 2 because we already loaded page 1
+  //       }
+  //
+  //       emit(ServiceHealthCareSuccess(
+  //         paginatedResponse: result.data,
+  //         allServices: _allServices,
+  //         hasMore: _hasMore,
+  //       ));
+  //     } else if (result is ResponseError<PaginatedResponse<HealthCareServiceModel>>) {
+  //       emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch health care services'));
+  //     }
+  //   } finally {
+  //     isLoading = false;
+  //   }
+  // }
+
+  // When returning from details page, reload if needed
+  void checkAndReload() {
+    if (state is! ServiceHealthCareSuccess) {
+      getAllServiceHealthCare();
     }
   }
 
