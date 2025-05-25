@@ -103,7 +103,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       children: [
         Text(
           "appointmentDetails.scheduledAppointment".tr(context),
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: AppColors.cyan,

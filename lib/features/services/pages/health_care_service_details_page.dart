@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/go_router/go_router.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
 import '../data/model/health_care_services_model.dart';
@@ -14,7 +15,6 @@ class HealthCareServiceDetailsPage extends StatefulWidget {
   const HealthCareServiceDetailsPage({super.key, required this.serviceId});
 
   @override
-
   State<HealthCareServiceDetailsPage> createState() =>
       _HealthCareServiceDetailsPageState();
 }
@@ -52,7 +52,8 @@ class _HealthCareServiceDetailsPageState
           icon: Icon(Icons.arrow_back_ios, color: subTextColor),
           onPressed: () => context.pop(),
         ),
-        elevation: 3, // ظل أكثر بروزًا
+        elevation: 3,
+        // ظل أكثر بروزًا
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(18),
@@ -111,11 +112,12 @@ class _HealthCareServiceDetailsPageState
               ),
             );
           }
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: LoadingPage());
         },
       ),
     );
   }
+
   Widget _buildServiceDetails(
     HealthCareServiceModel service,
     Color primaryColor,
@@ -240,19 +242,60 @@ class _HealthCareServiceDetailsPageState
             ),
             const Gap(10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.local_hospital_outlined,
-                  color: primaryColor,
-                  size: 26,
+                Row(
+                  children: [
+                    Icon(
+                      Icons.local_hospital_outlined,
+                      color: primaryColor,
+                      size: 26,
+                    ),
+                    const Gap(10),
+                    Text(
+                      service.clinic!.name,
+                      style: TextStyle(
+                        fontSize: 19,
+                        color: primaryColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-                const Gap(10),
-                Text(
-                  service.clinic!.name,
-                  style: TextStyle(
-                    fontSize: 19,
-                    color: primaryColor,
-                    fontWeight: FontWeight.w500,
+
+                IconButton(
+                  onPressed: () {
+                    context.pushNamed(
+                      AppRouter.clinicDetails.name,
+                      extra: {"clinicId": service.clinic!.id},
+                    );
+                  },
+                  icon: Container(
+                    width: 40, // حجم ثابت للدائرة
+                    height: 40, // حجم ثابت للدائرة
+                    decoration: BoxDecoration(
+                      color: Theme.of(
+                        context,
+                      ).primaryColor.withOpacity(0.15), // لون خلفية أفتح قليلاً
+                      shape: BoxShape.circle, // جعل الشكل دائريًا
+                      boxShadow: [
+                        // إضافة ظل خفيف
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward_ios_rounded, // أيقونة السهم الجديدة
+                      color:
+                          Theme.of(
+                            context,
+                          ).primaryColor, // لون الأيقونة بلون التطبيق الأساسي
+                      size: 20, // حجم الأيقونة
+                    ),
                   ),
                 ),
               ],

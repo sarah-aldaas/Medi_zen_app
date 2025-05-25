@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import '../../../../../base/theme/app_style.dart';
+import '../../../../../base/widgets/loading_page.dart';
 import '../../../signup/view/signup_screen.dart';
 import '../../cubit/login_cubit.dart';
 import '../../cubit/login_state.dart';
@@ -107,9 +108,7 @@ class _LoginFormState extends State<LoginForm> {
                 },
                 style: AppStyles.elevatedButtonStyle,
                 child: state is LoginLoading
-                    ? const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                )
+                    ? LoadingButton(isWhite: true,)
                     :  Text('login_page.login'.tr(context), style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 30),

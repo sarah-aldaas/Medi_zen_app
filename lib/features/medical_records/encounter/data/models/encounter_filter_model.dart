@@ -20,16 +20,37 @@ class EncounterFilterModel {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'search_query': searchQuery,
-      'status_id': statusId,
-      'type_id': typeId,
-      'appointment_id': appointmentId,
-      'min_start_date': minStartDate?.toIso8601String(),
-      'max_start_date': maxStartDate?.toIso8601String(),
-      'pagination_count': paginationCount,
-      'key': key,
-    };
+    final map = <String, dynamic>{};
+
+    if (searchQuery != null && searchQuery!.isNotEmpty) {
+      map['search_query'] = searchQuery;
+    }
+
+    if (statusId != null) {
+      map['status_id'] = statusId;
+    }
+
+    if (typeId != null) {
+      map['type_id'] = typeId;
+    }
+
+    if (appointmentId != null) {
+      map['appointment_id'] = appointmentId;
+    }
+
+    if (minStartDate != null) {
+      map['min_start_date'] = minStartDate!.toIso8601String();
+    }
+
+    if (maxStartDate != null) {
+      map['max_start_date'] = maxStartDate!.toIso8601String();
+    }
+
+    if (key != null && key!.isNotEmpty) {
+      map['key'] = key;
+    }
+
+    return map;
   }
 
   EncounterFilterModel copyWith({

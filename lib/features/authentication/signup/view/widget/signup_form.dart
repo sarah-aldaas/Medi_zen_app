@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Assuming you have a localization extension
 import 'package:medizen_app/base/go_router/go_router.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import '../../cubit/signup_cubit.dart';
 import '../../cubit/signup_state.dart';
 
@@ -165,7 +166,7 @@ class _SignupFormState extends State<SignupForm> {
                 ),
                 child:
                 state is SignupLoading
-                    ? const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                    ? LoadingButton(isWhite: true,)
                     : Text("sign_up_page.sign_up".tr(context), style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 20),

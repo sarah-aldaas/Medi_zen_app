@@ -351,7 +351,7 @@
       "userName": "Andrew Ainsley"
     },
     "specialties": {
-      "title": "Doctor Speciality",
+      "title": "All Clinics",
       "seeAll": "See all",
       "items": {
         "general": "General",
@@ -533,24 +533,44 @@
     "telecoms": "Telecoms",
     "updateTelecom": "Update Telecom",
     "value": "Value",
-    "type": "Type",
-    "use": "Use",
+    "type": "Type :",
+    "use": "Use :",
     "cancel": "Cancel",
     "update": "Update",
     "allFieldsRequired": "All fields are required",
     "createNewTelecom": "Create New Telecom",
     "create": "Create",
     "telecomDetails": "Telecom Details",
-    "valueLabel": "Value",
+    "valueLabel": "Value :",
     "notAvailable": "Not available",
-    "typeLabel": "Type",
-    "useLabel": "Use",
-    "startDateLabel": "Start Date",
-    "endDateLabel": "End Date",
+    "typeLabel": "Type :",
+    "useLabel": "Use :",
+    "startDateLabel": "Start Date :",
+    "endDateLabel": "End Date :",
     "manageTelecom": "Manage Telecom",
     "delete": "Delete",
     "addNewTelecom": "Add New Telecom",
-    "noTelecomsOfType": "No telecoms of this type"
+    "noTelecomsOfType": "No telecoms of this type",
+    "selectType": "Select Type ",
+    "selectUse": "Select Use"
 
-  }
+  },
+  "addressPage":{
+  "title": "My Addresses",
+  "filterAddresses": "Filter Addresses",
+  "addressUse": "Address Use",
+  "noAddressUsesAvailable": "No address uses available",
+  "addressType": "Address Type",
+  "noAddressTypesAvailable": "No address types available",
+  "allUses": "All Uses",
+  "allTypes": "All Types",
+  "clearFilters": "Clear Filters",
+  "apply": "Apply",
+  "deleteAddressTitle": "Delete Address",
+  "deleteAddressMessage": "Are you sure you want to delete this address?",
+  "deleteButton": "Delete",
+  "noAddresses": "No Addresses",
+  "noAddressesMessage": "You haven't added any addresses yet",
+  "addAddressButton": "Add Address"
+}
 }

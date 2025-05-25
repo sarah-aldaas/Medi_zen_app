@@ -351,7 +351,7 @@
       "userName": "أندرو إينسلي"
     },
     "specialties": {
-      "title": "تخصصات الأطباء",
+      "title": "العيادات",
       "seeAll": "عرض الكل",
       "items": {
         "general": "عام",
@@ -532,24 +532,43 @@
   "telecomPage": {
     "telecoms": "جهات الاتصال",
     "updateTelecom": "تحديث جهة الاتصال",
-    "value": "القيمة",
-    "type": "النوع",
-    "use": "الاستخدام",
+    "value": "القيمة  ",
+    "type": "النوع :",
+    "use": "الاستخدام :",
     "cancel": "إلغاء",
     "update": "تحديث",
     "allFieldsRequired": "جميع الحقول مطلوبة",
     "createNewTelecom": "إنشاء جهة اتصال جديدة",
     "create": "إنشاء",
     "telecomDetails": "تفاصيل جهة الاتصال",
-    "valueLabel": "القيمة",
+    "valueLabel": "القيمة :",
     "notAvailable": "غير متوفر",
-    "typeLabel": "النوع",
-    "useLabel": "الاستخدام",
-    "startDateLabel": "تاريخ البدء",
-    "endDateLabel": "تاريخ الانتهاء",
+    "typeLabel": "النوع :",
+    "useLabel": "الاستخدام :",
+    "startDateLabel": "تاريخ البدء :",
+    "endDateLabel": "تاريخ الانتهاء :",
     "manageTelecom": "إدارة جهة الاتصال",
     "delete": "حذف",
     "addNewTelecom": "إضافة جهة اتصال جديدة",
-    "noTelecomsOfType": "لا توجد جهات اتصال من هذا النوع"
-  }
-}
+    "noTelecomsOfType": "لا توجد جهات اتصال من هذا النوع",
+    "selectType": "اختر النوع",
+    "selectUse": "نوع الإستخدام"
+  },
+  "addressPage":{
+ " title": "عناويني",
+  "filterAddresses": "تصفية العناوين",
+  "addressUse": "نوع الاستخدام",
+  "noAddressUsesAvailable": "لا تتوفر أنواع استخدام للعناوين",
+  "addressType": "نوع العنوان",
+  "noAddressTypesAvailable": "لا تتوفر أنواع عناوين",
+  "allUses": "جميع الاستخدامات",
+  "allTypes": "جميع الأنواع",
+  "clearFilters": "مسح الفلاتر",
+  "apply": "تطبيق",
+  "deleteAddressTitle": "حذف العنوان",
+  "deleteAddressMessage": "هل أنت متأكد أنك تريد حذف هذا العنوان؟",
+  "deleteButton": "حذف",
+  "noAddresses": "لا توجد عناوين",
+  "noAddressesMessage": "لم تقم بإضافة أي عناوين بعد",
+  "addAddressButton": "إضافة عنوان"
+}}
