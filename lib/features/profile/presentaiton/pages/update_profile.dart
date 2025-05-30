@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Make sure this is imported
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -28,7 +28,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             height: 1.0,
           ),
         ),
-        title: Text("Edit profile", style: TextStyle(fontSize: 16, color: Colors.grey)),
+        title: Text(
+          "editProfilePage.editProfile".tr(context), // Localized
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -37,18 +40,42 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
             child: Column(
-              spacing: 20,
-              children: [
+              children: [ // Changed from 'spacing' to 'children'
                 CircleAvatar(
                   radius: 70,
                   backgroundImage: NetworkImage('https://via.placeholder.com/150'),
                   child: Icon(Icons.camera_alt, size: 30, color: Colors.grey),
                 ),
-                SizedBox(height: 20),
-                TextFormField(initialValue: email, decoration: InputDecoration(labelText: 'Your Email'), enabled: false),
-                TextFormField(initialValue: phone, decoration: InputDecoration(labelText: 'Your Phone'), keyboardType: TextInputType.phone),
-                TextFormField(initialValue: city, decoration: InputDecoration(labelText: 'City')),
-                TextFormField(initialValue: country, decoration: InputDecoration(labelText: 'Country')),
+                SizedBox(height: 20), // Spacing added
+                TextFormField(
+                  initialValue: email,
+                  decoration: InputDecoration(
+                    labelText: 'editProfilePage.yourEmail'.tr(context), // Localized
+                  ),
+                  enabled: false,
+                ),
+                SizedBox(height: 20), // Spacing added
+                TextFormField(
+                  initialValue: phone,
+                  decoration: InputDecoration(
+                    labelText: 'editProfilePage.yourPhone'.tr(context), // Localized
+                  ),
+                  keyboardType: TextInputType.phone,
+                ),
+                SizedBox(height: 20), // Spacing added
+                TextFormField(
+                  initialValue: city,
+                  decoration: InputDecoration(
+                    labelText: 'editProfilePage.city'.tr(context), // Localized
+                  ),
+                ),
+                SizedBox(height: 20), // Spacing added
+                TextFormField(
+                  initialValue: country,
+                  decoration: InputDecoration(
+                    labelText: 'editProfilePage.country'.tr(context), // Localized
+                  ),
+                ),
               ],
             ),
           ),

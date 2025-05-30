@@ -28,7 +28,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
   final List<String> _imagePaths = [
     AppAssetImages.photoDoctor8,
     AppAssetImages.photoDoctor4,
-    AppAssetImages.photoDoctor9
+    AppAssetImages.photoDoctor9,
   ];
 
   @override
@@ -56,15 +56,17 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
     _timer = Timer.periodic(const Duration(seconds: 7), (timer) async {
       if (currentPage < _imagePaths.length - 1) {
         currentPage++;
-        _pageController.animateToPage(currentPage,
-            duration: const Duration(milliseconds: 1500),
-            curve: Curves.easeInOut);
+        _pageController.animateToPage(
+          currentPage,
+          duration: const Duration(milliseconds: 1500),
+          curve: Curves.easeInOut,
+        );
       } else {
-        // Cancel the timer when the last page is reached
         timer.cancel();
-        // Mark first install as handled
-        serviceLocator<StorageService>().saveToDisk(StorageKey.firstInstall, false);
-        // Navigate to the welcome screen
+        serviceLocator<StorageService>().saveToDisk(
+          StorageKey.firstInstall,
+          false,
+        );
         if (mounted) {
           context.goNamed(AppRouter.welcomeScreen.name);
         }
@@ -99,9 +101,12 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                     itemCount: _imagePaths.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.asset(_imagePaths[index],
-                              fit: BoxFit.fill));
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          _imagePaths[index],
+                          fit: BoxFit.fill,
+                        ),
+                      );
                     },
                     onPageChanged: (index) {
                       setState(() {
@@ -114,17 +119,22 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .secondaryHeaderColor
-                        .withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(10)),
+                  color: Theme.of(
+                    context,
+                  ).secondaryHeaderColor.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(titles[currentPage],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
+                    Text(
+                      titles[currentPage],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
                     Text(description[currentPage], textAlign: TextAlign.center),
                   ],
                 ),
@@ -140,18 +150,21 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                       children: List.generate(_imagePaths.length, (index) {
                         return InkWell(
                           onTap: () {
-                            _pageController.animateToPage(index,
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeInOut);
+                            _pageController.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                            );
                           },
                           child: Container(
                             width: 10,
                             height: 5,
                             margin: const EdgeInsets.symmetric(horizontal: 5),
                             decoration: BoxDecoration(
-                              color: currentPage == index
-                                  ? Theme.of(context).primaryColor
-                                  : AppColors.greyColor,
+                              color:
+                                  currentPage == index
+                                      ? Theme.of(context).primaryColor
+                                      : AppColors.greyColor,
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
@@ -161,7 +174,10 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                    serviceLocator<StorageService>().saveToDisk(StorageKey.firstInstall, false);
+                      serviceLocator<StorageService>().saveToDisk(
+                        StorageKey.firstInstall,
+                        false,
+                      );
                       if (mounted) {
                         context.pushNamed(AppRouter.welcomeScreen.name);
                       }
@@ -174,8 +190,11 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                         color: Theme.of(context).primaryColor,
                       ),
                       child: const Center(
-                          child: Icon(Icons.arrow_forward_sharp,
-                              color: Colors.white)),
+                        child: Icon(
+                          Icons.arrow_forward_sharp,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],

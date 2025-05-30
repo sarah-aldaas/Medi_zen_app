@@ -58,7 +58,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           .read<AppointmentCubit>()
           .getMyAppointment(filters: _filter.toJson(), loadMore: true)
           .then((_) {
-            setState(() => _isLoadingMore = false); // Reset flag when done
+            setState(() => _isLoadingMore = false);
           });
     }
   }
@@ -157,9 +157,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
 
           return ListView.builder(
             controller: _scrollController,
-            itemCount:
-                appointments.length +
-                (hasMore ? 1 : 0), // Only add 1 if more data is available
+            itemCount: appointments.length + (hasMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < appointments.length) {
                 return _buildAppointmentItem(appointments[index]);
@@ -318,7 +316,9 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
 
                       ElevatedButton(
                         onPressed: () => _editAppointment(context, appointment),
-                        child: Text("Update"),
+                        child: Text(
+                          "myAppointments.buttons.update".tr(context),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor,
                           foregroundColor: Colors.white,

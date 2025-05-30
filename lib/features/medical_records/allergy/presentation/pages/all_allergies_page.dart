@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
-import '../../../../../base/theme/app_color.dart'; // Import your AppColors
+import '../../../../../base/theme/app_color.dart';
 import '../../data/models/allergy_filter_model.dart';
-import '../../data/models/allergy_model.dart'; // Import AllergyModel
+import '../../data/models/allergy_model.dart';
 import '../cubit/allergy_cubit/allergy_cubit.dart';
-import '../widgets/allergy_list_item.dart'; // Crucial: This points to the new widget
+import '../widgets/allergy_list_item.dart';
 import 'allergy_details_page.dart';
 
 class AllAllergiesPage extends StatefulWidget {
@@ -104,7 +105,7 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'No allergies found with current filters. Try adjusting your search.',
+                  'allergiesPage.noAllergiesFound'.tr(context),
                   style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
@@ -115,9 +116,9 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
                     Icons.refresh,
                     color: AppColors.primaryColor,
                   ),
-                  label: const Text(
-                    'Refresh List',
-                    style: TextStyle(
+                  label: Text(
+                    'allergiesPage.refreshList'.tr(context),
+                    style: const TextStyle(
                       fontSize: 16,
                       color: AppColors.primaryColor,
                     ),

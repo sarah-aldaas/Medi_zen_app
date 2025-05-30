@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/profile/data/models/address_model.dart';
@@ -84,7 +85,9 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
           color: AppColors.primaryColor,
         ),
         title: Text(
-          widget.address == null ? 'Add Address' : 'Edit Address',
+          widget.address == null
+              ? 'address.addAddress'.tr(context)
+              : 'address.editAddress'.tr(context),
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -95,9 +98,11 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
       body: BlocConsumer<CodeTypesCubit, CodeTypesState>(
         listener: (context, state) {
           if (state is CodeTypesError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('Error: ${state.error}')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('common.error'.tr(context) + '${state.error}'),
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -126,14 +131,14 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Failed to load address types',
+                    'address.faildToLoadType'.tr(context),
                     style: TextStyle(color: Colors.red),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed:
                         () => context.read<CodeTypesCubit>().fetchCodeTypes(),
-                    child: const Text('Retry'),
+                    child: Text('common.retry'.tr(context)),
                   ),
                 ],
               ),
@@ -182,107 +187,118 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
         child: Column(
           children: [
             AppDropdown<CodeModel>(
-              label: 'Address Use',
+              label: 'address.addressUse'.tr(context), // Localized
               items: addressUses,
-              displayItem: (item) => item.display,
+              displayItem: (item) => item.display ?? '', // Handle null display
               value: _selectedUse,
               onChanged: (value) => setState(() => _selectedUse = value),
               validator:
-                  (value) => value == null ? 'Please select address use' : null,
+                  (value) =>
+                      value == null
+                          ? 'address.selectAddressUse'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppDropdown<CodeModel>(
-              label: 'Address Type',
+              label: 'address.addressType'.tr(context), // Localized
               items: addressTypes,
-              displayItem: (item) => item.display,
+              displayItem: (item) => item.display ?? '', // Handle null display
               value: _selectedType,
               onChanged: (value) => setState(() => _selectedType = value),
               validator:
                   (value) =>
-                      value == null ? 'Please select address type' : null,
+                      value == null
+                          ? 'address.selectAddressType'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _countryController,
-              label: 'Country',
+              label: 'address.country'.tr(context), // Localized
               validator:
                   (value) =>
-                      value?.isEmpty ?? true ? 'Please enter country' : null,
+                      value?.isEmpty ?? true
+                          ? 'address.enterCountry'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _cityController,
-              label: 'City',
+              label: 'address.city'.tr(context), // Localized
               validator:
                   (value) =>
-                      value?.isEmpty ?? true ? 'Please enter city' : null,
+                      value?.isEmpty ?? true
+                          ? 'address.enterCity'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _stateController,
-              label: 'State/Province',
+              label: 'address.stateProvince'.tr(context), // Localized
               validator:
                   (value) =>
                       value?.isEmpty ?? true
-                          ? 'Please enter state/province'
-                          : null,
+                          ? 'address.enterStateProvince'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _districtController,
-              label: 'District',
+              label: 'address.district'.tr(context), // Localized
               validator:
                   (value) =>
-                      value?.isEmpty ?? true ? 'Please enter district' : null,
+                      value?.isEmpty ?? true
+                          ? 'address.enterDistrict'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _lineController,
-              label: 'Street Address',
+              label: 'address.streetAddress'.tr(context), // Localized
               validator:
                   (value) =>
                       value?.isEmpty ?? true
-                          ? 'Please enter street address'
-                          : null,
+                          ? 'address.enterStreetAddress'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _postalCodeController,
-              label: 'Postal Code',
+              label: 'address.postalCode'.tr(context), // Localized
               keyboardType: TextInputType.number,
               validator:
                   (value) =>
                       value?.isEmpty ?? true
-                          ? 'Please enter postal code'
-                          : null,
+                          ? 'address.enterPostalCode'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _textController,
-              label: 'Description',
+              label: 'address.description'.tr(context), // Localized
               validator:
                   (value) =>
                       value?.isEmpty ?? true
-                          ? 'Please enter description'
-                          : null,
+                          ? 'address.enterDescription'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _startDateController,
-              label: 'Start Date',
+              label: 'address.startDate'.tr(context), // Localized
               suffixIcon: Icons.calendar_today,
               readOnly: true,
               onTap: () => _selectDate(context, _startDateController),
               validator:
                   (value) =>
                       value?.isEmpty ?? true
-                          ? 'Please select start date'
-                          : null,
+                          ? 'address.selectStartDate'.tr(context)
+                          : null, // Localized
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _endDateController,
-              label: 'End Date (Optional)',
+              label: 'address.endDateOptional'.tr(context), // Localized
               suffixIcon: Icons.calendar_today,
               readOnly: true,
               onTap: () => _selectDate(context, _endDateController),
@@ -291,14 +307,16 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
             GestureDetector(
               child: Container(
                 width: context.width,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
                   child: Text(
-                    widget.address == null ? 'Add Address' : 'Update Address',
+                    widget.address == null
+                        ? 'address.addAddress'.tr(context) // Localized
+                        : 'address.updateAddress'.tr(context), // Localized
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
@@ -326,6 +344,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
       lastDate: DateTime(2100),
     );
     if (picked != null) {
+      // Format the date to 'YYYY-MM-DD'
       controller.text = picked.toIso8601String().split('T')[0];
     }
   }
@@ -360,6 +379,9 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
         );
       }
 
+      // Pop the screen after submission. You might want to listen to
+      // AddressCubit states (Success/Error) to pop only on success
+      // and show a snackbar on error.
       Navigator.pop(context);
     }
   }

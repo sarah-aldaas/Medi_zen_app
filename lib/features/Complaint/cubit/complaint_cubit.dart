@@ -17,9 +17,5 @@ class ComplaintCubit extends Cubit<ComplaintState> {
     emit(state.copyWith(complaintContent: content));
   }
 
-  void submitComplaint() {
-    // print('العيادة: ${state.selectedClinic}');
-    // print('الطبيب: ${state.selectedDoctor}');
-    // print('محتوى الشكوى: ${state.complaintContent}');
-  }
+  void submitComplaint() {}
 }

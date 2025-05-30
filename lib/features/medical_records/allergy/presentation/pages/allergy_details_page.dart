@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/encounter_details_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/appointment_reactions_page.dart';
@@ -50,9 +51,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Allergy Details',
-          style: TextStyle(
+        title: Text(
+          'allergiesPage.allergyDetails'.tr(context),
+          style: const TextStyle(
             color: AppColors.primaryColor,
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
           if (state is AllergyLoading) {
             return const Center(child: LoadingPage());
           } else if (state is AllergyDetailsSuccess) {
-            return _buildAllergyDetails(state.allergyModel);
+            return _buildAllergyDetails(context, state.allergyModel);
           } else {
             return Center(
               child: Column(
@@ -86,16 +87,18 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                   Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
-                    'Failed to load allergy details. Please try again.',
+                    'allergiesPage.failedToLoadAllergyDetails'.tr(
+                      context,
+                    ), // Translated
                     style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: _loadAllergyDetails,
-                    child: const Text(
-                      'Tap to retry',
-                      style: TextStyle(
+                    child: Text(
+                      'allergiesPage.tapToRetry'.tr(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         color: AppColors.primaryColor,
                       ),
@@ -110,7 +113,8 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
     );
   }
 
-  Widget _buildAllergyDetails(AllergyModel allergy) {
+  Widget _buildAllergyDetails(BuildContext context, AllergyModel allergy) {
+    // Added context
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -123,7 +127,10 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
               children: [
                 Expanded(
                   child: Text(
-                    allergy.name ?? 'Unknown Allergy',
+                    allergy.name ??
+                        'allergiesPage.unknownAllergy'.tr(
+                          context,
+                        ), // Translated
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -131,49 +138,50 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                _buildCriticalityChip(allergy.criticality),
+                _buildCriticalityChip(context, allergy.criticality),
               ],
             ),
           ),
 
           _buildInfoCard(
-            title: 'Basic Information',
+            context: context,
+            title: 'allergiesPage.basicInformation'.tr(context),
             children: [
               _buildDetailRow(
                 context,
                 Icons.info_outline,
-                'Type',
+                'allergiesPage.type'.tr(context),
                 allergy.type?.display,
               ),
               _buildDetailRow(
                 context,
                 Icons.category_outlined,
-                'Category',
+                'allergiesPage.category'.tr(context),
                 allergy.category?.display,
               ),
               _buildDetailRow(
                 context,
                 Icons.medical_services_outlined,
-                'Clinical Status',
+                'allergiesPage.clinicalStatus'.tr(context),
                 allergy.clinicalStatus?.display,
               ),
               _buildDetailRow(
                 context,
                 Icons.verified_outlined,
-                'Verification',
+                'allergiesPage.verification'.tr(context),
                 allergy.verificationStatus?.display,
               ),
               _buildDetailRow(
                 context,
                 Icons.person_outline,
-                'Onset Age',
-                '${allergy.onSetAge ?? 'N/A'} years',
+                'allergiesPage.onsetAge'.tr(context),
+                '${allergy.onSetAge ?? 'allergiesPage.notApplicable'.tr(context)} ${'allergiesPage.yearsAbbreviation'.tr(context)}',
               ),
               if (allergy.lastOccurrence != null)
                 _buildDetailRow(
                   context,
                   Icons.event_note_outlined,
-                  'Last Occurrence',
+                  'allergiesPage.lastOccurrence'.tr(context),
                   DateFormat(
                     'MMM d, y',
                   ).format(DateTime.parse(allergy.lastOccurrence!)),
@@ -182,7 +190,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                 _buildDetailRow(
                   context,
                   Icons.notes_outlined,
-                  'Notes',
+                  'allergiesPage.notes'.tr(context),
                   allergy.note,
                 ),
             ],
@@ -192,7 +200,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
           if (widget.appointmentId == null &&
               (allergy.reactions?.isNotEmpty ?? false)) ...[
             Text(
-              'Reactions',
+              'allergiesPage.reactions'.tr(context),
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
@@ -251,7 +259,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'View All Reactions',
+                        'allergiesPage.viewAllReactions'.tr(
+                          context,
+                        ), // Translated
                         style: Theme.of(
                           context,
                         ).textTheme.titleMedium?.copyWith(
@@ -274,7 +284,10 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
           if (allergy.encounter != null) ...[
             const SizedBox(height: 16),
             _buildInfoCard(
-              title: 'Encounter Information',
+              context: context,
+              title: 'allergiesPage.encounterInformation'.tr(
+                context,
+              ), // Translated
               actions: [
                 IconButton(
                   onPressed: () {
@@ -292,21 +305,23 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     Icons.arrow_forward_ios,
                     color: AppColors.primaryColor,
                   ),
-                  tooltip: 'View Encounter Details',
+                  tooltip: 'allergiesPage.viewEncounterDetails'.tr(
+                    context,
+                  ), // Translated
                 ),
               ],
               children: [
                 _buildDetailRow(
                   context,
                   Icons.local_hospital_outlined,
-                  'Reason',
+                  'allergiesPage.reason'.tr(context),
                   allergy.encounter?.reason,
                 ),
                 if (allergy.encounter?.actualStartDate != null)
                   _buildDetailRow(
                     context,
                     Icons.calendar_month_outlined,
-                    'Date',
+                    'allergiesPage.date'.tr(context),
                     DateFormat('MMM d, y - h:mm a').format(
                       DateTime.parse(allergy.encounter!.actualStartDate!),
                     ),
@@ -315,7 +330,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                   _buildDetailRow(
                     context,
                     Icons.note_alt_outlined,
-                    'Special Notes',
+                    'allergiesPage.specialNotes'.tr(context),
                     allergy.encounter?.specialArrangement,
                   ),
               ],
@@ -327,6 +342,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
   }
 
   Widget _buildInfoCard({
+    required BuildContext context,
     required String title,
     List<Widget>? actions,
     required List<Widget> children,
@@ -386,7 +402,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
           ),
           Expanded(
             child: Text(
-              value ?? 'Not specified',
+              value ?? 'allergiesPage.notSpecified'.tr(context),
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 color: Colors.black87,
@@ -398,22 +414,26 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
     );
   }
 
-  Widget _buildCriticalityChip(CodeModel? criticality) {
+  Widget _buildCriticalityChip(BuildContext context, CodeModel? criticality) {
     Color chipColor;
-    String displayText = criticality?.display ?? 'N/A';
+    String displayText;
+
     switch (criticality?.code?.toLowerCase()) {
       case 'high':
         chipColor = Colors.red.shade600;
+        displayText = 'allergiesPage.high'.tr(context);
         break;
       case 'moderate':
         chipColor = Colors.orange.shade600;
+        displayText = 'allergiesPage.moderate'.tr(context);
         break;
       case 'low':
         chipColor = Colors.green.shade600;
+        displayText = 'allergiesPage.low'.tr(context);
         break;
       default:
         chipColor = Colors.grey.shade500;
-        displayText = 'N/A';
+        displayText = 'allergiesPage.notApplicable'.tr(context);
     }
 
     return Chip(

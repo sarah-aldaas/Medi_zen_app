@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+
 import '../../../../../base/data/models/code_type_model.dart';
 import '../../data/models/allergy_filter_model.dart';
 
@@ -72,9 +74,12 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Filter Allergies",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  "allergyFilter.filterAllergies".tr(context),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close, size: 20),
@@ -89,11 +94,12 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
-
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        labelText: 'Search',
+                        labelText: 'allergyFilter.search'.tr(
+                          context,
+                        ), // Translated
                         prefixIcon: const Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -106,10 +112,11 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       },
                     ),
                     const SizedBox(height: 16),
-
-                    const Text(
-                      "Discovered During Encounter",
-                      style: TextStyle(
+                    Text(
+                      "allergyFilter.discoveredDuringEncounter".tr(
+                        context,
+                      ), // Translated
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -118,7 +125,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                     Column(
                       children: [
                         RadioListTile<int?>(
-                          title: const Text("Any"),
+                          title: Text("allergyFilter.any".tr(context)),
                           value: null,
                           groupValue: _selectedDiscoveredDuringEncounter,
                           activeColor: Theme.of(context).primaryColor,
@@ -129,9 +136,9 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           },
                         ),
                         RadioListTile<int>(
-                          title: const Text(
-                            "Yes",
-                            style: TextStyle(fontSize: 14),
+                          title: Text(
+                            "allergyFilter.yes".tr(context),
+                            style: const TextStyle(fontSize: 14),
                           ),
                           value: 1,
                           groupValue: _selectedDiscoveredDuringEncounter,
@@ -143,9 +150,9 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           },
                         ),
                         RadioListTile<int>(
-                          title: const Text(
-                            "No",
-                            style: TextStyle(fontSize: 14),
+                          title: Text(
+                            "allergyFilter.no".tr(context),
+                            style: const TextStyle(fontSize: 14),
                           ),
                           value: 0,
                           groupValue: _selectedDiscoveredDuringEncounter,
@@ -159,10 +166,9 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       ],
                     ),
                     const Divider(),
-
-                    const Text(
-                      "Allergy Type",
-                      style: TextStyle(
+                    Text(
+                      "allergyFilter.allergyType".tr(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -182,19 +188,23 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   .toList() ??
                               [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodesLoading) {
                           return Center(child: LoadingButton());
                         }
                         if (allergyTypes.isEmpty) {
-                          return const Text(
-                            "No allergy types available",
-                            style: TextStyle(color: Colors.grey),
+                          return Text(
+                            "allergyFilter.noAllergyTypesAvailable".tr(
+                              context,
+                            ), // Translated
+                            style: const TextStyle(color: Colors.grey),
                           );
                         }
                         return Column(
                           children: [
                             RadioListTile<String?>(
-                              title: const Text("All Types"),
+                              title: Text(
+                                "allergyFilter.allTypes".tr(context),
+                              ), // Translated
                               value: null,
                               groupValue: _selectedTypeId,
                               activeColor: Theme.of(context).primaryColor,
@@ -207,7 +217,8 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                             ...allergyTypes.map((type) {
                               return RadioListTile<String>(
                                 title: Text(
-                                  type.display ?? 'Unknown',
+                                  type.display ??
+                                      'allergyFilter.unknown'.tr(context),
                                   style: const TextStyle(fontSize: 14),
                                 ),
                                 value: type.id,
@@ -225,10 +236,9 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       },
                     ),
                     const Divider(),
-
-                    const Text(
-                      "Category",
-                      style: TextStyle(
+                    Text(
+                      "allergyFilter.category".tr(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -252,15 +262,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           return Center(child: LoadingButton());
                         }
                         if (categories.isEmpty) {
-                          return const Text(
-                            "No categories available",
+                          return Text(
+                            "allergyFilter.noCategoriesAvailable".tr(context),
                             style: TextStyle(color: Colors.grey),
                           );
                         }
                         return Column(
                           children: [
                             RadioListTile<int?>(
-                              title: const Text("All Categories"),
+                              title: Text(
+                                "allergyFilter.allCategories".tr(context),
+                              ),
                               value: null,
                               groupValue: _selectedCategoryId,
                               activeColor: Theme.of(context).primaryColor,
@@ -273,7 +285,8 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                             ...categories.map((category) {
                               return RadioListTile<int>(
                                 title: Text(
-                                  category.display ?? 'Unknown',
+                                  category.display ??
+                                      'allergyFilter.unknown'.tr(context),
                                   style: const TextStyle(fontSize: 14),
                                 ),
                                 value: int.parse(category.id),
@@ -291,10 +304,9 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       },
                     ),
                     const Divider(),
-
-                    const Text(
-                      "Clinical Status",
-                      style: TextStyle(
+                    Text(
+                      "allergyFilter.clinicalStatus".tr(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -318,15 +330,19 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           return Center(child: LoadingButton());
                         }
                         if (clinicalStatuses.isEmpty) {
-                          return const Text(
-                            "No clinical statuses available",
-                            style: TextStyle(color: Colors.grey),
+                          return Text(
+                            "allergyFilter.noClinicalStatusesAvailable".tr(
+                              context,
+                            ), // Translated
+                            style: const TextStyle(color: Colors.grey),
                           );
                         }
                         return Column(
                           children: [
                             RadioListTile<int?>(
-                              title: const Text("All Statuses"),
+                              title: Text(
+                                "allergyFilter.allStatuses".tr(context),
+                              ),
                               value: null,
                               groupValue: _selectedClinicalStatusId,
                               activeColor: Theme.of(context).primaryColor,
@@ -339,7 +355,8 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                             ...clinicalStatuses.map((status) {
                               return RadioListTile<int>(
                                 title: Text(
-                                  status.display ?? 'Unknown',
+                                  status.display ??
+                                      'allergyFilter.unknown'.tr(context),
                                   style: const TextStyle(fontSize: 14),
                                 ),
                                 value: int.parse(status.id),
@@ -357,10 +374,9 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       },
                     ),
                     const Divider(),
-
-                    const Text(
-                      "Criticality",
-                      style: TextStyle(
+                    Text(
+                      "allergyFilter.criticality".tr(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -384,15 +400,19 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           return Center(child: LoadingButton());
                         }
                         if (criticalities.isEmpty) {
-                          return const Text(
-                            "No criticalities available",
-                            style: TextStyle(color: Colors.grey),
+                          return Text(
+                            "allergyFilter.noCriticalitiesAvailable".tr(
+                              context,
+                            ),
+                            style: const TextStyle(color: Colors.grey),
                           );
                         }
                         return Column(
                           children: [
                             RadioListTile<int?>(
-                              title: const Text("All Criticalities"),
+                              title: Text(
+                                "allergyFilter.allCriticalities".tr(context),
+                              ),
                               value: null,
                               groupValue: _selectedCriticalityId,
                               activeColor: Theme.of(context).primaryColor,
@@ -405,7 +425,8 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                             ...criticalities.map((criticality) {
                               return RadioListTile<int>(
                                 title: Text(
-                                  criticality.display ?? 'Unknown',
+                                  criticality.display ??
+                                      'allergyFilter.unknown'.tr(context),
                                   style: const TextStyle(fontSize: 14),
                                 ),
                                 value: int.parse(criticality.id),
@@ -422,12 +443,11 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                         );
                       },
                     ),
-
                     const SizedBox(height: 16),
                     // Sort Order
-                    const Text(
-                      "Sort Order",
-                      style: TextStyle(
+                    Text(
+                      "allergyFilter.sortOrder".tr(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -444,15 +464,18 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           vertical: 8.0,
                         ),
                       ),
-                      items: const [
-                        DropdownMenuItem(value: null, child: Text("Default")),
+                      items: [
+                        DropdownMenuItem(
+                          value: null,
+                          child: Text("allergyFilter.default".tr(context)),
+                        ),
                         DropdownMenuItem(
                           value: 'asc',
-                          child: Text("Oldest First"),
+                          child: Text("allergyFilter.oldestFirst".tr(context)),
                         ),
                         DropdownMenuItem(
                           value: 'desc',
-                          child: Text("Newest First"),
+                          child: Text("allergyFilter.newestFirst".tr(context)),
                         ),
                       ],
                       onChanged:
@@ -483,16 +506,16 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       _filter = AllergyFilterModel();
                     });
                   },
-                  child: const Text(
-                    "Clear Filters",
-                    style: TextStyle(color: Colors.red),
+                  child: Text(
+                    "allergyFilter.clearFilters".tr(context),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
                 Row(
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancel"),
+                      child: Text("allergyFilter.cancel".tr(context)),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -521,7 +544,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      child: const Text("Apply"),
+                      child: Text("allergyFilter.apply".tr(context)),
                     ),
                   ],
                 ),

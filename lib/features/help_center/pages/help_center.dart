@@ -9,7 +9,7 @@ class HelpCenterPage extends StatefulWidget {
 }
 
 class _HelpCenterPageState extends State<HelpCenterPage> {
-  int _selectedTab = 0; // 0 for FAQ, 1 for Contact Us
+  int _selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +32,10 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                 child: TextButton(
                   onPressed: () => setState(() => _selectedTab = 0),
                   style: TextButton.styleFrom(
-                    foregroundColor: _selectedTab == 0
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey,
+                    foregroundColor:
+                        _selectedTab == 0
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey,
                   ),
                   child: Text("helpCenter.tabs.faq".tr(context)),
                 ),
@@ -43,9 +44,10 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                 child: TextButton(
                   onPressed: () => setState(() => _selectedTab = 1),
                   style: TextButton.styleFrom(
-                    foregroundColor: _selectedTab == 1
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey,
+                    foregroundColor:
+                        _selectedTab == 1
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey,
                   ),
                   child: Text("helpCenter.tabs.contactUs".tr(context)),
                 ),
@@ -82,18 +84,14 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
               title: "helpCenter.faqItems.whatIsMedical".tr(context),
               content: "helpCenter.faqItems.content".tr(context),
             ),
-            _buildFaqItem(
-              title: "helpCenter.faqItems.howToUse".tr(context),
-            ),
+            _buildFaqItem(title: "helpCenter.faqItems.howToUse".tr(context)),
             _buildFaqItem(
               title: "helpCenter.faqItems.cancelAppointment".tr(context),
             ),
             _buildFaqItem(
               title: "helpCenter.faqItems.saveRecording".tr(context),
             ),
-            _buildFaqItem(
-              title: "helpCenter.faqItems.exitApp".tr(context),
-            ),
+            _buildFaqItem(title: "helpCenter.faqItems.exitApp".tr(context)),
           ],
         ),
       ),
@@ -105,17 +103,12 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
       title: Text(title),
       children: <Widget>[
         if (content != null)
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(content),
-          ),
+          Padding(padding: const EdgeInsets.all(16.0), child: Text(content)),
       ],
     );
   }
 
   Widget _buildContactUsContent() {
-    return Center(
-      child: Text("helpCenter.contactUs.title".tr(context)),
-    );
+    return Center(child: Text("helpCenter.contactUs.title".tr(context)));
   }
 }

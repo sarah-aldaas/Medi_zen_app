@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Make sure this is imported
 
 class ErrorState extends StatelessWidget {
-  final String message;
+  final String
+  message; // This remains a direct string as it's dynamic error content
   final VoidCallback onRetry;
 
-  const ErrorState({
-    super.key,
-    required this.message,
-    required this.onRetry,
-  });
+  const ErrorState({super.key, required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +19,7 @@ class ErrorState extends StatelessWidget {
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              'Something went wrong',
+              'errorState.somethingWentWrong'.tr(context), // Localized
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.red,
                 fontWeight: FontWeight.bold,
@@ -29,7 +27,7 @@ class ErrorState extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              message,
+              message, // This shows the dynamic error message
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
@@ -40,7 +38,7 @@ class ErrorState extends StatelessWidget {
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Try Again'),
+              child: Text('errorState.tryAgain'.tr(context)), // Localized
             ),
           ],
         ),

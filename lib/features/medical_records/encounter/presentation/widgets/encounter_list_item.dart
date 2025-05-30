@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
 import '../../data/models/encounter_model.dart';
@@ -19,14 +20,16 @@ class EncounterListItem extends StatelessWidget {
     final Color dateBackgroundColor = Colors.blueGrey.shade50;
     final Color dateTextColor = Colors.blueGrey.shade700;
 
-    final String type = encounter.type?.display ?? 'Routine check-up';
+    final String type =
+        encounter.type?.display ?? 'encountersPge.encounter'.tr(context);
     final String scheduledDate =
         encounter.actualStartDate != null
             ? DateFormat(
               'MMM d, y - h:mm a',
             ).format(DateTime.parse(encounter.actualStartDate!))
-            : 'Date not available';
-    final String status = encounter.status?.display ?? 'Unknown';
+            : 'encountersPge.dateNotAvailable'.tr(context);
+    final String status =
+        encounter.status?.display ?? 'encountersPge.unknownStatus'.tr(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -47,7 +50,8 @@ class EncounterListItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        encounter.reason ?? 'Encounter',
+                        encounter.reason ??
+                            'encountersPge.encounter'.tr(context), // Translated
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -92,12 +96,13 @@ class EncounterListItem extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(width: 16),
-
                 Align(
                   alignment: Alignment.centerRight,
-                  child: _buildStatusIcon(encounter.status),
+                  child: _buildStatusIcon(
+                    context,
+                    encounter.status,
+                  ), // Pass context
                 ),
               ],
             ),
@@ -107,7 +112,8 @@ class EncounterListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusIcon(CodeModel? status) {
+  Widget _buildStatusIcon(BuildContext context, CodeModel? status) {
+    // Added context parameter
     IconData iconData;
     Color iconColor;
     String tooltipText;
@@ -116,28 +122,27 @@ class EncounterListItem extends StatelessWidget {
       case 'planned':
         iconData = Icons.event_note;
         iconColor = Colors.blue.shade600;
-        tooltipText = 'Planned';
-
+        tooltipText = 'encountersPge.planned'.tr(context); // Translated
         break;
       case 'in-progress':
         iconData = Icons.hourglass_full;
         iconColor = Colors.orange.shade600;
-        tooltipText = 'In Progress';
+        tooltipText = 'encountersPge.inProgress'.tr(context); // Translated
         break;
       case 'completed':
         iconData = Icons.check_circle;
         iconColor = Colors.green.shade600;
-        tooltipText = 'Completed';
+        tooltipText = 'encountersPge.completed'.tr(context); // Translated
         break;
       case 'cancelled':
         iconData = Icons.cancel;
         iconColor = Colors.red.shade600;
-        tooltipText = 'Cancelled';
+        tooltipText = 'encountersPge.cancelled'.tr(context); // Translated
         break;
       default:
         iconData = Icons.help_outline;
         iconColor = Colors.grey.shade500;
-        tooltipText = 'Unknown Status';
+        tooltipText = 'encountersPge.unknownStatus'.tr(context); // Translated
     }
 
     return Tooltip(

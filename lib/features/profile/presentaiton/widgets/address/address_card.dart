@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Make sure this is imported
 import 'package:medizen_app/features/profile/data/models/address_model.dart';
 
 import '../../../../../base/theme/app_color.dart';
@@ -29,7 +30,8 @@ class AddressCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  address.type?.display ?? 'Address',
+                  address.type?.display ??
+                      'addressCard.defaultAddressType'.tr(context), // Localized
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -38,7 +40,8 @@ class AddressCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              address.use?.display ?? 'Use',
+              address.use?.display ??
+                  'addressCard.defaultAddressUse'.tr(context), // Localized
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 20),
@@ -65,8 +68,8 @@ class AddressCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 18),
                 child: Text(
-                  '${address.startDate != null ? 'From: ${address.startDate}' : ''}'
-                  '${address.endDate != null ? ' to: ${address.endDate}' : ' to continue'}',
+                  '${address.startDate != null ? 'addressCard.from'.tr(context) + ': ${address.startDate}' : ''}' // Localized
+                  '${address.endDate != null ? ' ' + 'addressCard.to'.tr(context) + ': ${address.endDate}' : ' ' + 'addressCard.toContinue'.tr(context)}', // Localized
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: Colors.grey),

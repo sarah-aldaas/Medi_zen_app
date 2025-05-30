@@ -1,4 +1,3 @@
-
 import '../../../../base/data/models/code_type_model.dart';
 
 class QualificationModel {
@@ -9,7 +8,14 @@ class QualificationModel {
   final String? pdf;
   final CodeModel type;
 
-  QualificationModel({required this.id, required this.issuer, required this.startDate, this.endDate, this.pdf, required this.type});
+  QualificationModel({
+    required this.id,
+    required this.issuer,
+    required this.startDate,
+    this.endDate,
+    this.pdf,
+    required this.type,
+  });
 
   factory QualificationModel.fromJson(Map<String, dynamic> json) {
     return QualificationModel(
@@ -23,7 +29,14 @@ class QualificationModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'issuer': issuer, 'start_date': startDate, 'end_date': endDate, 'pdf': pdf, 'type': type.toJson()};
+    return {
+      'id': id,
+      'issuer': issuer,
+      'start_date': startDate,
+      'end_date': endDate,
+      'pdf': pdf,
+      'type': type.toJson(),
+    };
   }
 
   @override

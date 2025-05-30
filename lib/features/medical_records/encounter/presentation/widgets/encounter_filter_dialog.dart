@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../../../../base/blocs/code_types_bloc/code_types_cubit.dart';
@@ -64,9 +65,12 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Filter Encounters",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  "encountersPge.filterEncounters".tr(context), // Translated
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close, size: 20),
@@ -83,7 +87,9 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        labelText: 'Search',
+                        labelText: 'encountersPge.search'.tr(
+                          context,
+                        ), // Translated
                         prefixIcon: const Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -97,9 +103,9 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                     ),
                     const SizedBox(height: 16),
 
-                    const Text(
-                      "Encounter Type",
-                      style: TextStyle(
+                    Text(
+                      "encountersPge.encounterType".tr(context), // Translated
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -120,7 +126,9 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                           return Column(
                             children: [
                               RadioListTile<String?>(
-                                title: const Text("All Types"),
+                                title: Text(
+                                  "encountersPge.allTypes".tr(context),
+                                ), // Translated
                                 value: null,
                                 groupValue: _selectedTypeId,
                                 activeColor: Theme.of(context).primaryColor,
@@ -133,7 +141,10 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                               ...types.map(
                                 (type) => RadioListTile<String>(
                                   title: Text(
-                                    type.display ?? 'Unknown',
+                                    type.display ??
+                                        'encountersPge.unknown'.tr(
+                                          context,
+                                        ), // Translated
                                     style: const TextStyle(fontSize: 14),
                                   ),
                                   value: type.id,
@@ -154,9 +165,9 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                     ),
                     const Divider(),
 
-                    const Text(
-                      "Status",
-                      style: TextStyle(
+                    Text(
+                      "encountersPge.status".tr(context), // Translated
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -177,7 +188,9 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                           return Column(
                             children: [
                               RadioListTile<int?>(
-                                title: const Text("All Statuses"),
+                                title: Text(
+                                  "encountersPge.allStatuses".tr(context),
+                                ), // Translated
                                 value: null,
                                 groupValue: _selectedStatusId,
                                 activeColor: Theme.of(context).primaryColor,
@@ -190,7 +203,10 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                               ...statuses.map(
                                 (status) => RadioListTile<int>(
                                   title: Text(
-                                    status.display ?? 'Unknown',
+                                    status.display ??
+                                        'encountersPge.unknown'.tr(
+                                          context,
+                                        ), // Translated
                                     style: const TextStyle(fontSize: 14),
                                   ),
                                   value: int.parse(status.id),
@@ -211,9 +227,9 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                     ),
                     const Divider(),
 
-                    const Text(
-                      "Date Range",
-                      style: TextStyle(
+                    Text(
+                      "encountersPge.dateRange".tr(context), // Translated
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -223,8 +239,10 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                       contentPadding: EdgeInsets.zero,
                       title: Text(
                         _selectedMinStartDate != null
-                            ? 'From: ${DateFormat('MMM d, y').format(_selectedMinStartDate!)}'
-                            : "Select start date",
+                            ? '${"encountersPge.from".tr(context)}: ${DateFormat('MMM d, y').format(_selectedMinStartDate!)}' // Translated
+                            : "encountersPge.selectStartDate".tr(
+                              context,
+                            ), // Translated
                         style: TextStyle(
                           color:
                               _selectedMinStartDate != null
@@ -270,8 +288,10 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                       contentPadding: EdgeInsets.zero,
                       title: Text(
                         _selectedMaxStartDate != null
-                            ? 'To: ${DateFormat('MMM d, y').format(_selectedMaxStartDate!)}'
-                            : "Select end date",
+                            ? '${"encountersPge.to".tr(context)}: ${DateFormat('MMM d, y').format(_selectedMaxStartDate!)}' // Translated
+                            : "encountersPge.selectEndDate".tr(
+                              context,
+                            ), // Translated
                         style: TextStyle(
                           color:
                               _selectedMaxStartDate != null
@@ -330,16 +350,18 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                       _filter = EncounterFilterModel();
                     });
                   },
-                  child: const Text(
-                    "Clear Filters",
-                    style: TextStyle(color: Colors.red),
+                  child: Text(
+                    "encountersPge.clearFilters".tr(context), // Translated
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
                 Row(
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancel"),
+                      child: Text(
+                        "encountersPge.cancel".tr(context),
+                      ), // Translated
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -364,7 +386,9 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      child: const Text("Apply"),
+                      child: Text(
+                        "encountersPge.apply".tr(context),
+                      ), // Translated
                     ),
                   ],
                 ),

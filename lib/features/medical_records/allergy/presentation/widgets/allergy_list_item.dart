@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 import '../../../../../base/theme/app_color.dart';
 import '../../data/models/allergy_model.dart';
@@ -14,7 +15,7 @@ class AllergyListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  Widget _buildStatusIcon(String? clinicalStatus) {
+  Widget _buildStatusIcon(BuildContext context, String? clinicalStatus) {
     IconData iconData;
     Color iconColor;
     String tooltipText;
@@ -22,15 +23,15 @@ class AllergyListItem extends StatelessWidget {
     if (clinicalStatus?.toLowerCase() == 'active') {
       iconData = Icons.check_circle;
       iconColor = Colors.green.shade500;
-      tooltipText = 'Active Allergy';
+      tooltipText = 'allergiesPage.activeAllergy'.tr(context);
     } else if (clinicalStatus?.toLowerCase() == 'inactive') {
       iconData = Icons.circle_outlined;
       iconColor = Colors.grey.shade500;
-      tooltipText = 'Inactive Allergy';
+      tooltipText = 'allergiesPage.inactiveAllergy'.tr(context);
     } else {
       iconData = Icons.help_outline;
       iconColor = Colors.blueGrey.shade300;
-      tooltipText = 'Unknown Status';
+      tooltipText = 'allergiesPage.unknownStatus'.tr(context);
     }
 
     return Tooltip(
@@ -46,12 +47,14 @@ class AllergyListItem extends StatelessWidget {
     );
   }
 
-  String _formatDate(String? dateStr) {
-    if (dateStr == null || dateStr.isEmpty) return 'N/A';
+  String _formatDate(BuildContext context, String? dateStr) {
+    // Added context
+    if (dateStr == null || dateStr.isEmpty)
+      return 'allergiesPage.notApplicable'.tr(context);
     try {
       return DateFormat('MMM d, y').format(DateTime.parse(dateStr));
     } catch (e) {
-      return 'Invalid Date';
+      return 'allergiesPage.invalidDate'.tr(context);
     }
   }
 
@@ -63,7 +66,6 @@ class AllergyListItem extends StatelessWidget {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         clipBehavior: Clip.antiAlias,
-
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(15),
@@ -77,7 +79,8 @@ class AllergyListItem extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        allergy.name ?? 'Unknown Allergy',
+                        allergy.name ??
+                            'allergiesPage.unknownAllergy'.tr(context),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -87,12 +90,10 @@ class AllergyListItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-
-                    _buildStatusIcon(allergy.clinicalStatus?.display),
+                    _buildStatusIcon(context, allergy.clinicalStatus?.display),
                   ],
                 ),
                 const SizedBox(height: 12),
-
                 Row(
                   children: [
                     Icon(
@@ -102,7 +103,8 @@ class AllergyListItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      allergy.type?.display ?? 'Allergy',
+                      allergy.type?.display ??
+                          'allergiesPage.allergy'.tr(context),
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[700],
@@ -112,7 +114,6 @@ class AllergyListItem extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-
                 Row(
                   children: [
                     Icon(
@@ -122,13 +123,12 @@ class AllergyListItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Last: ${_formatDate(allergy.lastOccurrence)}',
+                      '${'allergiesPage.last'.tr(context)}: ${_formatDate(context, allergy.lastOccurrence)}',
                       style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
-
                 Row(
                   children: [
                     Icon(
@@ -138,7 +138,7 @@ class AllergyListItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Onset: ${allergy.onSetAge ?? 'N/A'} yrs',
+                      '${'allergiesPage.onset'.tr(context)}: ${allergy.onSetAge ?? 'allergiesPage.notApplicable'.tr(context)} ${'allergiesPage.yearsAbbreviation'.tr(context)}',
                       style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                     ),
                   ],

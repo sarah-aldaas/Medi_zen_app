@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 class UpdateProfileRequestModel extends Equatable {
@@ -35,7 +36,6 @@ class UpdateProfileRequestModel extends Equatable {
       'gender_id': genderId,
       'marital_status_id': maritalStatusId,
     };
-    // Only include avatar if it has been changed (non-null in this context means changed)
     if (image == null) {
       if (avatar != null) {
         data['avatar'] = avatar!.path;

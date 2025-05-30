@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../data/models/encounter_filter_model.dart';
-import '../../data/models/encounter_model.dart';import '../cubit/encounter_cubit/encounter_cubit.dart';
+import '../../data/models/encounter_model.dart';
+import '../cubit/encounter_cubit/encounter_cubit.dart';
 import '../widgets/encounter_list_item.dart';
 import 'encounter_details_page.dart';
 
@@ -72,7 +74,9 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
         if (state is EncounterError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error loading encounters: ${state.error}'),
+              content: Text(
+                'encountersPge.errorLoading'.tr(context),
+              ), // Translated
               backgroundColor: Colors.red,
             ),
           );
@@ -98,18 +102,18 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
               children: [
                 Icon(Icons.event_note, size: 70, color: Colors.grey[400]),
                 const SizedBox(height: 20),
-                const Text(
-                  'No encounters found',
-                  style: TextStyle(
+                Text(
+                  'encountersPge.noFound'.tr(context), // Translated
+                  style: const TextStyle(
                     fontSize: 20,
                     color: Colors.grey,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Check your filters or try again later.',
-                  style: TextStyle(fontSize: 15, color: Colors.grey),
+                Text(
+                  'encountersPge.checkFilters'.tr(context), // Translated
+                  style: const TextStyle(fontSize: 15, color: Colors.grey),
                 ),
               ],
             ),

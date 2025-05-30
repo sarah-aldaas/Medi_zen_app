@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
@@ -33,9 +34,9 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Encounter Details',
-          style: TextStyle(
+        title: Text(
+          'encountersPge.encounterDetails'.tr(context), // Translated
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 22,
             color: AppColors.primaryColor,
@@ -50,7 +51,9 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
           if (state is EncounterError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Error: ${state.error}'),
+                content: Text(
+                  '${'encountersPge.Error'.tr(context)}: ${state.error}',
+                ), // Translated
                 backgroundColor: Colors.red,
               ),
             );
@@ -72,9 +75,9 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                     color: Colors.red.shade300,
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Failed to load encounter details',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  Text(
+                    'encountersPge.failedToLoad'.tr(context), // Translated
+                    style: const TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
@@ -99,7 +102,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
             children: [
               Expanded(
                 child: Text(
-                  encounter.reason ?? 'General Encounter',
+                  encounter.reason ??
+                      'encountersPge.generalEncounter'.tr(
+                        context,
+                      ), // Translated
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -109,33 +115,31 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                 ),
               ),
               const SizedBox(width: 16),
-
               _buildStatusChip(encounter.status),
             ],
           ),
           const SizedBox(height: 30),
-
           _buildInfoCard(
             context,
-            title: 'Basic Information',
+            title: 'encountersPge.basicInformation'.tr(context), // Translated
             icon: Icons.info_outline,
             children: [
               _buildDetailRow(
                 context,
-                label: 'Type',
+                label: 'encountersPge.type'.tr(context), // Translated
                 value: encounter.type?.display,
                 icon: Icons.category_outlined,
               ),
               _buildDetailRow(
                 context,
-                label: 'Status',
+                label: 'encountersPge.status'.tr(context), // Translated
                 value: encounter.status?.display,
                 icon: Icons.check_circle_outline,
               ),
               if (encounter.actualStartDate != null)
                 _buildDetailRow(
                   context,
-                  label: 'Start Date',
+                  label: 'encountersPge.startDate'.tr(context), // Translated
                   value: DateFormat(
                     'MMM d, y - h:mm a',
                   ).format(DateTime.parse(encounter.actualStartDate!)),
@@ -144,7 +148,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
               if (encounter.actualEndDate != null)
                 _buildDetailRow(
                   context,
-                  label: 'End Date',
+                  label: 'encountersPge.endDate'.tr(context), // Translated
                   value: DateFormat(
                     'MMM d, y - h:mm a',
                   ).format(DateTime.parse(encounter.actualEndDate!)),
@@ -153,18 +157,19 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
               if (encounter.specialArrangement?.isNotEmpty ?? false)
                 _buildDetailRow(
                   context,
-                  label: 'Special Notes',
+                  label: 'encountersPge.specialNotes'.tr(context), // Translated
                   value: encounter.specialArrangement,
                   icon: Icons.notes_outlined,
                 ),
             ],
           ),
           const SizedBox(height: 24),
-
           if (encounter.appointment != null) ...[
             _buildInfoCard(
               context,
-              title: 'Appointment Details',
+              title: 'encountersPge.appointmentDetails'.tr(
+                context,
+              ), // Translated
               icon: Icons.schedule_outlined,
               actionWidget: IconButton(
                 onPressed: () {
@@ -200,19 +205,21 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                     size: 15,
                   ),
                 ),
-                tooltip: 'Go to Appointment Details',
+                tooltip: 'encountersPge.GoAppointmentDetails'.tr(
+                  context,
+                ), // Translated
               ),
               children: [
                 _buildDetailRow(
                   context,
-                  label: 'Reason',
+                  label: 'encountersPge.reason'.tr(context), // Translated
                   value: encounter.appointment?.reason,
                   icon: Icons.description_outlined,
                 ),
                 if (encounter.appointment?.startDate != null)
                   _buildDetailRow(
                     context,
-                    label: 'Scheduled',
+                    label: 'encountersPge.scheduled'.tr(context), // Translated
                     value: DateFormat(
                       'MMM d, y - h:mm a',
                     ).format(DateTime.parse(encounter.appointment!.startDate!)),
@@ -221,7 +228,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                 if (encounter.appointment?.doctor != null)
                   _buildDetailRow(
                     context,
-                    label: 'Doctor',
+                    label: 'encountersPge.doctor'.tr(context), // Translated
                     value:
                         '${encounter.appointment?.doctor?.prefix ?? ''} ${encounter.appointment?.doctor?.fName ?? ''} ${encounter.appointment?.doctor?.lName ?? ''}'
                             .trim(),
@@ -231,11 +238,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
             ),
             const SizedBox(height: 24),
           ],
-
           if (encounter.healthCareServices?.isNotEmpty ?? false)
             _buildInfoCard(
               context,
-              title: 'Services Provided',
+              title: 'encountersPge.servicesProvided'.tr(context), // Translated
               icon: Icons.medical_services_outlined,
               children: [
                 ListView.builder(
@@ -328,7 +334,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              value ?? 'N/A',
+              value ?? 'N/A', // 'N/A' is not in your JSON, consider adding it
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 15,
@@ -344,6 +350,26 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   Widget _buildStatusChip(CodeModel? status) {
     Color chipColor;
     Color textColor = Colors.white;
+
+    // Use a helper function to get the translated status display
+    String getTranslatedStatus(String? statusCode) {
+      switch (statusCode) {
+        case 'planned':
+          return 'encountersPge.planned'.tr(context);
+        case 'in-progress':
+          return 'encountersPge.inProgress'.tr(context);
+        case 'completed':
+          return 'encountersPge.completed'.tr(context);
+        case 'cancelled':
+          return 'encountersPge.cancelled'.tr(context);
+        case 'unknownStatus': // Using this as the default for unknown codes
+          return 'encountersPge.unknownStatus'.tr(context);
+        default:
+          return 'encountersPge.unknown'.tr(
+            context,
+          ); // Fallback for any other unknown
+      }
+    }
 
     switch (status?.code) {
       case 'planned':
@@ -377,7 +403,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
         ],
       ),
       child: Text(
-        status?.display ?? 'Unknown',
+        getTranslatedStatus(status?.code), // Use the translated status
         style: TextStyle(
           color: textColor,
           fontSize: 14,

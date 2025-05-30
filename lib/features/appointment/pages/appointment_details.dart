@@ -38,7 +38,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          "Appointment details",
+          "appointmentDetails.title".tr(context),
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 22,
@@ -181,7 +181,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Appointment information",
+          "appointmentDetails.appointment_information".tr(context),
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -241,7 +241,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
             foregroundColor: Colors.white,
           ),
           onPressed: () => _editAppointment(context, appointment),
-          child: Text("Update appointment"),
+          child: Text("appointmentDetails.reschedule".tr(context)),
         ),
       ],
     );
@@ -258,7 +258,6 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     return age;
   }
 
-  // Update the _cancelAppointment method:
   Future<void> _cancelAppointment(
     BuildContext context,
     AppointmentModel appointment,
@@ -276,14 +275,12 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
         cancellationReason: reason,
       );
       if (mounted) {
-        context.pop(true); // Return true to indicate success
+        context.pop(true);
       }
     }
   }
 
-  void _rescheduleAppointment(BuildContext context) {
-    // Navigate to rescheduling page
-  }
+  void _rescheduleAppointment(BuildContext context) {}
 
   Future<void> _confirmDelete(BuildContext context) async {
     final confirmed = await showDialog<bool>(
@@ -305,9 +302,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           ),
     );
 
-    if (confirmed == true) {
-      // Implement delete functionality
-    }
+    if (confirmed == true) {}
   }
 
   void _editAppointment(BuildContext context, AppointmentModel appointment) {
@@ -324,7 +319,6 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       ),
     ).then((success) {
       if (success == true) {
-        // Refresh the details if update was successful
         context.read<AppointmentCubit>().getDetailsAppointment(
           id: widget.appointmentId,
         );

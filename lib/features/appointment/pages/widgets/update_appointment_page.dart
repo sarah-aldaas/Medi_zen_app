@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_update_model.dart';
 
@@ -83,7 +84,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          "Update appointment",
+          'appointmentDetails.reschedule'.tr(context),
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 20,
@@ -104,7 +105,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
                 TextFormField(
                   controller: _reasonController,
                   decoration: InputDecoration(
-                    labelText: "Reason",
+                    labelText: "appointmentDetails.reason".tr(context),
                     border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
@@ -114,11 +115,11 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 22),
                 TextFormField(
                   controller: _descriptionController,
                   decoration: InputDecoration(
-                    labelText: "Description",
+                    labelText: "appointmentDetails.description".tr(context),
                     border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
@@ -128,22 +129,22 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 22),
                 TextFormField(
                   controller: _noteController,
                   decoration: InputDecoration(
-                    labelText: "Note",
+                    labelText: "appointmentDetails.note".tr(context),
                     border: const OutlineInputBorder(),
                     hintText: "Note optional",
                   ),
                 ),
-                const SizedBox(height: 35),
+                const SizedBox(height: 45),
                 if (_isLoading)
                   Center(child: LoadingButton())
                 else
                   ElevatedButton(
                     onPressed: _submitForm,
-                    child: Text("Save"),
+                    child: Text("appointmentDetails.save".tr(context)),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                       backgroundColor: Theme.of(context).primaryColor,

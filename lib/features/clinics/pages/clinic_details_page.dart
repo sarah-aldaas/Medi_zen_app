@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Ensure this is imported
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
@@ -75,11 +76,10 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                 ),
               );
             }
-            return const Text(
-              'Clinic Details',
-              style: TextStyle(
+            return Text(
+              'clinicDetails.clinicDetails'.tr(context),
+              style: const TextStyle(
                 color: AppColors.primaryColor,
-
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
               ),
@@ -96,7 +96,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (clinicState is ClinicError) {
-            return Center(child: Text(clinicState.error));
+            return Center(
+              child: Text('clinicDetails.errorLoadingClinic'.tr(context)),
+            );
           }
           if (clinicState is ClinicLoadedSuccess) {
             return _buildClinicDetails(clinicState.clinic);
@@ -129,7 +131,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             _buildDoctorsSection(),
             const Gap(32),
             _buildServicesSection(
-              clinic.healthCareServices as List<HealthCareServiceModel> ?? [],
+              clinic.healthCareServices as List<HealthCareServiceModel>? ?? [],
             ),
           ],
         ),
@@ -175,7 +177,8 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                   ),
                   const Gap(8),
                   Text(
-                    "Our Dedicated Doctors (${state.allDoctors.length})",
+                    'clinicDetails.ourDedicatedDoctors'.tr(context) +
+                        "(${state.allDoctors.length})",
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -186,11 +189,11 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
               ),
               const Gap(16),
               if (state.allDoctors.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
-                    "No doctors available in this clinic at the moment.",
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                    'clinicDetails.noAvailable'.tr(context),
+                    style: const TextStyle(color: Colors.grey, fontSize: 16),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -219,9 +222,11 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                                     style: TextButton.styleFrom(
                                       foregroundColor: Colors.blueAccent,
                                     ),
-                                    child: const Text(
-                                      "Load More Doctors",
-                                      style: TextStyle(fontSize: 16),
+                                    child: Text(
+                                      'clinicDetails.loadMore'.tr(
+                                        context,
+                                      ), // Localized
+                                      style: const TextStyle(fontSize: 16),
                                     ),
                                   ),
                         ),
@@ -238,7 +243,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             child: Column(
               children: [
                 Text(
-                  state.error,
+                  'clinicDetails.errorLoadingDoctors'.tr(context),
                   style: const TextStyle(color: Colors.redAccent, fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
@@ -250,9 +255,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.blueAccent,
                   ),
-                  child: const Text(
-                    "Retry Loading Doctors",
-                    style: TextStyle(fontSize: 16),
+                  child: Text(
+                    'clinicDetails.retryLoading'.tr(context),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ],
@@ -357,7 +362,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                         Text(
                           doctor.telecoms!.isNotEmpty
                               ? doctor.telecoms![0].value!
-                              : "No contact",
+                              : 'clinicDetails.noContact'.tr(context),
                           style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 14,
@@ -406,9 +411,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
               color: Theme.of(context).primaryColor,
             ),
             const Gap(8),
-            const Text(
-              "Our Services",
-              style: TextStyle(
+            Text(
+              'clinicDetails.ourServices'.tr(context),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
@@ -418,16 +423,16 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         ),
         const Gap(16),
         if (services.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.info_outline, color: Colors.grey),
-                Gap(8),
+                const Icon(Icons.info_outline, color: Colors.grey),
+                const Gap(8),
                 Text(
-                  "No services available at the moment.",
-                  style: TextStyle(color: Colors.grey),
+                  'clinicDetails.noServicesAvailable'.tr(context),
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ],
             ),
@@ -456,9 +461,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "View Our Services",
-                      style: TextStyle(
+                    Text(
+                      "clinicDetails.viewOurServices".tr(context),
+                      style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.black87,
                         fontSize: 16,
@@ -488,9 +493,9 @@ class ClinicServicesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Our Services',
-          style: TextStyle(
+        title: Text(
+          'clinicDetails.ourServices'.tr(context),
+          style: const TextStyle(
             color: Colors.black87,
             fontWeight: FontWeight.w600,
             fontSize: 20,
@@ -504,10 +509,12 @@ class ClinicServicesPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child:
             services.isEmpty
-                ? const Center(
+                ? Center(
                   child: Text(
-                    "No services available at the moment.",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    'clinicDetails.noServicesAvailable'.tr(
+                      context,
+                    ), // Localized
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 )
                 : ListView.separated(
@@ -579,7 +586,7 @@ class ClinicServicesPage extends StatelessWidget {
                             const Gap(25),
                             Text(
                               service.extraDetails ??
-                                  "No extra details provided.",
+                                  'clinicDetails.noExtra'.tr(context),
                               style: const TextStyle(color: Colors.grey),
                             ),
                             const Gap(30),
@@ -588,9 +595,9 @@ class ClinicServicesPage extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    const Text(
-                                      "Appointment: ",
-                                      style: TextStyle(
+                                    Text(
+                                      'clinicDetails.appointment'.tr(context),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black87,
                                       ),
@@ -615,7 +622,8 @@ class ClinicServicesPage extends StatelessWidget {
                                     ),
                                     const Gap(12),
                                     Text(
-                                      service.price ?? "Free",
+                                      service.price ??
+                                          'clinicDetails.free'.tr(context),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black87,
@@ -652,7 +660,9 @@ class ClinicServicesPage extends StatelessWidget {
                                   ),
                                   elevation: 3,
                                 ),
-                                child: const Text('View Details'),
+                                child: Text(
+                                  'clinicDetails.viewOurServices'.tr(context),
+                                ),
                               ),
                             ),
                           ],

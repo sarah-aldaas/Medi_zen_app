@@ -6,7 +6,7 @@ class AllergyFilterModel {
   final int? verificationStatusId;
   final int? categoryId;
   final int? criticalityId;
-  final String? sort; // 'asc' or 'desc'
+  final String? sort;
   final int? paginationCount;
 
   AllergyFilterModel({
@@ -71,7 +71,8 @@ class AllergyFilterModel {
   }) {
     return AllergyFilterModel(
       searchQuery: searchQuery ?? this.searchQuery,
-      isDiscoveredDuringEncounter: isDiscoveredDuringEncounter ?? this.isDiscoveredDuringEncounter,
+      isDiscoveredDuringEncounter:
+          isDiscoveredDuringEncounter ?? this.isDiscoveredDuringEncounter,
       typeId: typeId ?? this.typeId,
       clinicalStatusId: clinicalStatusId ?? this.clinicalStatusId,
       verificationStatusId: verificationStatusId ?? this.verificationStatusId,

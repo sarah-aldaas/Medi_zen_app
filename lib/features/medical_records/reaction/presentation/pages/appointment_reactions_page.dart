@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/models/reaction_filter_model.dart';
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/reaction_details_page.dart';
@@ -91,7 +92,7 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new,
             color: AppColors.primaryColor,
           ),
@@ -99,9 +100,9 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Allergy Reactions',
-          style: TextStyle(
+        title: Text(
+          'reactionsPage.allergyReactions'.tr(context), // Translated
+          style: const TextStyle(
             color: AppColors.primaryColor,
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -110,12 +111,11 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: AppColors.whiteColor,
-
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list, color: AppColors.primaryColor),
             onPressed: _showFilterDialog,
-            tooltip: 'Filter Reactions',
+            tooltip: 'reactionsPage.filterReactions'.tr(context), // Translated
           ),
         ],
       ),
@@ -149,16 +149,18 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
                   Icon(Icons.warning_amber, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
-                    'No reactions recorded for this allergy and appointment.',
+                    'reactionsPage.noReactionsRecorded'.tr(
+                      context,
+                    ), // Translated
                     style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: _loadReactions,
-                    child: const Text(
-                      'Tap to refresh',
-                      style: TextStyle(
+                    child: Text(
+                      'reactionsPage.tapToRefresh'.tr(context), // Translated
+                      style: const TextStyle(
                         fontSize: 16,
                         color: AppColors.primaryColor,
                       ),
@@ -182,6 +184,7 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
                 );
               } else {
                 return Padding(
+                  // Added const here
                   padding: EdgeInsets.all(16.0),
                   child: Center(child: LoadingButton()),
                 );

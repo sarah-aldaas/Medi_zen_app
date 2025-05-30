@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
 import 'package:medizen_app/features/services/pages/widgets/health_care_service_filter_dialog.dart';
@@ -77,9 +78,9 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: const Text(
-          'Health Care Services',
-          style: TextStyle(
+        title: Text(
+          'healthCareServicesPage.title'.tr(context),
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.primaryColor,
             fontSize: 22,
@@ -89,6 +90,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
           IconButton(
             icon: const Icon(Icons.filter_list, color: AppColors.primaryColor),
             onPressed: _showFilterDialog,
+            tooltip: 'healthCareServicesPage.filterTooltip'.tr(context),
           ),
         ],
       ),
@@ -123,7 +125,9 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    "There are not any services.",
+                    "healthCareServicesPage.noServicesAvailable".tr(
+                      context,
+                    ), // Translated
                     style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 24),
@@ -137,7 +141,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
             itemCount: services.length + (hasMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < services.length) {
-                return _buildServiceItem(services[index]);
+                return _buildServiceItem(context, services[index]);
               } else if (hasMore && state is! ServiceHealthCareError) {
                 return Center(child: LoadingButton());
               }
@@ -149,12 +153,14 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
     );
   }
 
-  Widget _buildServiceItem(HealthCareServiceModel service) {
+  Widget _buildServiceItem(
+    BuildContext context,
+    HealthCareServiceModel service,
+  ) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       elevation: 2.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-
       child: InkWell(
         onTap: () {
           context
@@ -163,7 +169,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                 extra: {"serviceId": service.id.toString()},
               )
               .then((value) {
-                _loadInitialServices(); // Reload services after returning
+                _loadInitialServices();
               });
         },
         borderRadius: BorderRadius.circular(12.0),
@@ -183,7 +189,6 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.asset(
                       AppAssetImages.article2,
-
                       width: 110,
                       height: 120,
                       fit: BoxFit.cover,
@@ -191,15 +196,16 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                   ),
                 ),
                 const SizedBox(width: 16.0),
-
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Date at the top right
                       Text(
-                        service.name ?? 'Unnamed Service',
+                        service.name ??
+                            'healthCareServicesPage.unnamedService'.tr(
+                              context,
+                            ), // Translated
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -210,14 +216,17 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                       const SizedBox(height: 10.0),
                       Text(
                         service.comment ??
-                            'No description available for this service. This is a placeholder text to fill space and simulate a longer description.',
+                            'healthCareServicesPage.noDescriptionAvailable'.tr(
+                              context,
+                            ),
                         style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
-
                       const SizedBox(height: 10.0),
-                      Text('Price: \$${service.price ?? 'N/A'}'),
+                      Text(
+                        '${'healthCareServicesPage.price'.tr(context)}: \$${service.price ?? 'N/A'}',
+                      ),
                       const Spacer(),
                       const SizedBox(height: 18.0),
                       if (service.category != null)

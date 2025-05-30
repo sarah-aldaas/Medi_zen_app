@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
 import '../../data/models/reaction_model.dart';
@@ -14,34 +15,39 @@ class ReactionListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  String _formatDateTime(String? dateTimeStr) {
+  String _formatDateTime(BuildContext context, String? dateTimeStr) {
     if (dateTimeStr == null || dateTimeStr.isEmpty) {
-      return 'N/A';
+      return 'reactionsPage.notApplicable'.tr(context); // Translated
     }
     try {
       final DateTime dateTime = DateTime.parse(dateTimeStr);
       return DateFormat('MMM d, y - h:mm a').format(dateTime);
     } catch (e) {
-      return 'Invalid Date';
+      return 'reactionsPage.invalidDate'.tr(context); // Translated
     }
   }
 
-  Widget _buildSeverityChip(CodeModel? severity) {
+  Widget _buildSeverityChip(BuildContext context, CodeModel? severity) {
+    // Added context
     Color chipColor;
-    String displayText = severity?.display ?? 'N/A';
+    String displayText;
+
     switch (severity?.code?.toLowerCase()) {
       case 'mild':
         chipColor = Colors.green.shade500;
+        displayText = 'reactionsPage.mild'.tr(context); // Translated
         break;
       case 'moderate':
         chipColor = Colors.orange.shade500;
+        displayText = 'reactionsPage.moderate'.tr(context); // Translated
         break;
       case 'severe':
         chipColor = Colors.red.shade500;
+        displayText = 'reactionsPage.severe'.tr(context); // Translated
         break;
       default:
         chipColor = Colors.grey.shade500;
-        displayText = 'N/A';
+        displayText = 'reactionsPage.notApplicable'.tr(context); // Translated
     }
 
     return Chip(
@@ -62,6 +68,9 @@ class ReactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color dateBackgroundColor = Colors.blueGrey.shade50;
+    final Color dateTextColor = Colors.blueGrey.shade700;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Card(
@@ -81,7 +90,10 @@ class ReactionListItem extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        reaction.manifestation ?? 'Unknown Reaction',
+                        reaction.manifestation ??
+                            'reactionsPage.unknownReaction'.tr(
+                              context,
+                            ), // Translated
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -91,14 +103,17 @@ class ReactionListItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    _buildSeverityChip(reaction.severity),
+                    _buildSeverityChip(
+                      context,
+                      reaction.severity,
+                    ), // Pass context
                   ],
                 ),
                 const SizedBox(height: 12),
 
                 _buildInfoRow(
                   icon: Icons.science_outlined,
-                  label: 'Substance',
+                  label: 'reactionsPage.substance'.tr(context), // Translated
                   value: reaction.substance,
                   context: context,
                 ),
@@ -106,7 +121,7 @@ class ReactionListItem extends StatelessWidget {
 
                 _buildInfoRow(
                   icon: Icons.route_outlined,
-                  label: 'Exposure',
+                  label: 'reactionsPage.exposure'.tr(context), // Translated
                   value: reaction.exposureRoute?.display,
                   context: context,
                 ),
@@ -114,8 +129,11 @@ class ReactionListItem extends StatelessWidget {
 
                 _buildInfoRowWithBackground(
                   icon: Icons.calendar_today_outlined,
-                  label: 'Onset',
-                  value: _formatDateTime(reaction.onSet),
+                  label: 'reactionsPage.onset'.tr(context), // Translated
+                  value: _formatDateTime(
+                    context,
+                    reaction.onSet,
+                  ), // Pass context
                   context: context,
                 ),
                 const SizedBox(height: 8),
@@ -123,7 +141,9 @@ class ReactionListItem extends StatelessWidget {
                 if (reaction.description?.isNotEmpty ?? false)
                   _buildInfoRow(
                     icon: Icons.description_outlined,
-                    label: 'Description',
+                    label: 'reactionsPage.description'.tr(
+                      context,
+                    ), // Translated
                     value: reaction.description,
                     context: context,
                   ),
@@ -133,7 +153,7 @@ class ReactionListItem extends StatelessWidget {
                 if (reaction.note?.isNotEmpty ?? false)
                   _buildInfoRow(
                     icon: Icons.note_alt_outlined,
-                    label: 'Notes',
+                    label: 'reactionsPage.notes'.tr(context), // Translated
                     value: reaction.note,
                     context: context,
                   ),
@@ -172,7 +192,7 @@ class ReactionListItem extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            value ?? 'Not specified',
+            value ?? 'reactionsPage.notSpecified'.tr(context), // Translated
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               color: Colors.black87,
@@ -216,7 +236,7 @@ class ReactionListItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              value ?? 'Not specified',
+              value ?? 'reactionsPage.notSpecified'.tr(context), // Translated
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.blueGrey,

@@ -42,7 +42,7 @@ class _ClinicsPageState extends State<ClinicsPage> {
           toolbarHeight: 80,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Text(
-            "AlL Clinics".tr(context),
+            "clinicsPage.appBarTitle".tr(context),
             style: TextStyle(
               color: Theme.of(context).primaryColor,
               fontSize: 22,

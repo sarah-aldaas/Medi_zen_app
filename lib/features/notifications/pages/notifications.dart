@@ -9,7 +9,10 @@ class NotificationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('notificationPage.notification'.tr(context), style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          'notificationPage.notification'.tr(context),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
           onPressed: () {
@@ -19,9 +22,7 @@ class NotificationPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.more_vert, color: Colors.grey),
-            onPressed: () {
-              // Handle more options
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -60,28 +61,36 @@ class NotificationPage extends StatelessWidget {
             icon: Icons.stars,
             title: 'New Services Available!',
             date: '14 Dec, 2022 | 10:52 AM',
-            message: 'You can now make multiple doctoral appointments at once. You can also cancel your appointment.',
+            message:
+                'You can now make multiple doctoral appointments at once. You can also cancel your appointment.',
           ),
           _buildNotificationItem(
             context: context,
             icon: Icons.credit_card,
             title: 'Credit Card Connected!',
             date: '12 Dec, 2022 | 15:38 PM',
-            message: 'Your credit card has been successfully linked with Medica. Enjoy our service.',
+            message:
+                'Your credit card has been successfully linked with Medica. Enjoy our service.',
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNotificationItem({required IconData icon, required String title, required String date, required String message, required BuildContext context}) {
+  Widget _buildNotificationItem({
+    required IconData icon,
+    required String title,
+    required String date,
+    required String message,
+    required BuildContext context,
+  }) {
     return Column(
       children: [
         ListTile(
           leading: Container(
             padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.2), // Light background color
+              color: Theme.of(context).primaryColor.withOpacity(0.2),
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Icon(icon, color: Theme.of(context).primaryColor),
@@ -92,18 +101,26 @@ class NotificationPage extends StatelessWidget {
               Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10.0)),
-                child: Text('notificationPage.new'.tr(context), style: TextStyle(color: Colors.white, fontSize: 12)),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Text(
+                  'notificationPage.new'.tr(context),
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
               ),
             ],
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Text(date, style: TextStyle(fontSize: 12, color: Colors.grey)), SizedBox(height: 4), Text(message)],
+            children: [
+              Text(date, style: TextStyle(fontSize: 12, color: Colors.grey)),
+              SizedBox(height: 4),
+              Text(message),
+            ],
           ),
-          onTap: () {
-            // Navigate to notification details
-          },
+          onTap: () {},
         ),
         Divider(),
       ],

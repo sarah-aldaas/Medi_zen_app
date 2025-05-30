@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/articles/pages/mixin/article_mixin.dart';
 
@@ -21,16 +20,12 @@ class MyBookmarkPage extends StatelessWidget with ArticleMixin {
           IconButton(
             icon: Icon(Icons.search, color: Colors.grey),
             tooltip: "bookmark.actions.search".tr(context),
-            onPressed: () {
-              // Handle search
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: Icon(Icons.more_vert, color: Colors.grey),
             tooltip: "bookmark.actions.more".tr(context),
-            onPressed: () {
-              // Handle more options
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -73,7 +68,9 @@ class MyBookmarkPage extends StatelessWidget with ArticleMixin {
                         SizedBox(height: 4),
                         Text(
                           article.category,
-                          style: TextStyle(color: Theme.of(context).primaryColor),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ],
                     ),

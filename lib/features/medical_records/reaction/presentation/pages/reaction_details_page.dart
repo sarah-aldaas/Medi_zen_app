@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/models/reaction_model.dart';
@@ -36,9 +37,9 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reaction Details'),
+        title: Text('reactionsPage.reactionDetails'.tr(context)), // Translated
         elevation: 0,
-        backgroundColor:AppColors.whiteColor,
+        backgroundColor: AppColors.whiteColor,
         titleTextStyle: const TextStyle(
           color: AppColors.primaryColor,
           fontSize: 20,
@@ -58,12 +59,17 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
           if (state is ReactionLoading) {
             return const Center(child: LoadingPage());
           } else if (state is ReactionDetailsSuccess) {
-            return _buildReactionDetails(state.reactionModel);
+            return _buildReactionDetails(
+              context,
+              state.reactionModel,
+            ); // Pass context
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                'Failed to load reaction details',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                'reactionsPage.failedToLoadReactionDetails'.tr(
+                  context,
+                ), // Translated
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
             );
           }
@@ -72,7 +78,8 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
     );
   }
 
-  Widget _buildReactionDetails(ReactionModel reaction) {
+  Widget _buildReactionDetails(BuildContext context, ReactionModel reaction) {
+    // Added context
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -82,18 +89,18 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
             children: [
               Expanded(
                 child: Text(
-                  reaction.manifestation ?? 'Unknown Reaction',
+                  reaction.manifestation ??
+                      'reactionsPage.unknownReaction'.tr(context), // Translated
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColorDark,
                   ),
                 ),
               ),
-              _buildSeverityChip(reaction.severity),
+              _buildSeverityChip(context, reaction.severity), // Pass context
             ],
           ),
           const SizedBox(height: 16),
-
           Card(
             elevation: 2,
             shape: RoundedRectangleBorder(
@@ -105,29 +112,43 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Basic Information',
+                    'reactionsPage.basicInformation'.tr(context), // Translated
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
                   const SizedBox(height: 12),
-                  _buildDetailRow('Substance', reaction.substance),
                   _buildDetailRow(
-                    'Exposure Route',
+                    context, // Pass context
+                    'reactionsPage.substance'.tr(context), // Translated
+                    reaction.substance,
+                  ),
+                  _buildDetailRow(
+                    context, // Pass context
+                    'reactionsPage.exposureRoute'.tr(context), // Translated
                     reaction.exposureRoute?.display,
                   ),
                   if (reaction.onSet != null)
                     _buildDetailRow(
-                      'Onset',
+                      context, // Pass context
+                      'reactionsPage.onset'.tr(context), // Translated
                       DateFormat(
                         'MMM d, y - h:mm a',
                       ).format(DateTime.parse(reaction.onSet!)),
                     ),
                   if (reaction.description?.isNotEmpty ?? false)
-                    _buildDetailRow('Description', reaction.description),
+                    _buildDetailRow(
+                      context, // Pass context
+                      'reactionsPage.description'.tr(context), // Translated
+                      reaction.description,
+                    ),
                   if (reaction.note?.isNotEmpty ?? false)
-                    _buildDetailRow('Notes', reaction.note),
+                    _buildDetailRow(
+                      context, // Pass context
+                      'reactionsPage.notes'.tr(context), // Translated
+                      reaction.note,
+                    ),
                 ],
               ),
             ),
@@ -137,7 +158,8 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
     );
   }
 
-  Widget _buildDetailRow(String label, String? value) {
+  Widget _buildDetailRow(BuildContext context, String label, String? value) {
+    // Added context
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -156,7 +178,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
           ),
           Expanded(
             child: Text(
-              value ?? 'Not specified',
+              value ?? 'reactionsPage.notSpecified'.tr(context), // Translated
               style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
             ),
           ),
@@ -165,25 +187,33 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
     );
   }
 
-  Widget _buildSeverityChip(CodeModel? severity) {
+  Widget _buildSeverityChip(BuildContext context, CodeModel? severity) {
+    // Added context
     Color chipColor;
-    switch (severity?.code) {
+    String displayText;
+
+    switch (severity?.code?.toLowerCase()) {
+      // Ensure code is lowercased for consistent matching
       case 'mild':
         chipColor = Colors.green.shade400;
+        displayText = 'reactionsPage.mild'.tr(context); // Translated
         break;
       case 'moderate':
         chipColor = Colors.orange.shade400;
+        displayText = 'reactionsPage.moderate'.tr(context); // Translated
         break;
       case 'severe':
         chipColor = Colors.red.shade400;
+        displayText = 'reactionsPage.severe'.tr(context); // Translated
         break;
       default:
         chipColor = Colors.grey.shade400;
+        displayText = 'reactionsPage.unknown'.tr(context); // Translated
     }
 
     return Chip(
       label: Text(
-        severity?.display ?? 'Unknown',
+        displayText,
         style: const TextStyle(color: Colors.white, fontSize: 12),
       ),
       backgroundColor: chipColor,
