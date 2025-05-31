@@ -78,7 +78,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.whiteColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_outlined),
           onPressed: () => Navigator.of(context).pop(),

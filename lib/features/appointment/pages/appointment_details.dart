@@ -62,7 +62,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           if (state is AppointmentDetailsSuccess) {
             return _buildAppointmentDetails(state.appointmentModel);
           } else if (state is AppointmentLoading) {
-            return const Center(child: LoadingPage());
+            return Center(child: LoadingPage());
           } else {
             return const Center(
               child: Text('Failed to load appointment details'),
