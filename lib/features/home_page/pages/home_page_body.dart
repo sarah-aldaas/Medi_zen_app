@@ -39,22 +39,10 @@ class _HomePageBodyState extends State<HomePageBody> {
             children: [
               _buildHeader(context),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SomeClinics(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: DefinitionWidget(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SomeDoctors(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SomeArticles(),
-              ),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeClinics()),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: DefinitionWidget()),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeDoctors()),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeArticles()),
             ],
           ),
         ),
@@ -65,7 +53,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   Widget _buildHeader(BuildContext context) {
     PatientModel? myPatientModel = loadingPatientModel();
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16,top: 20,left: 16,right: 8),
+      padding: const EdgeInsets.only(bottom: 16, top: 20, left: 16, right: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -94,56 +82,29 @@ class _HomePageBodyState extends State<HomePageBody> {
                   } else if (value == 'services') {
                     // context.pushNamed(AppRouter.healthCareServicesPage.name);
                     context.pushNamed(AppRouter.allAllergiesPage.name);
-                  }
-                  else if (value == 'encounter') {
+                  } else if (value == 'encounter') {
                     // context.pushNamed(AppRouter.healthCareServicesPage.name);
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => AllEncountersPage()));
-
-                  }
-                  else if (value == 'reaction') {
+                  } else if (value == 'reaction') {
                     // context.pushNamed(AppRouter.healthCareServicesPage.name);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => AppointmentReactionsPage(appointmentId: "1", allergyId: "1")));
-
                   }
                 },
-                itemBuilder: (BuildContext context) => [
-                  const PopupMenuItem<String>(
-                    value: 'favorites',
-                    child: ListTile(
-                      leading: Icon(Icons.favorite_border),
-                      title: Text('Favorites'),
-                    ),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'services',
-                    child: ListTile(
-                      leading: Icon(Icons.health_and_safety),
-                      title: Text('Health services'),
-                    ),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'encounter',
-                    child: ListTile(
-                      leading: Icon(Icons.health_and_safety),
-                      title: Text('encounter services'),
-                    ),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'reaction',
-                    child: ListTile(
-                      leading: Icon(Icons.health_and_safety),
-                      title: Text('reaction services'),
-                    ),
-                  ),
-
-                ],
+                itemBuilder:
+                    (BuildContext context) => [
+                      const PopupMenuItem<String>(value: 'favorites', child: ListTile(leading: Icon(Icons.favorite_border), title: Text('Favorites'))),
+                      const PopupMenuItem<String>(value: 'services', child: ListTile(leading: Icon(Icons.health_and_safety), title: Text('Health services'))),
+                      const PopupMenuItem<String>(
+                        value: 'encounter',
+                        child: ListTile(leading: Icon(Icons.health_and_safety), title: Text('encounter services')),
+                      ),
+                      const PopupMenuItem<String>(value: 'reaction', child: ListTile(leading: Icon(Icons.health_and_safety), title: Text('reaction services'))),
+                    ],
               ),
-
             ],
           ),
         ],
       ),
     );
   }
-
 }
