@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
@@ -16,7 +16,6 @@ class HealthCareServiceDetailsPage extends StatefulWidget {
   const HealthCareServiceDetailsPage({super.key, required this.serviceId});
 
   @override
-
   State<HealthCareServiceDetailsPage> createState() =>
       _HealthCareServiceDetailsPageState();
 }
@@ -34,7 +33,7 @@ class _HealthCareServiceDetailsPageState
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
-    final secondaryColor = Colors.tealAccent.shade400; // لون ثانوي منعش
+    final secondaryColor = Colors.tealAccent.shade400;
     final backgroundColor = Colors.white;
     final textColor = Colors.black87;
     final subTextColor = Colors.grey.shade600;
@@ -43,22 +42,20 @@ class _HealthCareServiceDetailsPageState
       appBar: AppBar(
         backgroundColor: backgroundColor,
         title: Text(
-          'Service Details',
+          'healthCareServicesPage.serviceDetails'.tr(context),
           style: TextStyle(
             color: primaryColor,
             fontWeight: FontWeight.bold,
-            fontSize: 24, // حجم خط أكبر للعنوان
+            fontSize: 24,
           ),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: subTextColor),
           onPressed: () => context.pop(),
         ),
-        elevation: 3, // ظل أكثر بروزًا
+        elevation: 3,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(18),
-          ), // حواف أكثر دائرية
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(18)),
         ),
       ),
       backgroundColor: Colors.grey.shade100,
@@ -71,6 +68,7 @@ class _HealthCareServiceDetailsPageState
         builder: (context, state) {
           if (state is ServiceHealthCareModelSuccess) {
             return _buildServiceDetails(
+              context,
               state.healthCareServiceModel,
               primaryColor,
               textColor,
@@ -107,7 +105,9 @@ class _HealthCareServiceDetailsPageState
                       ),
                       textStyle: const TextStyle(fontSize: 18),
                     ),
-                    child: const Text('Retry Loading'),
+                    child: Text(
+                      'healthCareServicesPage.retryLoading'.tr(context),
+                    ),
                   ),
                 ],
               ),
@@ -118,28 +118,30 @@ class _HealthCareServiceDetailsPageState
       ),
     );
   }
+
   Widget _buildServiceDetails(
+    BuildContext context,
     HealthCareServiceModel service,
     Color primaryColor,
     Color textColor,
     Color subTextColor,
   ) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20.0), // زيادة حجم التباعد
+      padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (service.photo != null)
             Center(
               child: Card(
-                elevation: 5, // ظل أكثر وضوحًا
+                elevation: 5,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
-                ), // حواف أكثر دائرية
+                ),
                 clipBehavior: Clip.antiAlias,
                 child: Image.network(
                   service.photo!,
-                  height: 250, // ارتفاع أكبر للصورة
+                  height: 250,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder:
@@ -155,24 +157,22 @@ class _HealthCareServiceDetailsPageState
           Text(
             service.name!,
             style: TextStyle(
-              fontSize: 26, // حجم خط أكبر لاسم الخدمة
+              fontSize: 26,
               fontWeight: FontWeight.bold,
               color: textColor,
             ),
           ),
           const Gap(10),
           Text(
-            service.comment ?? "No short description provided.",
+            service.comment ??
+                "healthCareServicesPage.noShortDescription".tr(context),
             style: TextStyle(fontSize: 17, color: subTextColor),
           ),
           const Gap(30),
-          Divider(
-            thickness: 2,
-            color: primaryColor.withOpacity(0.3),
-          ), // فاصل بلون أساسي أخف
+          Divider(thickness: 2, color: primaryColor.withOpacity(0.3)),
           const Gap(20),
           Text(
-            'Details',
+            'healthCareServicesPage.details'.tr(context),
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -181,7 +181,8 @@ class _HealthCareServiceDetailsPageState
           ),
           const Gap(10),
           Text(
-            service.extraDetails ?? 'No additional details available.',
+            service.extraDetails ??
+                'healthCareServicesPage.noAdditionalDetails'.tr(context),
             style: TextStyle(fontSize: 17, color: textColor, height: 1.5),
           ),
           const Gap(30),
@@ -192,7 +193,7 @@ class _HealthCareServiceDetailsPageState
               Icon(Icons.local_offer_outlined, color: primaryColor, size: 26),
               const Gap(10),
               Text(
-                'Price: ${service.price ?? "Free"}',
+                '${'healthCareServicesPage.price'.tr(context)}: \$${service.price ?? 'healthCareServicesPage.free'.tr(context)}', // Translated
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -206,7 +207,7 @@ class _HealthCareServiceDetailsPageState
             Divider(thickness: 2, color: primaryColor.withOpacity(0.3)),
             const Gap(20),
             Text(
-              'Category',
+              'healthCareServicesPage.category'.tr(context),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -224,7 +225,8 @@ class _HealthCareServiceDetailsPageState
             ),
             const Gap(8),
             Text(
-              service.category!.description ?? "No category description.",
+              service.category!.description ??
+                  "healthCareServicesPage.noCategoryDescription".tr(context),
               style: TextStyle(fontSize: 17, color: textColor, height: 1.5),
             ),
             const Gap(30),
@@ -233,7 +235,7 @@ class _HealthCareServiceDetailsPageState
             Divider(thickness: 2, color: primaryColor.withOpacity(0.3)),
             const Gap(20),
             Text(
-              'Clinic Information',
+              'healthCareServicesPage.clinicInformation'.tr(context),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -262,14 +264,50 @@ class _HealthCareServiceDetailsPageState
                     ),
                   ],
                 ),
-                IconButton(onPressed: (){
-                  context.pushNamed(AppRouter.clinicDetails.name,extra:{"clinicId":service.clinic!.id} );
-                }, icon: Icon(Icons.arrow_circle_right,color: Colors.blue,))
+                IconButton(
+                  onPressed: () {
+                    context.pushNamed(
+                      AppRouter.clinicDetails.name,
+                      extra: {"clinicId": service.clinic!.id},
+                    );
+                  },
+                  icon: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor.withOpacity(0.15),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Theme.of(context).primaryColor,
+                      size: 20,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.pushNamed(
+                      AppRouter.clinicDetails.name,
+                      extra: {"clinicId": service.clinic!.id},
+                    );
+                  },
+                  icon: Icon(Icons.arrow_circle_right, color: Colors.blue),
+                ),
               ],
             ),
             const Gap(8),
             Text(
-              service.clinic!.description ?? "No clinic description provided.",
+              service.clinic!.description ??
+                  "healthCareServicesPage.noClinicDescription".tr(context),
               style: TextStyle(fontSize: 17, color: textColor, height: 1.5),
             ),
             if (service.clinic!.photo != null)
@@ -304,7 +342,7 @@ class _HealthCareServiceDetailsPageState
             Divider(thickness: 2, color: primaryColor.withOpacity(0.3)),
             const Gap(20),
             Text(
-              'Eligibility Requirements',
+              'healthCareServicesPage.eligibilityRequirements'.tr(context),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -334,7 +372,10 @@ class _HealthCareServiceDetailsPageState
                     ),
                   ),
                   subtitle: Text(
-                    e.description ?? "No description provided.",
+                    e.description ??
+                        "healthCareServicesPage.noEligibilityDescription".tr(
+                          context,
+                        ),
                     style: TextStyle(color: subTextColor, fontSize: 16),
                   ),
                 ),

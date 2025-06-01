@@ -16,11 +16,10 @@ class Articles extends StatefulWidget {
 }
 
 class _ArticlesState extends State<Articles> with ArticleMixin {
-  late String _selectedFilter; // Default filter
+  late String _selectedFilter;
   @override
   void initState() {
     _selectedFilter = "articles.filters.newest".tr(context);
-    // TODO: implement initState
     super.initState();
   }
 
@@ -80,9 +79,7 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             TextButton(
-              onPressed: () {
-                // Navigate to see all trending
-              },
+              onPressed: () {},
               child: Text(
                 "articles.seeAll".tr(context),
                 style: TextStyle(color: Theme.of(context).primaryColor),
@@ -160,9 +157,7 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             TextButton(
-              onPressed: () {
-                // Navigate to see all articles
-              },
+              onPressed: () {},
               child: Text(
                 "articles.seeAll".tr(context),
                 style: TextStyle(color: Theme.of(context).primaryColor),

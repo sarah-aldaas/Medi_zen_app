@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../data/models/encounter_filter_model.dart';
+import '../../data/models/encounter_model.dart';
 import '../cubit/encounter_cubit/encounter_cubit.dart';
-import '../widgets/encounter_filter_dialog.dart';
 import '../widgets/encounter_list_item.dart';
 import 'encounter_details_page.dart';
-
 
 class AllEncountersPage extends StatefulWidget {
   final EncounterFilterModel filter;
@@ -45,15 +45,25 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
 
   void _loadInitialEncounters() {
     _isLoadingMore = false;
-    context.read<EncounterCubit>().getAllMyEncounter(filters: widget.filter.toJson());
+    context.read<EncounterCubit>().getAllMyEncounter(
+      filters: widget.filter.toJson(),
+    );
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
-      setState(() => _isLoadingMore = true);
-      context.read<EncounterCubit>().getAllMyEncounter(filters: widget.filter.toJson(), loadMore: true).then((_) {
-        setState(() => _isLoadingMore = false);
-      });
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
+      final currentState = context.read<EncounterCubit>().state;
+      if (currentState is EncountersSuccess && currentState.hasMore) {
+        setState(() => _isLoadingMore = true);
+        context
+            .read<EncounterCubit>()
+            .getAllMyEncounter(filters: widget.filter.toJson(), loadMore: true)
+            .then((_) {
+              setState(() => _isLoadingMore = false);
+            });
+      }
     }
   }
 
@@ -62,7 +72,14 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
     return BlocConsumer<EncounterCubit, EncounterState>(
       listener: (context, state) {
         if (state is EncounterError) {
-          // Handle error if needed
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'encountersPge.errorLoading'.tr(context),
+              ), // Translated
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -70,19 +87,33 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
           return const Center(child: LoadingPage());
         }
 
-        final encounters = state is EncountersSuccess ? state.paginatedResponse.paginatedData?.items : [];
-        final hasMore = state is EncountersSuccess ? state.hasMore : false;
+        final List<EncounterModel> encounters =
+            state is EncountersSuccess
+                ? state.paginatedResponse.paginatedData?.items
+                        ?.cast<EncounterModel>() ??
+                    []
+                : [];
+        final bool hasMore = state is EncountersSuccess ? state.hasMore : false;
 
-        if (encounters == null || encounters.isEmpty) {
+        if (encounters.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.calendar_today, size: 64, color: Colors.grey[400]),
-                const SizedBox(height: 16),
-                const Text(
-                  'No encounters found',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                Icon(Icons.event_note, size: 70, color: Colors.grey[400]),
+                const SizedBox(height: 20),
+                Text(
+                  'encountersPge.noFound'.tr(context), // Translated
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'encountersPge.checkFilters'.tr(context), // Translated
+                  style: const TextStyle(fontSize: 15, color: Colors.grey),
                 ),
               ],
             ),
@@ -99,7 +130,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
                 onTap: () => _navigateToEncounterDetails(encounters[index].id!),
               );
             } else {
-              return  Center(child: LoadingButton());
+              return Center(child: LoadingButton());
             }
           },
         );
@@ -113,7 +144,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
       MaterialPageRoute(
         builder: (context) => EncounterDetailsPage(encounterId: encounterId),
       ),
-    ).then((value) {
+    ).then((_) {
       _loadInitialEncounters();
     });
   }

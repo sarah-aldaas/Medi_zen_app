@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/models/reaction_filter_model.dart';
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/reaction_details_page.dart';
 
+import '../../../../../base/theme/app_color.dart';
+import '../../data/models/reaction_model.dart';
 import '../cubit/reaction_cubit/reaction_cubit.dart';
 import '../widgets/reaction_filter_dialog.dart';
 import '../widgets/reaction_list_item.dart';
@@ -12,10 +15,15 @@ class AppointmentReactionsPage extends StatefulWidget {
   final String appointmentId;
   final String allergyId;
 
-  const AppointmentReactionsPage({super.key, required this.appointmentId, required this.allergyId});
+  const AppointmentReactionsPage({
+    super.key,
+    required this.appointmentId,
+    required this.allergyId,
+  });
 
   @override
-  State<AppointmentReactionsPage> createState() => _AppointmentReactionsPageState();
+  State<AppointmentReactionsPage> createState() =>
+      _AppointmentReactionsPageState();
 }
 
 class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
@@ -27,26 +35,39 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
-    _loadInitialReactions();
+    _loadReactions();
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _loadInitialReactions() {
+  void _loadReactions() {
     _isLoadingMore = false;
-    context.read<ReactionCubit>().getAllReactionOfAppointment(appointmentId: widget.appointmentId, allergyId: widget.allergyId, filters: _filter.toJson());
+    context.read<ReactionCubit>().getAllReactionOfAppointment(
+      appointmentId: widget.appointmentId,
+      allergyId: widget.allergyId,
+      filters: _filter.toJson(),
+      loadMore: false,
+    );
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<ReactionCubit>()
-          .getAllReactionOfAppointment(appointmentId: widget.appointmentId, allergyId: widget.allergyId, filters: _filter.toJson(), loadMore: true)
+          .getAllReactionOfAppointment(
+            appointmentId: widget.appointmentId,
+            allergyId: widget.allergyId,
+            filters: _filter.toJson(),
+            loadMore: true,
+          )
           .then((_) {
             setState(() => _isLoadingMore = false);
           });
@@ -54,11 +75,15 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
   }
 
   Future<void> _showFilterDialog() async {
-    final result = await showDialog<ReactionFilterModel>(context: context, builder: (context) => ReactionFilterDialog(currentFilter: _filter));
+    final result = await showDialog<ReactionFilterModel>(
+      context: context,
+      builder: (context) => ReactionFilterDialog(currentFilter: _filter),
+    );
 
     if (result != null) {
       setState(() => _filter = result);
-      _loadInitialReactions();
+      _loadReactions();
+      _scrollController.jumpTo(0.0);
     }
   }
 
@@ -66,16 +91,43 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Allergy Reactions'),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: AppColors.primaryColor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          'reactionsPage.allergyReactions'.tr(context), // Translated
+          style: const TextStyle(
+            color: AppColors.primaryColor,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
         elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
-        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
-        actions: [IconButton(icon: const Icon(Icons.filter_list, color: Colors.white), onPressed: _showFilterDialog, tooltip: 'Filter Reactions')],
+        backgroundColor: AppColors.whiteColor,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list, color: AppColors.primaryColor),
+            onPressed: _showFilterDialog,
+            tooltip: 'reactionsPage.filterReactions'.tr(context), // Translated
+          ),
+        ],
       ),
       body: BlocConsumer<ReactionCubit, ReactionState>(
         listener: (context, state) {
           if (state is ReactionError) {
-            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error), backgroundColor: Colors.red));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.error),
+                backgroundColor: Colors.red.shade400,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -83,17 +135,37 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
             return const Center(child: LoadingPage());
           }
 
-          final reactions = state is ReactionsOfAppointmentSuccess ? state.paginatedResponse.paginatedData?.items : [];
-          final hasMore = state is ReactionsOfAppointmentSuccess ? state.hasMore : false;
-
+          final reactions =
+              state is ReactionsOfAppointmentSuccess
+                  ? state.paginatedResponse.paginatedData?.items
+                  : [];
+          final hasMore =
+              state is ReactionsOfAppointmentSuccess ? state.hasMore : false;
           if (reactions == null || reactions.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.medical_information, size: 64, color: Colors.grey[400]),
+                  Icon(Icons.warning_amber, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
-                  Text('No reactions recorded for this allergy', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                  Text(
+                    'reactionsPage.noReactionsRecorded'.tr(
+                      context,
+                    ), // Translated
+                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: _loadReactions,
+                    child: Text(
+                      'reactionsPage.tapToRefresh'.tr(context), // Translated
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -101,13 +173,21 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
 
           return ListView.builder(
             controller: _scrollController,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: reactions.length + (hasMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < reactions.length) {
-                return ReactionListItem(reaction: reactions[index], onTap: () => _navigateToReactionDetails(reactions[index].id!));
+                final ReactionModel reaction = reactions[index];
+                return ReactionListItem(
+                  reaction: reaction,
+                  onTap: () => _navigateToReactionDetails(reaction.id!),
+                );
               } else {
-                return  Padding(padding: EdgeInsets.all(16.0), child: Center(child: LoadingButton()));
+                return Padding(
+                  // Added const here
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(child: LoadingButton()),
+                );
               }
             },
           );
@@ -119,7 +199,13 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
   void _navigateToReactionDetails(String reactionId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ReactionDetailsPage(allergyId: widget.allergyId, reactionId: reactionId)),
-    ).then((_) => _loadInitialReactions());
+      MaterialPageRoute(
+        builder:
+            (context) => ReactionDetailsPage(
+              allergyId: widget.allergyId,
+              reactionId: reactionId,
+            ),
+      ),
+    ).then((_) => _loadReactions());
   }
 }

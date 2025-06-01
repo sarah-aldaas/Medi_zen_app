@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/models/reaction_filter_model.dart';
 
@@ -30,7 +31,6 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
     _selectedExposureRouteId = _filter.exposureRouteId?.toString();
     _selectedSort = _filter.key;
 
-    // Initialize code types
     context.read<CodeTypesCubit>().getAllergyReactionSeverityCodes();
     context.read<CodeTypesCubit>().getAllergyReactionExposureRouteCodes();
   }
@@ -47,8 +47,14 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: Container(
         padding: const EdgeInsets.all(16.0),
-        constraints: BoxConstraints(maxWidth: 400, maxHeight: MediaQuery.of(context).size.height * 0.8),
-        decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: BorderRadius.circular(16.0)),
+        constraints: BoxConstraints(
+          maxWidth: 400,
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: BorderRadius.circular(16.0),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,8 +63,17 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Filter Reactions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                IconButton(icon: const Icon(Icons.close, size: 20), onPressed: () => Navigator.pop(context)),
+                Text(
+                  'reactionsPage.filterReactions'.tr(context), // Translated
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 20),
+                  onPressed: () => Navigator.pop(context),
+                ),
               ],
             ),
             const Divider(),
@@ -68,15 +83,18 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
-                    // Search Field
+
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        labelText: 'Search',
+                        labelText: 'reactionsPage.search'.tr(
+                          context,
+                        ), // Translated
                         prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-
                       onChanged: (value) {
                         setState(() {
                           _filter = _filter.copyWith(searchQuery: value);
@@ -85,25 +103,45 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Severity Filter
-                    const Text('Severity', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    Text(
+                      'reactionsPage.severity'.tr(context), // Translated
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
                       builder: (context, state) {
                         List<CodeModel> severities = [];
                         if (state is CodeTypesSuccess) {
-                          severities = state.codes?.where((code) => code.codeTypeModel?.name == 'reaction_severity').toList() ?? [];
+                          severities =
+                              state.codes
+                                  ?.where(
+                                    (code) =>
+                                        code.codeTypeModel?.name ==
+                                        'reaction_severity',
+                                  )
+                                  .toList() ??
+                              [];
                         }
                         if (state is CodesLoading) {
-                          return  Center(child: LoadingButton());
+                          return Center(child: LoadingButton());
                         }
                         if (severities.isEmpty) {
-                          return const Text('No severities available', style: TextStyle(color: Colors.grey));
+                          return Text(
+                            'reactionsPage.noSeveritiesAvailable'.tr(
+                              context,
+                            ), // Translated
+                            style: const TextStyle(color: Colors.grey),
+                          );
                         }
                         return Column(
                           children: [
                             RadioListTile<String?>(
-                              title: const Text('All Severities'),
+                              title: Text(
+                                'reactionsPage.allSeverities'.tr(context),
+                              ), // Translated
                               value: null,
                               groupValue: _selectedSeverityId,
                               activeColor: Theme.of(context).primaryColor,
@@ -115,7 +153,13 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                             ),
                             ...severities.map((severity) {
                               return RadioListTile<String>(
-                                title: Text(severity.display ?? 'Unknown', style: const TextStyle(fontSize: 14)),
+                                title: Text(
+                                  severity.display ??
+                                      'reactionsPage.unknown'.tr(
+                                        context,
+                                      ), // Translated
+                                  style: const TextStyle(fontSize: 14),
+                                ),
                                 value: severity.id,
                                 groupValue: _selectedSeverityId,
                                 activeColor: Theme.of(context).primaryColor,
@@ -132,25 +176,45 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                     ),
                     const Divider(),
 
-                    // Exposure Route Filter
-                    const Text('Exposure Route', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
+                    Text(
+                      'reactionsPage.exposureRoute'.tr(context), // Translated
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
                       builder: (context, state) {
                         List<CodeModel> exposureRoutes = [];
                         if (state is CodeTypesSuccess) {
-                          exposureRoutes = state.codes?.where((code) => code.codeTypeModel?.name == 'reaction_exposure_route').toList() ?? [];
+                          exposureRoutes =
+                              state.codes
+                                  ?.where(
+                                    (code) =>
+                                        code.codeTypeModel?.name ==
+                                        'reaction_exposure_route',
+                                  )
+                                  .toList() ??
+                              [];
                         }
                         if (state is CodesLoading) {
-                          return  Center(child: LoadingButton());
+                          return Center(child: LoadingButton());
                         }
                         if (exposureRoutes.isEmpty) {
-                          return const Text('No exposure routes available', style: TextStyle(color: Colors.grey));
+                          return Text(
+                            'reactionsPage.noExposureRoutesAvailable'.tr(
+                              context,
+                            ), // Translated
+                            style: const TextStyle(color: Colors.grey),
+                          );
                         }
                         return Column(
                           children: [
                             RadioListTile<String?>(
-                              title: const Text('All Exposure Routes'),
+                              title: Text(
+                                'reactionsPage.allExposureRoutes'.tr(context),
+                              ), // Translated
                               value: null,
                               groupValue: _selectedExposureRouteId,
                               activeColor: Theme.of(context).primaryColor,
@@ -162,7 +226,13 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                             ),
                             ...exposureRoutes.map((route) {
                               return RadioListTile<String>(
-                                title: Text(route.display ?? 'Unknown', style: const TextStyle(fontSize: 14)),
+                                title: Text(
+                                  route.display ??
+                                      'reactionsPage.unknown'.tr(
+                                        context,
+                                      ), // Translated
+                                  style: const TextStyle(fontSize: 14),
+                                ),
                                 value: route.id,
                                 groupValue: _selectedExposureRouteId,
                                 activeColor: Theme.of(context).primaryColor,
@@ -178,21 +248,44 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                       },
                     ),
 
-                    const SizedBox(height: 16),
-                    // Sort Order
-                    const Text('Sort Order', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 20),
+
+                    Text(
+                      'reactionsPage.sortOrder'.tr(context), // Translated
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
                       value: _selectedSort,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 8.0,
+                        ),
                       ),
-                      items: const [
-                        DropdownMenuItem(value: null, child: Text('Default')),
-                        DropdownMenuItem(value: 'asc', child: Text('Oldest First')),
-                        DropdownMenuItem(value: 'desc', child: Text('Newest First')),
+                      items: [
+                        DropdownMenuItem(
+                          value: null,
+                          child: Text('reactionsPage.default'.tr(context)),
+                        ), // Translated
+                        DropdownMenuItem(
+                          value: 'asc',
+                          child: Text(
+                            'reactionsPage.oldestFirst'.tr(context),
+                          ), // Translated
+                        ),
+                        DropdownMenuItem(
+                          value: 'desc',
+                          child: Text(
+                            'reactionsPage.newestFirst'.tr(context),
+                          ), // Translated
+                        ),
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -204,8 +297,8 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            // Action Buttons
+            const SizedBox(height: 22),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -219,11 +312,19 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                       _filter = ReactionFilterModel();
                     });
                   },
-                  child: const Text('Clear Filters', style: TextStyle(color: Colors.red)),
+                  child: Text(
+                    'reactionsPage.clearFilters'.tr(context), // Translated
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ),
                 Row(
                   children: [
-                    TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'reactionsPage.cancel'.tr(context),
+                      ), // Translated
+                    ),
                     const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
@@ -231,8 +332,14 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                           context,
                           ReactionFilterModel(
                             searchQuery: _filter.searchQuery,
-                            severityId: _selectedSeverityId != null ? int.tryParse(_selectedSeverityId!) : null,
-                            exposureRouteId: _selectedExposureRouteId != null ? int.tryParse(_selectedExposureRouteId!) : null,
+                            severityId:
+                                _selectedSeverityId != null
+                                    ? int.tryParse(_selectedSeverityId!)
+                                    : null,
+                            exposureRouteId:
+                                _selectedExposureRouteId != null
+                                    ? int.tryParse(_selectedExposureRouteId!)
+                                    : null,
                             key: _selectedSort,
                           ),
                         );
@@ -240,10 +347,13 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-
-                      child: const Text('Apply'),
+                      child: Text(
+                        'reactionsPage.apply'.tr(context),
+                      ), // Translated
                     ),
                   ],
                 ),

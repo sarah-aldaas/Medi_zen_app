@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/services/network/resource.dart';
 import '../../../../../base/widgets/show_toast.dart';
@@ -12,7 +13,7 @@ class ClinicCubit extends Cubit<ClinicState> {
   final ClinicRemoteDataSource remoteDataSource;
   int currentPage = 1;
   bool hasMore = true;
-  bool isLoading = false; // Add loading state tracking
+  bool isLoading = false;
   String? currentSearchQuery;
   List<ClinicModel> allClinics = [];
   bool _isClosed = false;
@@ -29,7 +30,6 @@ class ClinicCubit extends Cubit<ClinicState> {
     String? searchQuery,
     bool loadMore = false,
   }) async {
-    // Prevent multiple simultaneous requests
     if (isLoading) return;
     isLoading = true;
 
@@ -67,7 +67,6 @@ class ClinicCubit extends Cubit<ClinicState> {
 
         final newClinics = result.data.paginatedData!.items;
 
-        // Filter out any duplicates before adding
         final newUniqueClinics =
             newClinics
                 .where(
@@ -91,13 +90,10 @@ class ClinicCubit extends Cubit<ClinicState> {
     }
   }
 
-
-
   Future<void> fetchClinicsHomePage({
     String? searchQuery,
     bool loadMore = false,
   }) async {
-    // Prevent multiple simultaneous requests
     if (isLoading) return;
     isLoading = true;
 
@@ -135,16 +131,15 @@ class ClinicCubit extends Cubit<ClinicState> {
 
         final newClinics = result.data.paginatedData!.items;
 
-        // Filter out any duplicates before adding
         final newUniqueClinics =
-        newClinics
-            .where(
-              (newClinic) =>
-          !allClinics.any(
-                (existingClinic) => existingClinic.id == newClinic.id,
-          ),
-        )
-            .toList();
+            newClinics
+                .where(
+                  (newClinic) =>
+                      !allClinics.any(
+                        (existingClinic) => existingClinic.id == newClinic.id,
+                      ),
+                )
+                .toList();
 
         allClinics.addAll(newUniqueClinics);
         hasMore = newClinics.length >= 8;
@@ -158,8 +153,6 @@ class ClinicCubit extends Cubit<ClinicState> {
       isLoading = false;
     }
   }
-
-
 
   Future<void> getSpecificClinic({required String id}) async {
     if (_isClosed) return;
@@ -187,5 +180,4 @@ class ClinicCubit extends Cubit<ClinicState> {
       }
     }
   }
-
 }

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
+import '../../../../../base/theme/app_color.dart';
 import '../../data/models/encounter_model.dart';
 import '../cubit/encounter_cubit/encounter_cubit.dart';
 import '../widgets/service_list_item.dart';
@@ -23,134 +25,323 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<EncounterCubit>().getSpecificEncounter(encounterId: widget.encounterId);
+    context.read<EncounterCubit>().getSpecificEncounter(
+      encounterId: widget.encounterId,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Encounter Details')),
+      appBar: AppBar(
+        title: Text(
+          'encountersPge.encounterDetails'.tr(context), // Translated
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: AppColors.primaryColor,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: AppColors.whiteColor,
+        elevation: 2,
+      ),
       body: BlocConsumer<EncounterCubit, EncounterState>(
         listener: (context, state) {
           if (state is EncounterError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${'encountersPge.Error'.tr(context)}: ${state.error}',
+                ), // Translated
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         },
         builder: (context, state) {
           if (state is EncounterLoading) {
             return const Center(child: LoadingPage());
           } else if (state is EncounterDetailsSuccess) {
-            return _buildEncounterDetails(state.encounterModel);
+            return _buildEncounterDetails(context, state.encounterModel);
           } else {
-            return const Center(child: Text('Failed to load encounter details'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 70,
+                    color: Colors.red.shade300,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'encountersPge.failedToLoad'.tr(context), // Translated
+                    style: const TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                ],
+              ),
+            );
           }
         },
       ),
     );
   }
 
-  Widget _buildEncounterDetails(EncounterModel encounter) {
+  Widget _buildEncounterDetails(
+    BuildContext context,
+    EncounterModel encounter,
+  ) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with status indicator
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: Text(encounter.reason ?? 'Encounter', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold))),
+              Expanded(
+                child: Text(
+                  encounter.reason ??
+                      'encountersPge.generalEncounter'.tr(
+                        context,
+                      ), // Translated
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 16),
               _buildStatusChip(encounter.status),
             ],
           ),
-          const SizedBox(height: 16),
-
-          // Basic Information
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Basic Information', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  _buildDetailRow('Type', encounter.type?.display),
-                  _buildDetailRow('Status', encounter.status?.display),
-                  if (encounter.actualStartDate != null)
-                    _buildDetailRow('Start', DateFormat('MMM d, y - h:mm a').format(DateTime.parse(encounter.actualStartDate!))),
-                  if (encounter.actualEndDate != null) _buildDetailRow('End', DateFormat('MMM d, y - h:mm a').format(DateTime.parse(encounter.actualEndDate!))),
-                  if (encounter.specialArrangement?.isNotEmpty ?? false) _buildDetailRow('Special Notes', encounter.specialArrangement),
-                ],
+          const SizedBox(height: 30),
+          _buildInfoCard(
+            context,
+            title: 'encountersPge.basicInformation'.tr(context), // Translated
+            icon: Icons.info_outline,
+            children: [
+              _buildDetailRow(
+                context,
+                label: 'encountersPge.type'.tr(context), // Translated
+                value: encounter.type?.display,
+                icon: Icons.category_outlined,
               ),
-            ),
+              _buildDetailRow(
+                context,
+                label: 'encountersPge.status'.tr(context), // Translated
+                value: encounter.status?.display,
+                icon: Icons.check_circle_outline,
+              ),
+              if (encounter.actualStartDate != null)
+                _buildDetailRow(
+                  context,
+                  label: 'encountersPge.startDate'.tr(context), // Translated
+                  value: DateFormat(
+                    'MMM d, y - h:mm a',
+                  ).format(DateTime.parse(encounter.actualStartDate!)),
+                  icon: Icons.calendar_today_outlined,
+                ),
+              if (encounter.actualEndDate != null)
+                _buildDetailRow(
+                  context,
+                  label: 'encountersPge.endDate'.tr(context), // Translated
+                  value: DateFormat(
+                    'MMM d, y - h:mm a',
+                  ).format(DateTime.parse(encounter.actualEndDate!)),
+                  icon: Icons.calendar_today_outlined,
+                ),
+              if (encounter.specialArrangement?.isNotEmpty ?? false)
+                _buildDetailRow(
+                  context,
+                  label: 'encountersPge.specialNotes'.tr(context), // Translated
+                  value: encounter.specialArrangement,
+                  icon: Icons.notes_outlined,
+                ),
+            ],
           ),
-          const SizedBox(height: 16),
-
-          // Appointment Information
+          const SizedBox(height: 24),
           if (encounter.appointment != null) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            _buildInfoCard(
+              context,
+              title: 'encountersPge.appointmentDetails'.tr(
+                context,
+              ), // Translated
+              icon: Icons.schedule_outlined,
+              actionWidget: IconButton(
+                onPressed: () {
+                  context
+                      .pushNamed(
+                        AppRouter.appointmentDetails.name,
+                        extra: {"appointmentId": encounter.appointment!.id},
+                      )
+                      .then((value) {
+                        context.read<EncounterCubit>().getSpecificEncounter(
+                          encounterId: widget.encounterId,
+                        );
+                      });
+                },
+                icon: Container(
+                  width: 25,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.15),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Theme.of(context).primaryColor,
+                    size: 15,
+                  ),
+                ),
+                tooltip: 'encountersPge.GoAppointmentDetails'.tr(
+                  context,
+                ), // Translated
+              ),
               children: [
-                Text('Appointment Information', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                IconButton(
-                  onPressed: () {
-                    context.pushNamed(AppRouter.appointmentDetails.name, extra: {"appointmentId": encounter.appointment!.id}).then((value){
-                      context.read<EncounterCubit>().getSpecificEncounter(encounterId: widget.encounterId);
+                _buildDetailRow(
+                  context,
+                  label: 'encountersPge.reason'.tr(context), // Translated
+                  value: encounter.appointment?.reason,
+                  icon: Icons.description_outlined,
+                ),
+                if (encounter.appointment?.startDate != null)
+                  _buildDetailRow(
+                    context,
+                    label: 'encountersPge.scheduled'.tr(context), // Translated
+                    value: DateFormat(
+                      'MMM d, y - h:mm a',
+                    ).format(DateTime.parse(encounter.appointment!.startDate!)),
+                    icon: Icons.access_time_outlined,
+                  ),
+                if (encounter.appointment?.doctor != null)
+                  _buildDetailRow(
+                    context,
+                    label: 'encountersPge.doctor'.tr(context), // Translated
+                    value:
+                        '${encounter.appointment?.doctor?.prefix ?? ''} ${encounter.appointment?.doctor?.fName ?? ''} ${encounter.appointment?.doctor?.lName ?? ''}'
+                            .trim(),
+                    icon: Icons.person_outline,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 24),
+          ],
+          if (encounter.healthCareServices?.isNotEmpty ?? false)
+            _buildInfoCard(
+              context,
+              title: 'encountersPge.servicesProvided'.tr(context), // Translated
+              icon: Icons.medical_services_outlined,
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: encounter.healthCareServices?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final service = encounter.healthCareServices![index];
 
-                    });
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: ServiceListItem(service: service),
+                    );
                   },
-                  icon: Icon(Icons.arrow_circle_right, color: Colors.blue),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDetailRow('Reason', encounter.appointment?.reason),
-                    if (encounter.appointment?.startDate != null)
-                      _buildDetailRow('Scheduled', DateFormat('MMM d, y - h:mm a').format(DateTime.parse(encounter.appointment!.startDate!))),
-                    if (encounter.appointment?.doctor != null)
-                      _buildDetailRow(
-                        'Doctor',
-                        '${encounter.appointment?.doctor?.prefix} ${encounter.appointment?.doctor?.fName} ${encounter.appointment?.doctor?.lName}',
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-
-          // Services Section
-          if (encounter.healthCareServices?.isNotEmpty ?? false) ...[
-            Text('Services Provided', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: encounter.healthCareServices?.length ?? 0,
-              itemBuilder: (context, index) {
-                final service = encounter.healthCareServices![index];
-                return ServiceListItem(service: service);
-              },
-            ),
-          ],
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(String label, String? value) {
+  Widget _buildInfoCard(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    Widget? actionWidget,
+    required List<Widget> children,
+  }) {
+    return Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: Theme.of(context).primaryColor, size: 24),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                if (actionWidget != null) actionWidget,
+              ],
+            ),
+            const Divider(height: 24, thickness: 1),
+            ...children,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(
+    BuildContext context, {
+    required String label,
+    String? value,
+    required IconData icon,
+  }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 120, child: Text('$label:', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
-          Expanded(child: Text(value ?? 'Not specified', style: const TextStyle(fontWeight: FontWeight.w500))),
+          Icon(
+            icon,
+            color: Theme.of(context).primaryColor.withOpacity(0.7),
+            size: 18,
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 100,
+            child: Text(
+              '$label:',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+                fontSize: 15,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              value ?? 'N/A', // 'N/A' is not in your JSON, consider adding it
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+                color: Colors.black87,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -158,23 +349,67 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
 
   Widget _buildStatusChip(CodeModel? status) {
     Color chipColor;
-    switch (status?.code) {
-      case 'planned':
-        chipColor = Colors.blue;
-        break;
-      case 'in-progress':
-        chipColor = Colors.orange;
-        break;
-      case 'completed':
-        chipColor = Colors.green;
-        break;
-      case 'cancelled':
-        chipColor = Colors.red;
-        break;
-      default:
-        chipColor = Colors.grey;
+    Color textColor = Colors.white;
+
+    // Use a helper function to get the translated status display
+    String getTranslatedStatus(String? statusCode) {
+      switch (statusCode) {
+        case 'planned':
+          return 'encountersPge.planned'.tr(context);
+        case 'in-progress':
+          return 'encountersPge.inProgress'.tr(context);
+        case 'completed':
+          return 'encountersPge.completed'.tr(context);
+        case 'cancelled':
+          return 'encountersPge.cancelled'.tr(context);
+        case 'unknownStatus': // Using this as the default for unknown codes
+          return 'encountersPge.unknownStatus'.tr(context);
+        default:
+          return 'encountersPge.unknown'.tr(
+            context,
+          ); // Fallback for any other unknown
+      }
     }
 
-    return Chip(label: Text(status?.display ?? 'Unknown', style: const TextStyle(color: Colors.white)), backgroundColor: chipColor);
+    switch (status?.code) {
+      case 'planned':
+        chipColor = Colors.blue.shade600;
+        break;
+      case 'in-progress':
+        chipColor = Colors.orange.shade600;
+        break;
+      case 'completed':
+        chipColor = Colors.green.shade600;
+        break;
+      case 'cancelled':
+        chipColor = Colors.red.shade600;
+        break;
+      default:
+        chipColor = Colors.grey.shade500;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: chipColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: chipColor.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Text(
+        getTranslatedStatus(status?.code), // Use the translated status
+        style: TextStyle(
+          color: textColor,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 }

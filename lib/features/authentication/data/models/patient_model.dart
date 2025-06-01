@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
-import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
 import 'package:medizen_app/features/profile/data/models/address_model.dart';
+import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
 
 class PatientModel extends Equatable {
   final String? id;
@@ -30,8 +30,8 @@ class PatientModel extends Equatable {
   final CodeModel? gender;
   final CodeModel? maritalStatus;
   final CodeModel? bloodType;
-  final AddressModel? addressModel; // Single address or null
-  final List<TelecomModel>? telecoms; // List of telecoms
+  final AddressModel? addressModel;
+  final List<TelecomModel>? telecoms;
 
   const PatientModel({
     required this.id,
@@ -57,8 +57,8 @@ class PatientModel extends Equatable {
     this.bloodId,
     required this.createdAt,
     required this.updatedAt,
-     this.gender,
-     this.maritalStatus,
+    this.gender,
+    this.maritalStatus,
     this.bloodType,
     this.addressModel,
     this.telecoms,
@@ -89,26 +89,47 @@ class PatientModel extends Equatable {
       bloodId: json['blood_id']?.toString(),
       createdAt: json['created_at']?.toString() ?? '',
       updatedAt: json['updated_at']?.toString() ?? '',
-      gender:json['gender']!=null? CodeModel.fromJson(json['gender'] as Map<String, dynamic>):null,
-      maritalStatus: json['marital_status']!=null?CodeModel.fromJson(json['marital_status'] as Map<String, dynamic>):null,
+      gender:
+          json['gender'] != null
+              ? CodeModel.fromJson(json['gender'] as Map<String, dynamic>)
+              : null,
+      maritalStatus:
+          json['marital_status'] != null
+              ? CodeModel.fromJson(
+                json['marital_status'] as Map<String, dynamic>,
+              )
+              : null,
       bloodType:
           json['blood_type'] != null
               ? CodeModel.fromJson(json['blood_type'] as Map<String, dynamic>)
               : json['blood'] != null
               ? CodeModel.fromJson(json['blood'] as Map<String, dynamic>)
               : null,
-      // Handle addresses as a single AddressModel (first item if array) or null
-      addressModel: json.containsKey('addresses')
-          ? (json['addresses'] is List && (json['addresses'] as List).isNotEmpty
-          ? AddressModel.fromJson((json['addresses'] as List).first as Map<String, dynamic>)
-          : (json['addresses'] is Map
-          ? AddressModel.fromJson(json['addresses'] as Map<String, dynamic>)
-          : null)):null,
-      // Handle telecoms as a list from a 'telecoms' key (adjust key if different)
-      telecoms: json.containsKey('telecoms')?
-          json['telecoms'] != null
-              ? (json['telecoms'] as List).map((telecomJson) => TelecomModel.fromJson(telecomJson as Map<String, dynamic>)).toList()
-              : null:null,
+      addressModel:
+          json.containsKey('addresses')
+              ? (json['addresses'] is List &&
+                      (json['addresses'] as List).isNotEmpty
+                  ? AddressModel.fromJson(
+                    (json['addresses'] as List).first as Map<String, dynamic>,
+                  )
+                  : (json['addresses'] is Map
+                      ? AddressModel.fromJson(
+                        json['addresses'] as Map<String, dynamic>,
+                      )
+                      : null))
+              : null,
+      telecoms:
+          json.containsKey('telecoms')
+              ? json['telecoms'] != null
+                  ? (json['telecoms'] as List)
+                      .map(
+                        (telecomJson) => TelecomModel.fromJson(
+                          telecomJson as Map<String, dynamic>,
+                        ),
+                      )
+                      .toList()
+                  : null
+              : null,
     );
   }
 
@@ -141,8 +162,8 @@ class PatientModel extends Equatable {
       'marital_status': maritalStatus!.toJson(),
       'blood_type': bloodType?.toJson(),
       'blood': bloodType?.toJson(),
-      'addresses': addressModel?.toJson(), // Convert single address to JSON
-      'telecoms': telecoms?.map((t) => t.toJson()).toList(), // Convert list of telecoms to JSON
+      'addresses': addressModel?.toJson(),
+      'telecoms': telecoms?.map((t) => t.toJson()).toList(),
     };
   }
 

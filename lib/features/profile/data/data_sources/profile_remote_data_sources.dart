@@ -52,15 +52,16 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }) async {
     final formData = FormData.fromMap(updateProfileRequestModel.toJson());
 
-    // Add avatar file if present
     if (updateProfileRequestModel.avatar != null) {
-      formData.files.add(MapEntry(
-        'avatar', // Adjust field name if API expects different (e.g., 'profile_picture')
-        await MultipartFile.fromFile(
-          updateProfileRequestModel.avatar!.path,
-          filename: updateProfileRequestModel.avatar!.path.split('/').last,
+      formData.files.add(
+        MapEntry(
+          'avatar',
+          await MultipartFile.fromFile(
+            updateProfileRequestModel.avatar!.path,
+            filename: updateProfileRequestModel.avatar!.path.split('/').last,
+          ),
         ),
-      ));
+      );
     }
 
     final response = await networkClient.invokeMultipart(

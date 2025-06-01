@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/data/models/public_response_model.dart';
 import '../../../../../base/services/network/resource.dart';
@@ -41,13 +41,11 @@ class AddressCubit extends Cubit<AddressState> {
       if (result is Success<PaginatedResponse<AddressModel>>) {
         final newAddresses = result.data.paginatedData?.items ?? [];
 
-        // Create a new list to ensure state changes are detected
         final updatedAddresses = List<AddressModel>.from(_allAddresses);
 
-        // Deduplicate while maintaining order
         final existingIds = updatedAddresses.map((addr) => addr.id).toSet();
         updatedAddresses.addAll(
-            newAddresses.where((addr) => !existingIds.contains(addr.id))
+          newAddresses.where((addr) => !existingIds.contains(addr.id)),
         );
 
         _allAddresses = updatedAddresses;
@@ -57,19 +55,23 @@ class AddressCubit extends Cubit<AddressState> {
           _currentPage++;
         }
 
-        emit(AddressSuccess(
-          paginatedResponse: PaginatedResponse<AddressModel>(
-            status: result.data.status,
-            errNum: result.data.errNum,
-            msg: result.data.msg,
-            paginatedData: PaginatedData<AddressModel>(items: _allAddresses),
-            meta: result.data.meta,
-            links: result.data.links,
+        emit(
+          AddressSuccess(
+            paginatedResponse: PaginatedResponse<AddressModel>(
+              status: result.data.status,
+              errNum: result.data.errNum,
+              msg: result.data.msg,
+              paginatedData: PaginatedData<AddressModel>(items: _allAddresses),
+              meta: result.data.meta,
+              links: result.data.links,
+            ),
+            isLoadingMore: _hasMore,
           ),
-          isLoadingMore: _hasMore,
-        ));
+        );
       } else if (result is ResponseError<PaginatedResponse<AddressModel>>) {
-        emit(AddressError(error: result.message ?? 'Failed to fetch addresses'));
+        emit(
+          AddressError(error: result.message ?? 'Failed to fetch addresses'),
+        );
       }
     } catch (e) {
       emit(AddressError(error: 'An unexpected error occurred'));
@@ -82,10 +84,14 @@ class AddressCubit extends Cubit<AddressState> {
     await fetchAddresses();
   }
 
-  Future<void> createAddress({required AddOrUpdateAddressModel addressModel}) async {
+  Future<void> createAddress({
+    required AddOrUpdateAddressModel addressModel,
+  }) async {
     emit(AddressLoading());
     try {
-      final result = await remoteDataSource.createAddress(addressModel: addressModel);
+      final result = await remoteDataSource.createAddress(
+        addressModel: addressModel,
+      );
       if (result is Success<PublicResponseModel>) {
         if (result.data.status) {
           await fetchAddresses();
@@ -94,7 +100,9 @@ class AddressCubit extends Cubit<AddressState> {
           emit(AddressError(error: result.data.msg));
         }
       } else if (result is ResponseError<PublicResponseModel>) {
-        ShowToast.showToastError(message: result.message ?? 'Failed to create Address');
+        ShowToast.showToastError(
+          message: result.message ?? 'Failed to create Address',
+        );
         emit(AddressError(error: result.message ?? 'Failed to create Address'));
       }
     } catch (e) {
@@ -102,10 +110,16 @@ class AddressCubit extends Cubit<AddressState> {
     }
   }
 
-  Future<void> updateAddress({required String id, required AddOrUpdateAddressModel? addressModel}) async {
+  Future<void> updateAddress({
+    required String id,
+    required AddOrUpdateAddressModel? addressModel,
+  }) async {
     emit(AddressLoading());
     try {
-      final result = await remoteDataSource.updateAddress(id: id, addressModel: addressModel!);
+      final result = await remoteDataSource.updateAddress(
+        id: id,
+        addressModel: addressModel!,
+      );
       if (result is Success<PublicResponseModel>) {
         if (result.data.status) {
           await fetchAddresses();
@@ -114,7 +128,9 @@ class AddressCubit extends Cubit<AddressState> {
           emit(AddressError(error: result.data.msg));
         }
       } else if (result is ResponseError<PublicResponseModel>) {
-        ShowToast.showToastError(message: result.message ?? 'Failed to update address');
+        ShowToast.showToastError(
+          message: result.message ?? 'Failed to update address',
+        );
         emit(AddressError(error: result.message ?? 'Failed to update address'));
       }
     } catch (e) {
@@ -134,7 +150,9 @@ class AddressCubit extends Cubit<AddressState> {
           emit(AddressError(error: result.data.msg));
         }
       } else if (result is ResponseError<PublicResponseModel>) {
-        ShowToast.showToastError(message: result.message ?? 'Failed to delete address');
+        ShowToast.showToastError(
+          message: result.message ?? 'Failed to delete address',
+        );
         emit(AddressError(error: result.message ?? 'Failed to delete address'));
       }
     } catch (e) {
@@ -149,8 +167,14 @@ class AddressCubit extends Cubit<AddressState> {
       if (result is Success<AddressModel>) {
         return result.data;
       } else if (result is ResponseError<AddressModel>) {
-        ShowToast.showToastError(message: result.message ?? 'Failed to fetch Address details');
-        emit(AddressError(error: result.message ?? 'Failed to fetch Address details'));
+        ShowToast.showToastError(
+          message: result.message ?? 'Failed to fetch Address details',
+        );
+        emit(
+          AddressError(
+            error: result.message ?? 'Failed to fetch Address details',
+          ),
+        );
       }
     } catch (e) {
       emit(AddressError(error: 'Failed to fetch address details'));

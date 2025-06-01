@@ -1,11 +1,13 @@
 import 'dart:async';
+
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
+
 import '../../../../base/constant/app_images.dart';
 import '../../../../base/go_router/go_router.dart';
 
@@ -96,24 +98,22 @@ class _DefinitionWidgetState extends State<DefinitionWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        // Use Expanded to wrap the text
                         child: Text(
                           _sentences[_currentPage].toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
-                          overflow:
-                              TextOverflow
-                                  .ellipsis, // Add ellipsis for overflow
-                          maxLines:
-                              2, // limit to 2 lines, or remove for unlimited
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                       ),
                       Gap(10),
                       GestureDetector(
                         onTap: () {
-                          context.pushNamed(AppRouter.healthCareServicesPage.name);
+                          context.pushNamed(
+                            AppRouter.healthCareServicesPage.name,
+                          );
                         },
                         child: Container(
                           decoration: BoxDecoration(

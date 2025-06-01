@@ -1,8 +1,4 @@
-import '../../../../base/constant/app_images.dart';
-import '../../../../base/data/models/code_type_model.dart';
-import '../../data/model/communication_model.dart';
 import '../../data/model/doctor_model.dart';
-import '../../data/model/qualification_model.dart';
 
 mixin DoctorMixin {
   final List<DoctorModel> allDoctors = [
