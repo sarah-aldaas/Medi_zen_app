@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../data/models/allergy_filter_model.dart';
@@ -14,7 +15,8 @@ class AppointmentAllergiesPage extends StatefulWidget {
   const AppointmentAllergiesPage({super.key, required this.appointmentId});
 
   @override
-  State<AppointmentAllergiesPage> createState() => _AppointmentAllergiesPageState();
+  State<AppointmentAllergiesPage> createState() =>
+      _AppointmentAllergiesPageState();
 }
 
 class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
@@ -44,13 +46,18 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context.read<AllergyCubit>().getAllMyAllergiesOfAppointment(
+      context
+          .read<AllergyCubit>()
+          .getAllMyAllergiesOfAppointment(
         appointmentId: widget.appointmentId,
         filters: _filter.toJson(),
         loadMore: true,
-      ).then((_) {
+      )
+          .then((_) {
         setState(() => _isLoadingMore = false);
       });
     }
@@ -72,21 +79,21 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Appointment Allergies'),
+        title: Text('allergiesPage.appointmentAllergies'.tr(context)),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: _showFilterDialog,
-            tooltip: 'Filter Allergies',
+            tooltip: 'allergiesPage.filterAllergies'.tr(context),
           ),
         ],
       ),
       body: BlocConsumer<AllergyCubit, AllergyState>(
         listener: (context, state) {
           if (state is AllergyError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.error)));
           }
         },
         builder: (context, state) {
@@ -94,18 +101,28 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
             return const Center(child: LoadingPage());
           }
 
-          final allergies = state is AllergiesOfAppointmentSuccess ? state.paginatedResponse.paginatedData?.items : [];
-          final hasMore = state is AllergiesOfAppointmentSuccess ? state.hasMore : false;
+          final allergies =
+          state is AllergiesOfAppointmentSuccess
+              ? state.paginatedResponse.paginatedData?.items
+              : [];
+          final hasMore =
+          state is AllergiesOfAppointmentSuccess ? state.hasMore : false;
 
           if (allergies == null || allergies.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.medical_services, size: 64, color: Colors.grey[400]),
+                  Icon(
+                    Icons.medical_services,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'No allergies recorded for this appointment',
+                  Text(
+                    'allergiesPage.noAllergiesRecorded'.tr(
+                      context,
+                    ), // Translated
                     style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
@@ -123,7 +140,7 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
                   onTap: () => _navigateToAllergyDetails(allergies[index].id!),
                 );
               } else {
-                return  Center(child: LoadingButton());
+                return Center(child: LoadingButton());
               }
             },
           );
@@ -136,12 +153,14 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AllergyDetailsPage(allergyId: allergyId,appointmentId: widget.appointmentId,),
+        builder:
+            (context) => AllergyDetailsPage(
+          allergyId: allergyId,
+          appointmentId: widget.appointmentId,
+        ),
       ),
-    ).then((value){
+    ).then((value) {
       _loadInitialAllergies();
     });
   }
 }
-
-

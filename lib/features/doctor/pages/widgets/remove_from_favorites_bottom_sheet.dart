@@ -22,24 +22,43 @@ class RemoveFromFavoritesBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(12.0))),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("favorites.removeTitle".tr(context), style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+          Text(
+            "favorites.removeTitle".tr(context),
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+          ),
           SizedBox(height: 16.0),
           ListTile(
-            leading: CircleAvatar(radius: 30, backgroundImage: NetworkImage(imageUrl)),
+            leading: CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(imageUrl),
+            ),
             title: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("favorites.doctorInfo.specialtyHospital".tr(context).format([specialty, hospital])),
+                Text(
+                  "favorites.doctorInfo.specialtyHospital".tr(context).format([
+                    specialty,
+                    hospital,
+                  ]),
+                ),
                 Row(
                   children: [
                     Icon(Icons.star, size: 16, color: Colors.blue),
-                    Text("favorites.doctorInfo.rating".tr(context).format([rating.toString(), reviews.toString()])),
+                    Text(
+                      "favorites.doctorInfo.rating".tr(context).format([
+                        rating.toString(),
+                        reviews.toString(),
+                      ]),
+                    ),
                   ],
                 ),
               ],
@@ -58,7 +77,10 @@ class RemoveFromFavoritesBottomSheet extends StatelessWidget {
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 child: Text("favorites.buttons.confirmRemove".tr(context)),
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.blue, backgroundColor: Colors.white),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                  backgroundColor: Colors.white,
+                ),
               ),
             ],
           ),
@@ -67,22 +89,3 @@ class RemoveFromFavoritesBottomSheet extends StatelessWidget {
     );
   }
 }
-
-// Usage remains the same:
-// showModalBottomSheet(
-//   context: context,
-//   builder: (BuildContext context) {
-//     return RemoveFromFavoritesBottomSheet(
-//       imageUrl: 'YOUR_IMAGE_URL',
-//       name: 'Dr. Travis Westaby',
-//       specialty: 'Cardiologists',
-//       hospital: 'Alka Hospital',
-//       rating: 4.3,
-//       reviews: 5376,
-//     );
-//   },
-// ).then((value) {
-//   if (value == true) {
-//     // Handle removal
-//   }
-// });

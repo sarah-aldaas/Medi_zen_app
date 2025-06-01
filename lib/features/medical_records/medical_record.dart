@@ -1,59 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/models/allergy_filter_model.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/pages/all_allergies_page.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/widgets/allergy_filter_dialog.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/all_encounters_page.dart';
-import '../../base/constant/app_images.dart';
+
 import '../../base/theme/app_color.dart';
 import 'encounter/data/models/encounter_filter_model.dart';
 import 'encounter/presentation/widgets/encounter_filter_dialog.dart';
-
 
 class MedicalRecordPage extends StatefulWidget {
   @override
   _MedicalRecordPageState createState() => _MedicalRecordPageState();
 }
 
-class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTickerProviderStateMixin {
+class _MedicalRecordPageState extends State<MedicalRecordPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  EncounterFilterModel _encounterFilter = EncounterFilterModel(); // Add this
-  AllergyFilterModel _allergyFilter = AllergyFilterModel(); // Add this
-
-  final List<String> _tabs = [
-    'Encounters',
-    'Allergies',
-    'Conditions',
-    'Observations',
-    'Diagnostic Reports',
-    'Medication Requests',
-    'Chronic Diseases',
-  ];
+  EncounterFilterModel _encounterFilter = EncounterFilterModel();
+  AllergyFilterModel _allergyFilter = AllergyFilterModel();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
-    _tabController.addListener(_handleTabSelection); // Add this
+    _tabController = TabController(length: 7, vsync: this);
+    _tabController.addListener(_handleTabSelection);
   }
 
-// Add this method
   void _handleTabSelection() {
     if (_tabController.indexIsChanging) {
-      setState(() {
-      }); // Force rebuild when tab changes
+      setState(() {});
     }
   }
+
   Future<void> _showEncounterFilterDialog() async {
     final result = await showDialog<EncounterFilterModel>(
       context: context,
-      builder: (context) => EncounterFilterDialog(currentFilter: _encounterFilter),
+      builder:
+          (context) => EncounterFilterDialog(currentFilter: _encounterFilter),
     );
 
     if (result != null) {
       setState(() => _encounterFilter = result);
     }
   }
-
 
   Future<void> _showAllergyFilterDialog() async {
     final result = await showDialog<AllergyFilterModel>(
@@ -68,19 +58,28 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
 
   @override
   void dispose() {
-    _tabController.removeListener(_handleTabSelection); // Clean up
-
+    _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<String> _tabs = [
+      'medicalRecordPage.tabs.encounters'.tr(context),
+      'medicalRecordPage.tabs.allergies'.tr(context),
+      'medicalRecordPage.tabs.conditions'.tr(context),
+      'medicalRecordPage.tabs.observations'.tr(context),
+      'medicalRecordPage.tabs.diagnosticReports'.tr(context),
+      'medicalRecordPage.tabs.medicationRequests'.tr(context),
+      'medicalRecordPage.tabs.chronicDiseases'.tr(context),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
-          'Medical Record',
+          'medicalRecordPage.title'.tr(context),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 22,
@@ -93,13 +92,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
             IconButton(
               icon: const Icon(Icons.filter_list),
               onPressed: _showEncounterFilterDialog,
-              tooltip: 'Filter Encounters',
+              tooltip: 'medicalRecordPage.filterEncountersTooltip'.tr(context),
             ),
           if (_tabController.index == 1)
             IconButton(
               icon: const Icon(Icons.filter_list),
               onPressed: _showAllergyFilterDialog,
-              tooltip: 'Filter Allergy',
+              tooltip: 'medicalRecordPage.filterAllergyTooltip'.tr(context),
             ),
         ],
         bottom: PreferredSize(
@@ -123,8 +122,8 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
         child: TabBarView(
           controller: _tabController,
           children: [
-            AllEncountersPage(filter: _encounterFilter), // Pass filter down
-            AllAllergiesPage(filter:_allergyFilter),
+            AllEncountersPage(filter: _encounterFilter),
+            AllAllergiesPage(filter: _allergyFilter),
             _buildObservationsList(),
             _buildDiagnosticReportsList(),
             _buildMedicationRequestsList(),
@@ -136,14 +135,12 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
     );
   }
 
-
-
   Widget _buildObservationsList() {
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
         _buildObservationTile(
-          observationName: 'Blood Pressure',
+          observationName: 'الملاحظات',
           value: '120/80 mmHg',
           date: '2023-11-20',
         ),
@@ -156,9 +153,9 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
       padding: EdgeInsets.all(16),
       children: [
         _buildDiagnosticReportTile(
-          reportName: 'X-Ray',
+          reportName: 'التقارير التشخيصية',
           reportDate: '2023-11-15',
-          result: 'Normal findings.',
+          result: 'نتائج طبيعية.',
         ),
       ],
     );
@@ -169,9 +166,9 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
       padding: EdgeInsets.all(16),
       children: [
         _buildMedicationRequestTile(
-          medicationName: 'Metformin',
+          medicationName: 'ميتفورمين',
           startDate: '2020-05-15',
-          dosage: '1000mg daily',
+          dosage: '1000 ملغ يوميًا',
         ),
       ],
     );
@@ -182,9 +179,9 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
       padding: EdgeInsets.all(16),
       children: [
         _buildAllergyTile(
-          allergyName: 'Penicillin',
-          reaction: 'Rash',
-          notes: 'Avoid penicillin-based medications.',
+          allergyName: 'البنسلين',
+          reaction: 'طفح جلدي',
+          notes: 'تجنب الأدوية المحتوية على البنسلين.',
         ),
       ],
     );
@@ -195,115 +192,11 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
       padding: EdgeInsets.all(16),
       children: [
         _buildChronicDiseaseTile(
-          diseaseName: 'Asthma',
+          diseaseName: 'ربو',
           diagnosisDate: '2015-03-10',
-          notes: 'Managed with inhalers.',
+          notes: 'يتم التحكم به باستخدام أجهزة الاستنشاق.',
         ),
       ],
-    );
-  }
-
-  Widget _buildEncounterTile({
-    required String doctorName,
-    required String clinicName,
-    required String time,
-    required String imageUrl,
-    required String reason,
-    required String diagnosis,
-    required String notes,
-  }) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      padding: EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(
-                  imageUrl,
-                  height: 80,
-                  width: 80,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(width: 16.0),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      doctorName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    Text(clinicName, style: TextStyle(fontSize: 16)),
-                    Text(time, style: TextStyle(fontSize: 16)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 15),
-          Text(
-            'Reason: $reason',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text('Diagnosis: $diagnosis'),
-          Text('Notes: $notes'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildConditionTile({
-    required String conditionName,
-    required String diagnosisDate,
-    required String notes,
-  }) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      padding: EdgeInsets.all(18.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            conditionName,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          Text(
-            'Diagnosis Date: $diagnosisDate',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text('Notes: $notes', style: TextStyle(fontSize: 16)),
-        ],
-      ),
     );
   }
 

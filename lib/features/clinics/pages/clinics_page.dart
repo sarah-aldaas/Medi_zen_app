@@ -1,7 +1,7 @@
 import 'dart:async';
+
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -9,10 +9,10 @@ import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
 import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
-import 'package:medizen_app/base/theme/app_color.dart';
 
 class ClinicsPage extends StatefulWidget {
   const ClinicsPage({Key? key}) : super(key: key);
@@ -34,12 +34,15 @@ class _ClinicsPageState extends State<ClinicsPage> {
             onPressed: () {
               context.pop();
             },
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.primaryColor,
+            ),
           ),
           toolbarHeight: 80,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Text(
-            "AlL Clinics".tr(context),
+            "clinicsPage.appBarTitle".tr(context),
             style: TextStyle(
               color: Theme.of(context).primaryColor,
               fontSize: 22,
@@ -60,6 +63,7 @@ class _ClinicsPageState extends State<ClinicsPage> {
           ],
         ),
         body: _ClinicsGridView(isVisible: isVisible),
+        backgroundColor: Colors.grey.shade100,
       ),
     );
   }
@@ -103,7 +107,6 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   void _onSearchChanged() {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 500), () {
-
       context.read<ClinicCubit>().fetchClinics(
         searchQuery: _searchController.text,
       );
@@ -118,7 +121,6 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-
               Visibility(
                 visible: widget.isVisible,
                 child: SearchFieldClinics(controller: _searchController),
@@ -159,7 +161,6 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
     } else if (state is ClinicSuccess) {
       return NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
-
           if (scrollNotification is ScrollEndNotification &&
               _scrollController.position.extentAfter == 0) {
             context.read<ClinicCubit>().fetchClinics(loadMore: true);
@@ -205,7 +206,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   Widget _buildClinicGridItem(ClinicModel clinic, BuildContext context) {
     return Card(
       elevation: 2.0,
-      color: Colors.teal.shade50,
+      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: InkWell(
         onTap:

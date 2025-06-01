@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/extensions/media_query_extension.dart';
+
 import '../../../../base/constant/app_images.dart';
 import '../../../../base/go_router/go_router.dart';
 import '../../../../base/services/di/injection_container_common.dart';
@@ -78,7 +78,10 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ClinicsPage()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ClinicsPage()),
+                      );
                     },
                     child: Text(
                       "homePage.specialties.seeAll".tr(context),
@@ -124,15 +127,18 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
             Text(
               _searchController.text.isEmpty
                   ? state.message
-                  : 'someClinics.no_result'.tr(context) + "${_searchController.text}",
+                  : 'someClinics.no_result'.tr(context) +
+                  "${_searchController.text}",
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
       );
     } else if (state is ClinicSuccess) {
-      // Limit to 8 items to match original behavior
-      final displayClinics = state.clinics.length > 8 ? state.clinics.sublist(0, 8) : state.clinics;
+      final displayClinics =
+      state.clinics.length > 8
+          ? state.clinics.sublist(0, 8)
+          : state.clinics;
       return GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -153,7 +159,8 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
 
   Widget _buildClinicGridItem(ClinicModel clinic, BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pushNamed(
+      onTap:
+          () => context.pushNamed(
         AppRouter.clinicDetails.name,
         extra: {"clinicId": clinic.id},
       ),
@@ -185,4 +192,3 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
     super.dispose();
   }
 }
-

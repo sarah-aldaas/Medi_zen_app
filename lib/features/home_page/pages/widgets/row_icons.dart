@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../base/extensions/localization_extensions.dart';
 import '../../../../base/go_router/go_router.dart';
-import '../../../../base/extensions/localization_extensions.dart'; // Add this import
 
 class RowIcons extends StatelessWidget {
   const RowIcons({super.key});
@@ -21,9 +22,11 @@ class RowIcons extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Card(
-                      child: Container(
-                          padding: const EdgeInsets.all(15),
-                          child: const Center(child: Icon(Icons.ac_unit)))),
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      child: const Center(child: Icon(Icons.ac_unit)),
+                    ),
+                  ),
                   Text("row_icons.doctors".tr(context)),
                 ],
               ),
@@ -36,9 +39,11 @@ class RowIcons extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Card(
-                      child: Container(
-                          padding: const EdgeInsets.all(15),
-                          child: const Center(child: Icon(Icons.article_outlined)))),
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      child: const Center(child: Icon(Icons.article_outlined)),
+                    ),
+                  ),
                   Text("row_icons.articles".tr(context)),
                 ],
               ),
@@ -47,9 +52,11 @@ class RowIcons extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Card(
-                    child: Container(
-                        padding: const EdgeInsets.all(15),
-                        child: const Center(child: Icon(Icons.home_repair_service)))),
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    child: const Center(child: Icon(Icons.home_repair_service)),
+                  ),
+                ),
                 Text("row_icons.services".tr(context)),
               ],
             ),
@@ -61,10 +68,13 @@ class RowIcons extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Card(
-                      child: Container(
-                          padding: const EdgeInsets.all(15),
-                          child:
-                          const Center(child: Icon(Icons.help_center_outlined)))),
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      child: const Center(
+                        child: Icon(Icons.help_center_outlined),
+                      ),
+                    ),
+                  ),
                   Text("row_icons.help_center".tr(context)),
                 ],
               ),

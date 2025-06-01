@@ -1,7 +1,6 @@
 import 'package:medizen_app/base/services/network/network_client.dart';
 import 'package:medizen_app/features/clinics/data/clinic_end_points.dart';
 import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
-import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
 
 import '../../../../base/data/models/pagination_model.dart';
 import '../../../../base/helpers/enums.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import '../../../../base/theme/app_style.dart';
 
 class GreetingWidget extends StatelessWidget {
   const GreetingWidget({super.key});
@@ -20,9 +19,6 @@ class GreetingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-        getGreeting(context),
-        style: TextStyle(fontSize: 12)
-    );
+    return Text(getGreeting(context), style: TextStyle(fontSize: 12));
   }
 }

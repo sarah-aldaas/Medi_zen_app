@@ -24,14 +24,22 @@ class DaysWorkDoctorModel {
       availability: availability ?? this.availability,
     );
   }
+
   factory DaysWorkDoctorModel.fromJson(Map<String, dynamic> json) {
     return DaysWorkDoctorModel(
       status: json['status'] as bool,
       errNum: json['errNum'] as int,
       msg: json['msg'] as String,
-      availability:json['availability']!=null? (json['availability'] as List)
-          .map((item) => DoctorAvailability.fromJson(item as Map<String, dynamic>))
-          .toList():[],
+      availability:
+          json['availability'] != null
+              ? (json['availability'] as List)
+                  .map(
+                    (item) => DoctorAvailability.fromJson(
+                      item as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList()
+              : [],
     );
   }
 
@@ -47,12 +55,9 @@ class DaysWorkDoctorModel {
 
 class DoctorAvailability {
   final DateTime date;
-  final int status; // 0 = unavailable, 1 = available
+  final int status;
 
-  DoctorAvailability({
-    required this.date,
-    required this.status,
-  });
+  DoctorAvailability({required this.date, required this.status});
 
   factory DoctorAvailability.fromJson(Map<String, dynamic> json) {
     return DoctorAvailability(
@@ -62,10 +67,7 @@ class DoctorAvailability {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'date': date,
-      'status': status,
-    };
+    return {'date': date, 'status': status};
   }
 
   bool get isAvailable => status == 1;

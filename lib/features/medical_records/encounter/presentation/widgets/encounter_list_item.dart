@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
 import '../../data/models/encounter_model.dart';
-
 
 class EncounterListItem extends StatelessWidget {
   final EncounterModel encounter;
@@ -17,44 +17,93 @@ class EncounterListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color dateBackgroundColor = Colors.blueGrey.shade50;
+    final Color dateTextColor = Colors.blueGrey.shade700;
+
+    final String type =
+        encounter.type?.display ?? 'encountersPge.encounter'.tr(context);
+    final String scheduledDate =
+        encounter.actualStartDate != null
+            ? DateFormat(
+              'MMM d, y - h:mm a',
+            ).format(DateTime.parse(encounter.actualStartDate!))
+            : 'encountersPge.dateNotAvailable'.tr(context);
+    final String status =
+        encounter.status?.display ?? 'encountersPge.unknownStatus'.tr(context);
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        elevation: 8,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(18),
           child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        encounter.reason ?? 'Encounter',
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        encounter.reason ??
+                            'encountersPge.encounter'.tr(context), // Translated
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 20,
+                          color: Colors.black87,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    _buildStatusChip(encounter.status),
-                  ],
+                      if (encounter.type?.display != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          type,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 16,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                      if (encounter.actualStartDate != null) ...[
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 7,
+                          ),
+                          decoration: BoxDecoration(
+                            color: dateBackgroundColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            scheduledDate,
+                            style: TextStyle(
+                              color: dateTextColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 8),
-                if (encounter.type?.display != null)
-                  Text(
-                    encounter.type!.display!,
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                const SizedBox(height: 8),
-                if (encounter.actualStartDate != null)
-                  Text(
-                    DateFormat('MMM d, y - h:mm a').format(DateTime.parse(encounter.actualStartDate!)),
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
+                const SizedBox(width: 16),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: _buildStatusIcon(
+                    context,
+                    encounter.status,
+                  ), // Pass context
+                ),
               ],
             ),
           ),
@@ -63,35 +112,49 @@ class EncounterListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(CodeModel? status) {
-    Color chipColor;
+  Widget _buildStatusIcon(BuildContext context, CodeModel? status) {
+    // Added context parameter
+    IconData iconData;
+    Color iconColor;
+    String tooltipText;
+
     switch (status?.code) {
       case 'planned':
-        chipColor = Colors.blue.shade100;
+        iconData = Icons.event_note;
+        iconColor = Colors.blue.shade600;
+        tooltipText = 'encountersPge.planned'.tr(context); // Translated
         break;
       case 'in-progress':
-        chipColor = Colors.orange.shade100;
+        iconData = Icons.hourglass_full;
+        iconColor = Colors.orange.shade600;
+        tooltipText = 'encountersPge.inProgress'.tr(context); // Translated
         break;
       case 'completed':
-        chipColor = Colors.green.shade100;
+        iconData = Icons.check_circle;
+        iconColor = Colors.green.shade600;
+        tooltipText = 'encountersPge.completed'.tr(context); // Translated
         break;
       case 'cancelled':
-        chipColor = Colors.red.shade100;
+        iconData = Icons.cancel;
+        iconColor = Colors.red.shade600;
+        tooltipText = 'encountersPge.cancelled'.tr(context); // Translated
         break;
       default:
-        chipColor = Colors.grey.shade200;
+        iconData = Icons.help_outline;
+        iconColor = Colors.grey.shade500;
+        tooltipText = 'encountersPge.unknownStatus'.tr(context); // Translated
     }
 
-    return Chip(
-      label: Text(
-        status?.display ?? 'Unknown',
-        style: TextStyle(
-          color: Colors.grey[800],
-          fontSize: 12,
+    return Tooltip(
+      message: tooltipText,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: iconColor.withOpacity(0.15),
+          shape: BoxShape.circle,
         ),
+        child: Icon(iconData, color: iconColor, size: 25),
       ),
-      backgroundColor: chipColor,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

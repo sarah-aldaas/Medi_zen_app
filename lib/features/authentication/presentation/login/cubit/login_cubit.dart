@@ -3,10 +3,12 @@ import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/services/network/resource.dart';
 import 'package:medizen_app/base/services/storage/storage_service.dart';
 import 'package:medizen_app/features/authentication/data/datasource/auth_remote_data_source.dart';
+
 import '../../../../../base/constant/storage_key.dart';
 import '../../../../../base/data/models/respons_model.dart';
 import '../../../../../base/error/exception.dart';
 import '../../../../../main.dart';
+
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -41,7 +43,6 @@ class LoginCubit extends Cubit<LoginState> {
             emit(LoginError(error: _parseErrorMessage(result.data.msg)));
           }
         } else {
-          // Handle the case when status is false
           emit(LoginError(error: _parseErrorMessage(result.data.msg)));
         }
       }
@@ -52,7 +53,6 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  // Helper method to parse the error message
   String _parseErrorMessage(dynamic msg) {
     String errorMessage = '';
     if (msg is Map<String, dynamic>) {
@@ -72,7 +72,6 @@ class LoginCubit extends Cubit<LoginState> {
   }
 }
 
-// Extension to capitalize the first letter of a string
 extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${substring(1)}";

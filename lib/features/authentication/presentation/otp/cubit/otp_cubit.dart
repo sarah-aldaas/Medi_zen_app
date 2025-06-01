@@ -1,6 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medizen_app/base/services/network/resource.dart';
+
 import '../../../../../base/data/models/respons_model.dart';
 import '../../../data/datasource/auth_remote_data_source.dart';
 
@@ -24,7 +25,9 @@ class OtpCubit extends Cubit<OtpState> {
         }
       },
       error: (String? message, int? code, AuthResponseModel? data) {
-        emit(OtpError(error: data?.msg ?? message ?? 'OTP verification failed'));
+        emit(
+          OtpError(error: data?.msg ?? message ?? 'OTP verification failed'),
+        );
       },
     );
   }
