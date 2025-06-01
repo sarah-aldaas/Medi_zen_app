@@ -62,7 +62,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           if (state is AppointmentDetailsSuccess) {
             return _buildAppointmentDetails(state.appointmentModel);
           } else if (state is AppointmentLoading) {
-            return Center(child: LoadingPage());
+            return const Center(child: LoadingPage());
           } else {
             return const Center(
               child: Text('Failed to load appointment details'),
@@ -118,8 +118,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
         const SizedBox(height: 5),
         Text(
           '${DateFormat('HH:mm').format(DateTime.parse(appointment.startDate!))} - '
-          '${DateFormat('HH:mm').format(DateTime.parse(appointment.endDate!))} '
-          '(${appointment.minutesDuration} minutes)',
+              '${DateFormat('HH:mm').format(DateTime.parse(appointment.endDate!))} '
+              '(${appointment.minutesDuration} minutes)',
         ),
       ],
     );
@@ -221,9 +221,9 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
   }
 
   Widget _buildActionButtons(
-    BuildContext context,
-    AppointmentModel appointment,
-  ) {
+      BuildContext context,
+      AppointmentModel appointment,
+      ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -259,14 +259,14 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
   }
 
   Future<void> _cancelAppointment(
-    BuildContext context,
-    AppointmentModel appointment,
-  ) async {
+      BuildContext context,
+      AppointmentModel appointment,
+      ) async {
     final reason = await showDialog<String>(
       context: context,
       builder:
           (context) =>
-              CancelAppointmentDialog(appointmentId: appointment.id.toString()),
+          CancelAppointmentDialog(appointmentId: appointment.id.toString()),
     );
 
     if (reason != null && reason.isNotEmpty) {
@@ -287,19 +287,19 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text("appointmentDetails.confirmDelete".tr(context)),
-            content: Text("appointmentDetails.deleteMessage".tr(context)),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text("appointmentDetails.no".tr(context)),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: Text("appointmentDetails.yes".tr(context)),
-              ),
-            ],
+        title: Text("appointmentDetails.confirmDelete".tr(context)),
+        content: Text("appointmentDetails.deleteMessage".tr(context)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text("appointmentDetails.no".tr(context)),
           ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text("appointmentDetails.yes".tr(context)),
+          ),
+        ],
+      ),
     );
 
     if (confirmed == true) {}
@@ -311,11 +311,11 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       MaterialPageRoute(
         builder:
             (context) => UpdateAppointmentPage(
-              appointmentId: appointment.id.toString(),
-              initialReason: appointment.reason ?? '',
-              initialDescription: appointment.description ?? '',
-              initialNote: appointment.note,
-            ),
+          appointmentId: appointment.id.toString(),
+          initialReason: appointment.reason ?? '',
+          initialDescription: appointment.description ?? '',
+          initialNote: appointment.note,
+        ),
       ),
     ).then((success) {
       if (success == true) {

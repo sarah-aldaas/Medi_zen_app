@@ -10,6 +10,7 @@ import 'package:medizen_app/features/profile/presentaiton/widgets/telecom/teleco
 import 'package:medizen_app/features/profile/presentaiton/widgets/telecom/telecom_update_create_dialogs.dart';
 
 import '../../../../../../../../base/theme/app_color.dart';
+import '../../../../base/widgets/loading_page.dart';
 import '../cubit/telecom_cubit/telecom_cubit.dart';
 
 class TelecomPage extends StatefulWidget {
@@ -137,7 +138,7 @@ class _TelecomPageState extends State<TelecomPage> {
         }
 
         if (state is TelecomLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: LoadingButton());
         }
 
         final telecoms =
@@ -277,7 +278,7 @@ class _TelecomPageState extends State<TelecomPage> {
           future: telecomTypesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: LoadingButton());
             }
             final telecomTypes = snapshot.data ?? [];
             return _buildContentForTab(_selectedTab ?? telecomTypes.first);

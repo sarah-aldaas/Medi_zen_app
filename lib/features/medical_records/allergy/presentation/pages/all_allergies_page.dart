@@ -57,15 +57,15 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+        _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<AllergyCubit>()
           .getAllMyAllergies(filters: widget.filter.toJson(), loadMore: true)
           .then((_) {
-            setState(() => _isLoadingMore = false);
-          });
+        setState(() => _isLoadingMore = false);
+      });
     }
   }
 
@@ -88,9 +88,9 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
         }
 
         final allergies =
-            state is AllergiesSuccess
-                ? state.paginatedResponse.paginatedData?.items
-                : [];
+        state is AllergiesSuccess
+            ? state.paginatedResponse.paginatedData?.items
+            : [];
         final hasMore = state is AllergiesSuccess ? state.hasMore : false;
 
         if (allergies == null || allergies.isEmpty) {

@@ -96,11 +96,11 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'type_appointment',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'type_appointment',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodeTypesLoading) {
                           return const Center(
@@ -235,9 +235,9 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                             : "filterAppointments.selectStartDate".tr(context),
                         style: TextStyle(
                           color:
-                              _selectedStartDate != null
-                                  ? Colors.black
-                                  : Colors.grey[600],
+                          _selectedStartDate != null
+                              ? Colors.black
+                              : Colors.grey[600],
                         ),
                       ),
                       trailing: Icon(
@@ -293,9 +293,9 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                             : "filterAppointments.selectEndDate".tr(context),
                         style: TextStyle(
                           color:
-                              _selectedEndDate != null
-                                  ? Colors.black
-                                  : Colors.grey[600],
+                          _selectedEndDate != null
+                              ? Colors.black
+                              : Colors.grey[600],
                         ),
                       ),
                       trailing: Icon(
@@ -306,7 +306,7 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                         final DateTime? picked = await showDatePicker(
                           context: context,
                           initialDate:
-                              _selectedEndDate ??
+                          _selectedEndDate ??
                               (_selectedStartDate ?? DateTime.now()),
                           firstDate: _selectedStartDate ?? DateTime(2000),
                           lastDate: DateTime(2100),
@@ -408,8 +408,8 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                       ],
                       onChanged:
                           (value) => setState(() {
-                            _selectedSort = value;
-                          }),
+                        _selectedSort = value;
+                      }),
                     ),
                   ],
                 ),
@@ -448,9 +448,9 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                           context,
                           AppointmentFilter(
                             typeId:
-                                _selectedTypeId != null
-                                    ? int.tryParse(_selectedTypeId!)
-                                    : null,
+                            _selectedTypeId != null
+                                ? int.tryParse(_selectedTypeId!)
+                                : null,
                             statusId: _selectedStatusId,
                             startDate: _selectedStartDate,
                             endDate: _selectedEndDate,

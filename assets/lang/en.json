@@ -408,7 +408,11 @@
       "userName": "Andrew Ainsley"
     },
     "specialties": {
+<<<<<<< HEAD
       "title": "All Clinics",
+=======
+      "title": "Doctor Speciality",
+>>>>>>> 609acdacad5ce38d7f0ede080fd6a3cd672fd027
       "seeAll": "See all",
       "items": {
         "general": "General",

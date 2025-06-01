@@ -128,7 +128,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
               _searchController.text.isEmpty
                   ? state.message
                   : 'someClinics.no_result'.tr(context) +
-                      "${_searchController.text}",
+                  "${_searchController.text}",
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
@@ -136,9 +136,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
       );
     } else if (state is ClinicSuccess) {
       final displayClinics =
-          state.clinics.length > 8
-              ? state.clinics.sublist(0, 8)
-              : state.clinics;
+      state.clinics.length > 8
+          ? state.clinics.sublist(0, 8)
+          : state.clinics;
       return GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -161,9 +161,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
     return GestureDetector(
       onTap:
           () => context.pushNamed(
-            AppRouter.clinicDetails.name,
-            extra: {"clinicId": clinic.id},
-          ),
+        AppRouter.clinicDetails.name,
+        extra: {"clinicId": clinic.id},
+      ),
       child: SizedBox(
         width: (MediaQuery.of(context).size.width - (2 * 16) - (3 * 20)) / 5,
         child: Column(

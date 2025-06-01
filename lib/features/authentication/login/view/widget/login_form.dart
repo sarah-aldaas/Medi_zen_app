@@ -6,6 +6,9 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 
 import '../../../../../base/theme/app_style.dart';
 import '../../../../../base/widgets/loading_page.dart';
+
+import '../../../signup/view/signup_screen.dart';
+
 import '../../cubit/login_cubit.dart';
 import '../../cubit/login_state.dart';
 
@@ -125,6 +128,7 @@ class _LoginFormState extends State<LoginForm> {
                   }
                 },
                 style: AppStyles.elevatedButtonStyle,
+
                 child:
                     state is LoginLoading
                         ? LoadingButton(isWhite: true)
@@ -132,6 +136,8 @@ class _LoginFormState extends State<LoginForm> {
                           'login_page.login'.tr(context),
                           style: TextStyle(color: Colors.white),
                         ),
+
+
               ),
               const SizedBox(height: 30),
               Row(

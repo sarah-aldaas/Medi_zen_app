@@ -293,6 +293,15 @@ class _HealthCareServiceDetailsPageState
                     ),
                   ),
                 ),
+                IconButton(
+                  onPressed: () {
+                    context.pushNamed(
+                      AppRouter.clinicDetails.name,
+                      extra: {"clinicId": service.clinic!.id},
+                    );
+                  },
+                  icon: Icon(Icons.arrow_circle_right, color: Colors.blue),
+                ),
               ],
             ),
             const Gap(8),

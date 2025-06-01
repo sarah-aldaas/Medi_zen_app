@@ -5,8 +5,8 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import '../../../../../base/theme/app_color.dart';
 import '../../../../../base/theme/app_style.dart';
 import '../../../../../base/widgets/loading_page.dart';
-import '../cubit/change_password_cubit.dart';
-import '../cubit/change_password_state.dart';
+import '../../../change_password/cubit/change_password_cubit.dart';
+import '../../../change_password/cubit/change_password_state.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   @override
@@ -129,6 +129,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                     );
                               },
                       style: AppStyles.primaryButtonStyle,
+
                       child:
                           state is ChangePasswordLoading
                               ? LoadingButton(isWhite: true)

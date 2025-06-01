@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../../../base/theme/app_color.dart';
 
@@ -81,7 +82,7 @@ class _CancelAppointmentDialogState extends State<CancelAppointmentDialog> {
           ),
           const SizedBox(height: 45.0),
           _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ?  Center(child: LoadingButton())
               : Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[

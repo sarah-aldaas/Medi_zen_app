@@ -61,6 +61,7 @@ class _HomePageBodyState extends State<HomePageBody> {
     PatientModel? myPatientModel = loadingPatientModel();
     return Padding(
       padding: const EdgeInsets.only(bottom: 16, top: 20, left: 16, right: 8),
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

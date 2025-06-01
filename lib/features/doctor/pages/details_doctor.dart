@@ -62,11 +62,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     final formattedDate = DateFormat('yyyy-MM-dd').format(date);
     final isAvailable =
         _doctorAvailability?.availability.any(
-          (day) =>
-              DateFormat('yyyy-MM-dd').format(day.date) == formattedDate &&
+              (day) =>
+          DateFormat('yyyy-MM-dd').format(day.date) == formattedDate &&
               day.isAvailable,
         ) ??
-        false;
+            false;
 
     if (!isAvailable) return;
 
@@ -106,7 +106,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       if (Platform.isAndroid) {
         directory =
             await getExternalStorageDirectory() ??
-            await getTemporaryDirectory();
+                await getTemporaryDirectory();
       } else {
         directory = await getApplicationDocumentsDirectory();
       }
@@ -172,7 +172,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       listener: (context, state) {
         if (state is DaysWorkDoctorSuccess) {
           final sortedAvailability =
-              state.days.availability..sort((a, b) => a.date.compareTo(b.date));
+          state.days.availability..sort((a, b) => a.date.compareTo(b.date));
           setState(() {
             _doctorAvailability = state.days.copyWith(
               availability: sortedAvailability,
@@ -182,7 +182,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
 
           if (_doctorAvailability!.availability.isNotEmpty) {
             final firstAvailable = sortedAvailability.firstWhere(
-              (day) => day.isAvailable,
+                  (day) => day.isAvailable,
               orElse: () => sortedAvailability.first,
             );
             setState(() {
@@ -316,32 +316,32 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                               (context, index) => const SizedBox(width: 8),
                           itemBuilder: (context, index) {
                             final day =
-                                _doctorAvailability!.availability[index];
+                            _doctorAvailability!.availability[index];
                             final isSelected =
                                 day.date.day == _selectedDate.day &&
-                                day.date.month == _selectedDate.month &&
-                                day.date.year == _selectedDate.year;
+                                    day.date.month == _selectedDate.month &&
+                                    day.date.year == _selectedDate.year;
 
                             return InkWell(
                               onTap:
-                                  day.isAvailable
-                                      ? () {
-                                        _fetchSlotsForDate(day.date);
-                                        setState(() {
-                                          _selectedDate = day.date;
-                                          _selectedTime = null;
-                                        });
-                                      }
-                                      : null,
+                              day.isAvailable
+                                  ? () {
+                                _fetchSlotsForDate(day.date);
+                                setState(() {
+                                  _selectedDate = day.date;
+                                  _selectedTime = null;
+                                });
+                              }
+                                  : null,
                               child: Container(
                                 width: 45,
                                 decoration: BoxDecoration(
                                   color:
-                                      isSelected
-                                          ? const Color(0xFF00CBA9)
-                                          : day.isAvailable
-                                          ? Colors.grey[200]
-                                          : Colors.grey[100],
+                                  isSelected
+                                      ? const Color(0xFF00CBA9)
+                                      : day.isAvailable
+                                      ? Colors.grey[200]
+                                      : Colors.grey[100],
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
@@ -354,11 +354,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                       style: TextStyle(
                                         fontSize: 12,
                                         color:
-                                            isSelected
-                                                ? Colors.white
-                                                : day.isAvailable
-                                                ? Colors.grey[600]
-                                                : Colors.grey[400],
+                                        isSelected
+                                            ? Colors.white
+                                            : day.isAvailable
+                                            ? Colors.grey[600]
+                                            : Colors.grey[400],
                                       ),
                                     ),
                                     const SizedBox(height: 4),
@@ -368,11 +368,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                         color:
-                                            isSelected
-                                                ? Colors.white
-                                                : day.isAvailable
-                                                ? Colors.black
-                                                : Colors.grey[400],
+                                        isSelected
+                                            ? Colors.white
+                                            : day.isAvailable
+                                            ? Colors.black
+                                            : Colors.grey[400],
                                       ),
                                     ),
                                     if (!day.isAvailable)
@@ -402,55 +402,55 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                         alignment: WrapAlignment.spaceBetween,
                         runSpacing: 8.0,
                         children:
-                            _availableSlots.map((slot) {
-                              final startTime = DateTime.parse(slot.startDate);
-                              final endTime = DateTime.parse(slot.endDate);
-                              final timeStr =
-                                  '${DateFormat('hh:mm a').format(startTime)}';
-                              final isSelected =
-                                  _selectedTime?.hour == startTime.hour &&
+                        _availableSlots.map((slot) {
+                          final startTime = DateTime.parse(slot.startDate);
+                          final endTime = DateTime.parse(slot.endDate);
+                          final timeStr =
+                              '${DateFormat('hh:mm a').format(startTime)}';
+                          final isSelected =
+                              _selectedTime?.hour == startTime.hour &&
                                   _selectedTime?.minute == startTime.minute;
-                              final isBooked = slot.status.code != 'available';
+                          final isBooked = slot.status.code != 'available';
 
-                              return InkWell(
-                                onTap:
-                                    isBooked
-                                        ? null
-                                        : () {
-                                          setState(() {
-                                            _selectedTime =
-                                                TimeOfDay.fromDateTime(
-                                                  startTime,
-                                                );
-                                          });
-                                        },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        isSelected
-                                            ? const Color(0xFF00CBA9)
-                                            : isBooked
-                                            ? Colors.grey[300]
-                                            : Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    timeStr,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color:
-                                          isSelected || isBooked
-                                              ? Colors.white
-                                              : Colors.black,
-                                    ),
-                                  ),
+                          return InkWell(
+                            onTap:
+                            isBooked
+                                ? null
+                                : () {
+                              setState(() {
+                                _selectedTime =
+                                    TimeOfDay.fromDateTime(
+                                      startTime,
+                                    );
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                isSelected
+                                    ? const Color(0xFF00CBA9)
+                                    : isBooked
+                                    ? Colors.grey[300]
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                timeStr,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                  isSelected || isBooked
+                                      ? Colors.white
+                                      : Colors.black,
                                 ),
-                              );
-                            }).toList(),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
                   const SizedBox(height: 20),
@@ -465,15 +465,15 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               Center(
                 child: ElevatedButton(
                   onPressed:
-                      _selectedTime == null
-                          ? null
-                          : () async {
-                            await _showAppointmentDialog(
-                              context: context,
-                              title:
-                                  'Booking appointment on ${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
-                            );
-                          },
+                  _selectedTime == null
+                      ? null
+                      : () async {
+                    await _showAppointmentDialog(
+                      context: context,
+                      title:
+                      'Booking appointment on ${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     disabledBackgroundColor: Colors.grey[400],
@@ -518,8 +518,8 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               if (widget.doctorModel.telecoms!.isNotEmpty)
                 Column(
                   children: List.generate(widget.doctorModel.telecoms!.length, (
-                    index,
-                  ) {
+                      index,
+                      ) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListTile(
@@ -559,9 +559,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                         runSpacing: 8.0,
                         children: List.generate(
                           widget.doctorModel.communications!.length,
-                          (index) {
+                              (index) {
                             final communication =
-                                widget.doctorModel.communications![index];
+                            widget.doctorModel.communications![index];
                             return Text(
                               communication.language.display,
                               style: TextStyle(
@@ -569,11 +569,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                 fontWeight: FontWeight.w600, //
 
                                 color:
-                                    communication.preferred
-                                        ? Theme.of(
-                                          context,
-                                        ).colorScheme.onSurface
-                                        : Colors.grey.shade600,
+                                communication.preferred
+                                    ? Theme.of(
+                                  context,
+                                ).colorScheme.onSurface
+                                    : Colors.grey.shade600,
                               ),
                             );
                           },
@@ -608,10 +608,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               if (widget.doctorModel.qualifications!.isNotEmpty)
                 Column(
                   children: List.generate(widget.doctorModel.qualifications!.length, (
-                    index,
-                  ) {
+                      index,
+                      ) {
                     final qualificationId =
-                        widget.doctorModel.qualifications![index].id.toString();
+                    widget.doctorModel.qualifications![index].id.toString();
                     return Container(
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.all(5),
@@ -631,11 +631,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                 height: 30,
                                 child: CircularProgressIndicator(
                                   value:
-                                      _downloadProgress[widget
-                                          .doctorModel
-                                          .qualifications![index]
-                                          .id
-                                          .toString()],
+                                  _downloadProgress[widget
+                                      .doctorModel
+                                      .qualifications![index]
+                                      .id
+                                      .toString()],
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     Theme.of(context).primaryColor,
@@ -644,44 +644,44 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                               ),
                             IconButton(
                               onPressed:
-                                  _downloadProgress.containsKey(
-                                        widget
-                                            .doctorModel
-                                            .qualifications![index]
-                                            .id
-                                            .toString(),
-                                      )
-                                      ? null
-                                      : () => downloadAndViewPdf(
-                                        widget
-                                            .doctorModel
-                                            .qualifications![index]
-                                            .pdf
-                                            .toString(),
-                                        widget
-                                            .doctorModel
-                                            .qualifications![index]
-                                            .id
-                                            .toString(),
-                                      ),
+                              _downloadProgress.containsKey(
+                                widget
+                                    .doctorModel
+                                    .qualifications![index]
+                                    .id
+                                    .toString(),
+                              )
+                                  ? null
+                                  : () => downloadAndViewPdf(
+                                widget
+                                    .doctorModel
+                                    .qualifications![index]
+                                    .pdf
+                                    .toString(),
+                                widget
+                                    .doctorModel
+                                    .qualifications![index]
+                                    .id
+                                    .toString(),
+                              ),
                               icon: Icon(
                                 _downloadComplete[widget
-                                            .doctorModel
-                                            .qualifications![index]
-                                            .id
-                                            .toString()] ==
-                                        true
+                                    .doctorModel
+                                    .qualifications![index]
+                                    .id
+                                    .toString()] ==
+                                    true
                                     ? Icons.check_circle
                                     : Icons.picture_as_pdf,
                                 color:
-                                    _downloadComplete[widget
-                                                .doctorModel
-                                                .qualifications![index]
-                                                .id
-                                                .toString()] ==
-                                            true
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.grey,
+                                _downloadComplete[widget
+                                    .doctorModel
+                                    .qualifications![index]
+                                    .id
+                                    .toString()] ==
+                                    true
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey,
                               ),
                             ),
                           ],
@@ -724,11 +724,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
   }
 
   Widget _buildInfoColumn(
-    IconData icon,
-    String value,
-    String labelKey,
-    BuildContext context,
-  ) {
+      IconData icon,
+      String value,
+      String labelKey,
+      BuildContext context,
+      ) {
     return Column(
       children: [
         Icon(icon, color: Theme.of(context).primaryColor),
@@ -857,9 +857,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                           reason: reason,
                           description: description,
                           note:
-                              note.isNotEmpty
-                                  ? note
-                                  : 'doctorDetails.noThing'.tr(context),
+                          note.isNotEmpty
+                              ? note
+                              : 'doctorDetails.noThing'.tr(context),
                           doctorId: widget.doctorModel.id.toString(),
                           patientId: patientModel.id!,
                           previousAppointment: null,

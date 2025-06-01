@@ -223,9 +223,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                       MaterialPageRoute(
                         builder:
                             (context) => ReactionDetailsPage(
-                              allergyId: allergy.id!,
-                              reactionId: reaction.id!,
-                            ),
+                          allergyId: allergy.id!,
+                          reactionId: reaction.id!,
+                        ),
                       ),
                     ).then((_) => _loadAllergyDetails());
                   },
@@ -247,9 +247,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     MaterialPageRoute(
                       builder:
                           (context) => AppointmentReactionsPage(
-                            appointmentId: widget.appointmentId!,
-                            allergyId: widget.allergyId,
-                          ),
+                        appointmentId: widget.appointmentId!,
+                        allergyId: widget.allergyId,
+                      ),
                     ),
                   ).then((_) => _loadAllergyDetails());
                 },
@@ -296,8 +296,8 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                       MaterialPageRoute(
                         builder:
                             (context) => EncounterDetailsPage(
-                              encounterId: allergy.encounter!.id!,
-                            ),
+                          encounterId: allergy.encounter!.id!,
+                        ),
                       ),
                     ).then((_) => _loadAllergyDetails());
                   },
@@ -378,11 +378,11 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
   }
 
   Widget _buildDetailRow(
-    BuildContext context,
-    IconData icon,
-    String label,
-    String? value,
-  ) {
+      BuildContext context,
+      IconData icon,
+      String label,
+      String? value,
+      ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
