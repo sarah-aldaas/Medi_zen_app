@@ -14,7 +14,7 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_create_model.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
-import 'package:medizen_app/main.dart'; // Ensure this is correct for AppColors
+import 'package:medizen_app/main.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -89,27 +89,44 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       }
 
       setState(() {
-        _downloadProgress[qualificationId] = 0;
+        _downloadProgress[qualificationId] = 0.0;
         _downloadComplete[qualificationId] = false;
       });
 
       if (Platform.isAndroid) {
         final status = await Permission.storage.request();
         if (!status.isGranted) {
-          throw Exception('Storage permission denied');
+          throw Exception(
+            'Storage permission denied. Please allow storage access.',
+          );
         }
       }
 
-      final directory = await getTemporaryDirectory();
+      Directory directory;
+      if (Platform.isAndroid) {
+        directory =
+            await getExternalStorageDirectory() ??
+            await getTemporaryDirectory();
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+
       final filePath = '${directory.path}/qualification_$qualificationId.pdf';
+      final file = File(filePath);
+
+      if (await file.exists()) {
+        await file.delete();
+      }
 
       await _dio.download(
         pdfUrl,
         filePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
+            final progress = received / total;
+            print('Download progress: $progress for $qualificationId');
             setState(() {
-              _downloadProgress[qualificationId] = received / total;
+              _downloadProgress[qualificationId] = progress;
             });
           }
         },
@@ -120,26 +137,29 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
         ),
       );
 
+      if (!await file.exists() || (await file.length()) == 0) {
+        throw Exception('Downloaded file is invalid or empty');
+      }
+
       setState(() {
         _downloadComplete[qualificationId] = true;
       });
 
-      // Open the PDF
-      final result = await OpenFilex.open(filePath);
+      final result = await OpenFilex.open(filePath, type: 'application/pdf');
       if (result.type != ResultType.done) {
         throw Exception('Failed to open PDF: ${result.message}');
       }
-    } catch (e) {
-      // Show error notification
+    } catch (e, stackTrace) {
+      print('Error downloading/opening PDF: $e\n$stackTrace');
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
           backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
+          duration: Duration(seconds: 3),
         ),
       );
     } finally {
-      // Clean up progress state
       setState(() {
         _downloadProgress.remove(qualificationId);
       });
@@ -192,18 +212,27 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             "${widget.doctorModel.fName} ${widget.doctorModel.lName}",
           ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).iconTheme.color,
+            ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.favorite_border, color: Colors.grey),
+              icon: Icon(
+                Icons.favorite_border,
+                color: Theme.of(context).iconTheme.color,
+              ),
               onPressed: () {},
             ),
             IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.grey),
+              icon: Icon(
+                Icons.more_vert,
+                color: Theme.of(context).iconTheme.color,
+              ),
               onPressed: () {},
             ),
           ],
@@ -388,7 +417,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                               final startTime = DateTime.parse(slot.startDate);
                               final endTime = DateTime.parse(slot.endDate);
                               final timeStr =
-                                  '${DateFormat('hh:mm a').format(startTime)}'; // - ${DateFormat('hh:mm a').format(endTime)}';
+                                  '${DateFormat('hh:mm a').format(startTime)}';
                               final isSelected =
                                   _selectedTime?.hour == startTime.hour &&
                                   _selectedTime?.minute == startTime.minute;
@@ -470,7 +499,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Center(
                 child: TextButton(
                   onPressed: () {
@@ -487,12 +516,12 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   ),
                 ),
               ),
-              const Divider(),
+              Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "Telecom",
+                    'doctorDetails.telecom'.tr(context),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -520,14 +549,13 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   }),
                 ),
               if (widget.doctorModel.telecoms!.isEmpty)
-                const Text("There are not any telecoms"),
-              const Divider(),
-
+                Text('doctorDetails.noTelecom'.tr(context)),
+              Divider(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Communications",
+                    'doctorDetails.communications'.tr(context),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -553,7 +581,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                               communication.language.display,
                               style: TextStyle(
                                 fontSize: 15,
-                                fontWeight: FontWeight.w600, //
+                                fontWeight: FontWeight.w600,
 
                                 color:
                                     communication.preferred
@@ -571,7 +599,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        "No communication methods available.",
+                        'doctorDetails.noCommunication',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -583,12 +611,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   const Divider(),
                 ],
               ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "Qualifications",
+                    'doctorDetails.qualifications'.tr(context),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -602,9 +629,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   children: List.generate(widget.doctorModel.qualifications!.length, (
                     index,
                   ) {
+                    final qualificationId =
+                        widget.doctorModel.qualifications![index].id.toString();
                     return Container(
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.all(5),
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -690,7 +719,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                               ),
                               Row(
                                 children: [
-                                  const Icon(Icons.date_range_outlined),
+                                  Icon(Icons.date_range_outlined),
                                   Text(
                                     " ${widget.doctorModel.qualifications![index].startDate} - ${widget.doctorModel.qualifications![index].endDate ?? "continue"}",
                                   ),
@@ -704,8 +733,8 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   }),
                 ),
               if (widget.doctorModel.qualifications!.isEmpty)
-                const Text("There are not any qualifications"),
-              const Divider(),
+                Text('doctorDetails.noQualifications'.tr(context)),
+              Divider(),
             ],
           ),
         ),
@@ -733,11 +762,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     required String title,
   }) async {
     final formKey = GlobalKey<FormState>();
-    String reason = 'I am sick.';
-    String description = 'I need some medical treatment.';
-    String note = 'No thing,Thanks.';
-    PatientModel patientModel =
-        loadingPatientModel(); // Assuming loadingPatientModel() exists and provides PatientModel
+    String reason = 'doctorDetails.sick'.tr(context);
+    String description = 'doctorDetails.medicalTreatment'.tr(context);
+    String note = 'doctorDetails.noThing'.tr(context);
+    PatientModel patientModel = loadingPatientModel();
 
     return showDialog(
       context: context,
@@ -748,20 +776,14 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               Navigator.pop(context);
               _fetchDoctorAvailability();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   backgroundColor: Colors.green,
-                  content: Text('Appointment booked successfully'),
+                  content: Text('doctorDetails.appointmentBooked'.tr(context)),
                 ),
               );
             } else if (state is AppointmentError) {
               Navigator.pop(context);
               _fetchDoctorAvailability();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.red,
-                  content: Text(state.error),
-                ),
-              );
             }
           },
           child: AlertDialog(
@@ -784,28 +806,30 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                       const Gap(20),
                       TextFormField(
                         initialValue: reason,
-                        decoration: const InputDecoration(
-                          labelText: 'Reason*',
-                          hintText: 'Why are you booking this appointment?',
+                        decoration: InputDecoration(
+                          labelText: 'doctorDetails.reason'.tr(context),
+                          hintText: 'doctorDetails.Why?'.tr(context),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a reason';
+                            return 'doctorDetails.enterReason'.tr(context);
                           }
                           return null;
                         },
                         onSaved: (value) => reason = value ?? '',
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       TextFormField(
                         initialValue: description,
-                        decoration: const InputDecoration(
-                          labelText: 'Description*',
-                          hintText: 'Describe your symptoms or concerns',
+                        decoration: InputDecoration(
+                          labelText: 'doctorDetails.description'.tr(context),
+                          hintText: 'doctorDetails.symptomsORconcerns'.tr(
+                            context,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a description';
+                            return 'doctorDetails.enterDescription';
                           }
                           return null;
                         },
@@ -814,9 +838,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                       const SizedBox(height: 16),
                       TextFormField(
                         initialValue: note,
-                        decoration: const InputDecoration(
-                          labelText: 'Note (Optional)',
-                          hintText: 'Any additional information',
+                        decoration: InputDecoration(
+                          labelText: 'doctorDetails.Note'.tr(context),
+                          hintText: 'doctorDetails.anyAdditional'.tr(context),
                         ),
                         onSaved: (value) => note = value ?? '',
                       ),
@@ -828,12 +852,12 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: Text('doctorDetails.cancel'.tr(context)),
               ),
               BlocBuilder<AppointmentCubit, AppointmentState>(
                 builder: (context, state) {
                   if (state is AppointmentLoading) {
-                    return LoadingButton(); // Ensure LoadingButton is a const widget
+                    return LoadingButton();
                   }
                   return ElevatedButton(
                     onPressed: () async {
@@ -851,7 +875,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                         final appointment = AppointmentCreateModel(
                           reason: reason,
                           description: description,
-                          note: note.isNotEmpty ? note : "No thing,Thanks.",
+                          note:
+                              note.isNotEmpty
+                                  ? note
+                                  : 'doctorDetails.noThing'.tr(context),
                           doctorId: widget.doctorModel.id.toString(),
                           patientId: patientModel.id!,
                           previousAppointment: null,
@@ -869,8 +896,8 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    child: const Text(
-                      'Confirm',
+                    child: Text(
+                      'doctorDetails.confirm'.tr(context),
                       style: TextStyle(color: Colors.white),
                     ),
                   );

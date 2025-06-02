@@ -1,4 +1,3 @@
-// screen/complaint_list_screen.dart
 import 'package:flutter/material.dart';
 import 'package:medizen_app/features/Complaint/view/widget/complaint_item.dart';
 
@@ -15,11 +14,14 @@ class ComplaintListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Complaints submitted',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: AppColors.blackColor)),
+        title: Text(
+          'Complaints submitted',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: AppColors.blackColor,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: AppColors.backgroundColor,
         elevation: 1,
@@ -44,14 +46,6 @@ class ComplaintListScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.0),
-            // ElevatedButton(
-            //   onPressed: () {},
-            //   child: Text(
-            //     'submit complaint',
-            //     style: AppStyles.primaryButtonStyle,
-            //   ),
-            //   style: AppStyles.primaryButtonStyle,
-            // ),
           ],
         ),
       ),

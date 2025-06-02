@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -6,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
@@ -20,6 +20,7 @@ import '../../../../base/theme/app_color.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key, required this.patientModel});
+
   final UpdateProfileRequestModel patientModel;
 
   @override
@@ -30,7 +31,7 @@ class EditProfileScreen extends StatelessWidget {
           create: (context) => ProfileCubit(remoteDataSource: serviceLocator()),
         ),
         BlocProvider(
-       create:
+          create:
               (context) => CodeTypesCubit(remoteDataSource: serviceLocator()),
         ),
         BlocProvider(
@@ -56,7 +57,7 @@ class EditProfileScreen extends StatelessWidget {
             onPressed: () => context.goNamed(AppRouter.profileDetails.name),
           ),
           title: Text(
-            "Edit Profile",
+            "editProfile.title".tr(context),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -79,7 +80,7 @@ class EditProfileScreen extends StatelessWidget {
                                 ProfileStatus.loadignUpdate
                             ? LoadingButton(isWhite: false)
                             : Text(
-                              'Update',
+                              'editProfile.updateButton'.tr(context),
                               style: TextStyle(
                                 fontSize: 16,
                                 color:
@@ -140,7 +141,9 @@ class _EditProfileFormState extends State<EditProfileForm> {
     return BlocConsumer<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state.status == ProfileStatus.success && state.patient == null) {
-          ShowToast.showToasts(message: 'Profile updated successfully');
+          ShowToast.showToasts(
+            message: 'editProfile.updateSuccessMessage'.tr(context),
+          );
           context.pushNamed(AppRouter.profileDetails.name);
         } else if (state.errorMessage.isNotEmpty) {
           ShowToast.showToastError(message: state.errorMessage);
@@ -202,7 +205,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
                     (value) => _cubit.updateMaritalStatusId(value),
                     formState.maritalStatusId,
                   ),
-
                   const SizedBox(height: 60),
                 ],
               ),
@@ -310,9 +312,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                                         : Colors.pink,
                               ),
                             ),
-                            const SizedBox(
-                              width: 8,
-                            ),
+                            const SizedBox(width: 8),
                             Text(code.display),
                           ],
                         )
@@ -333,20 +333,25 @@ class _EditProfileFormState extends State<EditProfileForm> {
   }
 
   void _showImageSourceDialog() {
+    final ThemeData theme = Theme.of(context);
+
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            backgroundColor: AppColors.whiteColor,
+            backgroundColor:
+                theme
+                    .dialogTheme
+                    .backgroundColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
             title: Text(
-              'Select Image Source',
-              style: TextStyle(
-                fontSize: 18,
+              'editProfile.selectImageSource'.tr(context),
+              style: theme.textTheme.titleMedium?.copyWith(
+
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
+                color: theme.primaryColor,
               ),
             ),
             content: Container(
@@ -355,8 +360,14 @@ class _EditProfileFormState extends State<EditProfileForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.camera, color: AppColors.camera),
-                    title: const Text('Camera'),
+                    leading: Icon(
+                      Icons.camera,
+                      color: theme.colorScheme.secondary,
+                    ),
+                    title: Text(
+                      'editProfile.camera'.tr(context),
+                      style: theme.textTheme.bodyLarge,
+                    ),
                     onTap: () async {
                       Navigator.pop(context);
                       final pickedFile = await ImagePicker().pickImage(
@@ -375,11 +386,17 @@ class _EditProfileFormState extends State<EditProfileForm> {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(
+                    leading: Icon(
                       Icons.photo_library,
-                      color: AppColors.gallery,
+                      color:
+                          theme
+                              .colorScheme
+                              .tertiary,
                     ),
-                    title: const Text('Gallery'),
+                    title: Text(
+                      'editProfile.gallery'.tr(context),
+                      style: theme.textTheme.bodyLarge,
+                    ),
                     onTap: () async {
                       Navigator.pop(context);
                       final pickedFile = await ImagePicker().pickImage(
@@ -399,11 +416,17 @@ class _EditProfileFormState extends State<EditProfileForm> {
                   ),
                   if (_cubit.state.avatar != null || image != null)
                     ListTile(
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.remove_circle,
-                        color: Colors.red,
+                        color:
+                            theme
+                                .colorScheme
+                                .error,
                       ),
-                      title: const Text('Remove Image'),
+                      title: Text(
+                        'editProfile.removeImage'.tr(context),
+                        style: theme.textTheme.bodyLarge,
+                      ),
                       onTap: () {
                         Navigator.pop(context);
                         setState(() {
@@ -420,11 +443,12 @@ class _EditProfileFormState extends State<EditProfileForm> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(
+                child: Text(
+                  'editProfile.cancel'.tr(context),
+                  style: theme.textTheme.labelLarge?.copyWith(
+
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryColor,
+                    color: theme.primaryColor,
                   ),
                 ),
               ),
@@ -480,7 +504,7 @@ class EditProfileFormState {
 
 class EditProfileFormCubit extends Cubit<EditProfileFormState> {
   final CodeTypesCubit codeTypesCubit;
-  final String id = UniqueKey().toString(); // For debugging cubit instance
+  final String id = UniqueKey().toString();
 
   EditProfileFormCubit(this.codeTypesCubit) : super(EditProfileFormState()) {
     debugPrint('EditProfileFormCubit created: $id');
@@ -506,13 +530,6 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
       debugPrint(
         'Marital Status Codes: ${uniqueMaritalStatusCodes.values.toList()}',
       );
-
-      if (uniqueGenderCodes.isEmpty || uniqueMaritalStatusCodes.isEmpty) {
-        ShowToast.showToastError(
-          message: 'Failed to load gender or marital status options',
-        );
-        return;
-      }
 
       emit(
         state.copyWith(

@@ -10,12 +10,16 @@ part 'otp_verify_password_state.dart';
 class OtpVerifyPasswordCubit extends Cubit<OtpVerifyPasswordState> {
   final AuthRemoteDataSource authRemoteDataSource;
 
-  OtpVerifyPasswordCubit({required this.authRemoteDataSource}) : super(OtpVerifyPasswordInitial());
+  OtpVerifyPasswordCubit({required this.authRemoteDataSource})
+    : super(OtpVerifyPasswordInitial());
 
   Future<void> verifyOtp({required String email, required String otp}) async {
     emit(OtpLoadingVerify());
-    try{
-      final result = await authRemoteDataSource.verifyOtpPassword(email: email, otp: otp);
+    try {
+      final result = await authRemoteDataSource.verifyOtpPassword(
+        email: email,
+        otp: otp,
+      );
       result.fold(
         success: (AuthResponseModel response) {
           if (response.status) {
@@ -23,10 +27,9 @@ class OtpVerifyPasswordCubit extends Cubit<OtpVerifyPasswordState> {
           } else {
             String errorMessage = '';
             if (response.msg is Map<String, dynamic>) {
-              // Handle nested error messages
               (response.msg as Map<String, dynamic>).forEach((key, value) {
                 if (value is List) {
-                  errorMessage += value.join(', '); // Join list of errors
+                  errorMessage += value.join(', ');
                 } else {
                   errorMessage += value.toString();
                 }
@@ -40,10 +43,12 @@ class OtpVerifyPasswordCubit extends Cubit<OtpVerifyPasswordState> {
           }
         },
         error: (String? message, int? code, AuthResponseModel? data) {
-          emit(OtpError(error: data?.msg ?? message ?? 'OTP verification failed'));
+          emit(
+            OtpError(error: data?.msg ?? message ?? 'OTP verification failed'),
+          );
         },
       );
-    }on ServerException catch (e) {
+    } on ServerException catch (e) {
       emit(OtpError(error: e.message));
     } catch (e) {
       emit(OtpError(error: 'Unexpected error: ${e.toString()}'));

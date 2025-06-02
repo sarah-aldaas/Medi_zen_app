@@ -34,14 +34,19 @@ class _ClinicsPageState extends State<ClinicsPage> {
             onPressed: () {
               context.pop();
             },
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
+
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).iconTheme.color,
+            ),
           ),
           toolbarHeight: 80,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
-            "AlL Clinics".tr(context),
+            "clinicsPage.appBarTitle".tr(context),
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+
+              color: Theme.of(context).appBarTheme.titleTextStyle?.color,
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
@@ -55,11 +60,15 @@ class _ClinicsPageState extends State<ClinicsPage> {
                 });
               },
 
-              icon: const Icon(Icons.search, color: AppColors.primaryColor),
+              icon: Icon(
+                Icons.search,
+                color: Theme.of(context).iconTheme.color,
+              ),
             ),
           ],
         ),
         body: _ClinicsGridView(isVisible: isVisible),
+
       ),
     );
   }
@@ -134,13 +143,22 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
     if (state is ClinicLoading && state.isInitialLoad) {
       return Center(child: LoadingButton(isWhite: false));
     } else if (state is ClinicError) {
-      return Center(child: Text(state.error));
+      return Center(
+        child: Text(
+          state.error,
+          style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+        ),
+      );
     } else if (state is ClinicEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.search_off, size: 50, color: Colors.grey),
+            Icon(
+              Icons.search_off,
+              size: 50,
+              color: Theme.of(context).iconTheme.color,
+            ),
             const SizedBox(height: 16),
             Text(
               _searchController.text.isEmpty
@@ -148,8 +166,10 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
                   : 'No results found for "${_searchController.text}"'.tr(
                     context,
                   ),
-
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+              ),
             ),
           ],
         ),
@@ -187,7 +207,12 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(state.error),
+            Text(
+              state.error,
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
             ElevatedButton(
               onPressed: () => context.read<ClinicCubit>().fetchClinics(),
               child: const Text('Retry'),
@@ -202,7 +227,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   Widget _buildClinicGridItem(ClinicModel clinic, BuildContext context) {
     return Card(
       elevation: 2.0,
-      color: Colors.white,
+      color: Theme.of(context).cardTheme.color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: InkWell(
         onTap:
@@ -223,7 +248,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
                       image: const DecorationImage(
-                        image: AssetImage(AppAssetImages.clinic1),
+                        image: AssetImage(
+                          AppAssetImages.clinic1,
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -235,9 +262,13 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 clinic.name,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
+                  color:
+                      Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.color,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -261,6 +292,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
 
 class SearchFieldClinics extends StatelessWidget {
   final TextEditingController controller;
+
   final double _opacityLevel = 0.6;
 
   const SearchFieldClinics({super.key, required this.controller});
@@ -277,23 +309,35 @@ class SearchFieldClinics extends StatelessWidget {
               filled: true,
               fillColor:
                   theme.brightness == Brightness.dark
-                      ? Colors.black12
+                      ? AppColors.powderLight.withOpacity(
+                        0.1,
+                      )
                       : Colors.grey.shade50,
               hintText: 'searchField.title'.tr(context),
               hintStyle: TextStyle(
-                color: Colors.grey.withValues(alpha: _opacityLevel),
+
+                color:
+                    theme.brightness == Brightness.dark
+                        ? Colors.white.withOpacity(_opacityLevel)
+                        : Colors.grey.withOpacity(_opacityLevel),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
-                borderSide: const BorderSide(color: Colors.transparent),
+                borderSide: const BorderSide(
+                  color: Colors.transparent,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
-                borderSide: const BorderSide(color: Colors.transparent),
+                borderSide: const BorderSide(
+                  color: Colors.transparent,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 12.0,
@@ -301,7 +345,11 @@ class SearchFieldClinics extends StatelessWidget {
               ),
               prefixIcon: Icon(
                 Icons.search,
-                color: Colors.grey.withValues(alpha: _opacityLevel),
+
+                color:
+                    theme.brightness == Brightness.dark
+                        ? Colors.white.withOpacity(_opacityLevel)
+                        : Colors.grey.withOpacity(_opacityLevel),
               ),
             ),
           );

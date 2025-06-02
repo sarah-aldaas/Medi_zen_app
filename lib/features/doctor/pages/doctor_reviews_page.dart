@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart'; // <== Added!
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class DoctorReviewsPage extends StatelessWidget {
   @override
@@ -14,12 +14,7 @@ class DoctorReviewsPage extends StatelessWidget {
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              // Handle more options
-            },
-          ),
+          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
         ],
       ),
       body: SingleChildScrollView(
@@ -31,11 +26,26 @@ class DoctorReviewsPage extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildFilterButton('doctorReviewsPage.filters.all'.tr(context), true),
-                  _buildFilterButton('doctorReviewsPage.filters.fiveStars'.tr(context), false),
-                  _buildFilterButton('doctorReviewsPage.filters.fourStars'.tr(context), false),
-                  _buildFilterButton('doctorReviewsPage.filters.threeStars'.tr(context), false),
-                  _buildFilterButton('doctorReviewsPage.filters.twoStars'.tr(context), false),
+                  _buildFilterButton(
+                    'doctorReviewsPage.filters.all'.tr(context),
+                    true,
+                  ),
+                  _buildFilterButton(
+                    'doctorReviewsPage.filters.fiveStars'.tr(context),
+                    false,
+                  ),
+                  _buildFilterButton(
+                    'doctorReviewsPage.filters.fourStars'.tr(context),
+                    false,
+                  ),
+                  _buildFilterButton(
+                    'doctorReviewsPage.filters.threeStars'.tr(context),
+                    false,
+                  ),
+                  _buildFilterButton(
+                    'doctorReviewsPage.filters.twoStars'.tr(context),
+                    false,
+                  ),
                 ],
               ),
             ),
@@ -110,9 +120,7 @@ class DoctorReviewsPage extends StatelessWidget {
     required int likes,
   }) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(imageUrl),
-      ),
+      leading: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
       title: Row(
         children: [
           Text(name),
@@ -120,7 +128,7 @@ class DoctorReviewsPage extends StatelessWidget {
           Row(
             children: List.generate(
               rating,
-                  (index) => const Icon(Icons.star, color: Colors.amber, size: 16),
+              (index) => const Icon(Icons.star, color: Colors.amber, size: 16),
             ),
           ),
         ],
@@ -130,11 +138,7 @@ class DoctorReviewsPage extends StatelessWidget {
         children: [
           Text(review),
           Row(
-            children: [
-              Text('$likes'),
-              const SizedBox(width: 4),
-              Text(daysAgo),
-            ],
+            children: [Text('$likes'), const SizedBox(width: 4), Text(daysAgo)],
           ),
         ],
       ),

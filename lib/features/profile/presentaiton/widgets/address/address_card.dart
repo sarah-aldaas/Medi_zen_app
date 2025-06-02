@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/profile/data/models/address_model.dart';
+
+import '../../../../../base/theme/app_color.dart';
 
 class AddressCard extends StatelessWidget {
   final AddressModel address;
@@ -16,10 +19,8 @@ class AddressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -29,59 +30,72 @@ class AddressCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  address.type?.display ?? 'Address',
+                  address.type?.display ??
+                      'addressCard.defaultAddressType'.tr(context),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, size: 20),
-                      onPressed: onEdit,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, size: 20),
-                      onPressed: onDelete,
-                    ),
-                  ],
-                ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             Text(
-              address.use?.display ?? 'Use',
+              address.use?.display ??
+                  'addressCard.defaultAddressUse'.tr(context),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             Text(
               address.text ?? '',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             Text(
               '${address.line}, ${address.district}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
+            const SizedBox(height: 20),
             Text(
               '${address.city}, ${address.state}, ${address.postalCode}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
+            const SizedBox(height: 20),
             Text(
               address.country ?? '',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             if (address.startDate != null || address.endDate != null)
               Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 18),
                 child: Text(
-                  '${address.startDate != null ? 'From: ${address.startDate}' : ''}'
-                      '${address.endDate != null ? ' to: ${address.endDate}' : ' to continue'}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey,
-                  ),
+                  '${address.startDate != null ? 'addressCard.from'.tr(context) + ': ${address.startDate}' : ''}'
+                  '${address.endDate != null ? ' ' + 'addressCard.to'.tr(context) + ': ${address.endDate}' : ' ' + 'addressCard.toContinue'.tr(context)}',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                 ),
               ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit,
+                    size: 20,
+                    color: AppColors.gallery,
+                  ),
+                  onPressed: onEdit,
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 20,
+                    color: AppColors.red,
+                  ),
+                  onPressed: onDelete,
+                ),
+              ],
+            ),
           ],
         ),
       ),

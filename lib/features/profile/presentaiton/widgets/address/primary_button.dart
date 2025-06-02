@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class PrimaryButton extends StatelessWidget {
-  final String text;
+  final String textKey;
   final VoidCallback onPressed;
   final bool isLoading;
 
   const PrimaryButton({
     super.key,
-    required this.text,
+    required this.textKey,
     required this.onPressed,
     this.isLoading = false,
   });
@@ -20,19 +21,18 @@ class PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        child: isLoading
-            ? const CircularProgressIndicator(color: Colors.white)
-            : Text(
-          text,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child:
+            isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(
+                  textKey.tr(context),
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
       ),
     );
   }

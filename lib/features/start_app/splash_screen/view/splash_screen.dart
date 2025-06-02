@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
@@ -24,7 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Timer? _navigationTimer;
 
   Future<void> _checkFirstLaunchAndPatient() async {
-    final isFirst = serviceLocator<StorageService>().getFromDisk(StorageKey.firstInstall) ?? true;
+    final isFirst =
+        serviceLocator<StorageService>().getFromDisk(StorageKey.firstInstall) ??
+        true;
 
     if (mounted) {
       setState(() {
@@ -52,7 +55,6 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _checkFirstLaunchAndPatient();
 
-    // Fade-in animation
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
         setState(() {
@@ -61,13 +63,12 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     });
 
-    // Navigation timer
     _navigationTimer = Timer(const Duration(seconds: 5), _navigate);
   }
 
   @override
   void dispose() {
-    _navigationTimer?.cancel(); // Cancel the timer to prevent callbacks after unmount
+    _navigationTimer?.cancel();
     super.dispose();
   }
 
@@ -93,7 +94,10 @@ class _SplashScreenState extends State<SplashScreen> {
                     fontFamily: 'ChypreNorm',
                   ),
                   children: <TextSpan>[
-                    TextSpan(text: 'edi', style: TextStyle(color: Colors.white)),
+                    TextSpan(
+                      text: 'edi',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     TextSpan(
                       text: 'Z',
                       style: TextStyle(
@@ -114,7 +118,10 @@ class _SplashScreenState extends State<SplashScreen> {
               child: SizedBox(
                 width: 30,
                 height: 30,
-                child: Image.asset(AppAssetImages.logoGreenPng, fit: BoxFit.fill),
+                child: Image.asset(
+                  AppAssetImages.logoGreenPng,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
           ],

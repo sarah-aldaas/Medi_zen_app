@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/theme/app_style.dart';
+import '../../../../base/widgets/loading_page.dart';
 import '../../login/view/login_screen.dart';
 import '../../reset_password/view/reset_password_screen.dart';
 import '../cubit/forgot_password_cubit.dart';
@@ -78,8 +79,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: state is ForgotPasswordLoading
-                      ? const CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                      ?  LoadingButton(isWhite: true,)
                       : Text(
                     "forgotPassword.buttons.continue".tr(context),
                     style: AppStyles.buttonTextStyle,

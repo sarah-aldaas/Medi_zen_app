@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
 import 'package:medizen_app/features/authentication/data/models/register_request_model.dart';
-import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/features/authentication/presentation/signup/cubit/signup_cubit.dart';
 
 class SignupFormState {
@@ -12,8 +12,8 @@ class SignupFormState {
   final String? maritalStatusId;
   final bool isLoadingCodes;
   final Map<String, String> formData;
-  final bool obscurePassword; // Added for password visibility
-  final bool obscureConfirmPassword; // Added for confirm password visibility
+  final bool obscurePassword;
+  final bool obscureConfirmPassword;
 
   SignupFormState({
     this.genderCodes = const [],
@@ -21,9 +21,15 @@ class SignupFormState {
     this.genderId,
     this.maritalStatusId,
     this.isLoadingCodes = true,
-    this.formData = const {'firstName': '', 'lastName': '', 'email': '', 'password': '', 'confirmPassword': ''},
-    this.obscurePassword = true, // Default to hidden
-    this.obscureConfirmPassword = true, // Default to hidden
+    this.formData = const {
+      'firstName': '',
+      'lastName': '',
+      'email': '',
+      'password': '',
+      'confirmPassword': '',
+    },
+    this.obscurePassword = true,
+    this.obscureConfirmPassword = true,
   });
 
   SignupFormState copyWith({
@@ -44,7 +50,8 @@ class SignupFormState {
       isLoadingCodes: isLoadingCodes ?? this.isLoadingCodes,
       formData: formData ?? this.formData,
       obscurePassword: obscurePassword ?? this.obscurePassword,
-      obscureConfirmPassword: obscureConfirmPassword ?? this.obscureConfirmPassword,
+      obscureConfirmPassword:
+          obscureConfirmPassword ?? this.obscureConfirmPassword,
     );
   }
 }
@@ -56,7 +63,10 @@ class SignupFormCubit extends Cubit<SignupFormState> {
 
   Future<void> loadCodes() async {
     if (state.isLoadingCodes) {
-      final results = await Future.wait([codeTypesCubit.getGenderCodes(), codeTypesCubit.getMaritalStatusCodes()]);
+      final results = await Future.wait([
+        codeTypesCubit.getGenderCodes(),
+        codeTypesCubit.getMaritalStatusCodes(),
+      ]);
       final uniqueGenderCodes = <String, CodeModel>{};
       final uniqueMaritalStatusCodes = <String, CodeModel>{};
 
@@ -67,13 +77,21 @@ class SignupFormCubit extends Cubit<SignupFormState> {
         uniqueMaritalStatusCodes[code.id.toString()] = code;
       }
 
-      emit(state.copyWith(
-        genderCodes: uniqueGenderCodes.values.toList(),
-        maritalStatusCodes: uniqueMaritalStatusCodes.values.toList(),
-        isLoadingCodes: false,
-        genderId: uniqueGenderCodes.isNotEmpty ? uniqueGenderCodes.values.first.id.toString() : null,
-        maritalStatusId: uniqueMaritalStatusCodes.isNotEmpty ? uniqueMaritalStatusCodes.values.first.id.toString() : null,
-      ));
+      emit(
+        state.copyWith(
+          genderCodes: uniqueGenderCodes.values.toList(),
+          maritalStatusCodes: uniqueMaritalStatusCodes.values.toList(),
+          isLoadingCodes: false,
+          genderId:
+              uniqueGenderCodes.isNotEmpty
+                  ? uniqueGenderCodes.values.first.id.toString()
+                  : null,
+          maritalStatusId:
+              uniqueMaritalStatusCodes.isNotEmpty
+                  ? uniqueMaritalStatusCodes.values.first.id.toString()
+                  : null,
+        ),
+      );
     }
   }
 
@@ -90,12 +108,10 @@ class SignupFormCubit extends Cubit<SignupFormState> {
     emit(state.copyWith(maritalStatusId: value));
   }
 
-  // Added method to toggle password visibility
   void togglePasswordVisibility() {
     emit(state.copyWith(obscurePassword: !state.obscurePassword));
   }
 
-  // Added method to toggle confirm password visibility
   void toggleConfirmPasswordVisibility() {
     emit(state.copyWith(obscureConfirmPassword: !state.obscureConfirmPassword));
   }

@@ -354,6 +354,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         "profileDetailsPage.contactInformation",
                         Icons.contact_phone,
                       ),
+                      const Gap(30),
                       _buildNavigationItem(
                         "profileDetailsPage.telecom",
                         Icons.phone,

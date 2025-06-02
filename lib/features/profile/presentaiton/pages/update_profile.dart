@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -24,11 +24,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
           child: Container(
-            color: Colors.grey.shade400, // Color of the line
+            color: Colors.grey.shade400,
             height: 1.0,
           ),
         ),
-        title: Text("Edit profile", style: TextStyle(fontSize: 16, color: Colors.grey)),
+        title: Text(
+          "editProfilePage.editProfile".tr(context),
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -37,7 +40,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40),
             child: Column(
-              spacing: 20,
               children: [
                 CircleAvatar(
                   radius: 70,
@@ -45,10 +47,35 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: Icon(Icons.camera_alt, size: 30, color: Colors.grey),
                 ),
                 SizedBox(height: 20),
-                TextFormField(initialValue: email, decoration: InputDecoration(labelText: 'Your Email'), enabled: false),
-                TextFormField(initialValue: phone, decoration: InputDecoration(labelText: 'Your Phone'), keyboardType: TextInputType.phone),
-                TextFormField(initialValue: city, decoration: InputDecoration(labelText: 'City')),
-                TextFormField(initialValue: country, decoration: InputDecoration(labelText: 'Country')),
+                TextFormField(
+                  initialValue: email,
+                  decoration: InputDecoration(
+                    labelText: 'editProfilePage.yourEmail'.tr(context),
+                  ),
+                  enabled: false,
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  initialValue: phone,
+                  decoration: InputDecoration(
+                    labelText: 'editProfilePage.yourPhone'.tr(context),
+                  ),
+                  keyboardType: TextInputType.phone,
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  initialValue: city,
+                  decoration: InputDecoration(
+                    labelText: 'editProfilePage.city'.tr(context),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  initialValue: country,
+                  decoration: InputDecoration(
+                    labelText: 'editProfilePage.country'.tr(context),
+                  ),
+                ),
               ],
             ),
           ),

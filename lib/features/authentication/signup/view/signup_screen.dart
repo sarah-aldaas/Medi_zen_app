@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/authentication/signup/view/widget/signup_form.dart';
 
-import '../../../../base/blocs/localization_bloc/localization_bloc.dart';
-import '../../../../base/theme/widgets/theme_mode_button.dart';
 import '../../../start_app/welcome/view/welcome_screen.dart';
 import '../cubit/signup_cubit.dart';
 
@@ -32,7 +30,8 @@ class SignupScreen extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WelcomeScreen()),
+                              builder: (context) => WelcomeScreen(),
+                            ),
                           );
                         },
                         icon: const Icon(
@@ -42,12 +41,12 @@ class SignupScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Center(
-                          child:  Text(
+                          child: Text(
                             "sign_up_page.sign_up".tr(context),
                             style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color:Theme.of(context).primaryColor// Color(0xFF47BD93),
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                         ),

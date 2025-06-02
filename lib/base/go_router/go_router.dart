@@ -30,6 +30,7 @@ import '../../features/profile/presentaiton/pages/address_page.dart';
 import '../../features/profile/presentaiton/pages/edit_profile_screen.dart';
 import '../../features/profile/presentaiton/pages/profile.dart';
 import '../../features/profile/presentaiton/pages/telecom_page.dart';
+import '../../features/services/pages/health_care_services_page.dart';
 import '../../features/start_app/on_boarding/view/on_boarding_screen.dart';
 import '../../features/start_app/splash_screen/view/splash_screen.dart';
 import '../../features/start_app/welcome/view/welcome_screen.dart';
@@ -70,6 +71,8 @@ enum AppRouter {
   clinicService,
   addressDetails,
   telecomDetails,
+  healthCareServicesPage,
+  allAllergiesPage,
 }
 
 GoRouter goRouter() {
@@ -297,6 +300,14 @@ GoRouter goRouter() {
             name: AppRouter.telecomDetails.name,
             builder: (BuildContext context, GoRouterState state) {
               return TelecomPage();
+            },
+          ),
+
+          GoRoute(
+            path: "/HealthCareServicesPage",
+            name: AppRouter.healthCareServicesPage.name,
+            builder: (BuildContext context, GoRouterState state) {
+              return HealthCareServicesPage();
             },
           ),
         ],
