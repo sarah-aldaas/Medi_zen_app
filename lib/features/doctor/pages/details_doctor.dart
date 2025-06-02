@@ -493,6 +493,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                       vertical: 16,
                     ),
                   ),
+
                   child: Text(
                     'doctorDetails.bookAppointment'.tr(context),
                     style: const TextStyle(fontSize: 18, color: Colors.white),
