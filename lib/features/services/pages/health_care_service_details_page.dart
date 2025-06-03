@@ -52,10 +52,10 @@ class _HealthCareServiceDetailsPageState
         title: Text(
           'healthCareServicesPage.serviceDetails'.tr(context),
           style:
-              theme.appBarTheme.titleTextStyle?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ) ??
+          theme.appBarTheme.titleTextStyle?.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ) ??
               TextStyle(
                 color: primaryColor,
                 fontWeight: FontWeight.bold,
@@ -130,9 +130,9 @@ class _HealthCareServiceDetailsPageState
   }
 
   Widget _buildServiceDetails(
-    BuildContext context,
-    HealthCareServiceModel service,
-  ) {
+      BuildContext context,
+      HealthCareServiceModel service,
+      ) {
     final ThemeData theme = Theme.of(context);
     final Color primaryColor = theme.primaryColor;
     final Color textColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
@@ -162,10 +162,10 @@ class _HealthCareServiceDetailsPageState
                   fit: BoxFit.cover,
                   errorBuilder:
                       (context, error, stackTrace) => Icon(
-                        Icons.medical_services_outlined,
-                        size: 120,
-                        color: theme.iconTheme.color?.withOpacity(0.5),
-                      ),
+                    Icons.medical_services_outlined,
+                    size: 120,
+                    color: theme.iconTheme.color?.withOpacity(0.5),
+                  ),
                 ),
               ),
             ),
@@ -336,10 +336,10 @@ class _HealthCareServiceDetailsPageState
                       fit: BoxFit.cover,
                       errorBuilder:
                           (context, error, stackTrace) => Icon(
-                            Icons.local_hospital_outlined,
-                            size: 80,
-                            color: theme.iconTheme.color?.withOpacity(0.5),
-                          ),
+                        Icons.local_hospital_outlined,
+                        size: 80,
+                        color: theme.iconTheme.color?.withOpacity(0.5),
+                      ),
                     ),
                   ),
                 ),
@@ -360,7 +360,7 @@ class _HealthCareServiceDetailsPageState
             ),
             const Gap(10),
             ...service.eligibilities!.map(
-              (e) => Card(
+                  (e) => Card(
                 elevation: 2,
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
 

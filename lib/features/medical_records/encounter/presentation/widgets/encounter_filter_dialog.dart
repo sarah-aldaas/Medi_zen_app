@@ -118,11 +118,11 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                               state.codes
                                   ?.where(
                                     (c) =>
-                                        c.codeTypeModel?.name ==
-                                        'encounter_type',
-                                  )
+                                c.codeTypeModel?.name ==
+                                    'encounter_type',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                           return Column(
                             children: [
                               RadioListTile<String?>(
@@ -139,7 +139,7 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                                 },
                               ),
                               ...types.map(
-                                (type) => RadioListTile<String>(
+                                    (type) => RadioListTile<String>(
                                   title: Text(
                                     type.display ??
                                         'encountersPge.unknown'.tr(
@@ -180,11 +180,11 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                               state.codes
                                   ?.where(
                                     (c) =>
-                                        c.codeTypeModel?.name ==
-                                        'encounter_status',
-                                  )
+                                c.codeTypeModel?.name ==
+                                    'encounter_status',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                           return Column(
                             children: [
                               RadioListTile<int?>(
@@ -201,7 +201,7 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                                 },
                               ),
                               ...statuses.map(
-                                (status) => RadioListTile<int>(
+                                    (status) => RadioListTile<int>(
                                   title: Text(
                                     status.display ??
                                         'encountersPge.unknown'.tr(
@@ -241,13 +241,13 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                         _selectedMinStartDate != null
                             ? '${"encountersPge.from".tr(context)}: ${DateFormat('MMM d, y').format(_selectedMinStartDate!)}' // Translated
                             : "encountersPge.selectStartDate".tr(
-                              context,
-                            ),
+                          context,
+                        ),
                         style: TextStyle(
                           color:
-                              _selectedMinStartDate != null
-                                  ? Colors.black
-                                  : Colors.grey[600],
+                          _selectedMinStartDate != null
+                              ? Colors.black
+                              : Colors.grey[600],
                         ),
                       ),
                       trailing: Icon(
@@ -290,13 +290,13 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                         _selectedMaxStartDate != null
                             ? '${"encountersPge.to".tr(context)}: ${DateFormat('MMM d, y').format(_selectedMaxStartDate!)}' // Translated
                             : "encountersPge.selectEndDate".tr(
-                              context,
-                            ),
+                          context,
+                        ),
                         style: TextStyle(
                           color:
-                              _selectedMaxStartDate != null
-                                  ? Colors.black
-                                  : Colors.grey[600],
+                          _selectedMaxStartDate != null
+                              ? Colors.black
+                              : Colors.grey[600],
                         ),
                       ),
                       trailing: Icon(
@@ -307,7 +307,7 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                         final DateTime? picked = await showDatePicker(
                           context: context,
                           initialDate:
-                              _selectedMaxStartDate ??
+                          _selectedMaxStartDate ??
                               (_selectedMinStartDate ?? DateTime.now()),
                           firstDate: _selectedMinStartDate ?? DateTime(2000),
                           lastDate: DateTime(2100),
@@ -370,9 +370,9 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                           EncounterFilterModel(
                             searchQuery: _filter.searchQuery,
                             typeId:
-                                _selectedTypeId != null
-                                    ? int.tryParse(_selectedTypeId!)
-                                    : null,
+                            _selectedTypeId != null
+                                ? int.tryParse(_selectedTypeId!)
+                                : null,
                             statusId: _selectedStatusId,
                             minStartDate: _selectedMinStartDate,
                             maxStartDate: _selectedMaxStartDate,

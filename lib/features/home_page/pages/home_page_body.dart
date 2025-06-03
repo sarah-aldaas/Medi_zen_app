@@ -60,7 +60,7 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   Widget _buildHeader(BuildContext context) {
     PatientModel? myPatientModel =
-        loadingPatientModel();
+    loadingPatientModel();
     final ThemeData theme = Theme.of(context);
 
     return Padding(
@@ -125,81 +125,81 @@ class _HomePageBodyState extends State<HomePageBody> {
                       MaterialPageRoute(
                         builder:
                             (context) => AppointmentReactionsPage(
-                              appointmentId: "1",
-                              allergyId: "1",
-                            ),
+                          appointmentId: "1",
+                          allergyId: "1",
+                        ),
                       ),
                     );
                   }
                 },
                 itemBuilder:
                     (BuildContext context) => [
-                      PopupMenuItem<String>(
-                        value: 'favorites',
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.favorite_border,
+                  PopupMenuItem<String>(
+                    value: 'favorites',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.favorite_border,
 
-                            color: Colors.blue,
-                          ),
+                        color: Colors.blue,
+                      ),
 
-                          title: Text(
-                            'Favorites',
-                            style: TextStyle(
-                              color: theme.textTheme.bodyLarge?.color,
-                            ),
-                          ),
+                      title: Text(
+                        'Favorites',
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                      PopupMenuItem<String>(
-                        value: 'services',
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.health_and_safety,
-                            color: Colors.green,
-                          ),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'services',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.health_and_safety,
+                        color: Colors.green,
+                      ),
 
-                          title: Text(
-                            'Health services',
-                            style: TextStyle(
-                              color: theme.textTheme.bodyLarge?.color,
-                            ),
-                          ),
+                      title: Text(
+                        'Health services',
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                      PopupMenuItem<String>(
-                        value: 'encounter',
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.group,
-                            color: Colors.orange,
-                          ),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'encounter',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.group,
+                        color: Colors.orange,
+                      ),
 
-                          title: Text(
-                            'Encounter services',
-                            style: TextStyle(
-                              color: theme.textTheme.bodyLarge?.color,
-                            ),
-                          ),
+                      title: Text(
+                        'Encounter services',
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                      PopupMenuItem<String>(
-                        value: 'reaction',
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.warning_amber,
-                            color: Colors.red,
-                          ), // Fixed color
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'reaction',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.warning_amber,
+                        color: Colors.red,
+                      ), // Fixed color
 
-                          title: Text(
-                            'Reaction services',
-                            style: TextStyle(
-                              color: theme.textTheme.bodyLarge?.color,
-                            ),
-                          ),
+                      title: Text(
+                        'Reaction services',
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

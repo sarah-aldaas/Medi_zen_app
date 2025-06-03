@@ -96,12 +96,12 @@ class _TelecomPageState extends State<TelecomPage> {
                 ),
                 onPressed:
                     () => showUpdateTelecomDialog(
-                      context: context,
-                      telecom: telecom,
-                      telecomCubit: context.read<TelecomCubit>(),
-                      telecomTypesFuture: telecomTypesFuture,
-                      telecomUseFuture: telecomUseFuture,
-                    ),
+                  context: context,
+                  telecom: telecom,
+                  telecomCubit: context.read<TelecomCubit>(),
+                  telecomTypesFuture: telecomTypesFuture,
+                  telecomUseFuture: telecomUseFuture,
+                ),
               ),
               const Gap(10),
               IconButton(
@@ -112,10 +112,10 @@ class _TelecomPageState extends State<TelecomPage> {
                 ),
                 onPressed:
                     () => showUpdateDeleteTelecomDialog(
-                      context: context,
-                      telecom: telecom,
-                      telecomCubit: context.read<TelecomCubit>(),
-                    ),
+                  context: context,
+                  telecom: telecom,
+                  telecomCubit: context.read<TelecomCubit>(),
+                ),
               ),
               const Gap(10),
               IconButton(
@@ -126,9 +126,9 @@ class _TelecomPageState extends State<TelecomPage> {
                 ),
                 onPressed:
                     () => showTelecomDetailsDialog(
-                      context: context,
-                      telecom: telecom,
-                    ),
+                  context: context,
+                  telecom: telecom,
+                ),
               ),
             ],
           ),
@@ -158,14 +158,14 @@ class _TelecomPageState extends State<TelecomPage> {
         }
 
         final telecoms =
-            state is TelecomSuccess
-                ? state.paginatedResponse.paginatedData?.items
-                : [];
+        state is TelecomSuccess
+            ? state.paginatedResponse.paginatedData?.items
+            : [];
         final filteredTelecoms =
             telecoms
                 ?.where((telecom) => telecom.type?.id == type.id)
                 .toList() ??
-            [];
+                [];
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
@@ -205,22 +205,22 @@ class _TelecomPageState extends State<TelecomPage> {
               const Gap(30),
               filteredTelecoms.isEmpty
                   ? Center(
-                    child: Text(
-                      'telecomPage.noTelecomsOfType'.tr(context),
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  )
+                child: Text(
+                  'telecomPage.noTelecomsOfType'.tr(context),
+                  style: theme.textTheme.bodyMedium,
+                ),
+              )
                   : ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: filteredTelecoms.length,
-                    itemBuilder: (context, index) {
-                      return _buildTelecomCard(
-                        context,
-                        filteredTelecoms[index],
-                      );
-                    },
-                  ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: filteredTelecoms.length,
+                itemBuilder: (context, index) {
+                  return _buildTelecomCard(
+                    context,
+                    filteredTelecoms[index],
+                  );
+                },
+              ),
             ],
           ),
         );
@@ -245,9 +245,9 @@ class _TelecomPageState extends State<TelecomPage> {
           title: Text(
             'telecomPage.telecoms'.tr(context),
             style:
-                theme.appBarTheme.titleTextStyle?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ) ??
+            theme.appBarTheme.titleTextStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+            ) ??
                 TextStyle(
                   color: theme.primaryColor,
                   fontWeight: FontWeight.bold,
@@ -280,30 +280,30 @@ class _TelecomPageState extends State<TelecomPage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children:
-                        telecomTypes.map((type) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            child: ChoiceChip(
-                              label: Text(type.display ?? 'N/A'),
-                              selected: _selectedTab == type,
-                              selectedColor: theme.primaryColor,
-                              backgroundColor: theme.chipTheme.backgroundColor,
-                              onSelected: (selected) {
-                                setState(() {
-                                  _selectedTab = type;
-                                });
-                              },
-                              labelStyle: theme.chipTheme.labelStyle?.copyWith(
-                                color:
-                                    _selectedTab == type
-                                        ? theme.colorScheme.onPrimary
-                                        : theme.textTheme.bodyMedium?.color,
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                    telecomTypes.map((type) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                        ),
+                        child: ChoiceChip(
+                          label: Text(type.display ?? 'N/A'),
+                          selected: _selectedTab == type,
+                          selectedColor: theme.primaryColor,
+                          backgroundColor: theme.chipTheme.backgroundColor,
+                          onSelected: (selected) {
+                            setState(() {
+                              _selectedTab = type;
+                            });
+                          },
+                          labelStyle: theme.chipTheme.labelStyle?.copyWith(
+                            color:
+                            _selectedTab == type
+                                ? theme.colorScheme.onPrimary
+                                : theme.textTheme.bodyMedium?.color,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 );
               },

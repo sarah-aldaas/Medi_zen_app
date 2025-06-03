@@ -51,20 +51,20 @@ void showUpdateTelecomDialog({
             final telecomUses = snapshot.data![1];
 
             selectedType = telecomTypes.firstWhere(
-              (type) => type.id == (telecom.type?.id ?? ''),
+                  (type) => type.id == (telecom.type?.id ?? ''),
               orElse:
                   () =>
-                      telecomTypes.isNotEmpty
-                          ? telecomTypes.first
-                          : null as CodeModel,
+              telecomTypes.isNotEmpty
+                  ? telecomTypes.first
+                  : null as CodeModel,
             );
             selectedUse = telecomUses.firstWhere(
-              (use) => use.id == (telecom.use?.id ?? ''),
+                  (use) => use.id == (telecom.use?.id ?? ''),
               orElse:
                   () =>
-                      telecomUses.isNotEmpty
-                          ? telecomUses.first
-                          : null as CodeModel,
+              telecomUses.isNotEmpty
+                  ? telecomUses.first
+                  : null as CodeModel,
             );
 
             return StatefulBuilder(
@@ -106,14 +106,14 @@ void showUpdateTelecomDialog({
                       const Gap(20),
                       DropdownButtonFormField<CodeModel>(
                         items:
-                            telecomTypes
-                                .map(
-                                  (type) => DropdownMenuItem<CodeModel>(
-                                    value: type,
-                                    child: Text(type.display),
-                                  ),
-                                )
-                                .toList(),
+                        telecomTypes
+                            .map(
+                              (type) => DropdownMenuItem<CodeModel>(
+                            value: type,
+                            child: Text(type.display),
+                          ),
+                        )
+                            .toList(),
                         onChanged:
                             (value) => setState(() => selectedType = value),
                         decoration: InputDecoration(
@@ -124,14 +124,14 @@ void showUpdateTelecomDialog({
                       const Gap(20),
                       DropdownButtonFormField<CodeModel>(
                         items:
-                            telecomUses
-                                .map(
-                                  (use) => DropdownMenuItem<CodeModel>(
-                                    value: use,
-                                    child: Text(use.display),
-                                  ),
-                                )
-                                .toList(),
+                        telecomUses
+                            .map(
+                              (use) => DropdownMenuItem<CodeModel>(
+                            value: use,
+                            child: Text(use.display),
+                          ),
+                        )
+                            .toList(),
                         onChanged:
                             (value) => setState(() => selectedUse = value),
                         decoration: InputDecoration(
@@ -313,17 +313,17 @@ void showCreateTelecomDialog({
                     builder: (context, selectedType, child) {
                       return DropdownButtonFormField<CodeModel>(
                         items:
-                            telecomTypes
-                                .map(
-                                  (type) => DropdownMenuItem(
-                                    value: type,
-                                    child: Text(
-                                      type.display,
-                                      style: const TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                        telecomTypes
+                            .map(
+                              (type) => DropdownMenuItem(
+                            value: type,
+                            child: Text(
+                              type.display,
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        )
+                            .toList(),
                         onChanged: (value) {
                           selectedTypeNotifier.value = value;
                         },
@@ -348,17 +348,17 @@ void showCreateTelecomDialog({
                     builder: (context, selectedUse, child) {
                       return DropdownButtonFormField<CodeModel>(
                         items:
-                            telecomUses
-                                .map(
-                                  (use) => DropdownMenuItem(
-                                    value: use,
-                                    child: Text(
-                                      use.display,
-                                      style: const TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                        telecomUses
+                            .map(
+                              (use) => DropdownMenuItem(
+                            value: use,
+                            child: Text(
+                              use.display,
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        )
+                            .toList(),
                         onChanged: (value) {
                           selectedUseNotifier.value = value;
                         },

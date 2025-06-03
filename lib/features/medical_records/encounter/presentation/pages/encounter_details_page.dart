@@ -38,10 +38,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
         title: Text(
           'encountersPge.encounterDetails'.tr(context),
           style:
-              theme.appBarTheme.titleTextStyle?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ) ??
+          theme.appBarTheme.titleTextStyle?.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ) ??
               TextStyle(
                 color: theme.primaryColor,
                 fontWeight: FontWeight.bold,
@@ -101,9 +101,9 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   }
 
   Widget _buildEncounterDetails(
-    BuildContext context,
-    EncounterModel encounter,
-  ) {
+      BuildContext context,
+      EncounterModel encounter,
+      ) {
     final ThemeData theme = Theme.of(context);
     final Color textColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
     final Color subTextColor =
@@ -190,14 +190,14 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                 onPressed: () {
                   context
                       .pushNamed(
-                        AppRouter.appointmentDetails.name,
-                        extra: {"appointmentId": encounter.appointment!.id},
-                      )
+                    AppRouter.appointmentDetails.name,
+                    extra: {"appointmentId": encounter.appointment!.id},
+                  )
                       .then((value) {
-                        context.read<EncounterCubit>().getSpecificEncounter(
-                          encounterId: widget.encounterId,
-                        );
-                      });
+                    context.read<EncounterCubit>().getSpecificEncounter(
+                      encounterId: widget.encounterId,
+                    );
+                  });
                 },
                 icon: Container(
                   width: 25,
@@ -243,8 +243,8 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                     context,
                     label: 'encountersPge.doctor'.tr(context),
                     value:
-                        '${encounter.appointment?.doctor?.prefix ?? ''} ${encounter.appointment?.doctor?.fName ?? ''} ${encounter.appointment?.doctor?.lName ?? ''}'
-                            .trim(),
+                    '${encounter.appointment?.doctor?.prefix ?? ''} ${encounter.appointment?.doctor?.fName ?? ''} ${encounter.appointment?.doctor?.lName ?? ''}'
+                        .trim(),
                     icon: Icons.person_outline,
                   ),
               ],
@@ -277,12 +277,12 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   }
 
   Widget _buildInfoCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    Widget? actionWidget,
-    required List<Widget> children,
-  }) {
+      BuildContext context, {
+        required String title,
+        required IconData icon,
+        Widget? actionWidget,
+        required List<Widget> children,
+      }) {
     final ThemeData theme = Theme.of(context);
     return Card(
       elevation: 6,
@@ -318,11 +318,11 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   }
 
   Widget _buildDetailRow(
-    BuildContext context, {
-    required String label,
-    String? value,
-    required IconData icon,
-  }) {
+      BuildContext context, {
+        required String label,
+        String? value,
+        required IconData icon,
+      }) {
     final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -393,7 +393,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
       default:
         chipColor =
             theme.textTheme.bodySmall?.color ??
-            Colors.grey.shade500;
+                Colors.grey.shade500;
     }
 
     return Container(

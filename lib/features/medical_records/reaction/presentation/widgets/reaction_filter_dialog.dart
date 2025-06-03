@@ -142,11 +142,11 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'reaction_severity',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'reaction_severity',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodesLoading) {
                           return Center(child: LoadingPage());
@@ -226,11 +226,11 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'reaction_exposure_route',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'reaction_exposure_route',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodesLoading) {
                           return Center(child: LoadingPage());
@@ -412,13 +412,13 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                           ReactionFilterModel(
                             searchQuery: _filter.searchQuery,
                             severityId:
-                                _selectedSeverityId != null
-                                    ? int.tryParse(_selectedSeverityId!)
-                                    : null,
+                            _selectedSeverityId != null
+                                ? int.tryParse(_selectedSeverityId!)
+                                : null,
                             exposureRouteId:
-                                _selectedExposureRouteId != null
-                                    ? int.tryParse(_selectedExposureRouteId!)
-                                    : null,
+                            _selectedExposureRouteId != null
+                                ? int.tryParse(_selectedExposureRouteId!)
+                                : null,
                             key: _selectedSort,
                           ),
                         );

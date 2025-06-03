@@ -24,15 +24,15 @@ class PrimaryButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child:
-            isLoading
-                ? const CircularProgressIndicator(color: Colors.white)
-                : Text(
-                  textKey.tr(context),
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+        isLoading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : Text(
+          textKey.tr(context),
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

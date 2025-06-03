@@ -47,15 +47,15 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+        _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<ServiceCubit>()
           .getAllServiceHealthCare(filters: _filter.toJson(), loadMore: true)
           .then((_) {
-            setState(() => _isLoadingMore = false);
-          });
+        setState(() => _isLoadingMore = false);
+      });
     }
   }
 
@@ -116,11 +116,11 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
           }
 
           final services =
-              state is ServiceHealthCareSuccess
-                  ? state.paginatedResponse.paginatedData!.items
-                  : [];
+          state is ServiceHealthCareSuccess
+              ? state.paginatedResponse.paginatedData!.items
+              : [];
           final hasMore =
-              state is ServiceHealthCareSuccess ? state.hasMore : false;
+          state is ServiceHealthCareSuccess ? state.hasMore : false;
           if (services.isEmpty) {
             return Center(
               child: Column(
@@ -169,9 +169,9 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
   }
 
   Widget _buildServiceItem(
-    BuildContext context,
-    HealthCareServiceModel service,
-  ) {
+      BuildContext context,
+      HealthCareServiceModel service,
+      ) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       elevation: 2.0,
@@ -182,12 +182,12 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
         onTap: () {
           context
               .pushNamed(
-                AppRouter.healthServiceDetails.name,
-                extra: {"serviceId": service.id.toString()},
-              )
+            AppRouter.healthServiceDetails.name,
+            extra: {"serviceId": service.id.toString()},
+          )
               .then((value) {
-                _loadInitialServices();
-              });
+            _loadInitialServices();
+          });
         },
         borderRadius: BorderRadius.circular(12.0),
         child: Padding(
@@ -211,12 +211,12 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                       fit: BoxFit.cover,
                       errorBuilder:
                           (context, error, stackTrace) => Icon(
-                            Icons.image_not_supported_outlined,
-                            size: 40,
-                            color: Theme.of(
-                              context,
-                            ).iconTheme.color?.withOpacity(0.5),
-                          ),
+                        Icons.image_not_supported_outlined,
+                        size: 40,
+                        color: Theme.of(
+                          context,
+                        ).iconTheme.color?.withOpacity(0.5),
+                      ),
                     ),
                   ),
                 ),

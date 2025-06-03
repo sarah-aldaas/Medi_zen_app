@@ -408,7 +408,6 @@
       "userName": "Andrew Ainsley"
     },
     "specialties": {
-
       "title": "All Clinics",
       "seeAll": "See all",
       "items": {
@@ -761,7 +760,10 @@
     "scheduled": "Scheduled",
     "doctor": "Doctor",
     "servicesProvided": "Services Provided",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    " scheduled": "Scheduled",
+    " servicesProvided": "Services Provided",
+    " unknown": "Unknown"
   },
   "reactionsPage": {
     "filterReactions": "Filter Reactions",
@@ -965,6 +967,8 @@
     "viewOurServices": "View Our Services",
     "noExtra": "No extra details provided.",
     "appointment": "Appointment:",
+    " noExtra": "No extra details provided.",
+    " appointment": "Appointment:",
     "free": "Free",
     "service": "serviceId",
     "viewDetails": "View Details"

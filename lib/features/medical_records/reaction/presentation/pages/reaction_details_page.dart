@@ -42,10 +42,10 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
         elevation: 0,
         backgroundColor: theme.appBarTheme.backgroundColor,
         titleTextStyle:
-            theme.appBarTheme.titleTextStyle?.copyWith(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ) ??
+        theme.appBarTheme.titleTextStyle?.copyWith(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ) ??
             TextStyle(
               color: theme.primaryColor,
               fontSize: 20,
@@ -225,7 +225,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
       default:
         chipColor =
             theme.textTheme.bodySmall?.color?.withOpacity(0.5) ??
-            Colors.grey.shade400;
+                Colors.grey.shade400;
         displayText = 'reactionsPage.unknown'.tr(context);
     }
 

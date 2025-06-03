@@ -463,7 +463,6 @@
     "logoutAllDevices": "جميع الأجهزة",
     "logoutThisDevice": "هذا الجهاز فقط"
   },
-
   "clinicCard": {
     "seeDetails": "عرض التفاصيل >"
   },
@@ -667,7 +666,6 @@
     "removeImage": "إزالة الصورة",
     "cancel": "إلغاء"
   },
-
   "editProfilePage": {
     "editProfile": "تعديل الملف الشخصي",
     "yourEmail": "بريدك الإلكتروني",
@@ -686,7 +684,6 @@
     "somethingWentWrong": "حدث خطأ ما",
     "tryAgain": "حاول مرة أخرى"
   },
-
   "addEditAddressPage": {
     "addAddressTitle": "إضافة عنوان",
     "editAddressTitle": "تعديل العنوان",
@@ -804,10 +801,10 @@
     "activeAllergy": "حساسية نشطة",
     "inactiveAllergy": "حساسية غير نشطة",
     "unknownStatus": "حالة غير معروفة",
-    "notApplicable": "لا ينطبق",
+    "notApplicable": "غير متوفر",
     "invalidDate": "تاريخ غير صالح",
     "unknownAllergy": "حساسية غير معروفة",
-    "allergy": "الحساسية",
+    "allergy": "حساسية",
     "last": "آخر",
     "onset": "بداية الظهور",
     "yearsAbbreviation": "سنة",
@@ -822,7 +819,7 @@
     "category": "الفئة",
     "clinicalStatus": "الحالة السريرية",
     "verification": "التحقق",
-    "onsetAge": "عمر بداية الظهور",
+    "onsetAge": "عمر الظهور",
     "lastOccurrence": "آخر ظهور",
     "notes": "ملاحظات",
     "reactions": "التفاعلات",
@@ -969,4 +966,3 @@
     "viewDetails": "عرض التفاصيل"
   }
 }
-

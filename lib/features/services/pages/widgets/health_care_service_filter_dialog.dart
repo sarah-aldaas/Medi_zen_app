@@ -100,19 +100,19 @@ class _HealthCareServiceFilterDialogState
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.search),
                         suffixIcon:
-                            _searchController.text.isNotEmpty
-                                ? IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    setState(() {
-                                      _searchController.clear();
-                                      _filter = _filter.copyWith(
-                                        searchQuery: null,
-                                      );
-                                    });
-                                  },
-                                )
-                                : null,
+                        _searchController.text.isNotEmpty
+                            ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _searchController.clear();
+                              _filter = _filter.copyWith(
+                                searchQuery: null,
+                              );
+                            });
+                          },
+                        )
+                            : null,
                       ),
                       onChanged: (value) {
                         setState(() {
@@ -146,9 +146,9 @@ class _HealthCareServiceFilterDialogState
                             onChanged: (value) {
                               _filter = _filter.copyWith(
                                 minPrice:
-                                    value.isNotEmpty
-                                        ? double.tryParse(value)
-                                        : null,
+                                value.isNotEmpty
+                                    ? double.tryParse(value)
+                                    : null,
                               );
                             },
                           ),
@@ -167,9 +167,9 @@ class _HealthCareServiceFilterDialogState
                             onChanged: (value) {
                               _filter = _filter.copyWith(
                                 maxPrice:
-                                    value.isNotEmpty
-                                        ? double.tryParse(value)
-                                        : null,
+                                value.isNotEmpty
+                                    ? double.tryParse(value)
+                                    : null,
                               );
                             },
                           ),
@@ -306,11 +306,11 @@ class _HealthCareServiceFilterDialogState
                                 state.codes
                                     ?.where(
                                       (code) =>
-                                          code.codeTypeModel?.name ==
-                                          'categories',
-                                    )
+                                  code.codeTypeModel?.name ==
+                                      'categories',
+                                )
                                     .toList() ??
-                                [];
+                                    [];
                           });
                         }
                       },
@@ -367,9 +367,9 @@ class _HealthCareServiceFilterDialogState
                                     _selectedCategoryId = value;
                                     _filter = _filter.copyWith(
                                       categoryId:
-                                          value != null
-                                              ? int.tryParse(value)
-                                              : null,
+                                      value != null
+                                          ? int.tryParse(value)
+                                          : null,
                                     );
                                   });
                                 },

@@ -29,11 +29,11 @@ class EncounterListItem extends StatelessWidget {
     final String type =
         encounter.type?.display ?? 'encountersPge.encounter'.tr(context);
     final String scheduledDate =
-        encounter.actualStartDate != null
-            ? DateFormat(
-              'MMM d, y - h:mm a',
-            ).format(DateTime.parse(encounter.actualStartDate!))
-            : 'encountersPge.dateNotAvailable'.tr(context);
+    encounter.actualStartDate != null
+        ? DateFormat(
+      'MMM d, y - h:mm a',
+    ).format(DateTime.parse(encounter.actualStartDate!))
+        : 'encountersPge.dateNotAvailable'.tr(context);
     final String status =
         encounter.status?.display ?? 'encountersPge.unknownStatus'.tr(context);
 
@@ -152,7 +152,7 @@ class EncounterListItem extends StatelessWidget {
         iconData = Icons.help_outline;
         iconColor =
             Theme.of(context).textTheme.bodySmall?.color ??
-            Colors.grey.shade500;
+                Colors.grey.shade500;
         tooltipText = 'encountersPge.unknownStatus'.tr(context);
     }
 

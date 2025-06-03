@@ -48,7 +48,7 @@ class ReactionListItem extends StatelessWidget {
       default:
         chipColor =
             theme.textTheme.bodySmall?.color?.withOpacity(0.5) ??
-            Colors.grey.shade500;
+                Colors.grey.shade500;
         displayText = 'reactionsPage.notApplicable'.tr(context);
     }
 

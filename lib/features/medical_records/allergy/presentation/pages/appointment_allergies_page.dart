@@ -47,19 +47,19 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+        _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<AllergyCubit>()
           .getAllMyAllergiesOfAppointment(
-            appointmentId: widget.appointmentId,
-            filters: _filter.toJson(),
-            loadMore: true,
-          )
+        appointmentId: widget.appointmentId,
+        filters: _filter.toJson(),
+        loadMore: true,
+      )
           .then((_) {
-            setState(() => _isLoadingMore = false);
-          });
+        setState(() => _isLoadingMore = false);
+      });
     }
   }
 
@@ -119,11 +119,11 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
           }
 
           final allergies =
-              state is AllergiesOfAppointmentSuccess
-                  ? state.paginatedResponse.paginatedData?.items
-                  : [];
+          state is AllergiesOfAppointmentSuccess
+              ? state.paginatedResponse.paginatedData?.items
+              : [];
           final hasMore =
-              state is AllergiesOfAppointmentSuccess ? state.hasMore : false;
+          state is AllergiesOfAppointmentSuccess ? state.hasMore : false;
 
           if (allergies == null || allergies.isEmpty) {
             return Center(
@@ -175,9 +175,9 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
       MaterialPageRoute(
         builder:
             (context) => AllergyDetailsPage(
-              allergyId: allergyId,
-              appointmentId: widget.appointmentId,
-            ),
+          allergyId: allergyId,
+          appointmentId: widget.appointmentId,
+        ),
       ),
     ).then((value) {
       _loadInitialAllergies();

@@ -55,6 +55,7 @@ dependencies:
   gap:
   pretty_dio_logger:
   equatable:
+  device_info_plus:
   permission_handler:
 #  health:
   loading_animation_widget:

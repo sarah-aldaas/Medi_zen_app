@@ -27,15 +27,15 @@ class AllergyListItem extends StatelessWidget {
       iconData = Icons.circle_outlined;
       iconColor =
           theme.textTheme.bodySmall?.color ??
-          Colors.grey.shade500;
+              Colors.grey.shade500;
       tooltipText = 'allergiesPage.inactiveAllergy'.tr(context);
     } else {
       iconData = Icons.help_outline;
       iconColor =
           theme.textTheme.bodySmall?.color?.withOpacity(0.6) ??
-          Colors
-              .blueGrey
-              .shade300;
+              Colors
+                  .blueGrey
+                  .shade300;
       tooltipText = 'allergiesPage.unknownStatus'.tr(context);
     }
 
@@ -99,10 +99,10 @@ class AllergyListItem extends StatelessWidget {
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color:
-                              theme
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.color,
+                          theme
+                              .textTheme
+                              .bodyLarge
+                              ?.color,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -129,10 +129,10 @@ class AllergyListItem extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         color:
-                            theme
-                                .textTheme
-                                .bodyMedium
-                                ?.color,
+                        theme
+                            .textTheme
+                            .bodyMedium
+                            ?.color,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

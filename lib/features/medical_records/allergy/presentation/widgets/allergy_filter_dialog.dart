@@ -228,11 +228,11 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'allergy_type',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'allergy_type',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodesLoading) {
                           return Center(child: LoadingPage());
@@ -311,11 +311,11 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'allergy_category',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'allergy_category',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodesLoading) {
                           return Center(child: LoadingPage());
@@ -394,11 +394,11 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'allergy_clinical_status',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'allergy_clinical_status',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodesLoading) {
                           return Center(child: LoadingPage());
@@ -479,11 +479,11 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'allergy_criticality',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'allergy_criticality',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodesLoading) {
                           return Center(child: LoadingPage());
@@ -617,8 +617,8 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       ],
                       onChanged:
                           (value) => setState(() {
-                            _selectedSort = value;
-                          }),
+                        _selectedSort = value;
+                      }),
                     ),
                   ],
                 ),
@@ -667,11 +667,11 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           AllergyFilterModel(
                             searchQuery: _filter.searchQuery,
                             isDiscoveredDuringEncounter:
-                                _selectedDiscoveredDuringEncounter,
+                            _selectedDiscoveredDuringEncounter,
                             typeId:
-                                _selectedTypeId != null
-                                    ? int.tryParse(_selectedTypeId!)
-                                    : null,
+                            _selectedTypeId != null
+                                ? int.tryParse(_selectedTypeId!)
+                                : null,
                             clinicalStatusId: _selectedClinicalStatusId,
                             verificationStatusId: _selectedVerificationStatusId,
                             categoryId: _selectedCategoryId,
