@@ -463,7 +463,6 @@
     "logoutAllDevices": "جميع الأجهزة",
     "logoutThisDevice": "هذا الجهاز فقط"
   },
-
   "clinicCard": {
     "seeDetails": "عرض التفاصيل >"
   },
@@ -667,7 +666,6 @@
     "removeImage": "إزالة الصورة",
     "cancel": "إلغاء"
   },
-
   "editProfilePage": {
     "editProfile": "تعديل الملف الشخصي",
     "yourEmail": "بريدك الإلكتروني",
@@ -686,7 +684,6 @@
     "somethingWentWrong": "حدث خطأ ما",
     "tryAgain": "حاول مرة أخرى"
   },
-
   "addEditAddressPage": {
     "addAddressTitle": "إضافة عنوان",
     "editAddressTitle": "تعديل العنوان",
@@ -839,6 +836,34 @@
     "noAllergiesFound": "لم يتم العثور على أي حساسيات باستخدام الفلاتر الحالية. حاول تعديل بحثك.",
     "refreshList": "تحديث القائمة"
   },
+  "allergyFilter": {
+    "filterAllergies": "تصفية الحساسيات",
+    "search": "بحث",
+    "discoveredDuringEncounter": "اكتشفت أثناء الموعد",
+    "any": "أي",
+    "yes": "نعم",
+    "no": "لا",
+    "allergyType": "نوع الحساسية",
+    "allTypes": "جميع الأنواع",
+    "noAllergyTypesAvailable": "لا توجد أنواع حساسية متاحة.",
+    "unknown": "غير معروف",
+    "category": "الفئة",
+    "allCategories": "جميع الفئات",
+    "noCategoriesAvailable": "لا توجد فئات متاحة.",
+    "clinicalStatus": "الحالة السريرية",
+    "allStatuses": "جميع الحالات",
+    "noClinicalStatusesAvailable": "لا توجد حالات سريرية متاحة.",
+    "criticality": "الخطورة",
+    "allCriticalities": "جميع مستويات الخطورة",
+    "noCriticalitiesAvailable": "لا توجد مستويات خطورة متاحة.",
+    "sortOrder": "ترتيب الفرز",
+    "default": "افتراضي",
+    "oldestFirst": "الأقدم أولاً",
+    "newestFirst": "الأحدث أولاً",
+    "clearFilters": "مسح الفلاتر",
+    "cancel": "إلغاء",
+    "apply": "تطبيق"
+  },
   "healthCareServicesPage": {
     "title": "خدمات الرعاية الصحية",
     "filterTooltip": "تصفية الخدمات",
@@ -940,5 +965,4 @@
     "service": "معرف الخدمة",
     "viewDetails": "عرض التفاصيل"
   }
-  }
-
+}

@@ -9,7 +9,6 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
 import 'package:medizen_app/features/services/pages/widgets/health_care_service_filter_dialog.dart';
 
-import '../../../base/theme/app_color.dart';
 import '../../../base/widgets/loading_page.dart';
 import '../data/model/health_care_service_filter.dart';
 import 'cubits/service_cubit/service_cubit.dart';
@@ -77,34 +76,43 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         title: Text(
           'healthCareServicesPage.title'.tr(context),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
-            fontSize: 22,
-          ),
+
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list, color: AppColors.primaryColor),
+            icon: Icon(
+              Icons.filter_list,
+              color: Theme.of(context).iconTheme.color,
+            ),
             onPressed: _showFilterDialog,
             tooltip: 'healthCareServicesPage.filterTooltip'.tr(context),
           ),
         ],
       ),
+
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocConsumer<ServiceCubit, ServiceState>(
         listener: (context, state) {
           if (state is ServiceHealthCareError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.error)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.error,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onError,
+                  ),
+                ),
+              ),
+            );
           }
         },
         builder: (context, state) {
           if (state is ServiceHealthCareLoading && !state.isLoadMore) {
-            return const Center(child: LoadingPage());
+            return Center(child: LoadingPage());
           }
 
           final services =
@@ -121,14 +129,17 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                   Icon(
                     Icons.health_and_safety,
                     size: 64,
-                    color: Colors.grey[400],
+
+                    color: Theme.of(context).iconTheme.color?.withOpacity(0.4),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    "healthCareServicesPage.noServicesAvailable".tr(
-                      context,
-                    ), // Translated
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                    "healthCareServicesPage.noServicesAvailable".tr(context),
+                    style: TextStyle(
+                      fontSize: 18,
+
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -143,7 +154,11 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
               if (index < services.length) {
                 return _buildServiceItem(context, services[index]);
               } else if (hasMore && state is! ServiceHealthCareError) {
-                return Center(child: LoadingButton());
+                return Center(
+                  child: LoadingButton(
+                    isWhite: Theme.of(context).brightness == Brightness.dark,
+                  ),
+                );
               }
               return const SizedBox.shrink();
             },
@@ -160,6 +175,8 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       elevation: 2.0,
+
+      color: Theme.of(context).cardTheme.color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: InkWell(
         onTap: () {
@@ -192,6 +209,14 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                       width: 110,
                       height: 120,
                       fit: BoxFit.cover,
+                      errorBuilder:
+                          (context, error, stackTrace) => Icon(
+                        Icons.image_not_supported_outlined,
+                        size: 40,
+                        color: Theme.of(
+                          context,
+                        ).iconTheme.color?.withOpacity(0.5),
+                      ),
                     ),
                   ),
                 ),
@@ -203,12 +228,12 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                     children: [
                       Text(
                         service.name ??
-                            'healthCareServicesPage.unnamedService'.tr(
-                              context,
-                            ), // Translated
-                        style: const TextStyle(
+                            'healthCareServicesPage.unnamedService'.tr(context),
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
+
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -219,13 +244,20 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                             'healthCareServicesPage.noDescriptionAvailable'.tr(
                               context,
                             ),
-                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                        style: TextStyle(
+                          fontSize: 14,
+
+                          color: Theme.of(context).textTheme.bodySmall?.color,
+                        ),
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 10.0),
                       Text(
                         '${'healthCareServicesPage.price'.tr(context)}: \$${service.price ?? 'N/A'}',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                        ),
                       ),
                       const Spacer(),
                       const SizedBox(height: 18.0),
@@ -236,13 +268,15 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                             vertical: 4.0,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.1),
+                            color: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4.0),
                           ),
                           child: Text(
                             service.category!.display,
                             style: TextStyle(
-                              color: Colors.green[700],
+                              color: Theme.of(context).primaryColor,
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
                             ),

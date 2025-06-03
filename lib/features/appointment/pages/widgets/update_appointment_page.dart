@@ -67,7 +67,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
       );
 
       if (mounted) {
-        Navigator.of(context).pop(true); // Return success
+        Navigator.of(context).pop(true);
       }
     }
   }

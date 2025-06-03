@@ -18,7 +18,6 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
       rating: 4.3,
       reviews: 5376,
     ),
-    // Add more doctors...
   ];
 
   @override
@@ -34,16 +33,12 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
           IconButton(
             icon: Icon(Icons.search),
             tooltip: "favoriteDoctors.actions.search".tr(context),
-            onPressed: () {
-              // Handle search
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: Icon(Icons.more_vert),
             tooltip: "favoriteDoctors.actions.more".tr(context),
-            onPressed: () {
-              // Handle more options
-            },
+            onPressed: () {},
           ),
         ],
         bottom: PreferredSize(
@@ -52,10 +47,22 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildFilterButton("favoriteDoctors.filters.all".tr(context), 0),
-                _buildFilterButton("favoriteDoctors.filters.general".tr(context), 1),
-                _buildFilterButton("favoriteDoctors.filters.dentist".tr(context), 2),
-                _buildFilterButton("favoriteDoctors.filters.nutritionist".tr(context), 3),
+                _buildFilterButton(
+                  "favoriteDoctors.filters.all".tr(context),
+                  0,
+                ),
+                _buildFilterButton(
+                  "favoriteDoctors.filters.general".tr(context),
+                  1,
+                ),
+                _buildFilterButton(
+                  "favoriteDoctors.filters.dentist".tr(context),
+                  2,
+                ),
+                _buildFilterButton(
+                  "favoriteDoctors.filters.nutritionist".tr(context),
+                  3,
+                ),
               ],
             ),
           ),
@@ -63,7 +70,8 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
       ),
       body: ListView.builder(
         itemCount: _filteredDoctors().length,
-        itemBuilder: (context, index) => _buildDoctorItem(_filteredDoctors()[index]),
+        itemBuilder:
+            (context, index) => _buildDoctorItem(_filteredDoctors()[index]),
       ),
     );
   }
@@ -72,15 +80,17 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ElevatedButton(
-          onPressed: () => setState(() => _selectedFilter = index),
-          child: Text(text),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _selectedFilter == index ? Colors.blue : Colors.grey[300],
-            foregroundColor: _selectedFilter == index ? Colors.white : Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-          )
+        onPressed: () => setState(() => _selectedFilter = index),
+        child: Text(text),
+        style: ElevatedButton.styleFrom(
+          backgroundColor:
+              _selectedFilter == index ? Colors.blue : Colors.grey[300],
+          foregroundColor:
+              _selectedFilter == index ? Colors.white : Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+        ),
       ),
     );
   }
@@ -93,15 +103,27 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
             radius: 30,
             backgroundImage: NetworkImage(doctor.imageUrl),
           ),
-          title: Text(doctor.name, style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(
+            doctor.name,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("favoriteDoctors.doctorInfo.specialtyHospital".tr(context).format([doctor.specialty, doctor.hospital])),
+              Text(
+                "favoriteDoctors.doctorInfo.specialtyHospital"
+                    .tr(context)
+                    .format([doctor.specialty, doctor.hospital]),
+              ),
               Row(
                 children: [
                   Icon(Icons.star, size: 16, color: Colors.blue),
-                  Text("favoriteDoctors.doctorInfo.rating".tr(context).format([doctor.rating.toString(), doctor.reviews.toString()])),
+                  Text(
+                    "favoriteDoctors.doctorInfo.rating".tr(context).format([
+                      doctor.rating.toString(),
+                      doctor.reviews.toString(),
+                    ]),
+                  ),
                 ],
               ),
             ],
@@ -110,9 +132,7 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
             icon: Icon(Icons.favorite_border),
             onPressed: () => _showRemoveDialog(context, doctor),
           ),
-          onTap: () {
-            // Navigate to doctor details
-          },
+          onTap: () {},
         ),
         Divider(),
       ],
@@ -122,17 +142,25 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
   List<Doctor> _filteredDoctors() {
     if (_selectedFilter == 0) return _doctors;
 
-    return _doctors.where((doctor) =>
-    doctor.specialty.toLowerCase() == _getFilterText(_selectedFilter).toLowerCase()
-    ).toList();
+    return _doctors
+        .where(
+          (doctor) =>
+              doctor.specialty.toLowerCase() ==
+              _getFilterText(_selectedFilter).toLowerCase(),
+        )
+        .toList();
   }
 
   String _getFilterText(int index) {
     switch (index) {
-      case 1: return "favoriteDoctors.filters.general".tr(context);
-      case 2: return "favoriteDoctors.filters.dentist".tr(context);
-      case 3: return "favoriteDoctors.filters.nutritionist".tr(context);
-      default: return '';
+      case 1:
+        return "favoriteDoctors.filters.general".tr(context);
+      case 2:
+        return "favoriteDoctors.filters.dentist".tr(context);
+      case 3:
+        return "favoriteDoctors.filters.nutritionist".tr(context);
+      default:
+        return '';
     }
   }
 
@@ -150,15 +178,29 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
                   radius: 30,
                   backgroundImage: NetworkImage(doctor.imageUrl),
                 ),
-                title: Text(doctor.name, style: TextStyle(fontWeight: FontWeight.bold)),
+                title: Text(
+                  doctor.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("favoriteDoctors.doctorInfo.specialtyHospital".tr(context).format([doctor.specialty, doctor.hospital])),
+                    Text(
+                      "favoriteDoctors.doctorInfo.specialtyHospital"
+                          .tr(context)
+                          .format([doctor.specialty, doctor.hospital]),
+                    ),
                     Row(
                       children: [
                         Icon(Icons.star, size: 16, color: Colors.blue),
-                        Text("favoriteDoctors.doctorInfo.rating".tr(context).format([doctor.rating.toString(), doctor.reviews.toString()])),
+                        Text(
+                          "favoriteDoctors.doctorInfo.rating"
+                              .tr(context)
+                              .format([
+                                doctor.rating.toString(),
+                                doctor.reviews.toString(),
+                              ]),
+                        ),
                       ],
                     ),
                   ],

@@ -96,7 +96,7 @@ class _HealthCareServiceFilterDialogState
                       controller: _searchController,
                       decoration: InputDecoration(
                         hintText: 'healthCareServicesPage.searchServicesHint'
-                            .tr(context), // Translated
+                            .tr(context),
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.search),
                         suffixIcon:
@@ -141,7 +141,7 @@ class _HealthCareServiceFilterDialogState
                                 context,
                               ),
                               border: const OutlineInputBorder(),
-                            ), // Translated
+                            ),
                             keyboardType: TextInputType.number,
                             onChanged: (value) {
                               _filter = _filter.copyWith(

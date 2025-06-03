@@ -111,14 +111,14 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                 state.codes
                     ?.where((code) => code.codeTypeModel?.name == 'address_use')
                     .toList() ??
-                [];
+                    [];
             final addressTypes =
                 state.codes
                     ?.where(
                       (code) => code.codeTypeModel?.name == 'address_type',
-                    )
+                )
                     .toList() ??
-                [];
+                    [];
 
             _setInitialValues(addressUses, addressTypes);
 
@@ -152,24 +152,24 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
   }
 
   void _setInitialValues(
-    List<CodeModel> addressUses,
-    List<CodeModel> addressTypes,
-  ) {
+      List<CodeModel> addressUses,
+      List<CodeModel> addressTypes,
+      ) {
     if (widget.address != null) {
       _selectedUse ??=
-          addressUses.isNotEmpty
-              ? addressUses.firstWhere(
-                (use) => use.id == widget.address?.use?.id,
-                orElse: () => addressUses.first,
-              )
-              : null;
+      addressUses.isNotEmpty
+          ? addressUses.firstWhere(
+            (use) => use.id == widget.address?.use?.id,
+        orElse: () => addressUses.first,
+      )
+          : null;
       _selectedType ??=
-          addressTypes.isNotEmpty
-              ? addressTypes.firstWhere(
-                (type) => type.id == widget.address?.type?.id,
-                orElse: () => addressTypes.first,
-              )
-              : null;
+      addressTypes.isNotEmpty
+          ? addressTypes.firstWhere(
+            (type) => type.id == widget.address?.type?.id,
+        orElse: () => addressTypes.first,
+      )
+          : null;
     } else {
       _selectedUse ??= addressUses.isNotEmpty ? addressUses.first : null;
       _selectedType ??= addressTypes.isNotEmpty ? addressTypes.first : null;
@@ -177,9 +177,9 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
   }
 
   Widget _buildAddressForm(
-    List<CodeModel> addressUses,
-    List<CodeModel> addressTypes,
-  ) {
+      List<CodeModel> addressUses,
+      List<CodeModel> addressTypes,
+      ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Form(
@@ -187,118 +187,118 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
         child: Column(
           children: [
             AppDropdown<CodeModel>(
-              label: 'address.addressUse'.tr(context), // Localized
+              label: 'address.addressUse'.tr(context),
               items: addressUses,
-              displayItem: (item) => item.display ?? '', // Handle null display
+              displayItem: (item) => item.display ?? '',
               value: _selectedUse,
               onChanged: (value) => setState(() => _selectedUse = value),
               validator:
                   (value) =>
-                      value == null
-                          ? 'address.selectAddressUse'.tr(context)
-                          : null, // Localized
+              value == null
+                  ? 'address.selectAddressUse'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppDropdown<CodeModel>(
-              label: 'address.addressType'.tr(context), // Localized
+              label: 'address.addressType'.tr(context),
               items: addressTypes,
-              displayItem: (item) => item.display ?? '', // Handle null display
+              displayItem: (item) => item.display ?? '',
               value: _selectedType,
               onChanged: (value) => setState(() => _selectedType = value),
               validator:
                   (value) =>
-                      value == null
-                          ? 'address.selectAddressType'.tr(context)
-                          : null, // Localized
+              value == null
+                  ? 'address.selectAddressType'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _countryController,
-              label: 'address.country'.tr(context), // Localized
+              label: 'address.country'.tr(context),
               validator:
                   (value) =>
-                      value?.isEmpty ?? true
-                          ? 'address.enterCountry'.tr(context)
-                          : null, // Localized
+              value?.isEmpty ?? true
+                  ? 'address.enterCountry'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _cityController,
-              label: 'address.city'.tr(context), // Localized
+              label: 'address.city'.tr(context),
               validator:
                   (value) =>
-                      value?.isEmpty ?? true
-                          ? 'address.enterCity'.tr(context)
-                          : null, // Localized
+              value?.isEmpty ?? true
+                  ? 'address.enterCity'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _stateController,
-              label: 'address.stateProvince'.tr(context), // Localized
+              label: 'address.stateProvince'.tr(context),
               validator:
                   (value) =>
-                      value?.isEmpty ?? true
-                          ? 'address.enterStateProvince'.tr(context)
-                          : null, // Localized
+              value?.isEmpty ?? true
+                  ? 'address.enterStateProvince'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _districtController,
-              label: 'address.district'.tr(context), // Localized
+              label: 'address.district'.tr(context),
               validator:
                   (value) =>
-                      value?.isEmpty ?? true
-                          ? 'address.enterDistrict'.tr(context)
-                          : null, // Localized
+              value?.isEmpty ?? true
+                  ? 'address.enterDistrict'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _lineController,
-              label: 'address.streetAddress'.tr(context), // Localized
+              label: 'address.streetAddress'.tr(context),
               validator:
                   (value) =>
-                      value?.isEmpty ?? true
-                          ? 'address.enterStreetAddress'.tr(context)
-                          : null, // Localized
+              value?.isEmpty ?? true
+                  ? 'address.enterStreetAddress'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _postalCodeController,
-              label: 'address.postalCode'.tr(context), // Localized
+              label: 'address.postalCode'.tr(context),
               keyboardType: TextInputType.number,
               validator:
                   (value) =>
-                      value?.isEmpty ?? true
-                          ? 'address.enterPostalCode'.tr(context)
-                          : null, // Localized
+              value?.isEmpty ?? true
+                  ? 'address.enterPostalCode'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _textController,
-              label: 'address.description'.tr(context), // Localized
+              label: 'address.description'.tr(context),
               validator:
                   (value) =>
-                      value?.isEmpty ?? true
-                          ? 'address.enterDescription'.tr(context)
-                          : null, // Localized
+              value?.isEmpty ?? true
+                  ? 'address.enterDescription'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _startDateController,
-              label: 'address.startDate'.tr(context), // Localized
+              label: 'address.startDate'.tr(context),
               suffixIcon: Icons.calendar_today,
               readOnly: true,
               onTap: () => _selectDate(context, _startDateController),
               validator:
                   (value) =>
-                      value?.isEmpty ?? true
-                          ? 'address.selectStartDate'.tr(context)
-                          : null, // Localized
+              value?.isEmpty ?? true
+                  ? 'address.selectStartDate'.tr(context)
+                  : null,
             ),
             const SizedBox(height: 40),
             AppTextField(
               controller: _endDateController,
-              label: 'address.endDateOptional'.tr(context), // Localized
+              label: 'address.endDateOptional'.tr(context),
               suffixIcon: Icons.calendar_today,
               readOnly: true,
               onTap: () => _selectDate(context, _endDateController),
@@ -315,8 +315,8 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                 child: Center(
                   child: Text(
                     widget.address == null
-                        ? 'address.addAddress'.tr(context) // Localized
-                        : 'address.updateAddress'.tr(context), // Localized
+                        ? 'address.addAddress'.tr(context)
+                        : 'address.updateAddress'.tr(context),
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
@@ -334,9 +334,9 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
   }
 
   Future<void> _selectDate(
-    BuildContext context,
-    TextEditingController controller,
-  ) async {
+      BuildContext context,
+      TextEditingController controller,
+      ) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -344,7 +344,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
       lastDate: DateTime(2100),
     );
     if (picked != null) {
-      // Format the date to 'YYYY-MM-DD'
+
       controller.text = picked.toIso8601String().split('T')[0];
     }
   }
@@ -361,11 +361,11 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
         text: _textController.text,
         postalCode: _postalCodeController.text,
         startDate:
-            _startDateController.text.isEmpty
-                ? null
-                : _startDateController.text,
+        _startDateController.text.isEmpty
+            ? null
+            : _startDateController.text,
         endDate:
-            _endDateController.text.isEmpty ? null : _endDateController.text,
+        _endDateController.text.isEmpty ? null : _endDateController.text,
         use: _selectedUse,
         type: _selectedType,
       );
@@ -378,10 +378,6 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
           addressModel: address,
         );
       }
-
-      // Pop the screen after submission. You might want to listen to
-      // AddressCubit states (Success/Error) to pop only on success
-      // and show a snackbar on error.
       Navigator.pop(context);
     }
   }

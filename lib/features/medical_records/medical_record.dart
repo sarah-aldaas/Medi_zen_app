@@ -77,7 +77,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         title: Text(
           'medicalRecordPage.title'.tr(context),
           style: TextStyle(
@@ -104,7 +104,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48),
           child: Container(
-            color: Theme.of(context).scaffoldBackgroundColor,
+            color: Theme.of(context).appBarTheme.backgroundColor,
             child: TabBar(
               tabAlignment: TabAlignment.start,
               controller: _tabController,

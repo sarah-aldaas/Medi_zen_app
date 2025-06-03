@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-
-import '../../../../../base/theme/app_color.dart';
 import '../../data/models/allergy_model.dart';
 
 class AllergyListItem extends StatelessWidget {
@@ -19,6 +17,7 @@ class AllergyListItem extends StatelessWidget {
     IconData iconData;
     Color iconColor;
     String tooltipText;
+    final ThemeData theme = Theme.of(context);
 
     if (clinicalStatus?.toLowerCase() == 'active') {
       iconData = Icons.check_circle;
@@ -26,16 +25,29 @@ class AllergyListItem extends StatelessWidget {
       tooltipText = 'allergiesPage.activeAllergy'.tr(context);
     } else if (clinicalStatus?.toLowerCase() == 'inactive') {
       iconData = Icons.circle_outlined;
-      iconColor = Colors.grey.shade500;
+      iconColor =
+          theme.textTheme.bodySmall?.color ??
+              Colors.grey.shade500;
       tooltipText = 'allergiesPage.inactiveAllergy'.tr(context);
     } else {
       iconData = Icons.help_outline;
-      iconColor = Colors.blueGrey.shade300;
+      iconColor =
+          theme.textTheme.bodySmall?.color?.withOpacity(0.6) ??
+              Colors
+                  .blueGrey
+                  .shade300;
       tooltipText = 'allergiesPage.unknownStatus'.tr(context);
     }
 
     return Tooltip(
       message: tooltipText,
+      textStyle: TextStyle(
+        color: theme.colorScheme.onSurface,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
@@ -48,7 +60,7 @@ class AllergyListItem extends StatelessWidget {
   }
 
   String _formatDate(BuildContext context, String? dateStr) {
-    // Added context
+
     if (dateStr == null || dateStr.isEmpty)
       return 'allergiesPage.notApplicable'.tr(context);
     try {
@@ -60,10 +72,13 @@ class AllergyListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Card(
         elevation: 4,
+        color: theme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -81,9 +96,13 @@ class AllergyListItem extends StatelessWidget {
                       child: Text(
                         allergy.name ??
                             'allergiesPage.unknownAllergy'.tr(context),
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color:
+                          theme
+                              .textTheme
+                              .bodyLarge
+                              ?.color,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -99,7 +118,9 @@ class AllergyListItem extends StatelessWidget {
                     Icon(
                       Icons.medical_information_outlined,
                       size: 18,
-                      color: AppColors.primaryColor.withOpacity(0.7),
+                      color: theme.iconTheme.color?.withOpacity(
+                        0.7,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -107,7 +128,11 @@ class AllergyListItem extends StatelessWidget {
                           'allergiesPage.allergy'.tr(context),
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[700],
+                        color:
+                        theme
+                            .textTheme
+                            .bodyMedium
+                            ?.color,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -119,12 +144,17 @@ class AllergyListItem extends StatelessWidget {
                     Icon(
                       Icons.calendar_today_outlined,
                       size: 18,
-                      color: AppColors.primaryColor.withOpacity(0.7),
+                      color: theme.iconTheme.color?.withOpacity(
+                        0.7,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       '${'allergiesPage.last'.tr(context)}: ${_formatDate(context, allergy.lastOccurrence)}',
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: theme.textTheme.bodyMedium?.color,
+                      ),
                     ),
                   ],
                 ),
@@ -134,12 +164,17 @@ class AllergyListItem extends StatelessWidget {
                     Icon(
                       Icons.child_care_outlined,
                       size: 18,
-                      color: AppColors.primaryColor.withOpacity(0.7),
+                      color: theme.iconTheme.color?.withOpacity(
+                        0.7,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       '${'allergiesPage.onset'.tr(context)}: ${allergy.onSetAge ?? 'allergiesPage.notApplicable'.tr(context)} ${'allergiesPage.yearsAbbreviation'.tr(context)}',
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: theme.textTheme.bodyMedium?.color,
+                      ),
                     ),
                   ],
                 ),

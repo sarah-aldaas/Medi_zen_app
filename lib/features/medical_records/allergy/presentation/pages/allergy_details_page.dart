@@ -7,7 +7,6 @@ import 'package:medizen_app/features/medical_records/encounter/presentation/page
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/appointment_reactions_page.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
-import '../../../../../base/theme/app_color.dart';
 import '../../../reaction/presentation/pages/reaction_details_page.dart';
 import '../../../reaction/presentation/widgets/reaction_list_item.dart';
 import '../../data/models/allergy_model.dart';
@@ -42,41 +41,53 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.primaryColor,
+            color: theme.appBarTheme.iconTheme?.color,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'allergiesPage.allergyDetails'.tr(context),
-          style: const TextStyle(
-            color: AppColors.primaryColor,
+          style:
+          theme.appBarTheme.titleTextStyle?.copyWith(
+            // Title style from theme
             fontSize: 22,
             fontWeight: FontWeight.bold,
-          ),
+          ) ??
+              TextStyle(
+                color: theme.primaryColor,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: AppColors.whiteColor,
+        backgroundColor: theme.appBarTheme.backgroundColor,
       ),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocConsumer<AllergyCubit, AllergyState>(
         listener: (context, state) {
           if (state is AllergyError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.error),
-                backgroundColor: Colors.red.shade400,
+                content: Text(
+                  state.error,
+                  style: TextStyle(color: theme.colorScheme.onError),
+                ),
+                backgroundColor: theme.colorScheme.error,
               ),
             );
           }
         },
         builder: (context, state) {
           if (state is AllergyLoading) {
-            return const Center(child: LoadingPage());
+            return Center(child: LoadingPage());
           } else if (state is AllergyDetailsSuccess) {
             return _buildAllergyDetails(context, state.allergyModel);
           } else {
@@ -84,13 +95,20 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'allergiesPage.failedToLoadAllergyDetails'.tr(
                       context,
                     ), // Translated
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: theme.textTheme.bodyMedium?.color,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
@@ -98,10 +116,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     onPressed: _loadAllergyDetails,
                     child: Text(
                       'allergiesPage.tapToRetry'.tr(context),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: AppColors.primaryColor,
-                      ),
+                      style: TextStyle(fontSize: 16, color: theme.primaryColor),
                     ),
                   ),
                 ],
@@ -114,7 +129,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
   }
 
   Widget _buildAllergyDetails(BuildContext context, AllergyModel allergy) {
-    // Added context
+    final ThemeData theme = Theme.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -131,9 +146,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                         'allergiesPage.unknownAllergy'.tr(
                           context,
                         ), // Translated
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                 ),
@@ -201,9 +216,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
               (allergy.reactions?.isNotEmpty ?? false)) ...[
             Text(
               'allergiesPage.reactions'.tr(context),
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 8),
@@ -236,6 +251,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
             const SizedBox(height: 16),
             Card(
               elevation: 4,
+              color: theme.cardColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
@@ -262,16 +278,14 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                         'allergiesPage.viewAllReactions'.tr(
                           context,
                         ), // Translated
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleMedium?.copyWith(
+                        style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primaryColor,
+                          color: theme.primaryColor,
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.arrow_forward_ios,
-                        color: AppColors.primaryColor,
+                        color: theme.iconTheme.color,
                         size: 20,
                       ),
                     ],
@@ -285,9 +299,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
             const SizedBox(height: 16),
             _buildInfoCard(
               context: context,
-              title: 'allergiesPage.encounterInformation'.tr(
-                context,
-              ), // Translated
+              title: 'allergiesPage.encounterInformation'.tr(context),
               actions: [
                 IconButton(
                   onPressed: () {
@@ -301,13 +313,11 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                       ),
                     ).then((_) => _loadAllergyDetails());
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_forward_ios,
-                    color: AppColors.primaryColor,
+                    color: theme.iconTheme.color,
                   ),
-                  tooltip: 'allergiesPage.viewEncounterDetails'.tr(
-                    context,
-                  ), // Translated
+                  tooltip: 'allergiesPage.viewEncounterDetails'.tr(context),
                 ),
               ],
               children: [
@@ -347,8 +357,10 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
     List<Widget>? actions,
     required List<Widget> children,
   }) {
+    final ThemeData theme = Theme.of(context);
     return Card(
       elevation: 4,
+      color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       clipBehavior: Clip.antiAlias,
       child: Padding(
@@ -361,9 +373,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
                 if (actions != null) Row(children: actions),
@@ -383,12 +395,13 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
       String label,
       String? value,
       ) {
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: AppColors.primaryColor.withOpacity(0.7)),
+          Icon(icon, size: 20, color: theme.iconTheme.color?.withOpacity(0.7)),
           const SizedBox(width: 12),
           SizedBox(
             width: 100,
@@ -396,16 +409,16 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
               '$label:',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
+                color: theme.textTheme.bodySmall?.color,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value ?? 'allergiesPage.notSpecified'.tr(context),
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -415,6 +428,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
   }
 
   Widget _buildCriticalityChip(BuildContext context, CodeModel? criticality) {
+    final ThemeData theme = Theme.of(context);
     Color chipColor;
     String displayText;
 
@@ -432,15 +446,17 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
         displayText = 'allergiesPage.low'.tr(context);
         break;
       default:
-        chipColor = Colors.grey.shade500;
+        chipColor =
+            theme.textTheme.bodySmall?.color?.withOpacity(0.5) ??
+                Colors.grey.shade500;
         displayText = 'allergiesPage.notApplicable'.tr(context);
     }
 
     return Chip(
       label: Text(
         displayText,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: theme.colorScheme.onPrimary,
           fontSize: 13,
           fontWeight: FontWeight.bold,
         ),

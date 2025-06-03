@@ -408,11 +408,7 @@
       "userName": "Andrew Ainsley"
     },
     "specialties": {
-<<<<<<< HEAD
       "title": "All Clinics",
-=======
-      "title": "Doctor Speciality",
->>>>>>> 609acdacad5ce38d7f0ede080fd6a3cd672fd027
       "seeAll": "See all",
       "items": {
         "general": "General",
@@ -472,7 +468,7 @@
     "seeDetails": "See Details >"
   },
   "clinicsPage": {
-    "allClinics": "All clinics"
+    "appBarTitle": "All clinics"
   },
   "greetings": {
     "morning": "Good Morning ☀️",
@@ -761,8 +757,11 @@
     "appointmentId": "Appointment",
     "GoAppointmentDetails": "Go to Appointment Details",
     "reason": "Reason",
-    " scheduled": "Scheduled",
+    "scheduled": "Scheduled",
     "doctor": "Doctor",
+    "servicesProvided": "Services Provided",
+    "unknown": "Unknown",
+    " scheduled": "Scheduled",
     " servicesProvided": "Services Provided",
     " unknown": "Unknown"
   },
@@ -806,7 +805,7 @@
     "activeAllergy": "Active Allergy",
     "inactiveAllergy": "Inactive Allergy",
     "unknownStatus": "Unknown Status",
-    "notApplicable": "N/A",
+    "notApplicable": "Not Applicable",
     "invalidDate": "Invalid Date",
     "unknownAllergy": "Unknown Allergy",
     "allergy": "Allergy",
@@ -834,12 +833,40 @@
     "reason": "Reason",
     "date": "Date",
     "specialNotes": "Special Notes",
-    "notSpecified": "Not specified",
+    "notSpecified": "Not Specified",
     "high": "High",
     "moderate": "Moderate",
     "low": "Low",
     "noAllergiesFound": "No allergies found with current filters. Try adjusting your search.",
     "refreshList": "Refresh List"
+  },
+  "allergyFilter": {
+    "filterAllergies": "Filter Allergies",
+    "search": "Search",
+    "discoveredDuringEncounter": "Discovered During Encounter",
+    "any": "Any",
+    "yes": "Yes",
+    "no": "No",
+    "allergyType": "Allergy Type",
+    "allTypes": "All Types",
+    "noAllergyTypesAvailable": "No allergy types available.",
+    "unknown": "Unknown",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "noCategoriesAvailable": "No categories available.",
+    "clinicalStatus": "Clinical Status",
+    "allStatuses": "All Statuses",
+    "noClinicalStatusesAvailable": "No clinical statuses available.",
+    "criticality": "Criticality",
+    "allCriticalities": "All Criticalities",
+    "noCriticalitiesAvailable": "No criticalities available.",
+    "sortOrder": "Sort Order",
+    "default": "Default",
+    "oldestFirst": "Oldest First",
+    "newestFirst": "Newest First",
+    "clearFilters": "Clear Filters",
+    "cancel": "Cancel",
+    "apply": "Apply"
   },
   "healthCareServicesPage": {
     "title": "Health Care Services",
@@ -938,6 +965,8 @@
     "ourServices": "Our Services",
     "noServicesAvailable": "No services available at the moment.",
     "viewOurServices": "View Our Services",
+    "noExtra": "No extra details provided.",
+    "appointment": "Appointment:",
     " noExtra": "No extra details provided.",
     " appointment": "Appointment:",
     "free": "Free",

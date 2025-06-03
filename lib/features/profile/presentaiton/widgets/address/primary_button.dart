@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Make sure this is imported
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class PrimaryButton extends StatelessWidget {
-  final String textKey; // Changed to textKey for localization
+  final String textKey;
   final VoidCallback onPressed;
   final bool isLoading;
 
   const PrimaryButton({
     super.key,
-    required this.textKey, // Changed to textKey
+    required this.textKey,
     required this.onPressed,
     this.isLoading = false,
   });
@@ -24,15 +24,15 @@ class PrimaryButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child:
-            isLoading
-                ? const CircularProgressIndicator(color: Colors.white)
-                : Text(
-                  textKey.tr(context), // Localized
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+        isLoading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : Text(
+          textKey.tr(context),
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

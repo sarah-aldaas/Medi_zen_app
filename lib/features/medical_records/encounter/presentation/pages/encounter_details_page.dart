@@ -7,7 +7,6 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
-import '../../../../../base/theme/app_color.dart';
 import '../../data/models/encounter_model.dart';
 import '../cubit/encounter_cubit/encounter_cubit.dart';
 import '../widgets/service_list_item.dart';
@@ -32,20 +31,29 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'encountersPge.encounterDetails'.tr(context), // Translated
-          style: const TextStyle(
+          'encountersPge.encounterDetails'.tr(context),
+          style:
+          theme.appBarTheme.titleTextStyle?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 22,
-            color: AppColors.primaryColor,
-          ),
+          ) ??
+              TextStyle(
+                color: theme.primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
         ),
         centerTitle: true,
-        backgroundColor: AppColors.whiteColor,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 2,
+        iconTheme: theme.appBarTheme.iconTheme,
       ),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocConsumer<EncounterCubit, EncounterState>(
         listener: (context, state) {
           if (state is EncounterError) {
@@ -53,15 +61,16 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
               SnackBar(
                 content: Text(
                   '${'encountersPge.Error'.tr(context)}: ${state.error}',
-                ), // Translated
-                backgroundColor: Colors.red,
+                  style: TextStyle(color: theme.colorScheme.onError),
+                ),
+                backgroundColor: theme.colorScheme.error,
               ),
             );
           }
         },
         builder: (context, state) {
           if (state is EncounterLoading) {
-            return const Center(child: LoadingPage());
+            return Center(child: LoadingPage());
           } else if (state is EncounterDetailsSuccess) {
             return _buildEncounterDetails(context, state.encounterModel);
           } else {
@@ -72,12 +81,15 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                   Icon(
                     Icons.error_outline,
                     size: 70,
-                    color: Colors.red.shade300,
+                    color: theme.colorScheme.error.withOpacity(0.7),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'encountersPge.failedToLoad'.tr(context), // Translated
-                    style: const TextStyle(fontSize: 18, color: Colors.grey),
+                    'encountersPge.failedToLoad'.tr(context),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: theme.textTheme.bodySmall?.color,
+                    ),
                   ),
                 ],
               ),
@@ -89,9 +101,14 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   }
 
   Widget _buildEncounterDetails(
-    BuildContext context,
-    EncounterModel encounter,
-  ) {
+      BuildContext context,
+      EncounterModel encounter,
+      ) {
+    final ThemeData theme = Theme.of(context);
+    final Color textColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
+    final Color subTextColor =
+        theme.textTheme.bodySmall?.color ?? Colors.grey.shade600;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -106,40 +123,40 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                       'encountersPge.generalEncounter'.tr(
                         context,
                       ), // Translated
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: textColor,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(width: 16),
-              _buildStatusChip(encounter.status),
+              _buildStatusChip(encounter.status, context),
             ],
           ),
           const SizedBox(height: 30),
           _buildInfoCard(
             context,
-            title: 'encountersPge.basicInformation'.tr(context), // Translated
+            title: 'encountersPge.basicInformation'.tr(context),
             icon: Icons.info_outline,
             children: [
               _buildDetailRow(
                 context,
-                label: 'encountersPge.type'.tr(context), // Translated
+                label: 'encountersPge.type'.tr(context),
                 value: encounter.type?.display,
                 icon: Icons.category_outlined,
               ),
               _buildDetailRow(
                 context,
-                label: 'encountersPge.status'.tr(context), // Translated
+                label: 'encountersPge.status'.tr(context),
                 value: encounter.status?.display,
                 icon: Icons.check_circle_outline,
               ),
               if (encounter.actualStartDate != null)
                 _buildDetailRow(
                   context,
-                  label: 'encountersPge.startDate'.tr(context), // Translated
+                  label: 'encountersPge.startDate'.tr(context),
                   value: DateFormat(
                     'MMM d, y - h:mm a',
                   ).format(DateTime.parse(encounter.actualStartDate!)),
@@ -148,7 +165,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
               if (encounter.actualEndDate != null)
                 _buildDetailRow(
                   context,
-                  label: 'encountersPge.endDate'.tr(context), // Translated
+                  label: 'encountersPge.endDate'.tr(context),
                   value: DateFormat(
                     'MMM d, y - h:mm a',
                   ).format(DateTime.parse(encounter.actualEndDate!)),
@@ -157,7 +174,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
               if (encounter.specialArrangement?.isNotEmpty ?? false)
                 _buildDetailRow(
                   context,
-                  label: 'encountersPge.specialNotes'.tr(context), // Translated
+                  label: 'encountersPge.specialNotes'.tr(context),
                   value: encounter.specialArrangement,
                   icon: Icons.notes_outlined,
                 ),
@@ -167,28 +184,26 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
           if (encounter.appointment != null) ...[
             _buildInfoCard(
               context,
-              title: 'encountersPge.appointmentDetails'.tr(
-                context,
-              ), // Translated
+              title: 'encountersPge.appointmentDetails'.tr(context),
               icon: Icons.schedule_outlined,
               actionWidget: IconButton(
                 onPressed: () {
                   context
                       .pushNamed(
-                        AppRouter.appointmentDetails.name,
-                        extra: {"appointmentId": encounter.appointment!.id},
-                      )
+                    AppRouter.appointmentDetails.name,
+                    extra: {"appointmentId": encounter.appointment!.id},
+                  )
                       .then((value) {
-                        context.read<EncounterCubit>().getSpecificEncounter(
-                          encounterId: widget.encounterId,
-                        );
-                      });
+                    context.read<EncounterCubit>().getSpecificEncounter(
+                      encounterId: widget.encounterId,
+                    );
+                  });
                 },
                 icon: Container(
                   width: 25,
                   height: 25,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.15),
+                    color: theme.primaryColor.withOpacity(0.15),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -201,25 +216,23 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                   ),
                   child: Icon(
                     Icons.arrow_forward_ios_rounded,
-                    color: Theme.of(context).primaryColor,
+                    color: theme.primaryColor,
                     size: 15,
                   ),
                 ),
-                tooltip: 'encountersPge.GoAppointmentDetails'.tr(
-                  context,
-                ), // Translated
+                tooltip: 'encountersPge.GoAppointmentDetails'.tr(context),
               ),
               children: [
                 _buildDetailRow(
                   context,
-                  label: 'encountersPge.reason'.tr(context), // Translated
+                  label: 'encountersPge.reason'.tr(context),
                   value: encounter.appointment?.reason,
                   icon: Icons.description_outlined,
                 ),
                 if (encounter.appointment?.startDate != null)
                   _buildDetailRow(
                     context,
-                    label: 'encountersPge.scheduled'.tr(context), // Translated
+                    label: 'encountersPge.scheduled'.tr(context),
                     value: DateFormat(
                       'MMM d, y - h:mm a',
                     ).format(DateTime.parse(encounter.appointment!.startDate!)),
@@ -228,10 +241,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                 if (encounter.appointment?.doctor != null)
                   _buildDetailRow(
                     context,
-                    label: 'encountersPge.doctor'.tr(context), // Translated
+                    label: 'encountersPge.doctor'.tr(context),
                     value:
-                        '${encounter.appointment?.doctor?.prefix ?? ''} ${encounter.appointment?.doctor?.fName ?? ''} ${encounter.appointment?.doctor?.lName ?? ''}'
-                            .trim(),
+                    '${encounter.appointment?.doctor?.prefix ?? ''} ${encounter.appointment?.doctor?.fName ?? ''} ${encounter.appointment?.doctor?.lName ?? ''}'
+                        .trim(),
                     icon: Icons.person_outline,
                   ),
               ],
@@ -241,7 +254,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
           if (encounter.healthCareServices?.isNotEmpty ?? false)
             _buildInfoCard(
               context,
-              title: 'encountersPge.servicesProvided'.tr(context), // Translated
+              title: 'encountersPge.servicesProvided'.tr(context),
               icon: Icons.medical_services_outlined,
               children: [
                 ListView.builder(
@@ -250,7 +263,6 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                   itemCount: encounter.healthCareServices?.length ?? 0,
                   itemBuilder: (context, index) {
                     final service = encounter.healthCareServices![index];
-
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: ServiceListItem(service: service),
@@ -265,14 +277,16 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   }
 
   Widget _buildInfoCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    Widget? actionWidget,
-    required List<Widget> children,
-  }) {
+      BuildContext context, {
+        required String title,
+        required IconData icon,
+        Widget? actionWidget,
+        required List<Widget> children,
+      }) {
+    final ThemeData theme = Theme.of(context);
     return Card(
       elevation: 6,
+      color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -281,21 +295,21 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
           children: [
             Row(
               children: [
-                Icon(icon, color: Theme.of(context).primaryColor, size: 24),
+                Icon(icon, color: theme.primaryColor, size: 24),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                 ),
                 if (actionWidget != null) actionWidget,
               ],
             ),
-            const Divider(height: 24, thickness: 1),
+            Divider(height: 24, thickness: 1, color: theme.dividerColor),
             ...children,
           ],
         ),
@@ -304,29 +318,26 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   }
 
   Widget _buildDetailRow(
-    BuildContext context, {
-    required String label,
-    String? value,
-    required IconData icon,
-  }) {
+      BuildContext context, {
+        required String label,
+        String? value,
+        required IconData icon,
+      }) {
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: Theme.of(context).primaryColor.withOpacity(0.7),
-            size: 18,
-          ),
+          Icon(icon, color: theme.primaryColor.withOpacity(0.7), size: 18),
           const SizedBox(width: 10),
           SizedBox(
             width: 100,
             child: Text(
               '$label:',
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.grey,
+                color: theme.textTheme.bodySmall?.color,
                 fontSize: 15,
               ),
             ),
@@ -334,11 +345,11 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              value ?? 'N/A', // 'N/A' is not in your JSON, consider adding it
-              style: const TextStyle(
+              value ?? 'N/A',
+              style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 15,
-                color: Colors.black87,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -347,11 +358,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
     );
   }
 
-  Widget _buildStatusChip(CodeModel? status) {
+  Widget _buildStatusChip(CodeModel? status, BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     Color chipColor;
-    Color textColor = Colors.white;
-
-    // Use a helper function to get the translated status display
+    Color textColor = theme.colorScheme.onPrimary;
     String getTranslatedStatus(String? statusCode) {
       switch (statusCode) {
         case 'planned':
@@ -362,12 +372,8 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
           return 'encountersPge.completed'.tr(context);
         case 'cancelled':
           return 'encountersPge.cancelled'.tr(context);
-        case 'unknownStatus': // Using this as the default for unknown codes
-          return 'encountersPge.unknownStatus'.tr(context);
         default:
-          return 'encountersPge.unknown'.tr(
-            context,
-          ); // Fallback for any other unknown
+          return 'encountersPge.unknownStatus'.tr(context);
       }
     }
 
@@ -385,7 +391,9 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
         chipColor = Colors.red.shade600;
         break;
       default:
-        chipColor = Colors.grey.shade500;
+        chipColor =
+            theme.textTheme.bodySmall?.color ??
+                Colors.grey.shade500;
     }
 
     return Container(
@@ -403,7 +411,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
         ],
       ),
       child: Text(
-        getTranslatedStatus(status?.code), // Use the translated status
+        getTranslatedStatus(status?.code),
         style: TextStyle(
           color: textColor,
           fontSize: 14,

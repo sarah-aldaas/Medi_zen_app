@@ -10,6 +10,7 @@ import 'package:medizen_app/base/theme/theme.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/presentation/logout/cubit/logout_cubit.dart';
 import 'package:medizen_app/main.dart';
+
 import '../../../../base/blocs/localization_bloc/localization_bloc.dart';
 import '../../../../base/constant/app_images.dart';
 import '../../../../base/constant/storage_key.dart';
@@ -26,7 +27,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  int? _selectedLogoutOption; // 0 for This Device, 1 for All Devices
+  int? _selectedLogoutOption;
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   title: Text('profilePage.payment'.tr(context)),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    // Navigate to payment
-                  },
+                  onTap: () {},
                 ),
                 ListTile(
                   leading: Icon(
@@ -115,9 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   title: Text('profilePage.security'.tr(context)),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    // Navigate to security
-                  },
+                  onTap: () {},
                 ),
                 ListTile(
                   leading: Icon(
@@ -184,9 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   title: Text('profilePage.helpCenter'.tr(context)),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    // Navigate to help center
-                  },
+                  onTap: () {},
                 ),
                 ListTile(
                   leading: Icon(
@@ -196,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text('profilePage.inviteFriends'.tr(context)),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
-                    // ShareApps.sendInvitation(context: context);                    // Navigate to invite friends
+                    // ShareApps.sendInvitation(context: context);
                   },
                 ),
                 BlocConsumer<LogoutCubit, LogoutState>(

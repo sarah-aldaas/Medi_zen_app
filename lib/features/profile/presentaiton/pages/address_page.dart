@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart'; // تأكد من استيراد هذا
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../../../../base/widgets/show_toast.dart';
@@ -72,14 +72,14 @@ class _AddressListPageState extends State<AddressListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.whiteColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_outlined),
           onPressed: () => Navigator.of(context).pop(),
           color: AppColors.primaryColor,
         ),
         title: Text(
-          'addressList.myAddresses'.tr(context), // ترجمة العنوان
+          'addressList.myAddresses'.tr(context),
           style: TextStyle(
             color: AppColors.primaryColor,
             fontWeight: FontWeight.bold,
@@ -96,9 +96,9 @@ class _AddressListPageState extends State<AddressListPage> {
             icon: Icon(Icons.add, color: AppColors.primaryColor),
             onPressed:
                 () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
-                ).then((_) => context.read<AddressCubit>().fetchAddresses()),
+              context,
+              MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
+            ).then((_) => context.read<AddressCubit>().fetchAddresses()),
             iconSize: 30,
           ),
         ],
@@ -125,18 +125,18 @@ class _AddressListPageState extends State<AddressListPage> {
             if (addresses.isEmpty) {
               return EmptyState(
                 icon: Icons.location_on,
-                title: 'addressList.noAddresses'.tr(context), // ترجمة
-                message: 'addressList.noAddressesMessage'.tr(context), // ترجمة
-                actionText: 'addressList.addAddress'.tr(context), // ترجمة
+                title: 'addressList.noAddresses'.tr(context),
+                message: 'addressList.noAddressesMessage'.tr(context),
+                actionText: 'addressList.addAddress'.tr(context),
                 onAction:
                     () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AddEditAddressPage(),
-                      ),
-                    ).then(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const AddEditAddressPage(),
+                  ),
+                ).then(
                       (_) => context.read<AddressCubit>().fetchAddresses(),
-                    ),
+                ),
               );
             }
 
@@ -158,19 +158,19 @@ class _AddressListPageState extends State<AddressListPage> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: AddressCard(
-                      key: ValueKey(address.id), // Important for proper updates
+                      key: ValueKey(address.id),
                       address: address,
                       onEdit:
                           () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => AddEditAddressPage(address: address),
-                            ),
-                          ).then(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => AddEditAddressPage(address: address),
+                        ),
+                      ).then(
                             (_) =>
-                                context.read<AddressCubit>().fetchAddresses(),
-                          ),
+                            context.read<AddressCubit>().fetchAddresses(),
+                      ),
                       onDelete: () => _showDeleteDialog(context, address.id!),
                     ),
                   );
@@ -189,58 +189,58 @@ class _AddressListPageState extends State<AddressListPage> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text(
-              'addressList.deleteAddress'.tr(context), // ترجمة
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: AppColors.primaryColor,
-              ),
-            ),
-            content: Text(
-              'addressList.confirmDeleteAddress'.tr(context), // ترجمة
-              style: const TextStyle(fontSize: 18),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'addressList.cancel'.tr(context), // ترجمة
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.gallery,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  context.read<AddressCubit>().deleteAddress(id: addressId);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor.withOpacity(0.7),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 15,
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  elevation: 3,
-                ),
-                child: Text(
-                  'addressList.delete'.tr(context), // ترجمة
-                  style: TextStyle(color: AppColors.whiteColor),
-                ),
-              ),
-            ],
+        title: Text(
+          'addressList.deleteAddress'.tr(context),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: AppColors.primaryColor,
           ),
+        ),
+        content: Text(
+          'addressList.confirmDeleteAddress'.tr(context),
+          style: const TextStyle(fontSize: 18),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'addressList.cancel'.tr(context),
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: AppColors.gallery,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.read<AddressCubit>().deleteAddress(id: addressId);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryColor.withOpacity(0.7),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30,
+                vertical: 15,
+              ),
+              textStyle: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+              elevation: 3,
+            ),
+            child: Text(
+              'addressList.delete'.tr(context),
+              style: TextStyle(color: AppColors.whiteColor),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -301,7 +301,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "addressList.filterAddresses".tr(context), // ترجمة
+                  "addressList.filterAddresses".tr(context),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -320,7 +320,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "addressList.addressUse".tr(context), // ترجمة
+                      "addressList.addressUse".tr(context),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -335,16 +335,16 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'address_use',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'address_use',
+                              )
                                   .fold<Map<String, CodeModel>>(
-                                    {},
+                                {},
                                     (map, code) => map..[code.id] = code,
-                                  )
+                              )
                                   .values
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodeTypesLoading) {
                           return Center(child: LoadingButton());
@@ -390,7 +390,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "addressList.addressType".tr(context), // ترجمة
+                      "addressList.addressType".tr(context),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -405,16 +405,16 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'address_type',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'address_type',
+                              )
                                   .fold<Map<String, CodeModel>>(
-                                    {},
+                                {},
                                     (map, code) => map..[code.id] = code,
-                                  )
+                              )
                                   .values
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodeTypesLoading) {
                           return Center(child: LoadingButton());
@@ -474,7 +474,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                     });
                   },
                   child: Text(
-                    "addressList.clearFilters".tr(context), // ترجمة
+                    "addressList.clearFilters".tr(context),
                     style: const TextStyle(color: Colors.red),
                   ),
                 ),
@@ -482,7 +482,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text("addressList.cancel".tr(context)), // ترجمة
+                      child: Text("addressList.cancel".tr(context)),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -501,7 +501,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      child: Text("addressList.apply".tr(context)), // ترجمة
+                      child: Text("addressList.apply".tr(context)),
                     ),
                   ],
                 ),
