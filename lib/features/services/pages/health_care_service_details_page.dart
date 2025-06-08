@@ -32,25 +32,38 @@ class _HealthCareServiceDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
-    final secondaryColor = Colors.tealAccent.shade400;
-    final backgroundColor = Colors.white;
-    final textColor = Colors.black87;
-    final subTextColor = Colors.grey.shade600;
+    final ThemeData theme = Theme.of(context);
+    final Color primaryColor = theme.primaryColor;
+
+    final Color secondaryColor = theme.colorScheme.secondary;
+
+    final Color textColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
+    final Color subTextColor =
+        theme.textTheme.bodySmall?.color ?? Colors.grey.shade600;
+
+    final Color appBarBackgroundColor =
+        theme.appBarTheme.backgroundColor ?? Colors.white;
+
+    final Color scaffoldBackgroundColor = theme.scaffoldBackgroundColor;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: appBarBackgroundColor,
         title: Text(
           'healthCareServicesPage.serviceDetails'.tr(context),
-          style: TextStyle(
-            color: primaryColor,
+          style:
+          theme.appBarTheme.titleTextStyle?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 24,
-          ),
+          ) ??
+              TextStyle(
+                color: primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: subTextColor),
+          icon: Icon(Icons.arrow_back_ios, color: theme.iconTheme.color),
           onPressed: () => context.pop(),
         ),
         elevation: 3,
@@ -58,7 +71,7 @@ class _HealthCareServiceDetailsPageState
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(18)),
         ),
       ),
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: scaffoldBackgroundColor,
       body: BlocConsumer<ServiceCubit, ServiceState>(
         listener: (context, state) {
           if (state is ServiceHealthCareError) {
@@ -67,13 +80,7 @@ class _HealthCareServiceDetailsPageState
         },
         builder: (context, state) {
           if (state is ServiceHealthCareModelSuccess) {
-            return _buildServiceDetails(
-              context,
-              state.healthCareServiceModel,
-              primaryColor,
-              textColor,
-              subTextColor,
-            );
+            return _buildServiceDetails(context, state.healthCareServiceModel);
           } else if (state is ServiceHealthCareError) {
             return Center(
               child: Column(
@@ -95,7 +102,7 @@ class _HealthCareServiceDetailsPageState
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
-                      foregroundColor: backgroundColor,
+                      foregroundColor: theme.textTheme.labelLarge?.color,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -103,7 +110,10 @@ class _HealthCareServiceDetailsPageState
                         horizontal: 40,
                         vertical: 14,
                       ),
-                      textStyle: const TextStyle(fontSize: 18),
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        color: theme.textTheme.labelLarge?.color,
+                      ),
                     ),
                     child: Text(
                       'healthCareServicesPage.retryLoading'.tr(context),
@@ -113,19 +123,23 @@ class _HealthCareServiceDetailsPageState
               ),
             );
           }
-          return const Center(child: LoadingPage());
+          return Center(child: LoadingPage());
         },
       ),
     );
   }
 
   Widget _buildServiceDetails(
-    BuildContext context,
-    HealthCareServiceModel service,
-    Color primaryColor,
-    Color textColor,
-    Color subTextColor,
-  ) {
+      BuildContext context,
+      HealthCareServiceModel service,
+      ) {
+    final ThemeData theme = Theme.of(context);
+    final Color primaryColor = theme.primaryColor;
+    final Color textColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
+    final Color subTextColor =
+        theme.textTheme.bodySmall?.color ?? Colors.grey.shade600;
+    final Color cardColor = theme.cardTheme.color ?? Colors.white;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -135,6 +149,8 @@ class _HealthCareServiceDetailsPageState
             Center(
               child: Card(
                 elevation: 5,
+
+                color: cardColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
                 ),
@@ -146,10 +162,10 @@ class _HealthCareServiceDetailsPageState
                   fit: BoxFit.cover,
                   errorBuilder:
                       (context, error, stackTrace) => Icon(
-                        Icons.medical_services_outlined,
-                        size: 120,
-                        color: subTextColor,
-                      ),
+                    Icons.medical_services_outlined,
+                    size: 120,
+                    color: theme.iconTheme.color?.withOpacity(0.5),
+                  ),
                 ),
               ),
             ),
@@ -275,7 +291,7 @@ class _HealthCareServiceDetailsPageState
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.15),
+                      color: theme.primaryColor.withOpacity(0.15),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
@@ -288,19 +304,10 @@ class _HealthCareServiceDetailsPageState
                     ),
                     child: Icon(
                       Icons.arrow_forward_ios_rounded,
-                      color: Theme.of(context).primaryColor,
+                      color: theme.primaryColor,
                       size: 20,
                     ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    context.pushNamed(
-                      AppRouter.clinicDetails.name,
-                      extra: {"clinicId": service.clinic!.id},
-                    );
-                  },
-                  icon: Icon(Icons.arrow_circle_right, color: Colors.blue),
                 ),
               ],
             ),
@@ -316,6 +323,8 @@ class _HealthCareServiceDetailsPageState
                 child: Center(
                   child: Card(
                     elevation: 3,
+
+                    color: cardColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -327,10 +336,10 @@ class _HealthCareServiceDetailsPageState
                       fit: BoxFit.cover,
                       errorBuilder:
                           (context, error, stackTrace) => Icon(
-                            Icons.local_hospital_outlined,
-                            size: 80,
-                            color: subTextColor,
-                          ),
+                        Icons.local_hospital_outlined,
+                        size: 80,
+                        color: theme.iconTheme.color?.withOpacity(0.5),
+                      ),
                     ),
                   ),
                 ),
@@ -351,9 +360,11 @@ class _HealthCareServiceDetailsPageState
             ),
             const Gap(10),
             ...service.eligibilities!.map(
-              (e) => Card(
+                  (e) => Card(
                 elevation: 2,
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
+
+                color: cardColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

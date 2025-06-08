@@ -9,8 +9,6 @@ import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
 import 'package:medizen_app/features/profile/presentaiton/widgets/telecom/telecom_details_dialog.dart';
 import 'package:medizen_app/features/profile/presentaiton/widgets/telecom/telecom_update_create_dialogs.dart';
 
-import '../../../../../../../../base/theme/app_color.dart';
-import '../../../../base/widgets/loading_page.dart';
 import '../cubit/telecom_cubit/telecom_cubit.dart';
 
 class TelecomPage extends StatefulWidget {
@@ -26,56 +24,62 @@ class _TelecomPageState extends State<TelecomPage> {
 
   @override
   void initState() {
+    super.initState();
     telecomTypesFuture = context.read<CodeTypesCubit>().getTelecomTypeCodes();
     telecomUseFuture = context.read<CodeTypesCubit>().getTelecomUseCodes();
     context.read<TelecomCubit>().fetchTelecoms(
       rank: '1',
       paginationCount: '100',
     );
-    super.initState();
   }
 
-  Widget _buildTelecomCard(TelecomModel telecom) {
+  Widget _buildTelecomCard(BuildContext context, TelecomModel telecom) {
+    final ThemeData theme = Theme.of(context);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 5,
+      color: theme.cardColor,
       child: ExpansionTile(
-        leading: const Icon(
+        leading: Icon(
           Icons.phone_android,
-          color: AppColors.gallery,
+          color: theme.iconTheme.color,
           size: 30,
         ),
         title: Text(
           telecom.value ?? 'N/A',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         subtitle: Text(
           '${telecom.type?.display ?? 'N/A'} - ${telecom.use?.display ?? 'N/A'}',
-          style: const TextStyle(fontSize: 15),
+          style: theme.textTheme.bodyMedium,
         ),
         childrenPadding: const EdgeInsets.all(20),
+        collapsedIconColor: theme.iconTheme.color,
+        iconColor: theme.primaryColor,
         children: [
           Row(
             children: [
-              Icon(Icons.tag, size: 25),
+              Icon(Icons.tag, size: 25, color: theme.iconTheme.color),
               const Gap(12),
               Text(
                 "telecomPage.type".tr(context) +
                     "${telecom.type?.display ?? 'N/A'}",
-                style: TextStyle(fontSize: 17),
+                style: theme.textTheme.bodyLarge,
               ),
             ],
           ),
           const Gap(12),
           Row(
             children: [
-              const Icon(Icons.label, size: 25),
+              Icon(Icons.label, size: 25, color: theme.iconTheme.color),
               const Gap(12),
               Text(
                 "telecomPage.use".tr(context) +
                     "${telecom.use?.display ?? 'N/A'}",
-                style: TextStyle(fontSize: 17),
+                style: theme.textTheme.bodyLarge,
               ),
             ],
           ),
@@ -85,38 +89,46 @@ class _TelecomPageState extends State<TelecomPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                icon: const Icon(Icons.edit, color: Colors.cyan, size: 20),
+                icon: Icon(
+                  Icons.edit,
+                  color: theme.colorScheme.secondary,
+                  size: 20,
+                ),
                 onPressed:
                     () => showUpdateTelecomDialog(
-                      context: context,
-                      telecom: telecom,
-                      telecomCubit: context.read<TelecomCubit>(),
-                      telecomTypesFuture: telecomTypesFuture,
-                      telecomUseFuture: telecomUseFuture,
-                    ),
+                  context: context,
+                  telecom: telecom,
+                  telecomCubit: context.read<TelecomCubit>(),
+                  telecomTypesFuture: telecomTypesFuture,
+                  telecomUseFuture: telecomUseFuture,
+                ),
               ),
               const Gap(10),
               IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                icon: Icon(
+                  Icons.delete,
+                  color: theme.colorScheme.error,
+                  size: 20,
+                ),
                 onPressed:
                     () => showUpdateDeleteTelecomDialog(
-                      context: context,
-                      telecom: telecom,
-                      telecomCubit: context.read<TelecomCubit>(),
-                    ),
+                  context: context,
+                  telecom: telecom,
+                  telecomCubit: context.read<TelecomCubit>(),
+                ),
               ),
               const Gap(10),
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.info_outline,
-                  color: Colors.blueGrey,
+                  color: theme.colorScheme.onSurface.withOpacity(0.6),
                   size: 20,
                 ),
                 onPressed:
                     () => showTelecomDetailsDialog(
-                      context: context,
-                      telecom: telecom,
-                    ),
+                  context: context,
+                  telecom: telecom,
+                ),
               ),
             ],
           ),
@@ -130,23 +142,30 @@ class _TelecomPageState extends State<TelecomPage> {
 
     return BlocBuilder<TelecomCubit, TelecomState>(
       builder: (context, state) {
+        final ThemeData theme = Theme.of(context);
+
         if (state is TelecomInitial) {
-          context.read<TelecomCubit>().fetchTelecoms(
-            rank: '1',
-            paginationCount: '100',
-          );
+          // context.read<TelecomCubit>().fetchTelecoms(
+          //   rank: '1',
+          //   paginationCount: '100',
+          // );
         }
 
         if (state is TelecomLoading) {
-          return Center(child: LoadingButton());
+          return Center(
+            child: CircularProgressIndicator(color: theme.primaryColor),
+          );
         }
 
         final telecoms =
-            state is TelecomSuccess
-                ? state.paginatedResponse.paginatedData!.items
-                : [];
+        state is TelecomSuccess
+            ? state.paginatedResponse.paginatedData?.items
+            : [];
         final filteredTelecoms =
-            telecoms.where((telecom) => telecom.type!.id == type.id).toList();
+            telecoms
+                ?.where((telecom) => telecom.type?.id == type.id)
+                .toList() ??
+                [];
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
@@ -165,8 +184,8 @@ class _TelecomPageState extends State<TelecomPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor.withOpacity(0.7),
-                    foregroundColor: Colors.white,
+                    backgroundColor: theme.primaryColor,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -174,7 +193,7 @@ class _TelecomPageState extends State<TelecomPage> {
                       horizontal: 30,
                       vertical: 15,
                     ),
-                    textStyle: const TextStyle(
+                    textStyle: theme.textTheme.labelLarge?.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
@@ -186,16 +205,22 @@ class _TelecomPageState extends State<TelecomPage> {
               const Gap(30),
               filteredTelecoms.isEmpty
                   ? Center(
-                    child: Text('telecomPage.noTelecomsOfType'.tr(context)),
-                  )
+                child: Text(
+                  'telecomPage.noTelecomsOfType'.tr(context),
+                  style: theme.textTheme.bodyMedium,
+                ),
+              )
                   : ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: filteredTelecoms.length,
-                    itemBuilder: (context, index) {
-                      return _buildTelecomCard(filteredTelecoms[index]);
-                    },
-                  ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: filteredTelecoms.length,
+                itemBuilder: (context, index) {
+                  return _buildTelecomCard(
+                    context,
+                    filteredTelecoms[index],
+                  );
+                },
+              ),
             ],
           ),
         );
@@ -207,25 +232,34 @@ class _TelecomPageState extends State<TelecomPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => serviceLocator<CodeTypesCubit>()),
         BlocProvider(create: (context) => serviceLocator<TelecomCubit>()),
       ],
       child: Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           title: Text(
             'telecomPage.telecoms'.tr(context),
-            style: TextStyle(
-              color: AppColors.primaryColor,
+            style:
+            theme.appBarTheme.titleTextStyle?.copyWith(
               fontWeight: FontWeight.bold,
-            ),
+            ) ??
+                TextStyle(
+                  color: theme.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: theme.appBarTheme.backgroundColor,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_outlined),
+            icon: Icon(
+              Icons.arrow_back_ios_new_outlined,
+              color: theme.appBarTheme.iconTheme?.color,
+            ),
             onPressed: () => Navigator.of(context).pop(),
-            color: AppColors.primaryColor,
           ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(60),
@@ -233,7 +267,9 @@ class _TelecomPageState extends State<TelecomPage> {
               future: telecomTypesFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: LinearProgressIndicator());
+                  return Center(
+                    child: LinearProgressIndicator(color: theme.primaryColor),
+                  );
                 }
                 final telecomTypes = snapshot.data ?? [];
                 if (telecomTypes.isEmpty) {
@@ -244,30 +280,30 @@ class _TelecomPageState extends State<TelecomPage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children:
-                        telecomTypes.map((type) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            child: ChoiceChip(
-                              label: Text(type.display ?? 'N/A'),
-                              selected: _selectedTab == type,
-                              selectedColor: AppColors.primaryColor,
-                              backgroundColor: Colors.grey[200],
-                              onSelected: (selected) {
-                                setState(() {
-                                  _selectedTab = type;
-                                });
-                              },
-                              labelStyle: TextStyle(
-                                color:
-                                    _selectedTab == type
-                                        ? Colors.white
-                                        : Colors.black,
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                    telecomTypes.map((type) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                        ),
+                        child: ChoiceChip(
+                          label: Text(type.display ?? 'N/A'),
+                          selected: _selectedTab == type,
+                          selectedColor: theme.primaryColor,
+                          backgroundColor: theme.chipTheme.backgroundColor,
+                          onSelected: (selected) {
+                            setState(() {
+                              _selectedTab = type;
+                            });
+                          },
+                          labelStyle: theme.chipTheme.labelStyle?.copyWith(
+                            color:
+                            _selectedTab == type
+                                ? theme.colorScheme.onPrimary
+                                : theme.textTheme.bodyMedium?.color,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 );
               },
@@ -278,7 +314,9 @@ class _TelecomPageState extends State<TelecomPage> {
           future: telecomTypesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: LoadingButton());
+              return Center(
+                child: CircularProgressIndicator(color: theme.primaryColor),
+              );
             }
             final telecomTypes = snapshot.data ?? [];
             return _buildContentForTab(_selectedTab ?? telecomTypes.first);

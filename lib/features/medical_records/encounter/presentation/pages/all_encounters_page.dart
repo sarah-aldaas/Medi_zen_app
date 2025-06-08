@@ -52,7 +52,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
+        _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       final currentState = context.read<EncounterCubit>().state;
       if (currentState is EncountersSuccess && currentState.hasMore) {
@@ -61,8 +61,8 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
             .read<EncounterCubit>()
             .getAllMyEncounter(filters: widget.filter.toJson(), loadMore: true)
             .then((_) {
-              setState(() => _isLoadingMore = false);
-            });
+          setState(() => _isLoadingMore = false);
+        });
       }
     }
   }
@@ -74,9 +74,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
         if (state is EncounterError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                'encountersPge.errorLoading'.tr(context),
-              ), // Translated
+              content: Text('encountersPge.errorLoading'.tr(context)),
               backgroundColor: Colors.red,
             ),
           );
@@ -88,11 +86,11 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
         }
 
         final List<EncounterModel> encounters =
-            state is EncountersSuccess
-                ? state.paginatedResponse.paginatedData?.items
-                        ?.cast<EncounterModel>() ??
-                    []
-                : [];
+        state is EncountersSuccess
+            ? state.paginatedResponse.paginatedData?.items
+            ?.cast<EncounterModel>() ??
+            []
+            : [];
         final bool hasMore = state is EncountersSuccess ? state.hasMore : false;
 
         if (encounters.isEmpty) {
@@ -103,7 +101,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
                 Icon(Icons.event_note, size: 70, color: Colors.grey[400]),
                 const SizedBox(height: 20),
                 Text(
-                  'encountersPge.noFound'.tr(context), // Translated
+                  'encountersPge.noFound'.tr(context),
                   style: const TextStyle(
                     fontSize: 20,
                     color: Colors.grey,
@@ -112,7 +110,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'encountersPge.checkFilters'.tr(context), // Translated
+                  'encountersPge.checkFilters'.tr(context),
                   style: const TextStyle(fontSize: 15, color: Colors.grey),
                 ),
               ],

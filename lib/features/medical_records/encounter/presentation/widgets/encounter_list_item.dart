@@ -17,17 +17,23 @@ class EncounterListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color dateBackgroundColor = Colors.blueGrey.shade50;
-    final Color dateTextColor = Colors.blueGrey.shade700;
+    final ThemeData theme = Theme.of(context);
+
+
+    final Color dateBackgroundColor = theme.colorScheme.primary.withOpacity(
+      0.1,
+    );
+    final Color dateTextColor =
+        theme.primaryColor;
 
     final String type =
         encounter.type?.display ?? 'encountersPge.encounter'.tr(context);
     final String scheduledDate =
-        encounter.actualStartDate != null
-            ? DateFormat(
-              'MMM d, y - h:mm a',
-            ).format(DateTime.parse(encounter.actualStartDate!))
-            : 'encountersPge.dateNotAvailable'.tr(context);
+    encounter.actualStartDate != null
+        ? DateFormat(
+      'MMM d, y - h:mm a',
+    ).format(DateTime.parse(encounter.actualStartDate!))
+        : 'encountersPge.dateNotAvailable'.tr(context);
     final String status =
         encounter.status?.display ?? 'encountersPge.unknownStatus'.tr(context);
 
@@ -35,6 +41,8 @@ class EncounterListItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Card(
         elevation: 8,
+
+        color: theme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -51,11 +59,12 @@ class EncounterListItem extends StatelessWidget {
                     children: [
                       Text(
                         encounter.reason ??
-                            'encountersPge.encounter'.tr(context), // Translated
-                        style: const TextStyle(
+                            'encountersPge.encounter'.tr(context),
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
-                          color: Colors.black87,
+
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -65,7 +74,8 @@ class EncounterListItem extends StatelessWidget {
                         Text(
                           type,
                           style: TextStyle(
-                            color: Colors.grey[600],
+
+                            color: theme.textTheme.bodySmall?.color,
                             fontSize: 16,
                           ),
                           maxLines: 1,
@@ -113,7 +123,6 @@ class EncounterListItem extends StatelessWidget {
   }
 
   Widget _buildStatusIcon(BuildContext context, CodeModel? status) {
-    // Added context parameter
     IconData iconData;
     Color iconColor;
     String tooltipText;
@@ -122,27 +131,29 @@ class EncounterListItem extends StatelessWidget {
       case 'planned':
         iconData = Icons.event_note;
         iconColor = Colors.blue.shade600;
-        tooltipText = 'encountersPge.planned'.tr(context); // Translated
+        tooltipText = 'encountersPge.planned'.tr(context);
         break;
       case 'in-progress':
         iconData = Icons.hourglass_full;
         iconColor = Colors.orange.shade600;
-        tooltipText = 'encountersPge.inProgress'.tr(context); // Translated
+        tooltipText = 'encountersPge.inProgress'.tr(context);
         break;
       case 'completed':
         iconData = Icons.check_circle;
         iconColor = Colors.green.shade600;
-        tooltipText = 'encountersPge.completed'.tr(context); // Translated
+        tooltipText = 'encountersPge.completed'.tr(context);
         break;
       case 'cancelled':
         iconData = Icons.cancel;
         iconColor = Colors.red.shade600;
-        tooltipText = 'encountersPge.cancelled'.tr(context); // Translated
+        tooltipText = 'encountersPge.cancelled'.tr(context);
         break;
       default:
         iconData = Icons.help_outline;
-        iconColor = Colors.grey.shade500;
-        tooltipText = 'encountersPge.unknownStatus'.tr(context); // Translated
+        iconColor =
+            Theme.of(context).textTheme.bodySmall?.color ??
+                Colors.grey.shade500;
+        tooltipText = 'encountersPge.unknownStatus'.tr(context);
     }
 
     return Tooltip(

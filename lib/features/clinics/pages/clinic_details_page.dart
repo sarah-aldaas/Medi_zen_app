@@ -3,20 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Ensure this is imported
-import 'package:medizen_app/base/extensions/media_query_extension.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
-import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/features/clinics/data/datasources/clinic_remote_datasources.dart';
-import 'package:medizen_app/features/doctor/data/datasource/doctor_remote_datasource.dart';
-import 'package:medizen_app/features/doctor/pages/cubit/doctor_cubit/doctor_cubit.dart';
-import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
+import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
+import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
 
-import '../../../base/theme/app_color.dart';
+import '../../doctor/data/datasource/doctor_remote_datasource.dart';
 import '../../doctor/data/model/doctor_model.dart';
-import '../data/models/clinic_model.dart';
-import 'cubit/clinic_cubit/clinic_cubit.dart';
+import '../../doctor/pages/cubit/doctor_cubit/doctor_cubit.dart';
+import '../../services/data/model/health_care_services_model.dart';
+import '../data/datasources/clinic_remote_datasources.dart';
 
 class ClinicDetailsPage extends StatefulWidget {
   const ClinicDetailsPage({super.key, required this.clinicId});
@@ -59,28 +57,32 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => context.pop(),
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Theme.of(context).iconTheme.color,
+          ),
         ),
         toolbarHeight: 70,
-        backgroundColor: Colors.white,
+
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         centerTitle: true,
         title: BlocBuilder<ClinicCubit, ClinicState>(
           bloc: _clinicCubit,
           builder: (context, state) {
+            TextStyle appBarTitleStyle =
+                Theme.of(context).appBarTheme.titleTextStyle ??
+                    Theme.of(
+                      context,
+                    ).textTheme.displayLarge!.copyWith(fontSize: 20); // fallback
+
             if (state is ClinicLoadedSuccess) {
-              return Text(
-                state.clinic.name,
-                style: const TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                ),
-              );
+              return Text(state.clinic.name, style: appBarTitleStyle);
             }
             return Text(
               'clinicDetails.clinicDetails'.tr(context),
-              style: const TextStyle(
-                color: AppColors.primaryColor,
+              style: appBarTitleStyle.copyWith(
+                color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
               ),
@@ -89,22 +91,36 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         ),
         elevation: 1,
       ),
-      backgroundColor: Colors.grey.shade100,
+
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocBuilder<ClinicCubit, ClinicState>(
         bloc: _clinicCubit,
         builder: (context, clinicState) {
           if (clinicState is ClinicLoading) {
-            return const Center(child: LoadingPage());
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            );
           }
           if (clinicState is ClinicError) {
             return Center(
-              child: Text('clinicDetails.errorLoadingClinic'.tr(context)),
+              child: Text(
+                'clinicDetails.errorLoadingClinic'.tr(context),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
             );
           }
           if (clinicState is ClinicLoadedSuccess) {
             return _buildClinicDetails(clinicState.clinic);
           }
-          return const Center(child: LoadingPage());
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          );
         },
       ),
     );
@@ -122,9 +138,10 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             const Gap(20),
             Text(
               clinic.description,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: Colors.black87,
+
+                color: Theme.of(context).textTheme.bodyLarge?.color,
                 height: 1.5,
               ),
             ),
@@ -142,9 +159,11 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
 
   Widget _buildClinicImage(ClinicModel clinic) {
     return SizedBox(
-      width: context.width,
+      width: MediaQuery.of(context).size.width,
       child: Card(
         elevation: 2,
+
+        color: Theme.of(context).cardTheme.color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         clipBehavior: Clip.antiAlias,
         child: AspectRatio(
@@ -154,7 +173,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             fit: BoxFit.cover,
             errorBuilder:
                 (context, error, stackTrace) =>
-                    Image.asset(AppAssetImages.clinic6, fit: BoxFit.cover),
+                Image.asset(AppAssetImages.clinic6, fit: BoxFit.cover),
           ),
         ),
       ),
@@ -166,6 +185,11 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
       bloc: _doctorCubit,
       builder: (context, state) {
         Widget content;
+
+        TextStyle sectionTitleStyle = Theme.of(context).textTheme.displayLarge!
+            .copyWith(fontSize: 20, fontWeight: FontWeight.bold);
+        TextStyle normalTextStyle = Theme.of(context).textTheme.bodyLarge!;
+
         if (state is LoadedDoctorsOfClinicSuccess) {
           content = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,11 +204,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                   Text(
                     'clinicDetails.ourDedicatedDoctors'.tr(context) +
                         "(${state.allDoctors.length})",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+                    style: sectionTitleStyle,
                   ),
                 ],
               ),
@@ -194,7 +214,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
                     'clinicDetails.noAvailable'.tr(context),
-                    style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    style: normalTextStyle.copyWith(
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -212,24 +234,31 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: Center(
                           child:
-                              _doctorCubit.isLoading
-                                  ? const CircularProgressIndicator()
-                                  : TextButton(
-                                    onPressed: () {
-                                      _doctorCubit.getDoctorsOfClinic(
-                                        clinicId: widget.clinicId,
-                                      );
-                                    },
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: Colors.blueAccent,
-                                    ),
-                                    child: Text(
-                                      'clinicDetails.loadMore'.tr(
-                                        context,
-                                      ), // Localized
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                  ),
+                          _doctorCubit.isLoading
+                              ? CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                          )
+                              : TextButton(
+                            onPressed: () {
+                              _doctorCubit.getDoctorsOfClinic(
+                                clinicId: widget.clinicId,
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor:
+                              Theme.of(context).primaryColor,
+                            ),
+                            child: Text(
+                              'clinicDetails.loadMore'.tr(context),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color:
+                                Theme.of(
+                                  context,
+                                ).textTheme.labelLarge?.color,
+                              ),
+                            ),
+                          ),
                         ),
                       );
                     } else {
@@ -245,7 +274,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
               children: [
                 Text(
                   'clinicDetails.errorLoadingDoctors'.tr(context),
-                  style: const TextStyle(color: Colors.redAccent, fontSize: 16),
+                  style: normalTextStyle.copyWith(color: Colors.redAccent),
                   textAlign: TextAlign.center,
                 ),
                 const Gap(8),
@@ -254,18 +283,25 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                     _doctorCubit.getDoctorsOfClinic(clinicId: widget.clinicId);
                   },
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.blueAccent,
+                    foregroundColor: Theme.of(context).primaryColor,
                   ),
                   child: Text(
                     'clinicDetails.retryLoading'.tr(context),
-                    style: const TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).textTheme.labelLarge?.color,
+                    ),
                   ),
                 ),
               ],
             ),
           );
         } else if (state is DoctorLoading && !_doctorCubit.isLoading) {
-          content = Center(child: LoadingButton());
+          content = Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          );
         } else {
           content = const SizedBox.shrink();
         }
@@ -282,6 +318,8 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
     return Card(
       elevation: 2,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
+
+      color: Theme.of(context).cardTheme.color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
         onTap: () {
@@ -304,11 +342,14 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                       width: 100,
                       fit: BoxFit.cover,
                       errorBuilder:
-                          (context, error, stackTrace) => const Icon(
-                            Icons.person_outline,
-                            size: 60,
-                            color: Colors.grey,
-                          ),
+                          (context, error, stackTrace) => Icon(
+                        Icons.person_outline,
+                        size: 60,
+
+                        color: Theme.of(
+                          context,
+                        ).iconTheme.color?.withOpacity(0.5),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -338,10 +379,11 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                   children: [
                     Text(
                       "${doctor.fName} ${doctor.lName}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.black87,
+
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                       ),
                     ),
                     const Gap(6),
@@ -349,7 +391,10 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                       doctor.text,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14),
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                        fontSize: 14,
+                      ),
                     ),
                     const Gap(12),
                     Row(
@@ -364,8 +409,8 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                           doctor.telecoms!.isNotEmpty
                               ? doctor.telecoms![0].value!
                               : 'clinicDetails.noContact'.tr(context),
-                          style: const TextStyle(
-                            color: Colors.grey,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodySmall?.color,
                             fontSize: 14,
                           ),
                         ),
@@ -381,8 +426,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                             doctor.address,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: const TextStyle(
-                              color: Colors.grey,
+                            style: TextStyle(
+                              color:
+                              Theme.of(context).textTheme.bodySmall?.color,
                               fontSize: 14,
                             ),
                           ),
@@ -393,7 +439,12 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                 ),
               ),
               const Gap(8),
-              const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
+              //
+              Icon(
+                Icons.arrow_forward_ios,
+                color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
+                size: 18,
+              ),
             ],
           ),
         ),
@@ -414,10 +465,11 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             const Gap(8),
             Text(
               'clinicDetails.ourServices'.tr(context),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ],
@@ -429,11 +481,16 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.info_outline, color: Colors.grey),
+                Icon(
+                  Icons.info_outline,
+                  color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
+                ),
                 const Gap(8),
                 Text(
                   'clinicDetails.noServicesAvailable'.tr(context),
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodySmall?.color,
+                  ),
                 ),
               ],
             ),
@@ -441,6 +498,8 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         else
           Card(
             elevation: 2,
+
+            color: Theme.of(context).cardTheme.color,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -464,15 +523,18 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                   children: [
                     Text(
                       "clinicDetails.viewOurServices".tr(context),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        color: Colors.black87,
+
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                         fontSize: 16,
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Theme.of(
+                        context,
+                      ).iconTheme.color?.withOpacity(0.5),
                       size: 18,
                     ),
                   ],
@@ -496,182 +558,211 @@ class ClinicServicesPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'clinicDetails.ourServices'.tr(context),
-          style: const TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-          ),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.grey),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
         elevation: 1,
       ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child:
-            services.isEmpty
-                ? Center(
-                  child: Text(
-                    'clinicDetails.noServicesAvailable'.tr(
-                      context,
-                    ), // Localized
-                    style: const TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                )
-                : ListView.separated(
-                  itemCount: services.length,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    final service = services[index];
-                    return Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+        services.isEmpty
+            ? Center(
+          child: Text(
+            'clinicDetails.noServicesAvailable'.tr(
+              context,
+            ), // Localized
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).textTheme.bodySmall?.color,
+            ),
+          ),
+        )
+            : ListView.separated(
+          itemCount: services.length,
+          separatorBuilder:
+              (context, index) =>
+              Divider(color: Theme.of(context).dividerColor),
+          itemBuilder: (context, index) {
+            final service = services[index];
+            return Card(
+              elevation: 2,
+
+              color: Theme.of(context).cardTheme.color,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              service.photo!,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (context, error, stackTrace) => Icon(
+                                Icons.image_not_supported_outlined,
+                                size: 40,
+                                color: Theme.of(
+                                  context,
+                                ).iconTheme.color?.withOpacity(0.5),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Gap(16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                service.name!,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color:
+                                  Theme.of(
+                                    context,
+                                  ).textTheme.bodyLarge?.color,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const Gap(4),
+                              Text(
+                                service.comment ?? "",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  color:
+                                  Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.color,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Gap(25),
+                    Text(
+                      service.extraDetails ??
+                          'clinicDetails.noExtra'.tr(context),
+                      style: TextStyle(
+                        color:
+                        Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.color,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    const Gap(30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 60,
-                                  height: 60,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      service.photo!,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (
-                                            context,
-                                            error,
-                                            stackTrace,
-                                          ) => const Icon(
-                                            Icons.image_not_supported_outlined,
-                                            size: 40,
-                                            color: Colors.grey,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        service.name!,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      const Gap(4),
-                                      Text(
-                                        service.comment ?? "",
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Gap(25),
                             Text(
-                              service.extraDetails ??
-                                  'clinicDetails.noExtra'.tr(context),
-                              style: const TextStyle(color: Colors.grey),
+                              'clinicDetails.appointment'.tr(context),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color:
+                                Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.color,
+                              ),
                             ),
-                            const Gap(30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'clinicDetails.appointment'.tr(context),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                    const Gap(10),
-                                    Icon(
-                                      service.appointmentRequired!
-                                          ? Icons.check_circle_outline
-                                          : Icons.block,
-                                      color:
-                                          service.appointmentRequired!
-                                              ? Colors.green
-                                              : Colors.redAccent,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.monetization_on_outlined,
-                                      color: Colors.grey,
-                                    ),
-                                    const Gap(12),
-                                    Text(
-                                      service.price ??
-                                          'clinicDetails.free'.tr(context),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            const Gap(10),
+                            Icon(
+                              service.appointmentRequired!
+                                  ? Icons.check_circle_outline
+                                  : Icons.block,
+                              color:
+                              service.appointmentRequired!
+                                  ? Colors.green
+                                  : Colors.redAccent,
                             ),
-                            const Gap(40),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  context.pushNamed(
-                                    AppRouter.healthServiceDetails.name,
-                                    extra: {"serviceId": service.id.toString()},
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primaryColor
-                                      .withOpacity(0.7),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 30,
-                                    vertical: 15,
-                                  ),
-                                  textStyle: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  elevation: 3,
-                                ),
-                                child: Text(
-                                  'clinicDetails.viewOurServices'.tr(context),
-                                ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.monetization_on_outlined,
+                              color: Theme.of(
+                                context,
+                              ).iconTheme.color?.withOpacity(0.5),
+                            ),
+                            const Gap(12),
+                            Text(
+                              service.price ??
+                                  'clinicDetails.free'.tr(context),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color:
+                                Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.color,
                               ),
                             ),
                           ],
                         ),
+                      ],
+                    ),
+                    const Gap(40),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.pushNamed(
+                            AppRouter.healthServiceDetails.name,
+                            extra: {"serviceId": service.id.toString()},
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).primaryColor.withOpacity(0.9),
+                          // foregroundColor:
+                          //     Theme.of(context).buttonTheme.textTheme ==
+                          //             ButtonTextTheme.primary
+                          //         ? Theme.of(
+                          //           context,
+                          //         ).textTheme.labelLarge?.color
+                          //         : null,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 15,
+                          ),
+                          textStyle: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          elevation: 3,
+                        ),
+                        child: Text(
+                          'clinicDetails.viewOurServices'.tr(context),
+                          style: TextStyle(color: AppColors.whiteColor),
+                        ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

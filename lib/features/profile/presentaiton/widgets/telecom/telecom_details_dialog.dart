@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Ensure this is imported
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
 
-import '../../../../../../../../../base/theme/app_color.dart';
-
 Widget _buildDetailRow(BuildContext context, String titleKey, String? value) {
+  final ThemeData theme = Theme.of(context);
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: Row(
       children: [
-        Icon(Icons.circle_outlined, color: Theme.of(context).primaryColor),
+        Icon(Icons.circle_outlined, color: theme.primaryColor),
         const SizedBox(width: 12),
         Text(
           titleKey.tr(context),
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             value ?? 'telecomPage.notAvailable'.tr(context),
-            style: TextStyle(color: Colors.grey[700]),
+            style: theme.textTheme.bodyMedium,
           ),
         ),
       ],
@@ -33,86 +34,84 @@ void showTelecomDetailsDialog({
 }) {
   showDialog(
     context: context,
-    builder:
-        (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          backgroundColor: Colors.white,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'telecomPage.telecomDetails'.tr(context),
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+    builder: (dialogContext) {
+      final ThemeData theme = Theme.of(dialogContext);
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: theme.dialogTheme.backgroundColor,
+        surfaceTintColor: theme.dialogTheme.surfaceTintColor,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'telecomPage.telecomDetails'.tr(context),
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.primaryColor,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Icon(Icons.close, color: AppColors.blackColor),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildDetailRow(
-                  context,
-                  "telecomPage.valueLabel",
-                  telecom.value,
-                ),
-                const SizedBox(height: 20),
-                _buildDetailRow(
-                  context,
-                  'telecomPage.typeLabel',
-                  telecom.type?.display,
-                ),
-                const SizedBox(height: 20),
-                _buildDetailRow(
-                  context,
-                  'telecomPage.useLabel',
-                  telecom.use?.display,
-                ),
-                const SizedBox(height: 20),
-                _buildDetailRow(
-                  context,
-                  'telecomPage.startDateLabel',
-                  telecom.startDate,
-                ),
-                const SizedBox(height: 20),
-                _buildDetailRow(
-                  context,
-                  'telecomPage.endDateLabel',
-                  telecom.endDate,
-                ),
-              ],
             ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(
-                'telecomPage.cancel'.tr(context),
-                style: TextStyle(
-                  fontSize: 15,
-                  color: AppColors.whiteColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Icon(Icons.close, color: theme.iconTheme.color),
             ),
           ],
         ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildDetailRow(context, "telecomPage.valueLabel", telecom.value),
+              const SizedBox(height: 20),
+              _buildDetailRow(
+                context,
+                'telecomPage.typeLabel',
+                telecom.type?.display,
+              ),
+              const SizedBox(height: 20),
+              _buildDetailRow(
+                context,
+                'telecomPage.useLabel',
+                telecom.use?.display,
+              ),
+              const SizedBox(height: 20),
+              _buildDetailRow(
+                context,
+                'telecomPage.startDateLabel',
+                telecom.startDate,
+              ),
+              const SizedBox(height: 20),
+              _buildDetailRow(
+                context,
+                'telecomPage.endDateLabel',
+                telecom.endDate,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            child: Text(
+              'telecomPage.cancel'.tr(context),
+              style: theme.textTheme.labelLarge?.copyWith(
+                fontSize: 15,
+                color: theme.colorScheme.onPrimary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
   );
 }
 

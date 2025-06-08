@@ -10,7 +10,6 @@ import 'package:medizen_app/features/home_page/pages/widgets/some_clinics.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/appointment_reactions_page.dart';
 
-import '../../../base/theme/app_color.dart';
 import '../../../main.dart';
 import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
 
@@ -22,18 +21,20 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-  final String clinicId = "1";
+  final String clinicId =
+      "1";
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SingleChildScrollView(
           child: Column(
-            spacing: 10,
+
             children: [
               _buildHeader(context),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: SomeClinics(),
@@ -58,10 +59,12 @@ class _HomePageBodyState extends State<HomePageBody> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    PatientModel? myPatientModel = loadingPatientModel();
+    PatientModel? myPatientModel =
+    loadingPatientModel();
+    final ThemeData theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16, top: 20, left: 16, right: 8),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -75,7 +78,11 @@ class _HomePageBodyState extends State<HomePageBody> {
                   GreetingWidget(),
                   Text(
                     "${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: theme.textTheme.bodyLarge?.color,
+                    ),
                   ),
                 ],
               ),
@@ -83,21 +90,21 @@ class _HomePageBodyState extends State<HomePageBody> {
           ),
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.notifications_outlined,
-                color: AppColors.primaryColor,
+
+                color: theme.iconTheme.color,
               ),
               const SizedBox(width: 16.0),
               PopupMenuButton<String>(
-                icon: const Icon(
+                icon: Icon(
                   Icons.more_vert,
-                  color: AppColors.primaryColor,
+
+                  color: theme.iconTheme.color,
                 ),
 
-                color: Colors.white,
-
+                color: theme.cardColor,
                 elevation: 8.0,
-
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
@@ -105,71 +112,94 @@ class _HomePageBodyState extends State<HomePageBody> {
                   if (value == 'favorites') {
                     Navigator.push(
                       context,
-
                       MaterialPageRoute(builder: (context) => MyFavorite()),
                     );
                   } else if (value == 'services') {
                     context.pushNamed(AppRouter.healthCareServicesPage.name);
-
-                    context.pushNamed(AppRouter.allAllergiesPage.name);
+                    // context.pushNamed(AppRouter.allAllergiesPage.name);
                   } else if (value == 'encounter') {
-                    //                    context.pushNamed(AppRouter.allEncountersPage.name);
-
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => AllEncountersPage()));
+                    // context.pushNamed(AppRouter.allEncountersPage.name);
                   } else if (value == 'reaction') {
-                    // context.pushNamed(AppRouter.healthCareServicesPage.name);
-
                     Navigator.push(
                       context,
-
                       MaterialPageRoute(
                         builder:
                             (context) => AppointmentReactionsPage(
-                              appointmentId: "1",
-
-                              allergyId: "1",
-                            ),
+                          appointmentId: "1",
+                          allergyId: "1",
+                        ),
                       ),
                     );
                   }
                 },
                 itemBuilder:
                     (BuildContext context) => [
-                      const PopupMenuItem<String>(
-                        value: 'favorites',
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.favorite_border,
-                            color: Colors.blue,
-                          ),
-                          title: Text('Favorites'),
+                  PopupMenuItem<String>(
+                    value: 'favorites',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.favorite_border,
+
+                        color: Colors.blue,
+                      ),
+
+                      title: Text(
+                        'Favorites',
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                      const PopupMenuItem<String>(
-                        value: 'services',
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.health_and_safety,
-                            color: Colors.green,
-                          ),
-                          title: Text('Health services'),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'services',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.health_and_safety,
+                        color: Colors.green,
+                      ),
+
+                      title: Text(
+                        'Health services',
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                      const PopupMenuItem<String>(
-                        value: 'encounter',
-                        child: ListTile(
-                          leading: Icon(Icons.group, color: Colors.orange),
-                          title: Text('Encounter services'),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'encounter',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.group,
+                        color: Colors.orange,
+                      ),
+
+                      title: Text(
+                        'Encounter services',
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                      const PopupMenuItem<String>(
-                        value: 'reaction',
-                        child: ListTile(
-                          leading: Icon(Icons.warning_amber, color: Colors.red),
-                          title: Text('Reaction services'),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'reaction',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.warning_amber,
+                        color: Colors.red,
+                      ), // Fixed color
+
+                      title: Text(
+                        'Reaction services',
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

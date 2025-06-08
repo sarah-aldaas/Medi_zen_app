@@ -55,6 +55,8 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: Container(
@@ -64,7 +66,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
           maxHeight: MediaQuery.of(context).size.height * 0.8,
         ),
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: Column(
@@ -76,18 +78,22 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
               children: [
                 Text(
                   "allergyFilter.filterAllergies".tr(context),
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, size: 20),
+                  icon: Icon(
+                    Icons.close,
+                    size: 20,
+                    color: theme.iconTheme.color,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
-            const Divider(),
+            Divider(color: theme.dividerColor),
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
@@ -100,11 +106,30 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                         labelText: 'allergyFilter.search'.tr(
                           context,
                         ), // Translated
-                        prefixIcon: const Icon(Icons.search),
+                        labelStyle: TextStyle(
+                          color: theme.textTheme.bodySmall?.color,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: theme.iconTheme.color,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: theme.dividerColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: theme.dividerColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                            width: 2.0,
+                          ),
                         ),
                       ),
+                      style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                       onChanged: (value) {
                         setState(() {
                           _filter = _filter.copyWith(searchQuery: value);
@@ -113,22 +138,29 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "allergyFilter.discoveredDuringEncounter".tr(
-                        context,
-                      ), // Translated
-                      style: const TextStyle(
-                        fontSize: 16,
+                      "allergyFilter.discoveredDuringEncounter".tr(context),
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Column(
                       children: [
                         RadioListTile<int?>(
-                          title: Text("allergyFilter.any".tr(context)),
+                          title: Text(
+                            "allergyFilter.any".tr(context),
+                            style: TextStyle(
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
                           value: null,
                           groupValue: _selectedDiscoveredDuringEncounter,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: theme.primaryColor,
+                          tileColor: theme.cardColor,
+                          selectedTileColor: theme.primaryColor.withOpacity(
+                            0.1,
+                          ),
                           onChanged: (int? value) {
                             setState(() {
                               _selectedDiscoveredDuringEncounter = value;
@@ -138,11 +170,18 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                         RadioListTile<int>(
                           title: Text(
                             "allergyFilter.yes".tr(context),
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
                           ),
                           value: 1,
                           groupValue: _selectedDiscoveredDuringEncounter,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: theme.primaryColor,
+                          tileColor: theme.cardColor,
+                          selectedTileColor: theme.primaryColor.withOpacity(
+                            0.1,
+                          ),
                           onChanged: (int? value) {
                             setState(() {
                               _selectedDiscoveredDuringEncounter = value;
@@ -152,11 +191,18 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                         RadioListTile<int>(
                           title: Text(
                             "allergyFilter.no".tr(context),
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
                           ),
                           value: 0,
                           groupValue: _selectedDiscoveredDuringEncounter,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: theme.primaryColor,
+                          tileColor: theme.cardColor,
+                          selectedTileColor: theme.primaryColor.withOpacity(
+                            0.1,
+                          ),
                           onChanged: (int? value) {
                             setState(() {
                               _selectedDiscoveredDuringEncounter = value;
@@ -165,12 +211,12 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                         ),
                       ],
                     ),
-                    const Divider(),
+                    Divider(color: theme.dividerColor),
                     Text(
                       "allergyFilter.allergyType".tr(context),
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -189,14 +235,14 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingButton());
+                          return Center(child: LoadingPage());
                         }
                         if (allergyTypes.isEmpty) {
                           return Text(
-                            "allergyFilter.noAllergyTypesAvailable".tr(
-                              context,
-                            ), // Translated
-                            style: const TextStyle(color: Colors.grey),
+                            "allergyFilter.noAllergyTypesAvailable".tr(context),
+                            style: TextStyle(
+                              color: theme.textTheme.bodySmall?.color,
+                            ),
                           );
                         }
                         return Column(
@@ -204,10 +250,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                             RadioListTile<String?>(
                               title: Text(
                                 "allergyFilter.allTypes".tr(context),
-                              ), // Translated
+                                style: TextStyle(
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
+                              ),
                               value: null,
                               groupValue: _selectedTypeId,
-                              activeColor: Theme.of(context).primaryColor,
+                              activeColor: theme.primaryColor,
+                              tileColor: theme.cardColor,
+                              selectedTileColor: theme.primaryColor.withOpacity(
+                                0.1,
+                              ),
                               onChanged: (String? value) {
                                 setState(() {
                                   _selectedTypeId = value;
@@ -219,11 +272,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                 title: Text(
                                   type.display ??
                                       'allergyFilter.unknown'.tr(context),
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.textTheme.bodyLarge?.color,
+                                  ),
                                 ),
                                 value: type.id,
                                 groupValue: _selectedTypeId,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: theme.primaryColor,
+                                tileColor: theme.cardColor,
+                                selectedTileColor: theme.primaryColor
+                                    .withOpacity(0.1),
                                 onChanged: (String? value) {
                                   setState(() {
                                     _selectedTypeId = value;
@@ -235,12 +294,12 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                         );
                       },
                     ),
-                    const Divider(),
+                    Divider(color: theme.dividerColor),
                     Text(
                       "allergyFilter.category".tr(context),
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -259,12 +318,14 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingButton());
+                          return Center(child: LoadingPage());
                         }
                         if (categories.isEmpty) {
                           return Text(
                             "allergyFilter.noCategoriesAvailable".tr(context),
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                              color: theme.textTheme.bodySmall?.color,
+                            ),
                           );
                         }
                         return Column(
@@ -272,10 +333,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                             RadioListTile<int?>(
                               title: Text(
                                 "allergyFilter.allCategories".tr(context),
+                                style: TextStyle(
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
                               ),
                               value: null,
                               groupValue: _selectedCategoryId,
-                              activeColor: Theme.of(context).primaryColor,
+                              activeColor: theme.primaryColor,
+                              tileColor: theme.cardColor,
+                              selectedTileColor: theme.primaryColor.withOpacity(
+                                0.1,
+                              ),
                               onChanged: (int? value) {
                                 setState(() {
                                   _selectedCategoryId = value;
@@ -287,11 +355,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                 title: Text(
                                   category.display ??
                                       'allergyFilter.unknown'.tr(context),
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.textTheme.bodyLarge?.color,
+                                  ),
                                 ),
                                 value: int.parse(category.id),
                                 groupValue: _selectedCategoryId,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: theme.primaryColor,
+                                tileColor: theme.cardColor,
+                                selectedTileColor: theme.primaryColor
+                                    .withOpacity(0.1),
                                 onChanged: (int? value) {
                                   setState(() {
                                     _selectedCategoryId = value;
@@ -303,12 +377,12 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                         );
                       },
                     ),
-                    const Divider(),
+                    Divider(color: theme.dividerColor),
                     Text(
                       "allergyFilter.clinicalStatus".tr(context),
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -327,14 +401,16 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingButton());
+                          return Center(child: LoadingPage());
                         }
                         if (clinicalStatuses.isEmpty) {
                           return Text(
                             "allergyFilter.noClinicalStatusesAvailable".tr(
                               context,
                             ), // Translated
-                            style: const TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                              color: theme.textTheme.bodySmall?.color,
+                            ),
                           );
                         }
                         return Column(
@@ -342,10 +418,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                             RadioListTile<int?>(
                               title: Text(
                                 "allergyFilter.allStatuses".tr(context),
+                                style: TextStyle(
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
                               ),
                               value: null,
                               groupValue: _selectedClinicalStatusId,
-                              activeColor: Theme.of(context).primaryColor,
+                              activeColor: theme.primaryColor,
+                              tileColor: theme.cardColor,
+                              selectedTileColor: theme.primaryColor.withOpacity(
+                                0.1,
+                              ),
                               onChanged: (int? value) {
                                 setState(() {
                                   _selectedClinicalStatusId = value;
@@ -357,11 +440,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                 title: Text(
                                   status.display ??
                                       'allergyFilter.unknown'.tr(context),
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.textTheme.bodyLarge?.color,
+                                  ),
                                 ),
                                 value: int.parse(status.id),
                                 groupValue: _selectedClinicalStatusId,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: theme.primaryColor,
+                                tileColor: theme.cardColor,
+                                selectedTileColor: theme.primaryColor
+                                    .withOpacity(0.1),
                                 onChanged: (int? value) {
                                   setState(() {
                                     _selectedClinicalStatusId = value;
@@ -376,9 +465,9 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                     const Divider(),
                     Text(
                       "allergyFilter.criticality".tr(context),
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -397,14 +486,16 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingButton());
+                          return Center(child: LoadingPage());
                         }
                         if (criticalities.isEmpty) {
                           return Text(
                             "allergyFilter.noCriticalitiesAvailable".tr(
                               context,
                             ),
-                            style: const TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                              color: theme.textTheme.bodySmall?.color,
+                            ),
                           );
                         }
                         return Column(
@@ -412,10 +503,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                             RadioListTile<int?>(
                               title: Text(
                                 "allergyFilter.allCriticalities".tr(context),
+                                style: TextStyle(
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
                               ),
                               value: null,
                               groupValue: _selectedCriticalityId,
-                              activeColor: Theme.of(context).primaryColor,
+                              activeColor: theme.primaryColor,
+                              tileColor: theme.cardColor,
+                              selectedTileColor: theme.primaryColor.withOpacity(
+                                0.1,
+                              ),
                               onChanged: (int? value) {
                                 setState(() {
                                   _selectedCriticalityId = value;
@@ -427,11 +525,17 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                 title: Text(
                                   criticality.display ??
                                       'allergyFilter.unknown'.tr(context),
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.textTheme.bodyLarge?.color,
+                                  ),
                                 ),
                                 value: int.parse(criticality.id),
                                 groupValue: _selectedCriticalityId,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: theme.primaryColor,
+                                tileColor: theme.cardColor,
+                                selectedTileColor: theme.primaryColor
+                                    .withOpacity(0.1),
                                 onChanged: (int? value) {
                                   setState(() {
                                     _selectedCriticalityId = value;
@@ -447,9 +551,9 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                     // Sort Order
                     Text(
                       "allergyFilter.sortOrder".tr(context),
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -458,24 +562,57 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: theme.dividerColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: theme.dividerColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                            width: 2.0,
+                          ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12.0,
                           vertical: 8.0,
                         ),
                       ),
+                      icon: Icon(
+                        Icons.arrow_drop_down,
+                        color: theme.iconTheme.color,
+                      ),
+                      dropdownColor: theme.cardColor,
+                      style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                       items: [
                         DropdownMenuItem(
                           value: null,
-                          child: Text("allergyFilter.default".tr(context)),
+                          child: Text(
+                            "allergyFilter.default".tr(context),
+                            style: TextStyle(
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
                         ),
                         DropdownMenuItem(
                           value: 'asc',
-                          child: Text("allergyFilter.oldestFirst".tr(context)),
+                          child: Text(
+                            "allergyFilter.oldestFirst".tr(context),
+                            style: TextStyle(
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
                         ),
                         DropdownMenuItem(
                           value: 'desc',
-                          child: Text("allergyFilter.newestFirst".tr(context)),
+                          child: Text(
+                            "allergyFilter.newestFirst".tr(context),
+                            style: TextStyle(
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
                         ),
                       ],
                       onChanged:
@@ -488,7 +625,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
               ),
             ),
             const SizedBox(height: 16),
-            // Action Buttons
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -508,15 +645,21 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                   },
                   child: Text(
                     "allergyFilter.clearFilters".tr(context),
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(color: theme.colorScheme.error),
                   ),
                 ),
                 Row(
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text("allergyFilter.cancel".tr(context)),
+                      child: Text(
+                        "allergyFilter.cancel".tr(context),
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(
@@ -538,8 +681,8 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
+                        backgroundColor: theme.primaryColor,
+                        foregroundColor: theme.colorScheme.onPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),

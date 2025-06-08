@@ -43,6 +43,8 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: Container(
@@ -51,32 +53,36 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
           maxWidth: 400,
           maxHeight: MediaQuery.of(context).size.height * 0.8,
         ),
+
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'reactionsPage.filterReactions'.tr(context), // Translated
-                  style: const TextStyle(
-                    fontSize: 18,
+                  'reactionsPage.filterReactions'.tr(context),
+                  style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, size: 20),
+                  icon: Icon(
+                    Icons.close,
+                    size: 20,
+                    color: theme.iconTheme.color,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
-            const Divider(),
+            Divider(color: theme.dividerColor),
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
@@ -87,14 +93,31 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        labelText: 'reactionsPage.search'.tr(
-                          context,
-                        ), // Translated
-                        prefixIcon: const Icon(Icons.search),
+                        labelText: 'reactionsPage.search'.tr(context),
+                        labelStyle: TextStyle(
+                          color: theme.textTheme.bodySmall?.color,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: theme.iconTheme.color,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: theme.dividerColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: theme.dividerColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                            width: 2.0,
+                          ),
                         ),
                       ),
+                      style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                       onChanged: (value) {
                         setState(() {
                           _filter = _filter.copyWith(searchQuery: value);
@@ -104,10 +127,10 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                     const SizedBox(height: 16),
 
                     Text(
-                      'reactionsPage.severity'.tr(context), // Translated
-                      style: const TextStyle(
-                        fontSize: 16,
+                      'reactionsPage.severity'.tr(context),
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -119,21 +142,21 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'reaction_severity',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'reaction_severity',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingButton());
+                          return Center(child: LoadingPage());
                         }
                         if (severities.isEmpty) {
                           return Text(
-                            'reactionsPage.noSeveritiesAvailable'.tr(
-                              context,
-                            ), // Translated
-                            style: const TextStyle(color: Colors.grey),
+                            'reactionsPage.noSeveritiesAvailable'.tr(context),
+                            style: TextStyle(
+                              color: theme.textTheme.bodySmall?.color,
+                            ),
                           );
                         }
                         return Column(
@@ -141,10 +164,17 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                             RadioListTile<String?>(
                               title: Text(
                                 'reactionsPage.allSeverities'.tr(context),
-                              ), // Translated
+                                style: TextStyle(
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
+                              ),
                               value: null,
                               groupValue: _selectedSeverityId,
-                              activeColor: Theme.of(context).primaryColor,
+                              activeColor: theme.primaryColor,
+                              tileColor: theme.cardColor,
+                              selectedTileColor: theme.primaryColor.withOpacity(
+                                0.1,
+                              ),
                               onChanged: (value) {
                                 setState(() {
                                   _selectedSeverityId = value;
@@ -155,14 +185,18 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                               return RadioListTile<String>(
                                 title: Text(
                                   severity.display ??
-                                      'reactionsPage.unknown'.tr(
-                                        context,
-                                      ), // Translated
-                                  style: const TextStyle(fontSize: 14),
+                                      'reactionsPage.unknown'.tr(context),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.textTheme.bodyLarge?.color,
+                                  ),
                                 ),
                                 value: severity.id,
                                 groupValue: _selectedSeverityId,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: theme.primaryColor,
+                                tileColor: theme.cardColor,
+                                selectedTileColor: theme.primaryColor
+                                    .withOpacity(0.1),
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedSeverityId = value;
@@ -174,13 +208,13 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                         );
                       },
                     ),
-                    const Divider(),
+                    Divider(color: theme.dividerColor),
 
                     Text(
-                      'reactionsPage.exposureRoute'.tr(context), // Translated
-                      style: const TextStyle(
-                        fontSize: 16,
+                      'reactionsPage.exposureRoute'.tr(context),
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -192,21 +226,23 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                        code.codeTypeModel?.name ==
-                                        'reaction_exposure_route',
-                                  )
+                                code.codeTypeModel?.name ==
+                                    'reaction_exposure_route',
+                              )
                                   .toList() ??
-                              [];
+                                  [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingButton());
+                          return Center(child: LoadingPage());
                         }
                         if (exposureRoutes.isEmpty) {
                           return Text(
                             'reactionsPage.noExposureRoutesAvailable'.tr(
                               context,
-                            ), // Translated
-                            style: const TextStyle(color: Colors.grey),
+                            ),
+                            style: TextStyle(
+                              color: theme.textTheme.bodySmall?.color,
+                            ),
                           );
                         }
                         return Column(
@@ -214,10 +250,17 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                             RadioListTile<String?>(
                               title: Text(
                                 'reactionsPage.allExposureRoutes'.tr(context),
-                              ), // Translated
+                                style: TextStyle(
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
+                              ),
                               value: null,
                               groupValue: _selectedExposureRouteId,
-                              activeColor: Theme.of(context).primaryColor,
+                              activeColor: theme.primaryColor,
+                              tileColor: theme.cardColor,
+                              selectedTileColor: theme.primaryColor.withOpacity(
+                                0.1,
+                              ),
                               onChanged: (value) {
                                 setState(() {
                                   _selectedExposureRouteId = value;
@@ -228,14 +271,18 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                               return RadioListTile<String>(
                                 title: Text(
                                   route.display ??
-                                      'reactionsPage.unknown'.tr(
-                                        context,
-                                      ), // Translated
-                                  style: const TextStyle(fontSize: 14),
+                                      'reactionsPage.unknown'.tr(context),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.textTheme.bodyLarge?.color,
+                                  ),
                                 ),
                                 value: route.id,
                                 groupValue: _selectedExposureRouteId,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: theme.primaryColor,
+                                tileColor: theme.cardColor,
+                                selectedTileColor: theme.primaryColor
+                                    .withOpacity(0.1),
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedExposureRouteId = value;
@@ -251,10 +298,10 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                     const SizedBox(height: 20),
 
                     Text(
-                      'reactionsPage.sortOrder'.tr(context), // Translated
-                      style: const TextStyle(
-                        fontSize: 16,
+                      'reactionsPage.sortOrder'.tr(context),
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -263,28 +310,57 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: theme.dividerColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: theme.dividerColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                            width: 2.0,
+                          ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12.0,
                           vertical: 8.0,
                         ),
                       ),
+                      icon: Icon(
+                        Icons.arrow_drop_down,
+                        color: theme.iconTheme.color,
+                      ),
+                      dropdownColor: theme.cardColor,
+                      style: TextStyle(color: theme.textTheme.bodyLarge?.color),
                       items: [
                         DropdownMenuItem(
                           value: null,
-                          child: Text('reactionsPage.default'.tr(context)),
-                        ), // Translated
+                          child: Text(
+                            'reactionsPage.default'.tr(context),
+                            style: TextStyle(
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
+                        ),
                         DropdownMenuItem(
                           value: 'asc',
                           child: Text(
                             'reactionsPage.oldestFirst'.tr(context),
-                          ), // Translated
+                            style: TextStyle(
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
                         ),
                         DropdownMenuItem(
                           value: 'desc',
                           child: Text(
                             'reactionsPage.newestFirst'.tr(context),
-                          ), // Translated
+                            style: TextStyle(
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
                         ),
                       ],
                       onChanged: (value) {
@@ -313,8 +389,8 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                     });
                   },
                   child: Text(
-                    'reactionsPage.clearFilters'.tr(context), // Translated
-                    style: const TextStyle(color: Colors.red),
+                    'reactionsPage.clearFilters'.tr(context),
+                    style: TextStyle(color: theme.colorScheme.error),
                   ),
                 ),
                 Row(
@@ -323,7 +399,10 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                       onPressed: () => Navigator.pop(context),
                       child: Text(
                         'reactionsPage.cancel'.tr(context),
-                      ), // Translated
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
@@ -333,27 +412,25 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
                           ReactionFilterModel(
                             searchQuery: _filter.searchQuery,
                             severityId:
-                                _selectedSeverityId != null
-                                    ? int.tryParse(_selectedSeverityId!)
-                                    : null,
+                            _selectedSeverityId != null
+                                ? int.tryParse(_selectedSeverityId!)
+                                : null,
                             exposureRouteId:
-                                _selectedExposureRouteId != null
-                                    ? int.tryParse(_selectedExposureRouteId!)
-                                    : null,
+                            _selectedExposureRouteId != null
+                                ? int.tryParse(_selectedExposureRouteId!)
+                                : null,
                             key: _selectedSort,
                           ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
+                        backgroundColor: theme.primaryColor,
+                        foregroundColor: theme.colorScheme.onPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      child: Text(
-                        'reactionsPage.apply'.tr(context),
-                      ), // Translated
+                      child: Text('reactionsPage.apply'.tr(context)),
                     ),
                   ],
                 ),

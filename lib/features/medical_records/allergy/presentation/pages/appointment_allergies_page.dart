@@ -77,28 +77,45 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('allergiesPage.appointmentAllergies'.tr(context)),
+        title: Text(
+          'allergiesPage.appointmentAllergies'.tr(context),
+          style: theme.appBarTheme.titleTextStyle,
+        ),
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        iconTheme: theme.appBarTheme.iconTheme,
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: Icon(
+              Icons.filter_list,
+              color: theme.appBarTheme.iconTheme?.color,
+            ),
             onPressed: _showFilterDialog,
             tooltip: 'allergiesPage.filterAllergies'.tr(context),
           ),
         ],
       ),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocConsumer<AllergyCubit, AllergyState>(
         listener: (context, state) {
           if (state is AllergyError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.error)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.error,
+                  style: TextStyle(color: theme.colorScheme.onError),
+                ),
+                backgroundColor: theme.colorScheme.error,
+              ),
+            );
           }
         },
         builder: (context, state) {
           if (state is AllergyLoading && !state.isLoadMore) {
-            return const Center(child: LoadingPage());
+            return Center(child: LoadingPage());
           }
 
           final allergies =
@@ -116,14 +133,17 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
                   Icon(
                     Icons.medical_services,
                     size: 64,
-                    color: Colors.grey[400],
+                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'allergiesPage.noAllergiesRecorded'.tr(
                       context,
                     ), // Translated
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: theme.textTheme.bodyMedium?.color,
+                    ),
                   ),
                 ],
               ),
@@ -140,7 +160,7 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
                   onTap: () => _navigateToAllergyDetails(allergies[index].id!),
                 );
               } else {
-                return Center(child: LoadingButton());
+                return Center(child: LoadingPage());
               }
             },
           );

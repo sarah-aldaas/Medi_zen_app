@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-
-import 'app_color.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 
 final ThemeData lightTheme = ThemeData(
-  // fontFamily: 'ChypreNorm',
   brightness: Brightness.light,
   secondaryHeaderColor: Colors.black87,
   primaryColor: AppColors.primaryColor,
   scaffoldBackgroundColor: Colors.grey.shade100,
-  appBarTheme: AppBarTheme(
-    color: AppColors.primaryColor,
-    iconTheme: IconThemeData(color: Colors.white),
+  appBarTheme: const AppBarTheme(
+    color: AppColors.whiteColor,
+    iconTheme: IconThemeData(color: AppColors.primaryColor),
+    titleTextStyle: TextStyle(
+      color: AppColors.primaryColor,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
   ),
-  textTheme: TextTheme(
+  textTheme: const TextTheme(
     bodyLarge: TextStyle(color: Colors.black87),
     bodyMedium: TextStyle(color: Colors.black87),
     displayLarge: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
@@ -20,17 +23,17 @@ final ThemeData lightTheme = ThemeData(
       color: Colors.black87,
       fontWeight: FontWeight.bold,
     ),
-    labelLarge: TextStyle(color: Colors.white),
+    labelLarge: TextStyle(color: AppColors.primaryColor),
   ),
   buttonTheme: ButtonThemeData(
     buttonColor: AppColors.primaryColor,
     textTheme: ButtonTextTheme.primary,
   ),
-  iconTheme: IconThemeData(color: AppColors.primaryColor),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
+  iconTheme: const IconThemeData(color: AppColors.primaryColor),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: AppColors.primaryColor,
   ),
-  cardTheme: CardTheme(color: Colors.white, elevation: 2),
+  cardTheme: const CardTheme(color: Colors.white, elevation: 2),
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(25.0),
@@ -46,45 +49,56 @@ final ThemeData lightTheme = ThemeData(
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(25.0),
-      borderSide: BorderSide(color: AppColors.primaryColor),
+      borderSide: const BorderSide(color: Colors.redAccent),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(25.0),
-      borderSide: BorderSide(color: AppColors.primaryColor),
+      borderSide: const BorderSide(color: Colors.redAccent),
     ),
     errorStyle: const TextStyle(
       color: Colors.redAccent,
       fontWeight: FontWeight.w500,
     ),
+    hintStyle: TextStyle(color: Colors.grey.shade600),
   ),
 );
 
 final ThemeData darkTheme = ThemeData(
-  // fontFamily: 'ChypreNorm',
   brightness: Brightness.dark,
   secondaryHeaderColor: Colors.white,
   primaryColor: AppColors.primaryColor,
-  scaffoldBackgroundColor: Colors.grey[900],
-  appBarTheme: AppBarTheme(
-    color: Colors.grey[850],
-    iconTheme: IconThemeData(color: Colors.white),
+  scaffoldBackgroundColor: AppColors.darkBackground,
+  appBarTheme: const AppBarTheme(
+    color: AppColors.darkBackground,
+    iconTheme: IconThemeData(color: AppColors.primaryColor),
+    titleTextStyle: TextStyle(
+      color: AppColors.primaryColor,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
   ),
-  textTheme: TextTheme(
-    bodyLarge: TextStyle(color: Colors.white),
-    bodyMedium: TextStyle(color: Colors.white),
-    displayLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-    displayMedium: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-    labelLarge: TextStyle(color: Colors.white),
+  textTheme: const TextTheme(
+    bodyLarge: TextStyle(color: AppColors.whiteColor),
+    bodyMedium: TextStyle(color: AppColors.whiteColor),
+    displayLarge: TextStyle(
+      color: AppColors.whiteColor,
+      fontWeight: FontWeight.bold,
+    ),
+    displayMedium: TextStyle(
+      color: AppColors.whiteColor,
+      fontWeight: FontWeight.bold,
+    ),
+    labelLarge: TextStyle(color: AppColors.whiteColor),
   ),
   buttonTheme: ButtonThemeData(
     buttonColor: AppColors.primaryColor,
     textTheme: ButtonTextTheme.primary,
   ),
-  iconTheme: IconThemeData(color: AppColors.primaryColor),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
+  iconTheme: const IconThemeData(color: AppColors.primaryColor),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: AppColors.primaryColor,
   ),
-  cardTheme: CardTheme(color: Colors.grey[850], elevation: 2),
+  cardTheme: const CardTheme(color: AppColors.darkCard, elevation: 2),
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(25.0),
@@ -100,15 +114,16 @@ final ThemeData darkTheme = ThemeData(
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(25.0),
-      borderSide: BorderSide(color: AppColors.primaryColor),
+      borderSide: const BorderSide(color: Colors.redAccent),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(25.0),
-      borderSide: BorderSide(color: AppColors.primaryColor),
+      borderSide: const BorderSide(color: Colors.redAccent),
     ),
     errorStyle: const TextStyle(
       color: Colors.redAccent,
       fontWeight: FontWeight.w500,
     ),
+    hintStyle: TextStyle(color: Colors.grey.shade400),
   ),
 );

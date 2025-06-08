@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
-import '../../../../../base/theme/app_color.dart';
 import '../../data/models/allergy_filter_model.dart';
 import '../../data/models/allergy_model.dart';
 import '../cubit/allergy_cubit/allergy_cubit.dart';
@@ -71,20 +70,25 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return BlocConsumer<AllergyCubit, AllergyState>(
       listener: (context, state) {
         if (state is AllergyError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.error),
-              backgroundColor: Colors.red.shade400,
+              content: Text(
+                state.error,
+                style: TextStyle(color: theme.colorScheme.onError),
+              ),
+              backgroundColor: theme.colorScheme.error,
             ),
           );
         }
       },
       builder: (context, state) {
         if (state is AllergyLoading && !state.isLoadMore) {
-          return const Center(child: LoadingPage());
+          return Center(child: LoadingPage());
         }
 
         final allergies =
@@ -101,27 +105,24 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
                 Icon(
                   Icons.sentiment_dissatisfied_outlined,
                   size: 64,
-                  color: Colors.grey[400],
+                  color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'allergiesPage.noAllergiesFound'.tr(context),
-                  style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: theme.textTheme.bodyMedium?.color,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 TextButton.icon(
                   onPressed: _loadInitialAllergies,
-                  icon: const Icon(
-                    Icons.refresh,
-                    color: AppColors.primaryColor,
-                  ),
+                  icon: Icon(Icons.refresh, color: theme.primaryColor),
                   label: Text(
                     'allergiesPage.refreshList'.tr(context),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: AppColors.primaryColor,
-                    ),
+                    style: TextStyle(fontSize: 16, color: theme.primaryColor),
                   ),
                 ),
               ],
@@ -142,8 +143,8 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
               );
             } else {
               return Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(child: LoadingButton()),
+                padding: const EdgeInsets.all(16.0),
+                child: Center(child: LoadingPage()),
               );
             }
           },

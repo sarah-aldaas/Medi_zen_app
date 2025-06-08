@@ -212,18 +212,27 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             "${widget.doctorModel.fName} ${widget.doctorModel.lName}",
           ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).iconTheme.color,
+            ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.favorite_border, color: Colors.grey),
+              icon: Icon(
+                Icons.favorite_border,
+                color: Theme.of(context).iconTheme.color,
+              ),
               onPressed: () {},
             ),
             IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.grey),
+              icon: Icon(
+                Icons.more_vert,
+                color: Theme.of(context).iconTheme.color,
+              ),
               onPressed: () {},
             ),
           ],
@@ -279,9 +288,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               const SizedBox(height: 20),
               Text(
                 'doctorDetails.aboutMe'.tr(context),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
               const SizedBox(height: 8),
@@ -289,9 +299,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               const SizedBox(height: 20),
               Text(
                 'doctorDetails.workingTime'.tr(context),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
               const SizedBox(height: 8),
@@ -482,6 +493,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                       vertical: 16,
                     ),
                   ),
+
                   child: Text(
                     'doctorDetails.bookAppointment'.tr(context),
                     style: const TextStyle(fontSize: 18, color: Colors.white),
@@ -511,7 +523,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                 children: [
                   Text(
                     'doctorDetails.telecom'.tr(context),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ],
               ),
@@ -566,7 +582,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                               communication.language.display,
                               style: TextStyle(
                                 fontSize: 15,
-                                fontWeight: FontWeight.w600, //
+                                fontWeight: FontWeight.w600,
 
                                 color:
                                 communication.preferred
@@ -601,7 +617,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                 children: [
                   Text(
                     'doctorDetails.qualifications'.tr(context),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ],
               ),

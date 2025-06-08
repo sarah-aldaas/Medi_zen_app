@@ -392,7 +392,7 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                           child: Text(
                             "filterAppointments.defaultSort".tr(context),
                           ),
-                        ), // Localized
+                        ),
                         DropdownMenuItem(
                           value: 'asc',
                           child: Text(

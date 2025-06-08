@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/models/reaction_model.dart';
 
@@ -35,41 +34,54 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('reactionsPage.reactionDetails'.tr(context)), // Translated
+        title: Text('reactionsPage.reactionDetails'.tr(context)),
         elevation: 0,
-        backgroundColor: AppColors.whiteColor,
-        titleTextStyle: const TextStyle(
-          color: AppColors.primaryColor,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        titleTextStyle:
+        theme.appBarTheme.titleTextStyle?.copyWith(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-        ),
+        ) ??
+            TextStyle(
+              color: theme.primaryColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
         centerTitle: true,
+        iconTheme: theme.appBarTheme.iconTheme,
       ),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocConsumer<ReactionCubit, ReactionState>(
         listener: (context, state) {
           if (state is ReactionError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+              SnackBar(
+                content: Text(
+                  state.error,
+                  style: TextStyle(color: theme.colorScheme.onError),
+                ),
+                backgroundColor: theme.colorScheme.error,
+              ),
             );
           }
         },
         builder: (context, state) {
           if (state is ReactionLoading) {
-            return const Center(child: LoadingPage());
+            return Center(child: LoadingPage());
           } else if (state is ReactionDetailsSuccess) {
-            return _buildReactionDetails(
-              context,
-              state.reactionModel,
-            ); // Pass context
+            return _buildReactionDetails(context, state.reactionModel);
           } else {
             return Center(
               child: Text(
-                'reactionsPage.failedToLoadReactionDetails'.tr(
-                  context,
-                ), // Translated
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
+                'reactionsPage.failedToLoadReactionDetails'.tr(context),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: theme.textTheme.bodySmall?.color,
+                ),
               ),
             );
           }
@@ -79,7 +91,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
   }
 
   Widget _buildReactionDetails(BuildContext context, ReactionModel reaction) {
-    // Added context
+    final ThemeData theme = Theme.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -90,19 +102,20 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
               Expanded(
                 child: Text(
                   reaction.manifestation ??
-                      'reactionsPage.unknownReaction'.tr(context), // Translated
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      'reactionsPage.unknownReaction'.tr(context),
+                  style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColorDark,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
               ),
-              _buildSeverityChip(context, reaction.severity), // Pass context
+              _buildSeverityChip(context, reaction.severity),
             ],
           ),
           const SizedBox(height: 16),
           Card(
             elevation: 2,
+            color: theme.cardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -112,41 +125,41 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'reactionsPage.basicInformation'.tr(context), // Translated
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    'reactionsPage.basicInformation'.tr(context),
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
+                      color: theme.primaryColor,
                     ),
                   ),
                   const SizedBox(height: 12),
                   _buildDetailRow(
-                    context, // Pass context
-                    'reactionsPage.substance'.tr(context), // Translated
+                    context,
+                    'reactionsPage.substance'.tr(context),
                     reaction.substance,
                   ),
                   _buildDetailRow(
-                    context, // Pass context
-                    'reactionsPage.exposureRoute'.tr(context), // Translated
+                    context,
+                    'reactionsPage.exposureRoute'.tr(context),
                     reaction.exposureRoute?.display,
                   ),
                   if (reaction.onSet != null)
                     _buildDetailRow(
-                      context, // Pass context
-                      'reactionsPage.onset'.tr(context), // Translated
+                      context,
+                      'reactionsPage.onset'.tr(context),
                       DateFormat(
                         'MMM d, y - h:mm a',
                       ).format(DateTime.parse(reaction.onSet!)),
                     ),
                   if (reaction.description?.isNotEmpty ?? false)
                     _buildDetailRow(
-                      context, // Pass context
-                      'reactionsPage.description'.tr(context), // Translated
+                      context,
+                      'reactionsPage.description'.tr(context),
                       reaction.description,
                     ),
                   if (reaction.note?.isNotEmpty ?? false)
                     _buildDetailRow(
-                      context, // Pass context
-                      'reactionsPage.notes'.tr(context), // Translated
+                      context,
+                      'reactionsPage.notes'.tr(context),
                       reaction.note,
                     ),
                 ],
@@ -159,7 +172,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
   }
 
   Widget _buildDetailRow(BuildContext context, String label, String? value) {
-    // Added context
+    final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -171,15 +184,19 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
               '$label:',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
+                color: theme.textTheme.bodySmall?.color,
                 fontSize: 14,
               ),
             ),
           ),
           Expanded(
             child: Text(
-              value ?? 'reactionsPage.notSpecified'.tr(context), // Translated
-              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              value ?? 'reactionsPage.notSpecified'.tr(context),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: theme.textTheme.bodyLarge?.color,
+              ),
             ),
           ),
         ],
@@ -188,33 +205,34 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
   }
 
   Widget _buildSeverityChip(BuildContext context, CodeModel? severity) {
-    // Added context
+    final ThemeData theme = Theme.of(context);
     Color chipColor;
     String displayText;
 
     switch (severity?.code?.toLowerCase()) {
-      // Ensure code is lowercased for consistent matching
       case 'mild':
         chipColor = Colors.green.shade400;
-        displayText = 'reactionsPage.mild'.tr(context); // Translated
+        displayText = 'reactionsPage.mild'.tr(context);
         break;
       case 'moderate':
         chipColor = Colors.orange.shade400;
-        displayText = 'reactionsPage.moderate'.tr(context); // Translated
+        displayText = 'reactionsPage.moderate'.tr(context);
         break;
       case 'severe':
         chipColor = Colors.red.shade400;
-        displayText = 'reactionsPage.severe'.tr(context); // Translated
+        displayText = 'reactionsPage.severe'.tr(context);
         break;
       default:
-        chipColor = Colors.grey.shade400;
-        displayText = 'reactionsPage.unknown'.tr(context); // Translated
+        chipColor =
+            theme.textTheme.bodySmall?.color?.withOpacity(0.5) ??
+                Colors.grey.shade400;
+        displayText = 'reactionsPage.unknown'.tr(context);
     }
 
     return Chip(
       label: Text(
         displayText,
-        style: const TextStyle(color: Colors.white, fontSize: 12),
+        style: TextStyle(color: theme.colorScheme.onPrimary, fontSize: 12),
       ),
       backgroundColor: chipColor,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
