@@ -61,7 +61,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
         note: _noteController.text.isNotEmpty ? _noteController.text : null,
       );
 
-      await context.read<AppointmentCubit>().updateAppointment(
+      await context.read<AppointmentCubit>().updateAppointment(context: context,
         id: widget.appointmentId,
         appointmentModel: updateModel,
       );

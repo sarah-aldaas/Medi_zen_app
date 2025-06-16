@@ -40,6 +40,7 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
   void _loadInitialAllergies() {
     _isLoadingMore = false;
     context.read<AllergyCubit>().getAllMyAllergiesOfAppointment(
+      context: context,
       appointmentId: widget.appointmentId,
       filters: _filter.toJson(),
     );
@@ -53,6 +54,7 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
       context
           .read<AllergyCubit>()
           .getAllMyAllergiesOfAppointment(
+        context: context,
         appointmentId: widget.appointmentId,
         filters: _filter.toJson(),
         loadMore: true,

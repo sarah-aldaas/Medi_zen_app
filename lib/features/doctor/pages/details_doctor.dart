@@ -54,6 +54,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
   Future<void> _fetchDoctorAvailability() async {
     setState(() => _isLoadingAvailability = true);
     await context.read<AppointmentCubit>().getDaysWorkDoctor(
+      context: context,
       doctorId: widget.doctorModel.id.toString(),
     );
   }
@@ -888,7 +889,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
 
                         await context
                             .read<AppointmentCubit>()
-                            .createAppointment(appointmentModel: appointment);
+                            .createAppointment(appointmentModel: appointment,context: context);
                       }
                     },
                     style: ElevatedButton.styleFrom(

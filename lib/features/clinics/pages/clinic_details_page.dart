@@ -40,7 +40,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
       remoteDataSource: serviceLocator<DoctorRemoteDataSource>(),
     );
     _clinicCubit.getSpecificClinic(id: widget.clinicId);
-    _doctorCubit.getDoctorsOfClinic(clinicId: widget.clinicId);
+    _doctorCubit.getDoctorsOfClinic(clinicId: widget.clinicId,context: context);
   }
 
   @override
@@ -241,6 +241,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                               : TextButton(
                             onPressed: () {
                               _doctorCubit.getDoctorsOfClinic(
+                                context: context,
                                 clinicId: widget.clinicId,
                               );
                             },
@@ -280,7 +281,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                 const Gap(8),
                 TextButton(
                   onPressed: () {
-                    _doctorCubit.getDoctorsOfClinic(clinicId: widget.clinicId);
+                    _doctorCubit.getDoctorsOfClinic(clinicId: widget.clinicId,context: context);
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: Theme.of(context).primaryColor,

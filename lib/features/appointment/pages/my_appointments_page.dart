@@ -45,6 +45,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   void _loadInitialAppointments() {
     _isLoadingMore = false;
     context.read<AppointmentCubit>().getMyAppointment(
+      context: context,
       filters: _filter.toJson(),
     );
   }
@@ -56,7 +57,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
       setState(() => _isLoadingMore = true);
       context
           .read<AppointmentCubit>()
-          .getMyAppointment(filters: _filter.toJson(), loadMore: true)
+          .getMyAppointment(filters: _filter.toJson(), loadMore: true,context: context)
           .then((_) {
             setState(() => _isLoadingMore = false);
           });
@@ -345,6 +346,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
 
     if (reason != null && reason.isNotEmpty) {
       await context.read<AppointmentCubit>().cancelAppointment(
+        context: context,
         id: appointment.id.toString(),
         cancellationReason: reason,
       );

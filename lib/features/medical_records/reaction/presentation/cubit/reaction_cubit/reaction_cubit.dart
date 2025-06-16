@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/data_source/reaction_remote_datasource.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../../base/data/models/pagination_model.dart';
+import '../../../../../../base/go_router/go_router.dart';
 import '../../../../../../base/services/network/resource.dart';
 import '../../../../../../base/widgets/show_toast.dart';
 import '../../../data/models/reaction_model.dart';
@@ -23,7 +26,7 @@ class ReactionCubit extends Cubit<ReactionState> {
     Map<String, dynamic>? filters,
     bool loadMore = false,
     required String allergyId,
-    required String appointmentId,
+    required String appointmentId,required BuildContext context
   }) async {
     if (!loadMore) {
       _currentPage = 1;
@@ -47,6 +50,9 @@ class ReactionCubit extends Cubit<ReactionState> {
     );
 
     if (result is Success<PaginatedResponse<ReactionModel>>) {
+      if(result.data.msg=="Unauthorized. Please login first."){
+        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+      }
       try {
         _allReactions.addAll(result.data.paginatedData!.items);
         _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;

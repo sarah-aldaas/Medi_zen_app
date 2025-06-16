@@ -371,9 +371,10 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
       );
 
       if (widget.address == null) {
-        context.read<AddressCubit>().createAddress(addressModel: address);
+        context.read<AddressCubit>().createAddress(addressModel: address,context: context);
       } else {
         context.read<AddressCubit>().updateAddress(
+          context: context,
           id: widget.address!.id!,
           addressModel: address,
         );

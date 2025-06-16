@@ -46,6 +46,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
   void _loadInitialEncounters() {
     _isLoadingMore = false;
     context.read<EncounterCubit>().getAllMyEncounter(
+      context: context,
       filters: widget.filter.toJson(),
     );
   }
@@ -59,7 +60,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
         setState(() => _isLoadingMore = true);
         context
             .read<EncounterCubit>()
-            .getAllMyEncounter(filters: widget.filter.toJson(), loadMore: true)
+            .getAllMyEncounter(filters: widget.filter.toJson(), loadMore: true,context:context)
             .then((_) {
           setState(() => _isLoadingMore = false);
         });

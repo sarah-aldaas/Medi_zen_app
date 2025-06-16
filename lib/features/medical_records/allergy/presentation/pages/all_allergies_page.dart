@@ -49,6 +49,7 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
   void _loadInitialAllergies() {
     _isLoadingMore = false;
     context.read<AllergyCubit>().getAllMyAllergies(
+      context: context,
       filters: widget.filter.toJson(),
       loadMore: false,
     );
@@ -61,7 +62,7 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
       setState(() => _isLoadingMore = true);
       context
           .read<AllergyCubit>()
-          .getAllMyAllergies(filters: widget.filter.toJson(), loadMore: true)
+          .getAllMyAllergies(filters: widget.filter.toJson(), loadMore: true,context: context)
           .then((_) {
         setState(() => _isLoadingMore = false);
       });

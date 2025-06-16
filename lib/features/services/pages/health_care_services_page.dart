@@ -41,6 +41,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
   void _loadInitialServices() {
     _isLoadingMore = false;
     context.read<ServiceCubit>().getAllServiceHealthCare(
+      context: context,
       filters: _filter.toJson(),
     );
   }
@@ -52,7 +53,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
       setState(() => _isLoadingMore = true);
       context
           .read<ServiceCubit>()
-          .getAllServiceHealthCare(filters: _filter.toJson(), loadMore: true)
+          .getAllServiceHealthCare(filters: _filter.toJson(), loadMore: true,context: context)
           .then((_) {
         setState(() => _isLoadingMore = false);
       });

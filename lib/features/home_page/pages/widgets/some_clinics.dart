@@ -25,7 +25,7 @@ class _SomeClinicsState extends State<SomeClinics> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => serviceLocator<ClinicCubit>()..fetchClinics(),
+      create: (context) => serviceLocator<ClinicCubit>()..fetchClinics(context: context),
       child: _ClinicsGridView(),
     );
   }
@@ -46,13 +46,14 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
-    context.read<ClinicCubit>().fetchClinics();
+    context.read<ClinicCubit>().fetchClinics(context: context);
   }
 
   void _onSearchChanged() {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 500), () {
       context.read<ClinicCubit>().fetchClinics(
+        context: context,
         searchQuery: _searchController.text,
       );
     });
@@ -111,7 +112,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
           children: [
             Text(state.error),
             ElevatedButton(
-              onPressed: () => context.read<ClinicCubit>().fetchClinics(),
+              onPressed: () => context.read<ClinicCubit>().fetchClinics(context: context),
               child: Text('someClinics.retry'.tr(context)),
             ),
           ],

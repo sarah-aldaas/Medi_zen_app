@@ -1,7 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../base/data/models/pagination_model.dart';
+import '../../../../../base/go_router/go_router.dart';
 import '../../../../../base/services/network/resource.dart';
 import '../../../../../base/widgets/show_toast.dart';
 import '../../../data/datasources/clinic_remote_datasources.dart';
@@ -27,6 +30,7 @@ class ClinicCubit extends Cubit<ClinicState> {
   }
 
   Future<void> fetchClinics({
+  required BuildContext context,
     String? searchQuery,
     bool loadMore = false,
   }) async {
@@ -55,6 +59,9 @@ class ClinicCubit extends Cubit<ClinicState> {
       );
 
       if (result is Success<PaginatedResponse<ClinicModel>>) {
+        if(result.data.msg=="Unauthorized. Please login first."){
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        }
         if (!result.data.status! || result.data.paginatedData == null) {
           hasMore = false;
           emit(
@@ -91,6 +98,7 @@ class ClinicCubit extends Cubit<ClinicState> {
   }
 
   Future<void> fetchClinicsHomePage({
+  required BuildContext context,
     String? searchQuery,
     bool loadMore = false,
   }) async {
@@ -119,6 +127,9 @@ class ClinicCubit extends Cubit<ClinicState> {
       );
 
       if (result is Success<PaginatedResponse<ClinicModel>>) {
+        if(result.data.msg=="Unauthorized. Please login first."){
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        }
         if (!result.data.status! || result.data.paginatedData == null) {
           hasMore = false;
           emit(

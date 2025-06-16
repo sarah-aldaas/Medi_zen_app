@@ -270,7 +270,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     );
 
     if (reason != null && reason.isNotEmpty) {
-      await context.read<AppointmentCubit>().cancelAppointment(
+      await context.read<AppointmentCubit>().cancelAppointment(context: context,
         id: appointment.id.toString(),
         cancellationReason: reason,
       );
