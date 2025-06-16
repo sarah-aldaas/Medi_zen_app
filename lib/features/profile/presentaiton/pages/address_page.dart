@@ -29,7 +29,7 @@ class _AddressListPageState extends State<AddressListPage> {
   void initState() {
     super.initState();
     if (!_hasFetched) {
-      context.read<AddressCubit>().fetchAddresses();
+      context.read<AddressCubit>().fetchAddresses(context: context);
       context.read<CodeTypesCubit>().getAddressTypeCodes();
       context.read<CodeTypesCubit>().getAddressUseCodes();
       _hasFetched = true;
@@ -41,7 +41,7 @@ class _AddressListPageState extends State<AddressListPage> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.9) {
-      context.read<AddressCubit>().fetchAddresses(loadMore: true);
+      context.read<AddressCubit>().fetchAddresses(loadMore: true,context: context);
     }
   }
 
@@ -62,6 +62,7 @@ class _AddressListPageState extends State<AddressListPage> {
     if (result != null) {
       setState(() => _filter = result);
       context.read<AddressCubit>().applyFilters(
+        context: context,
         typeId: result.typeId,
         useId: result.useId,
       );
@@ -98,7 +99,7 @@ class _AddressListPageState extends State<AddressListPage> {
                 () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
-            ).then((_) => context.read<AddressCubit>().fetchAddresses()),
+            ).then((_) => context.read<AddressCubit>().fetchAddresses(context: context)),
             iconSize: 30,
           ),
         ],
@@ -116,7 +117,7 @@ class _AddressListPageState extends State<AddressListPage> {
           } else if (state is AddressError) {
             return ErrorState(
               message: state.error,
-              onRetry: () => context.read<AddressCubit>().fetchAddresses(),
+              onRetry: () => context.read<AddressCubit>().fetchAddresses(context: context),
             );
           } else if (state is AddressSuccess) {
             final addresses =
@@ -135,14 +136,14 @@ class _AddressListPageState extends State<AddressListPage> {
                     builder: (_) => const AddEditAddressPage(),
                   ),
                 ).then(
-                      (_) => context.read<AddressCubit>().fetchAddresses(),
+                      (_) => context.read<AddressCubit>().fetchAddresses(context: context),
                 ),
               );
             }
 
             return RefreshIndicator(
               onRefresh:
-                  () async => context.read<AddressCubit>().fetchAddresses(),
+                  () async => context.read<AddressCubit>().fetchAddresses(context: context,),
               child: ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.all(16),
@@ -169,7 +170,7 @@ class _AddressListPageState extends State<AddressListPage> {
                         ),
                       ).then(
                             (_) =>
-                            context.read<AddressCubit>().fetchAddresses(),
+                            context.read<AddressCubit>().fetchAddresses(context: context),
                       ),
                       onDelete: () => _showDeleteDialog(context, address.id!),
                     ),
@@ -216,7 +217,7 @@ class _AddressListPageState extends State<AddressListPage> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              context.read<AddressCubit>().deleteAddress(id: addressId);
+              context.read<AddressCubit>().deleteAddress(id: addressId,context: context,);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor.withOpacity(0.7),

@@ -47,6 +47,7 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
   void _loadReactions() {
     _isLoadingMore = false;
     context.read<ReactionCubit>().getAllReactionOfAppointment(
+      context: context,
       appointmentId: widget.appointmentId,
       allergyId: widget.allergyId,
       filters: _filter.toJson(),
@@ -62,6 +63,7 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
       context
           .read<ReactionCubit>()
           .getAllReactionOfAppointment(
+        context: context,
         appointmentId: widget.appointmentId,
         allergyId: widget.allergyId,
         filters: _filter.toJson(),

@@ -173,6 +173,7 @@ void showUpdateTelecomDialog({
                                   typeId: selectedType!.id,
                                 );
                                 telecomCubit.updateTelecom(
+                                  context: context,
                                   id: telecom.id!,
                                   telecomModel: updatedTelecom,
                                 );
@@ -419,6 +420,7 @@ void showCreateTelecomDialog({
                               useId: selectedUseNotifier.value!.id,
                             );
                             telecomCubit.createTelecom(
+                              context: context,
                               telecomModel: newTelecom,
                             );
                             Navigator.pop(context);
@@ -538,7 +540,7 @@ void showUpdateDeleteTelecomDialog({
             ),
             GestureDetector(
               onTap: () {
-                telecomCubit.deleteTelecom(id: telecom.id!);
+                telecomCubit.deleteTelecom(id: telecom.id!,context: context,);
                 Navigator.pop(context);
               },
               child: Container(

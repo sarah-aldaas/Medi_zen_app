@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_update_model.dart';
 import 'package:medizen_app/features/appointment/data/models/days_work_doctor_model.dart';
 import 'package:medizen_app/features/appointment/data/models/slots_model.dart';
@@ -6,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'package:flutter/foundation.dart';
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/data/models/public_response_model.dart';
+import '../../../../../base/go_router/go_router.dart';
 import '../../../../../base/services/network/resource.dart';
 import '../../../../../base/widgets/show_toast.dart';
 import '../../../data/datasource/appointment_remote_datasource.dart';
@@ -29,10 +32,14 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> getDaysWorkDoctor({required String doctorId}) async {
+  Future<void> getDaysWorkDoctor({required String doctorId,required BuildContext context}) async {
     emit(DaysWorkDoctorLoading());
     final result = await remoteDataSource.getDaysWorkDoctor(doctorId: doctorId);
     if (result is Success<DaysWorkDoctorModel>) {
+      if(result.data.msg=="Unauthorized. Please login first."){
+        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+
+      }
       emit(DaysWorkDoctorSuccess(days: result.data));
     } else if (result is ResponseError<DaysWorkDoctorModel>) {
       emit(AppointmentError(error: result.message ?? 'Failed to fetch days'));
@@ -44,7 +51,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   Map<String, dynamic> _currentFilters = {};
   List<AppointmentModel> _allAppointments = [];
 
-  Future<void> getMyAppointment({Map<String, dynamic>? filters, bool loadMore = false}) async {
+  Future<void> getMyAppointment({Map<String, dynamic>? filters, bool loadMore = false,required BuildContext context}) async {
     if (!loadMore) {
       _currentPage = 1;
       _hasMore = true;
@@ -61,6 +68,9 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     final result = await remoteDataSource.getMyAppointment(filters: _currentFilters, page: _currentPage, perPage: 5);
 
     if (result is Success<PaginatedResponse<AppointmentModel>>) {
+      if(result.data.msg=="Unauthorized. Please login first."){
+        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+      }
      try {
         _allAppointments.addAll(result.data.paginatedData!.items);
         _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
@@ -85,10 +95,13 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> createAppointment({required AppointmentCreateModel appointmentModel}) async {
+  Future<void> createAppointment({required AppointmentCreateModel appointmentModel,required BuildContext context}) async {
     emit(AppointmentLoading(isLoadMore: false));
     final result = await remoteDataSource.createAppointment(appointmentModel: appointmentModel);
     if (result is Success<PublicResponseModel>) {
+      if(result.data.msg=="Unauthorized. Please login first."){
+        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+      }
       if (result.data.status) {
         emit(CreateAppointmentSuccess());
       } else {
@@ -100,12 +113,15 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> updateAppointment({required String id, required AppointmentUpdateModel appointmentModel}) async {
+  Future<void> updateAppointment({required String id, required AppointmentUpdateModel appointmentModel,required BuildContext context}) async {
     emit(AppointmentLoading(isLoadMore: false));
     final result = await remoteDataSource.updateAppointment(id: id, appointmentModel: appointmentModel);
     if (result is Success<PublicResponseModel>) {
+      if(result.data.msg=="Unauthorized. Please login first."){
+        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+      }
       if (result.data.status) {
-        await getMyAppointment();
+        await getMyAppointment(context: context);
       } else {
         ShowToast.showToastError(message: result.data.msg);
         emit(AppointmentError(error: result.data.msg));
@@ -116,12 +132,15 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> cancelAppointment({required String id, required String cancellationReason}) async {
+  Future<void> cancelAppointment({required String id, required String cancellationReason,required BuildContext context}) async {
     emit(AppointmentLoading(isLoadMore: false));
     final result = await remoteDataSource.cancelAppointment(id: id, cancellationReason: cancellationReason);
     if (result is Success<PublicResponseModel>) {
+      if(result.data.msg=="Unauthorized. Please login first."){
+        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+      }
       if (result.data.status) {
-        await getMyAppointment();
+        await getMyAppointment(context: context);
       } else {
         ShowToast.showToastError(message: result.data.msg);
         emit(AppointmentError(error: result.data.msg));
