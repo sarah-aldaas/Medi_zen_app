@@ -6,6 +6,7 @@ import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import '../../../../../base/theme/app_color.dart';
 import '../../../../../base/theme/app_style.dart';
 import '../../../../../base/widgets/loading_page.dart';
+import '../../../../../base/widgets/show_toast.dart';
 import '../cubit/change_password_cubit.dart';
 import '../cubit/change_password_state.dart';
 
@@ -71,9 +72,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 BlocConsumer<ChangePasswordCubit, ChangePasswordState>(
                   listener: (context, state) {
                     if (state is ChangePasswordSuccess) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("changePassword.messages.success".tr(context))));
+                      ShowToast.showToastSuccess(message:"changePassword.messages.success".tr(context));
                     } else if (state is ChangePasswordFailure) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error ?? "changePassword.messages.error".tr(context))));
+                      ShowToast.showToastError(message: state.error);
                     }
                   },
                   builder: (context, state) {

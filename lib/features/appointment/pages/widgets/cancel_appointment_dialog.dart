@@ -3,6 +3,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../../../base/theme/app_color.dart';
+import '../../../../base/widgets/show_toast.dart';
 
 class CancelAppointmentDialog extends StatefulWidget {
   final String appointmentId;
@@ -94,11 +95,7 @@ class _CancelAppointmentDialogState extends State<CancelAppointmentDialog> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_reasonController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Please enter a cancellation reason"),
-                          ),
-                        );
+                        ShowToast.showToastError(message: "Please enter a cancellation reason");
                         return;
                       }
                       setState(() => _isLoading = true);

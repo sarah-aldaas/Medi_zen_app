@@ -8,6 +8,7 @@ import 'package:medizen_app/features/profile/data/models/address_model.dart';
 import '../../../../../base/blocs/code_types_bloc/code_types_cubit.dart';
 import '../../../../../base/data/models/code_type_model.dart';
 import '../../../../../base/theme/app_color.dart';
+import '../../../../../base/widgets/show_toast.dart';
 import '../../cubit/address_cubit/address_cubit.dart';
 import 'app_dropdown.dart';
 import 'app_text_field.dart';
@@ -98,11 +99,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
       body: BlocConsumer<CodeTypesCubit, CodeTypesState>(
         listener: (context, state) {
           if (state is CodeTypesError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('common.error'.tr(context) + '${state.error}'),
-              ),
-            );
+            ShowToast.showToastError(message: 'common.error'.tr(context) + '${state.error}');
           }
         },
         builder: (context, state) {

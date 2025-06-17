@@ -8,6 +8,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_model.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/cancel_appointment_dialog.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/filter_appointment_dialog.dart';
@@ -118,9 +119,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
       body: BlocConsumer<AppointmentCubit, AppointmentState>(
         listener: (context, state) {
           if (state is AppointmentError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.error)));
+           ShowToast.showToastError(message: state.error);
           }
         },
         builder: (context, state) {
@@ -369,12 +368,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
     ).then((success) {
       if (success) {
         _loadInitialAppointments();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.green,
-            content: Text("Appointment updated successfully"),
-          ),
-        );
+        ShowToast.showToastSuccess(message: "Appointment updated successfully");
       }
       if (!success) {
         _loadInitialAppointments();

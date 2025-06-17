@@ -205,11 +205,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 BlocConsumer<LogoutCubit, LogoutState>(
                   listener: (context, state) {
                     if (state is LogoutSuccess) {
-                      // ShowToast.showToastSuccess(message: state.message);
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(content: Text(state.message)),
-                      // );
-
                       context.goNamed(AppRouter.welcomeScreen.name);
                     } else if (state is LogoutError) {
                       _selectedLogoutOption = null;
@@ -218,9 +213,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         StorageKey.patientModel,
                       );
                       context.goNamed(AppRouter.welcomeScreen.name);
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(content: Text(state.error)),
-                      // );
                     }
                   },
                   builder: (context, state) {

@@ -29,6 +29,5 @@ class ResponseError<T> extends Resource<T> {
   final int? code;
 
   ResponseError({this.data, this.message, this.code}) {
-    // Utilities.showSnackBar(message!);
   }
 }

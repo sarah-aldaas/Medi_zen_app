@@ -7,6 +7,7 @@ import 'package:medizen_app/features/medical_records/encounter/presentation/page
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/appointment_reactions_page.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
+import '../../../../../base/widgets/show_toast.dart';
 import '../../../reaction/presentation/pages/reaction_details_page.dart';
 import '../../../reaction/presentation/widgets/reaction_list_item.dart';
 import '../../data/models/allergy_model.dart';
@@ -75,15 +76,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
       body: BlocConsumer<AllergyCubit, AllergyState>(
         listener: (context, state) {
           if (state is AllergyError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.error,
-                  style: TextStyle(color: theme.colorScheme.onError),
-                ),
-                backgroundColor: theme.colorScheme.error,
-              ),
-            );
+            ShowToast.showToastError(message: state.error);
           }
         },
         builder: (context, state) {

@@ -6,6 +6,7 @@ import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import '../../../../../base/blocs/code_types_bloc/code_types_cubit.dart';
 import '../../../../../base/go_router/go_router.dart';
+import '../../../../../base/widgets/show_toast.dart';
 
 class WelcomeWidget extends StatelessWidget {
   const WelcomeWidget({super.key});
@@ -19,7 +20,7 @@ class WelcomeWidget extends StatelessWidget {
           body: BlocConsumer<CodeTypesCubit, CodeTypesState>(
             listener: (context, state) {
               if (state is CodeTypesError) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
+                ShowToast.showToastError(message: state.error);
               }
             },
             builder: (context, state) {

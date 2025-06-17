@@ -6,6 +6,7 @@ import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/cancel_appointment_dialog.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/update_appointment_page.dart';
 
@@ -54,9 +55,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       body: BlocConsumer<AppointmentCubit, AppointmentState>(
         listener: (context, state) {
           if (state is AppointmentError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.error)));
+            ShowToast.showToastError(message: state.error);
           }
         },
         builder: (context, state) {
@@ -324,9 +323,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           context: context,
           id: widget.appointmentId,
         );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Appointment updated successfully")),
-        );
+        ShowToast.showToastSuccess(message: "Appointment updated successfully");
       }
     });
   }
