@@ -1,28 +1,37 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/services/network/network_info.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/data_source/allergy_remote_datasource.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/models/allergy_model.dart';
 import 'package:meta/meta.dart';
-
 import '../../../../../../base/data/models/pagination_model.dart';
 import '../../../../../../base/go_router/go_router.dart';
 import '../../../../../../base/services/network/resource.dart';
-import '../../../../../../base/widgets/show_toast.dart';
 
 part 'allergy_state.dart';
 
 class AllergyCubit extends Cubit<AllergyState> {
   final AllergyRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
-  AllergyCubit({required this.remoteDataSource}) : super(AllergyInitial());
+  AllergyCubit({
+    required this.remoteDataSource,
+    required this.networkInfo,
+  }) : super(AllergyInitial());
 
   int _currentPage = 1;
   bool _hasMore = true;
   Map<String, dynamic> _currentFilters = {};
   List<AllergyModel> _allAllergies = [];
 
-  Future<void> getAllMyAllergies({Map<String, dynamic>? filters, bool loadMore = false,required BuildContext context}) async {
+  Future<void> getAllMyAllergies({
+    Map<String, dynamic>? filters,
+    bool loadMore = false,
+    required BuildContext context,
+  }) async {
+
     if (!loadMore) {
       _currentPage = 1;
       _hasMore = true;
@@ -35,16 +44,32 @@ class AllergyCubit extends Cubit<AllergyState> {
     if (filters != null) {
       _currentFilters = filters;
     }
+    // Check internet connectivity for initial load
+    if (!loadMore) {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        context.pushNamed(AppRouter.noInternet.name);
+        emit(AllergyError(error: 'No internet connection'));
+        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+        return;
+      }
+    }
 
-    final result = await remoteDataSource.getAllMyAllergies(filters: _currentFilters, page: _currentPage, perPage: 5);
+
+    final result = await remoteDataSource.getAllMyAllergies(
+      filters: _currentFilters,
+      page: _currentPage,
+      perPage: 5,
+    );
 
     if (result is Success<PaginatedResponse<AllergyModel>>) {
-      if(result.data.msg=="Unauthorized. Please login first."){
+      if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
       try {
         _allAllergies.addAll(result.data.paginatedData!.items);
-        _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _hasMore = result.data.paginatedData!.items.isNotEmpty &&
+            result.data.meta!.currentPage < result.data.meta!.lastPage;
         _currentPage++;
 
         emit(
@@ -70,7 +95,14 @@ class AllergyCubit extends Cubit<AllergyState> {
   Map<String, dynamic> _currentFiltersOfAppointment = {};
   List<AllergyModel> _allAllergiesOfAppointment = [];
 
-  Future<void> getAllMyAllergiesOfAppointment({Map<String, dynamic>? filters, bool loadMore = false, required String appointmentId,required BuildContext context}) async {
+  Future<void> getAllMyAllergiesOfAppointment({
+    Map<String, dynamic>? filters,
+    bool loadMore = false,
+    required String appointmentId,
+    required BuildContext context,
+  }) async {
+
+
     if (!loadMore) {
       _currentPageOfAppointment = 1;
       _hasMoreOfAppointment = true;
@@ -84,6 +116,16 @@ class AllergyCubit extends Cubit<AllergyState> {
       _currentFiltersOfAppointment = filters;
     }
 
+    // Check internet connectivity for initial load
+    if (!loadMore) {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        context.pushNamed(AppRouter.noInternet.name);
+        emit(AllergyError(error: 'No internet connection'));
+        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+        return;
+      }
+    }
     final result = await remoteDataSource.getAllMyAllergiesOfAppointment(
       filters: _currentFiltersOfAppointment,
       page: _currentPageOfAppointment,
@@ -92,12 +134,13 @@ class AllergyCubit extends Cubit<AllergyState> {
     );
 
     if (result is Success<PaginatedResponse<AllergyModel>>) {
-      if(result.data.msg=="Unauthorized. Please login first."){
+      if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
       try {
         _allAllergiesOfAppointment.addAll(result.data.paginatedData!.items);
-        _hasMoreOfAppointment = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _hasMoreOfAppointment = result.data.paginatedData!.items.isNotEmpty &&
+            result.data.meta!.currentPage < result.data.meta!.lastPage;
         _currentPageOfAppointment++;
 
         emit(
@@ -118,8 +161,21 @@ class AllergyCubit extends Cubit<AllergyState> {
     }
   }
 
-  Future<void> getSpecificAllergy({required String allergyId}) async {
+  Future<void> getSpecificAllergy({
+    required String allergyId,
+    required BuildContext context, // Add context parameter
+  }) async {
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
     emit(AllergyLoading(isLoadMore: false));
+
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(AllergyError(error: 'No internet connection'));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return;
+    }
+
     final result = await remoteDataSource.getSpecificAllergy(allergyId: allergyId);
     if (result is Success<AllergyModel>) {
       emit(AllergyDetailsSuccess(allergyModel: result.data));

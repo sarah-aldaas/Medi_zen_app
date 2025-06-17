@@ -1,83 +1,38 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/services/network/network_info.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/services/data/datasources/services_remote_datasoources.dart';
 import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
 import 'package:meta/meta.dart';
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/go_router/go_router.dart';
 import '../../../../../base/services/network/resource.dart';
-import '../../../../../base/widgets/show_toast.dart';
 import '../../../data/model/health_care_service_filter.dart';
 
 part 'service_state.dart';
 
 class ServiceCubit extends Cubit<ServiceState> {
   final ServicesRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo; // Add NetworkInfo dependency
   int _currentPage = 1;
   bool _hasMore = true;
   bool isLoading = false;
-  ServiceCubit({required this.remoteDataSource}) : super(ServiceInitial());
-
-  // Future<void> getAllServiceHealthCare({bool loadMore = false, HealthCareServiceFilter? filter}) async {
-  //   if (isLoading || (!loadMore && _allServices.isNotEmpty)) return;
-  //   isLoading = true;
-  //
-  //   if (!loadMore) {
-  //     _currentPage = 1;
-  //     _hasMore = true;
-  //     _allServices.clear();
-  //     emit(ServiceHealthCareLoading());
-  //   }
-  //
-  //   if (filter != null) {
-  //     _currentFilter = filter;
-  //   }
-  //
-  //   // Convert filter to query parameters
-  //   final queryParams = _currentFilter.toJson();
-  //   queryParams['page'] = _currentPage;
-  //   queryParams['pagination_count'] = _currentFilter.paginationCount ?? 10;
-  //
-  //   try {
-  //     final result = await remoteDataSource.getAllHealthCareServices(
-  //       page: _currentPage,
-  //       perPage: _currentFilter.paginationCount ?? 10,
-  //       filters: queryParams, // Pass the complete query parameters
-  //     );
-  //     if (result is Success<PaginatedResponse<HealthCareServiceModel>>) {
-  //       final newServices = result.data.paginatedData?.items ?? [];
-  //       _allServices.addAll(newServices);
-  //
-  //       final totalPages = result.data.meta?.lastPage ?? 1;
-  //       _hasMore = _currentPage < totalPages;
-  //
-  //       if (loadMore) {
-  //         _currentPage++;
-  //       } else {
-  //         _currentPage = 2; // Set to 2 because we already loaded page 1
-  //       }
-  //
-  //       emit(ServiceHealthCareSuccess(
-  //         paginatedResponse: result.data,
-  //         allServices: _allServices,
-  //         hasMore: _hasMore,
-  //       ));
-  //     } else if (result is ResponseError<PaginatedResponse<HealthCareServiceModel>>) {
-  //       emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch health care services'));
-  //     }
-  //
-  //     // ... rest of your existing code ...
-  //   } finally {
-  //     isLoading = false;
-  //   }
-  // }
-
-
   Map<String, dynamic> _currentFilters = {};
   List<HealthCareServiceModel> allServices = [];
 
-  Future<void> getAllServiceHealthCare({Map<String, dynamic>? filters, bool loadMore = false,required BuildContext context}) async {
+  ServiceCubit({
+    required this.remoteDataSource,
+    required this.networkInfo,
+  }) : super(ServiceInitial());
+
+  Future<void> getAllServiceHealthCare({
+    Map<String, dynamic>? filters,
+    bool loadMore = false,
+    required BuildContext context,
+  }) async {
+
     if (!loadMore) {
       _currentPage = 1;
       _hasMore = true;
@@ -90,16 +45,31 @@ class ServiceCubit extends Cubit<ServiceState> {
     if (filters != null) {
       _currentFilters = filters;
     }
+    // Check internet connectivity for initial load
+    if (!loadMore) {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        context.pushNamed(AppRouter.noInternet.name);
+        emit(ServiceHealthCareError(error: 'No internet connection'));
+        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+        return;
+      }
+    }
 
-    final result = await remoteDataSource.getAllHealthCareServices(filters: _currentFilters, page: _currentPage, perPage: 5);
+    final result = await remoteDataSource.getAllHealthCareServices(
+      filters: _currentFilters,
+      page: _currentPage,
+      perPage: 5,
+    );
 
     if (result is Success<PaginatedResponse<HealthCareServiceModel>>) {
-      if(result.data.msg=="Unauthorized. Please login first."){
+      if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
       try {
         allServices.addAll(result.data.paginatedData!.items);
-        _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _hasMore = result.data.paginatedData!.items.isNotEmpty &&
+            result.data.meta!.currentPage < result.data.meta!.lastPage;
         _currentPage++;
 
         emit(
@@ -112,73 +82,35 @@ class ServiceCubit extends Cubit<ServiceState> {
             ),
           ),
         );
-      }catch(e){
-        emit(ServiceHealthCareError(error:result.data.msg ?? 'Failed to fetch Appointments'));
-
+      } catch (e) {
+        emit(ServiceHealthCareError(error: result.data.msg ?? 'Failed to fetch health care services'));
       }
     } else if (result is ResponseError<PaginatedResponse<HealthCareServiceModel>>) {
-      emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch Appointments'));
+      emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch health care services'));
     }
   }
 
-
-  // Future<void> getAllServiceHealthCare({bool loadMore = false, HealthCareServiceFilter? filter}) async {
-  //   if (isLoading || (!loadMore && _allServices.isNotEmpty)) return;
-  //   isLoading = true;
-  //
-  //   if (!loadMore) {
-  //     _currentPage = 1;
-  //     _hasMore = true;
-  //     _allServices.clear();
-  //     emit(ServiceHealthCareLoading());
-  //   }
-  //
-  //   if (filter != null) {
-  //     _currentFilter = filter;
-  //   }
-  //
-  //   try {
-  //     final result = await remoteDataSource.getAllHealthCareServices(
-  //       page: _currentPage,
-  //       perPage: _currentFilter.paginationCount ?? 10,
-  //       filters: _currentFilter.toJson(),
-  //     );
-  //
-  //     if (result is Success<PaginatedResponse<HealthCareServiceModel>>) {
-  //       final newServices = result.data.paginatedData?.items ?? [];
-  //       _allServices.addAll(newServices);
-  //
-  //       final totalPages = result.data.meta?.lastPage ?? 1;
-  //       _hasMore = _currentPage < totalPages;
-  //
-  //       if (loadMore) {
-  //         _currentPage++;
-  //       } else {
-  //         _currentPage = 2; // Set to 2 because we already loaded page 1
-  //       }
-  //
-  //       emit(ServiceHealthCareSuccess(
-  //         paginatedResponse: result.data,
-  //         allServices: _allServices,
-  //         hasMore: _hasMore,
-  //       ));
-  //     } else if (result is ResponseError<PaginatedResponse<HealthCareServiceModel>>) {
-  //       emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch health care services'));
-  //     }
-  //   } finally {
-  //     isLoading = false;
-  //   }
-  // }
-
-  // When returning from details page, reload if needed
   void checkAndReload({required BuildContext context}) {
     if (state is! ServiceHealthCareSuccess) {
       getAllServiceHealthCare(context: context);
     }
   }
 
-  Future<void> getSpecificServiceHealthCare({required String id}) async {
+  Future<void> getSpecificServiceHealthCare({
+    required String id,
+    required BuildContext context, // Add context parameter
+  }) async {
     emit(ServiceHealthCareLoading());
+
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(ServiceHealthCareError(error: 'No internet connection'));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return;
+    }
+
     try {
       final result = await remoteDataSource.getSpecificHealthCareServices(id: id);
       if (result is Success<HealthCareServiceModel>) {
@@ -192,63 +124,4 @@ class ServiceCubit extends Cubit<ServiceState> {
       emit(ServiceHealthCareError(error: e.toString()));
     }
   }
-
-// Future<void> getAllServiceHealthCareEligibility({bool loadMore = false}) async {
-//   if (isLoadingEligibility || (!loadMore && allEligibilityCodes.isNotEmpty)) return;
-//   isLoadingEligibility = true;
-//
-//   if (!loadMore) {
-//     currentEligibilityPage = 1;
-//     hasMoreEligibility = true;
-//     allEligibilityCodes.clear();
-//     emit(ServiceHealthCareEligibilityLoading());
-//   }
-//
-//   try {
-//     final result = await remoteDataSource.getAllHealthCareServiceEligibilityCodes(
-//       page: currentEligibilityPage,
-//       perPage: 10, // Set your desired page size
-//     );
-//
-//     if (result is Success<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>) {
-//       final newEligibilityCodes = result.data.paginatedData?.items ?? [];
-//       allEligibilityCodes.addAll(newEligibilityCodes);
-//
-//       // Update pagination info
-//       final totalPages = result.data.meta?.lastPage ?? 1;
-//       hasMoreEligibility = currentEligibilityPage < totalPages;
-//
-//       // Only increment page if we're loading more
-//       if (loadMore) {
-//         currentEligibilityPage++;
-//       } else {
-//         // For initial load, set to page 2 since we already loaded page 1
-//         currentEligibilityPage = 2;
-//       }
-//
-//       emit(ServiceHealthCareEligibilitySuccess(
-//         paginatedResponse: result.data,
-//         allEligibilityCodes: allEligibilityCodes,
-//         hasMore: hasMoreEligibility,
-//       ));
-//     } else if (result is ResponseError<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>) {
-//       emit(ServiceHealthCareEligibilityError(error: result.message ?? 'Failed to fetch health care service eligibility codes'));
-//     }
-//   } finally {
-//     isLoadingEligibility = false;
-//   }
-// }
-  // Future<HealthCareServiceEligibilityCodesModel?> getSpecificServiceHealthCareEligibilityCodes({required String id}) async {
-  //   emit(ServiceHealthCareEligibilityLoading());
-  //   final result = await remoteDataSource.getSpecificHealthCareServiceEligibilityCodes(id: id);
-  //   if (result is Success<HealthCareServiceEligibilityCodesModel>) {
-  //     return result.data;
-  //   } else if (result is ResponseError<HealthCareServiceEligibilityCodesModel>) {
-  //     ShowToast.showToastError(message: result.message ?? 'Failed to fetch health care service eligibility codes details');
-  //     emit(ServiceHealthCareError(error: result.message ?? 'Failed to fetch health care service eligibility codes details'));
-  //     return null;
-  //   } else {
-  //     return null;
-  //   }
-  // }
 }

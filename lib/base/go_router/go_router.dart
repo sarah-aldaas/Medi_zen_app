@@ -34,6 +34,7 @@ import '../../features/services/pages/health_care_services_page.dart';
 import '../../features/start_app/on_boarding/view/on_boarding_screen.dart';
 import '../../features/start_app/splash_screen/view/splash_screen.dart';
 import '../../features/start_app/welcome/view/welcome_screen.dart';
+import '../widgets/no_internet_page.dart';
 
 enum AppRouter {
   login,
@@ -73,6 +74,7 @@ enum AppRouter {
   telecomDetails,
   healthCareServicesPage,
   allAllergiesPage,
+  noInternet
 }
 
 GoRouter goRouter() {
@@ -237,7 +239,7 @@ GoRouter goRouter() {
               return BlocProvider(
                 create:
                     (context) =>
-                        serviceLocator<ProfileCubit>()..fetchMyProfile(),
+                        serviceLocator<ProfileCubit>()..fetchMyProfile(context: context),
                 child: ProfileDetailsPage(),
               );
             },
@@ -309,6 +311,11 @@ GoRouter goRouter() {
             builder: (BuildContext context, GoRouterState state) {
               return HealthCareServicesPage();
             },
+          ),
+          GoRoute(
+            path: '/noInternet',
+            name: AppRouter.noInternet.name,
+            builder: (context, state) => const NoInternetPage(),
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
+import 'package:medizen_app/features/articles/pages/articles.dart';
 import 'package:medizen_app/features/home_page/pages/home_page_body.dart';
 import '../../appointment/pages/my_appointments_page.dart';
 import '../../medical_records/Medical_Record.dart';
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       HomePageBody(),
       MyAppointmentPage(),
       MedicalRecordPage(),
-      ProfilePage(),
+      Articles(),
     ];
 
     return ThemeSwitchingArea(
@@ -85,8 +86,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       GButton(
-                        icon: Icons.person_outline,
-                        text: "home.tabs.profile".tr(context),
+                        icon: Icons.article,
+                        text: "home.tabs.articles".tr(context),
                         textStyle: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).primaryColor,
@@ -95,8 +96,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                     selectedIndex: _selectedIndex,
-                    onTabChange:
-                        (index) => setState(() => _selectedIndex = index),
+                    onTabChange: (index) {
+                      print('Tab changed to index: $index'); // Debug log
+                      setState(() => _selectedIndex = index);
+                    },
                   ),
                 ),
               ),

@@ -68,25 +68,30 @@ class _HomePageBodyState extends State<HomePageBody> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              AvatarImage(imageUrl: myPatientModel.avatar, radius: 20),
-              const SizedBox(width: 8.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GreetingWidget(),
-                  Text(
-                    "${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}",
+          GestureDetector(
+            onTap: (){
+              context.pushNamed(AppRouter.profile.name);
+            },
+            child: Row(
+              children: [
+                AvatarImage(imageUrl: myPatientModel.avatar, radius: 20),
+                const SizedBox(width: 8.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GreetingWidget(),
+                    Text(
+                      "${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}",
 
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: theme.textTheme.bodyLarge?.color,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: theme.textTheme.bodyLarge?.color,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
           Row(
             children: [

@@ -1,7 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/services/network/network_info.dart';
+import 'package:medizen_app/base/services/network/resource.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import '../../../../../base/data/models/respons_model.dart';
 import '../../../../../base/error/exception.dart';
+import '../../../../../base/go_router/go_router.dart';
 import '../../../data/datasource/auth_remote_data_source.dart';
 import '../../../data/models/register_request_model.dart';
 
@@ -21,9 +26,12 @@ class SignupState {
 
 class SignupCubit extends Cubit<SignupState> {
   final AuthRemoteDataSource authRemoteDataSource;
+  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
-  SignupCubit({required this.authRemoteDataSource})
-    : super(SignupState.initial());
+  SignupCubit({
+    required this.authRemoteDataSource,
+    required this.networkInfo,
+  }) : super(SignupState.initial());
 
   String parseErrorMessage(dynamic msg) {
     if (msg is Map<String, dynamic>) {
@@ -44,8 +52,18 @@ class SignupCubit extends Cubit<SignupState> {
 
   Future<void> signup({
     required RegisterRequestModel registerRequestModel,
+    required BuildContext context, // Add context parameter
   }) async {
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
     emit(SignupState.loading());
+
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(SignupState.error('No internet connection'));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return;
+    }
 
     try {
       final result = await authRemoteDataSource.signup(

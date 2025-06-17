@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/base/services/network/network_info.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/data/models/register_request_model.dart';
 import 'package:medizen_app/features/authentication/presentation/signup/cubit/signup_cubit.dart';
+
+import '../../../../../base/go_router/go_router.dart';
 
 class SignupFormState {
   final List<CodeModel> genderCodes;
@@ -51,21 +56,29 @@ class SignupFormState {
       formData: formData ?? this.formData,
       obscurePassword: obscurePassword ?? this.obscurePassword,
       obscureConfirmPassword:
-          obscureConfirmPassword ?? this.obscureConfirmPassword,
+      obscureConfirmPassword ?? this.obscureConfirmPassword,
     );
   }
 }
 
 class SignupFormCubit extends Cubit<SignupFormState> {
   final CodeTypesCubit codeTypesCubit;
+  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
-  SignupFormCubit(this.codeTypesCubit) : super(SignupFormState());
+  SignupFormCubit({
+    required this.codeTypesCubit,
+    required this.networkInfo,
+  }) : super(SignupFormState());
 
-  Future<void> loadCodes() async {
+  Future<void> loadCodes(BuildContext context) async {
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
+
+
     if (state.isLoadingCodes) {
       final results = await Future.wait([
-        codeTypesCubit.getGenderCodes(),
-        codeTypesCubit.getMaritalStatusCodes(),
+        codeTypesCubit.getGenderCodes(context: context),
+        codeTypesCubit.getMaritalStatusCodes(context: context),
       ]);
       final uniqueGenderCodes = <String, CodeModel>{};
       final uniqueMaritalStatusCodes = <String, CodeModel>{};
@@ -83,15 +96,21 @@ class SignupFormCubit extends Cubit<SignupFormState> {
           maritalStatusCodes: uniqueMaritalStatusCodes.values.toList(),
           isLoadingCodes: false,
           genderId:
-              uniqueGenderCodes.isNotEmpty
-                  ? uniqueGenderCodes.values.first.id.toString()
-                  : null,
+          uniqueGenderCodes.isNotEmpty
+              ? uniqueGenderCodes.values.first.id.toString()
+              : null,
           maritalStatusId:
-              uniqueMaritalStatusCodes.isNotEmpty
-                  ? uniqueMaritalStatusCodes.values.first.id.toString()
-                  : null,
+          uniqueMaritalStatusCodes.isNotEmpty
+              ? uniqueMaritalStatusCodes.values.first.id.toString()
+              : null,
         ),
       );
+    }
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(state.copyWith(isLoadingCodes: false));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return;
     }
   }
 
@@ -128,6 +147,7 @@ class SignupFormCubit extends Cubit<SignupFormState> {
           genderId: state.genderId!,
           maritalStatusId: state.maritalStatusId!,
         ),
+        context: context, // Pass context to SignupCubit
       );
     }
   }

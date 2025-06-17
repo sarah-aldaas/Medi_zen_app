@@ -2,11 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
-
+import 'package:medizen_app/base/services/network/network_info.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/go_router/go_router.dart';
 import '../../../../../base/services/network/resource.dart';
-import '../../../../../base/widgets/show_toast.dart';
 import '../../../data/datasources/clinic_remote_datasources.dart';
 import '../../../data/models/clinic_model.dart';
 
@@ -14,6 +14,7 @@ part 'clinic_state.dart';
 
 class ClinicCubit extends Cubit<ClinicState> {
   final ClinicRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo; // Add NetworkInfo dependency
   int currentPage = 1;
   bool hasMore = true;
   bool isLoading = false;
@@ -21,7 +22,10 @@ class ClinicCubit extends Cubit<ClinicState> {
   List<ClinicModel> allClinics = [];
   bool _isClosed = false;
 
-  ClinicCubit({required this.remoteDataSource}) : super(ClinicInitial());
+  ClinicCubit({
+    required this.remoteDataSource,
+    required this.networkInfo,
+  }) : super(ClinicInitial());
 
   @override
   Future<void> close() {
@@ -30,12 +34,14 @@ class ClinicCubit extends Cubit<ClinicState> {
   }
 
   Future<void> fetchClinics({
-  required BuildContext context,
+    required BuildContext context,
     String? searchQuery,
     bool loadMore = false,
   }) async {
     if (isLoading) return;
     isLoading = true;
+
+
 
     if (!loadMore) {
       currentPage = 1;
@@ -51,6 +57,18 @@ class ClinicCubit extends Cubit<ClinicState> {
       currentPage++;
     }
 
+
+    // Check internet connectivity for initial load
+    if (!loadMore) {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        context.pushNamed(AppRouter.noInternet.name);
+        emit(ClinicError(error: 'No internet connection'));
+        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+        isLoading = false;
+        return;
+      }
+    }
     try {
       final result = await remoteDataSource.getAllClinics(
         searchQuery: currentSearchQuery,
@@ -59,7 +77,7 @@ class ClinicCubit extends Cubit<ClinicState> {
       );
 
       if (result is Success<PaginatedResponse<ClinicModel>>) {
-        if(result.data.msg=="Unauthorized. Please login first."){
+        if (result.data.msg == "Unauthorized. Please login first.") {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
         }
         if (!result.data.status! || result.data.paginatedData == null) {
@@ -69,20 +87,19 @@ class ClinicCubit extends Cubit<ClinicState> {
                 ? ClinicEmpty(message: result.data.msg!)
                 : ClinicSuccess(clinics: allClinics),
           );
+          isLoading = false;
           return;
         }
 
         final newClinics = result.data.paginatedData!.items;
 
-        final newUniqueClinics =
-            newClinics
-                .where(
-                  (newClinic) =>
-                      !allClinics.any(
-                        (existingClinic) => existingClinic.id == newClinic.id,
-                      ),
-                )
-                .toList();
+        final newUniqueClinics = newClinics
+            .where(
+              (newClinic) => !allClinics.any(
+                (existingClinic) => existingClinic.id == newClinic.id,
+          ),
+        )
+            .toList();
 
         allClinics.addAll(newUniqueClinics);
         hasMore = newClinics.length >= 15;
@@ -98,12 +115,14 @@ class ClinicCubit extends Cubit<ClinicState> {
   }
 
   Future<void> fetchClinicsHomePage({
-  required BuildContext context,
+    required BuildContext context,
     String? searchQuery,
     bool loadMore = false,
   }) async {
     if (isLoading) return;
     isLoading = true;
+
+
 
     if (!loadMore) {
       currentPage = 1;
@@ -118,6 +137,17 @@ class ClinicCubit extends Cubit<ClinicState> {
       }
       currentPage++;
     }
+// Check internet connectivity for initial load
+    if (!loadMore) {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        context.pushNamed(AppRouter.noInternet.name);
+        emit(ClinicError(error: 'No internet connection'));
+        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+        isLoading = false;
+        return;
+      }
+    }
 
     try {
       final result = await remoteDataSource.getAllClinics(
@@ -127,7 +157,7 @@ class ClinicCubit extends Cubit<ClinicState> {
       );
 
       if (result is Success<PaginatedResponse<ClinicModel>>) {
-        if(result.data.msg=="Unauthorized. Please login first."){
+        if (result.data.msg == "Unauthorized. Please login first.") {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
         }
         if (!result.data.status! || result.data.paginatedData == null) {
@@ -137,20 +167,19 @@ class ClinicCubit extends Cubit<ClinicState> {
                 ? ClinicEmpty(message: result.data.msg!)
                 : ClinicSuccess(clinics: allClinics),
           );
+          isLoading = false;
           return;
         }
 
         final newClinics = result.data.paginatedData!.items;
 
-        final newUniqueClinics =
-            newClinics
-                .where(
-                  (newClinic) =>
-                      !allClinics.any(
-                        (existingClinic) => existingClinic.id == newClinic.id,
-                      ),
-                )
-                .toList();
+        final newUniqueClinics = newClinics
+            .where(
+              (newClinic) => !allClinics.any(
+                (existingClinic) => existingClinic.id == newClinic.id,
+          ),
+        )
+            .toList();
 
         allClinics.addAll(newUniqueClinics);
         hasMore = newClinics.length >= 8;
@@ -165,10 +194,23 @@ class ClinicCubit extends Cubit<ClinicState> {
     }
   }
 
-  Future<void> getSpecificClinic({required String id}) async {
+  Future<void> getSpecificClinic({
+    required String id,
+    required BuildContext context, // Add context parameter
+  }) async {
     if (_isClosed) return;
 
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
     emit(ClinicLoading());
+
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(ClinicError(error: 'No internet connection'));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return;
+    }
+
     try {
       final result = await remoteDataSource.getSpecificClinic(id: id);
       if (_isClosed) return;

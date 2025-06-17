@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medizen_app/base/services/network/network_info.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:meta/meta.dart';
-
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/data/models/public_response_model.dart';
 import '../../../../../base/go_router/go_router.dart';
 import '../../../../../base/services/network/resource.dart';
-import '../../../../../base/widgets/show_toast.dart';
 import '../../../data/data_sources/address_remote_data_sources.dart';
 import '../../../data/models/address_model.dart';
 
@@ -15,15 +15,23 @@ part 'address_state.dart';
 
 class AddressCubit extends Cubit<AddressState> {
   final AddressRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo; // Add NetworkInfo dependency
   List<AddressModel> _allAddresses = [];
   int _currentPage = 1;
   bool _hasMore = true;
   String? _typeIdFilter;
   String? _useIdFilter;
 
-  AddressCubit({required this.remoteDataSource}) : super(AddressInitial());
+  AddressCubit({
+    required this.remoteDataSource,
+    required this.networkInfo,
+  }) : super(AddressInitial());
 
-  Future<void> fetchAddresses({bool loadMore = false,required BuildContext context}) async {
+  Future<void> fetchAddresses({
+    bool loadMore = false,
+    required BuildContext context,
+  }) async {
+
     try {
       if (!loadMore) {
         _allAddresses = [];
@@ -34,6 +42,17 @@ class AddressCubit extends Cubit<AddressState> {
         return;
       }
 
+      // Check internet connectivity for initial load
+      if (!loadMore) {
+        final isConnected = await networkInfo.isConnected;
+        if (!isConnected) {
+          context.pushNamed(AppRouter.noInternet.name);
+          emit(AddressError(error: 'No internet connection'));
+          ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+          return;
+        }
+      }
+
       final result = await remoteDataSource.getListAllAddress(
         page: _currentPage,
         perPage: 10,
@@ -42,7 +61,7 @@ class AddressCubit extends Cubit<AddressState> {
       );
 
       if (result is Success<PaginatedResponse<AddressModel>>) {
-        if(result.data.msg=="Unauthorized. Please login first."){
+        if (result.data.msg == "Unauthorized. Please login first.") {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
         }
         final newAddresses = result.data.paginatedData?.items ?? [];
@@ -84,23 +103,37 @@ class AddressCubit extends Cubit<AddressState> {
     }
   }
 
-  Future<void> applyFilters({String? typeId, String? useId,required BuildContext context}) async {
+  Future<void> applyFilters({
+    String? typeId,
+    String? useId,
+    required BuildContext context,
+  }) async {
     _typeIdFilter = typeId;
     _useIdFilter = useId;
     await fetchAddresses(context: context);
   }
 
   Future<void> createAddress({
-  required BuildContext context,
+    required BuildContext context,
     required AddOrUpdateAddressModel addressModel,
   }) async {
     emit(AddressLoading());
+
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(AddressError(error: 'No internet connection'));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return;
+    }
+
     try {
       final result = await remoteDataSource.createAddress(
         addressModel: addressModel,
       );
       if (result is Success<PublicResponseModel>) {
-        if(result.data.msg=="Unauthorized. Please login first."){
+        if (result.data.msg == "Unauthorized. Please login first.") {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
         }
         if (result.data.status) {
@@ -122,16 +155,27 @@ class AddressCubit extends Cubit<AddressState> {
 
   Future<void> updateAddress({
     required String id,
-    required AddOrUpdateAddressModel? addressModel,required BuildContext context
+    required AddOrUpdateAddressModel? addressModel,
+    required BuildContext context,
   }) async {
     emit(AddressLoading());
+
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(AddressError(error: 'No internet connection'));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return;
+    }
+
     try {
       final result = await remoteDataSource.updateAddress(
         id: id,
         addressModel: addressModel!,
       );
       if (result is Success<PublicResponseModel>) {
-        if(result.data.msg=="Unauthorized. Please login first."){
+        if (result.data.msg == "Unauthorized. Please login first.") {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
         }
         if (result.data.status) {
@@ -151,12 +195,25 @@ class AddressCubit extends Cubit<AddressState> {
     }
   }
 
-  Future<void> deleteAddress({required String id,required BuildContext context}) async {
+  Future<void> deleteAddress({
+    required String id,
+    required BuildContext context,
+  }) async {
     emit(AddressLoading());
+
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(AddressError(error: 'No internet connection'));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return;
+    }
+
     try {
       final result = await remoteDataSource.deleteAddress(id: id);
       if (result is Success<PublicResponseModel>) {
-        if(result.data.msg=="Unauthorized. Please login first."){
+        if (result.data.msg == "Unauthorized. Please login first.") {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
         }
         if (result.data.status) {
@@ -176,8 +233,21 @@ class AddressCubit extends Cubit<AddressState> {
     }
   }
 
-  Future<AddressModel?> showAddress({required String id}) async {
+  Future<AddressModel?> showAddress({
+    required String id,
+    required BuildContext context, // Add context parameter
+  }) async {
     emit(AddressLoading());
+
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(AddressError(error: 'No internet connection'));
+      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      return null;
+    }
+
     try {
       final result = await remoteDataSource.showAddress(id: id);
       if (result is Success<AddressModel>) {

@@ -88,9 +88,9 @@ class MyApp extends StatelessWidget {
                 BlocProvider<AddressCubit>(create: (context) => serviceLocator<AddressCubit>(), lazy: false),
                 BlocProvider<AppointmentCubit>(create: (context) => serviceLocator<AppointmentCubit>(), lazy: false),
                 BlocProvider<EditProfileFormCubit>(create: (context) => EditProfileFormCubit(serviceLocator<CodeTypesCubit>()), lazy: false),
-                BlocProvider<AllergyCubit>(create: (context) => AllergyCubit(remoteDataSource: serviceLocator<AllergyRemoteDataSource>()), lazy: false),
-                BlocProvider<ReactionCubit>(create: (context) => ReactionCubit(remoteDataSource: serviceLocator<ReactionRemoteDataSource>()), lazy: false),
-                BlocProvider<EncounterCubit>(create: (context) => EncounterCubit(remoteDataSource: serviceLocator<EncounterRemoteDataSource>()), lazy: false),
+                BlocProvider<AllergyCubit>(create: (context) => AllergyCubit(remoteDataSource: serviceLocator<AllergyRemoteDataSource>(),networkInfo: serviceLocator()), lazy: false),
+                BlocProvider<ReactionCubit>(create: (context) => ReactionCubit(remoteDataSource: serviceLocator<ReactionRemoteDataSource>(),networkInfo: serviceLocator()), lazy: false),
+                BlocProvider<EncounterCubit>(create: (context) => EncounterCubit(remoteDataSource: serviceLocator<EncounterRemoteDataSource>(),networkInfo: serviceLocator()), lazy: false),
               ],
               child: BlocBuilder<LocalizationBloc, LocalizationState>(
                 builder: (context, state) {

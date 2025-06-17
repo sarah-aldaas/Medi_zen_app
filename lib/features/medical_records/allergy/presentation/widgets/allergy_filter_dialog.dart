@@ -40,11 +40,11 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
     _selectedDiscoveredDuringEncounter = _filter.isDiscoveredDuringEncounter;
     _selectedSort = _filter.sort;
 
-    context.read<CodeTypesCubit>().getAllergyTypeCodes();
-    context.read<CodeTypesCubit>().getAllergyCategoryCodes();
-    context.read<CodeTypesCubit>().getAllergyClinicalStatusCodes();
-    context.read<CodeTypesCubit>().getAllergyVerificationStatusCodes();
-    context.read<CodeTypesCubit>().getAllergyCriticalityCodes();
+    context.read<CodeTypesCubit>().getAllergyTypeCodes(context: context);
+    context.read<CodeTypesCubit>().getAllergyCategoryCodes(context: context);
+    context.read<CodeTypesCubit>().getAllergyClinicalStatusCodes(context: context);
+    context.read<CodeTypesCubit>().getAllergyVerificationStatusCodes(context: context);
+    context.read<CodeTypesCubit>().getAllergyCriticalityCodes(context: context);
   }
 
   @override

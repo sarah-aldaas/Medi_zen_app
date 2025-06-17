@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => LoginCubit(authRemoteDataSource: serviceLocator()),
+        create: (context) => LoginCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()),
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),

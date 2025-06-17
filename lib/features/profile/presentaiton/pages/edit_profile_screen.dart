@@ -28,11 +28,11 @@ class EditProfileScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ProfileCubit(remoteDataSource: serviceLocator()),
+          create: (context) => ProfileCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()),
         ),
         BlocProvider(
           create:
-              (context) => CodeTypesCubit(remoteDataSource: serviceLocator()),
+              (context) => CodeTypesCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()),
         ),
         BlocProvider(
           create:
@@ -126,8 +126,8 @@ class _EditProfileFormState extends State<EditProfileForm> {
   void initState() {
     super.initState();
     _cubit = context.read<EditProfileFormCubit>();
-    context.read<ProfileCubit>().fetchMyProfile();
-    _cubit.loadCodes();
+    context.read<ProfileCubit>().fetchMyProfile(context: context);
+    _cubit.loadCodes(context: context);
   }
 
   @override
@@ -510,11 +510,11 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
     debugPrint('EditProfileFormCubit created: $id');
   }
 
-  Future<void> loadCodes() async {
+  Future<void> loadCodes({required BuildContext context}) async {
     if (state.isLoadingCodes) {
       final results = await Future.wait([
-        codeTypesCubit.getGenderCodes(),
-        codeTypesCubit.getMaritalStatusCodes(),
+        codeTypesCubit.getGenderCodes(context: context),
+        codeTypesCubit.getMaritalStatusCodes(context: context),
       ]);
       final uniqueGenderCodes = <String, CodeModel>{};
       final uniqueMaritalStatusCodes = <String, CodeModel>{};

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
+import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
@@ -25,8 +26,8 @@ class _SignupFormState extends State<SignupForm> {
   @override
   void initState() {
     super.initState();
-    _cubit = SignupFormCubit(context.read<CodeTypesCubit>());
-    _cubit.loadCodes();
+    _cubit = SignupFormCubit(codeTypesCubit: context.read<CodeTypesCubit>(), networkInfo: serviceLocator());
+    _cubit.loadCodes(context);
   }
 
   @override

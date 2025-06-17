@@ -36,7 +36,7 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
     _selectedStartDate = _filter.startDate;
     _selectedEndDate = _filter.endDate;
     _selectedSort = _filter.sort;
-    context.read<CodeTypesCubit>().getAppointmentTypeCodes();
+    context.read<CodeTypesCubit>().getAppointmentTypeCodes(context: context);
   }
 
   @override
