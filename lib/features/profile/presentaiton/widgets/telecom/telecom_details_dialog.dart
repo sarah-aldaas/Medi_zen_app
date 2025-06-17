@@ -8,30 +8,17 @@ Widget _buildDetailRow(BuildContext context, String titleKey, String? value) {
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: Row(
       children: [
-        Icon(Icons.circle_outlined, color: theme.primaryColor),
+        Icon(Icons.star_border_purple500_rounded, color: theme.primaryColor),
         const SizedBox(width: 12),
-        Text(
-          titleKey.tr(context),
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text(titleKey.tr(context), style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            value ?? 'telecomPage.notAvailable'.tr(context),
-            style: theme.textTheme.bodyMedium,
-          ),
-        ),
+        Expanded(child: Text(value ?? 'telecomPage.notAvailable'.tr(context), style: theme.textTheme.bodyMedium)),
       ],
     ),
   );
 }
 
-void showTelecomDetailsDialog({
-  required BuildContext context,
-  required TelecomModel telecom,
-}) {
+void showTelecomDetailsDialog({required BuildContext context, required TelecomModel telecom}) {
   showDialog(
     context: context,
     builder: (dialogContext) {
@@ -45,15 +32,7 @@ void showTelecomDetailsDialog({
           children: [
             Text(
               'telecomPage.telecomDetails'.tr(context),
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.primaryColor,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Icon(Icons.close, color: theme.iconTheme.color),
+              style: theme.textTheme.titleLarge?.copyWith(color: theme.primaryColor, fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -64,49 +43,29 @@ void showTelecomDetailsDialog({
             children: [
               _buildDetailRow(context, "telecomPage.valueLabel", telecom.value),
               const SizedBox(height: 20),
-              _buildDetailRow(
-                context,
-                'telecomPage.typeLabel',
-                telecom.type?.display,
-              ),
+              _buildDetailRow(context, 'telecomPage.typeLabel', telecom.type?.display),
               const SizedBox(height: 20),
-              _buildDetailRow(
-                context,
-                'telecomPage.useLabel',
-                telecom.use?.display,
-              ),
+              _buildDetailRow(context, 'telecomPage.useLabel', telecom.use?.display),
               const SizedBox(height: 20),
-              _buildDetailRow(
-                context,
-                'telecomPage.startDateLabel',
-                telecom.startDate,
-              ),
+              _buildDetailRow(context, 'telecomPage.startDateLabel', telecom.startDate),
               const SizedBox(height: 20),
-              _buildDetailRow(
-                context,
-                'telecomPage.endDateLabel',
-                telecom.endDate,
-              ),
+              _buildDetailRow(context, 'telecomPage.endDateLabel', telecom.endDate),
             ],
           ),
         ),
         actions: [
           ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(dialogContext); // Close the dialog
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
             child: Text(
               'telecomPage.cancel'.tr(context),
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontSize: 15,
-                color: theme.colorScheme.onPrimary,
-                fontWeight: FontWeight.bold,
-              ),
+              style: theme.textTheme.labelLarge?.copyWith(fontSize: 15, color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -114,4 +73,3 @@ void showTelecomDetailsDialog({
     },
   );
 }
-

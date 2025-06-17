@@ -87,35 +87,35 @@ class _ProfilePageState extends State<ProfilePage> {
                     context.pushNamed(AppRouter.profileDetails.name);
                   },
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.notifications_none,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text('profilePage.notification'.tr(context)),
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    context.pushNamed(AppRouter.notificationSettings.name);
-                  },
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.payment_outlined,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text('profilePage.payment'.tr(context)),
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.security_outlined,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text('profilePage.security'.tr(context)),
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {},
-                ),
+                // ListTile(
+                //   leading: Icon(
+                //     Icons.notifications_none,
+                //     color: Theme.of(context).primaryColor,
+                //   ),
+                //   title: Text('profilePage.notification'.tr(context)),
+                //   trailing: Icon(Icons.chevron_right),
+                //   onTap: () {
+                //     context.pushNamed(AppRouter.notificationSettings.name);
+                //   },
+                // ),
+                // ListTile(
+                //   leading: Icon(
+                //     Icons.payment_outlined,
+                //     color: Theme.of(context).primaryColor,
+                //   ),
+                //   title: Text('profilePage.payment'.tr(context)),
+                //   trailing: Icon(Icons.chevron_right),
+                //   onTap: () {},
+                // ),
+                // ListTile(
+                //   leading: Icon(
+                //     Icons.security_outlined,
+                //     color: Theme.of(context).primaryColor,
+                //   ),
+                //   title: Text('profilePage.security'.tr(context)),
+                //   trailing: Icon(Icons.chevron_right),
+                //   onTap: () {},
+                // ),
                 ListTile(
                   leading: Icon(
                     Icons.insert_comment_outlined,
@@ -127,27 +127,35 @@ class _ProfilePageState extends State<ProfilePage> {
                     context.pushNamed(AppRouter.complaint.name);
                   },
                 ),
-                ListTile(
+                ExpansionTile(
                   leading: Icon(
                     Icons.language,
                     color: Theme.of(context).primaryColor,
                   ),
                   title: Text('profilePage.language'.tr(context)),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('profilePage.englishUS'.tr(context)),
-                      Icon(Icons.chevron_right),
-                    ],
-                  ),
-                  onTap: () {
-                    final bloc = context.read<LocalizationBloc>();
-                    if (bloc.isArabic()) {
-                      bloc.add(const ChangeLanguageEvent(Locale('en')));
-                    } else {
-                      bloc.add(const ChangeLanguageEvent(Locale('ar')));
-                    }
-                  },
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(width: 50,),
+                        TextButton(onPressed: (){
+                          final bloc = context.read<LocalizationBloc>();
+                          if(bloc.isArabic())
+                            bloc.add(const ChangeLanguageEvent(Locale('en')));
+
+                        }, child: Text("profilePage.english".tr(context))),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(width: 50,),
+                        TextButton(onPressed: (){
+                          final bloc = context.read<LocalizationBloc>();
+                          if(!bloc.isArabic())
+                            bloc.add(const ChangeLanguageEvent(Locale('ar')));
+                        }, child: Text("profilePage.arabic".tr(context))),
+                      ],
+                    ),
+                  ],
                 ),
                 ThemeSwitcher.withTheme(
                   builder: (_, switcher, theme) {
@@ -183,17 +191,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {},
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.people_outline,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text('profilePage.inviteFriends'.tr(context)),
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    // ShareApps.sendInvitation(context: context);
-                  },
-                ),
+                // ListTile(
+                //   leading: Icon(
+                //     Icons.people_outline,
+                //     color: Theme.of(context).primaryColor,
+                //   ),
+                //   title: Text('profilePage.inviteFriends'.tr(context)),
+                //   trailing: Icon(Icons.chevron_right),
+                //   onTap: () {
+                //     // ShareApps.sendInvitation(context: context);
+                //   },
+                // ),
                 BlocConsumer<LogoutCubit, LogoutState>(
                   listener: (context, state) {
                     if (state is LogoutSuccess) {

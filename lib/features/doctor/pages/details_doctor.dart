@@ -580,17 +580,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                             final communication =
                             widget.doctorModel.communications![index];
                             return Text(
-                              communication.language.display,
+                              "${communication.language.display} ${communication.preferred?"(preferred)":""}",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
-
-                                color:
-                                communication.preferred
-                                    ? Theme.of(
-                                  context,
-                                ).colorScheme.onSurface
-                                    : Colors.grey.shade600,
                               ),
                             );
                           },

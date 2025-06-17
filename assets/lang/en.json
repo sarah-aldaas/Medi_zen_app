@@ -463,7 +463,9 @@
     "inviteFriends": "Invite Friends",
     "logout": "Logout",
     "logoutAllDevices": "All devices",
-    "logoutThisDevice": "Only this device"
+    "logoutThisDevice": "Only this device",
+    "english":"English" ,
+    "arabic": "Arabic"
   },
   "clinicCard": {
     "seeDetails": "See Details >"
@@ -596,10 +598,10 @@
     "createNewTelecom": "Create New Telecom",
     "create": "Create",
     "telecomDetails": "Telecom Details",
-    "valueLabel": "Value :",
+    "valueLabel": "Value",
     "notAvailable": "Not available",
-    "typeLabel": "Type :",
-    "useLabel": "Use :",
+    "typeLabel": "Type",
+    "useLabel": "Use",
     "startDateLabel": "Start Date :",
     "endDateLabel": "End Date :",
     "manageTelecom": "Manage Telecom",
