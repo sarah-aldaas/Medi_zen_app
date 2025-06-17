@@ -30,8 +30,8 @@ class _AddressListPageState extends State<AddressListPage> {
     super.initState();
     if (!_hasFetched) {
       context.read<AddressCubit>().fetchAddresses(context: context);
-      context.read<CodeTypesCubit>().getAddressTypeCodes();
-      context.read<CodeTypesCubit>().getAddressUseCodes();
+      context.read<CodeTypesCubit>().getAddressTypeCodes(context: context);
+      context.read<CodeTypesCubit>().getAddressUseCodes(context: context);
       _hasFetched = true;
     }
 

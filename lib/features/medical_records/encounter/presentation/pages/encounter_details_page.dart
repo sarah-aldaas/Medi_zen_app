@@ -26,6 +26,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
     super.initState();
     context.read<EncounterCubit>().getSpecificEncounter(
       encounterId: widget.encounterId,
+      context: context
     );
   }
 
@@ -196,6 +197,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                       .then((value) {
                     context.read<EncounterCubit>().getSpecificEncounter(
                       encounterId: widget.encounterId,
+                      context: context
                     );
                   });
                 },

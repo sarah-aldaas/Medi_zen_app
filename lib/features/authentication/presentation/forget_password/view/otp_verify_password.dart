@@ -95,7 +95,7 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
                               ? null
                               : () {
                                 if (_otpController.text.length == 6) {
-                                  context.read<OtpVerifyPasswordCubit>().verifyOtp(email: widget.email, otp: _otpController.text);
+                                  context.read<OtpVerifyPasswordCubit>().verifyOtp(email: widget.email, otp: _otpController.text,context: context);
                                 } else {
                                   ScaffoldMessenger.of(
                                     context,

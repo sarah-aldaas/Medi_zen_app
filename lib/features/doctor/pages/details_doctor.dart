@@ -77,9 +77,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       _selectedTime = null;
     });
 
-    context.read<AppointmentCubit>().geSlotsAppointment(
+    context.read<AppointmentCubit>().getSlotsAppointment(
       practitionerId: widget.doctorModel.id.toString(),
-      date: formattedDate,
+      date: formattedDate, context: context,
     );
   }
 

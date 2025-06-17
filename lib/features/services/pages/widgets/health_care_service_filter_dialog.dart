@@ -31,7 +31,7 @@ class _HealthCareServiceFilterDialogState
   @override
   void initState() {
     super.initState();
-    context.read<CodeTypesCubit>().getServiceCategoryCodes();
+    context.read<CodeTypesCubit>().getServiceCategoryCodes(context: context);
 
     _filter = widget.currentFilter;
     _searchController.text = _filter.searchQuery ?? '';
@@ -321,7 +321,7 @@ class _HealthCareServiceFilterDialogState
                         if (state is CodesError) {
                           context
                               .read<CodeTypesCubit>()
-                              .getServiceCategoryCodes();
+                              .getServiceCategoryCodes(context: context);
 
                           return Text(
                             "${'healthCareServicesPage.errorLoadingCategories'.tr(context)} ${state.error}",

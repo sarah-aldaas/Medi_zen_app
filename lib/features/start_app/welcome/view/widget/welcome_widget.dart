@@ -13,7 +13,7 @@ class WelcomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => serviceLocator<CodeTypesCubit>()..fetchCodeTypes(),
+      create: (context) => serviceLocator<CodeTypesCubit>()..fetchCodeTypes(context: context),
       child: SafeArea(
         child: Scaffold(
           body: BlocConsumer<CodeTypesCubit, CodeTypesState>(

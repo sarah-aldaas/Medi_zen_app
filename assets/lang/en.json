@@ -399,7 +399,8 @@
       "home": "Home",
       "appointment": "Appointments",
       "medicalRecord": "Medical Records",
-      "profile": "Profile"
+      "profile": "Profile",
+      "articles": "Articles"
     }
   },
   "homePage": {
@@ -468,7 +469,8 @@
     "seeDetails": "See Details >"
   },
   "clinicsPage": {
-    "allClinics": "All clinics"
+    "allClinics": "All clinics",
+    "appBarTitle": "All clinics"
   },
   "greetings": {
     "morning": "Good Morning ☀️",

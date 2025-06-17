@@ -398,7 +398,8 @@
       "home": "الرئيسية",
       "appointment": "المواعيد",
       "medicalRecord": "السجلات الطبية",
-      "profile": "الملف الشخصي"
+      "profile": "الملف الشخصي",
+      "articles": "المقالات"
     }
   },
   "homePage": {
@@ -467,7 +468,8 @@
     "seeDetails": "عرض التفاصيل >"
   },
   "clinicsPage": {
-    "appBarTitle": "جميع العيادات"
+    "appBarTitle": "جميع العيادات",
+    "allClinics": "جميع العيادات"
   },
   "greetings": {
     "morning": "صباح الخير ☀️",

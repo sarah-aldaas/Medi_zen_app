@@ -29,6 +29,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
     context.read<ReactionCubit>().getSpecificReaction(
       allergyId: widget.allergyId,
       reactionId: widget.reactionId,
+      context: context
     );
   }
 

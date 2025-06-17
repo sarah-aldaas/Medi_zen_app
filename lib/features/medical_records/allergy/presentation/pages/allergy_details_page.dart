@@ -35,6 +35,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
 
   void _loadAllergyDetails() {
     context.read<AllergyCubit>().getSpecificAllergy(
+      context: context,
       allergyId: widget.allergyId,
     );
   }

@@ -96,7 +96,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               ? null
                               : () {
                                 if (_otpController.text.length == 6) {
-                                  context.read<OtpCubit>().verifyOtp(email: widget.email, otp: _otpController.text);
+                                  context.read<OtpCubit>().verifyOtp(email: widget.email, otp: _otpController.text,context: context);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text("otp_verification_page.invalid_otp_error".tr(context)), backgroundColor: Colors.deepOrange),
@@ -135,7 +135,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             if (!isTimerRunning)
                               TextButton(
                                 onPressed: () {
-                                  context.read<OtpCubit>().resendOtp(email: widget.email);
+                                  context.read<OtpCubit>().resendOtp(email: widget.email,context: context);
                                 },
                                 child:
                                     state is OtpLoadingResend

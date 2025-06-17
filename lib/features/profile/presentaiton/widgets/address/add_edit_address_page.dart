@@ -40,8 +40,8 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
   void initState() {
     super.initState();
     _initializeControllers();
-    context.read<CodeTypesCubit>().getAddressTypeCodes();
-    context.read<CodeTypesCubit>().getAddressUseCodes();
+    context.read<CodeTypesCubit>().getAddressTypeCodes(context: context);
+    context.read<CodeTypesCubit>().getAddressUseCodes(context: context);
   }
 
   void _initializeControllers() {
@@ -137,7 +137,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed:
-                        () => context.read<CodeTypesCubit>().fetchCodeTypes(),
+                        () => context.read<CodeTypesCubit>().fetchCodeTypes(context: context),
                     child: Text('common.retry'.tr(context)),
                   ),
                 ],

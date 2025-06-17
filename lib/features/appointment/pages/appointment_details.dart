@@ -28,6 +28,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     super.initState();
 
     context.read<AppointmentCubit>().getDetailsAppointment(
+      context: context,
       id: widget.appointmentId,
     );
   }
@@ -320,6 +321,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     ).then((success) {
       if (success == true) {
         context.read<AppointmentCubit>().getDetailsAppointment(
+          context: context,
           id: widget.appointmentId,
         );
         ScaffoldMessenger.of(context).showSnackBar(

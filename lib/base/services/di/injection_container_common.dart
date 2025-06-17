@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logger/logger.dart';
@@ -49,7 +50,7 @@ Future<void> initDI() async {
 Future<void> _initService() async {
   serviceLocator.registerSingleton<LogService>(LogService(log: Logger()));
   await CacheDependencyInjection.initDi();
-  serviceLocator.registerSingleton<NetworkInfo>(NetworkInfoImplementation(InternetConnection()));
+  serviceLocator.registerSingleton<NetworkInfo>(NetworkInfoImplementation(connectivity:Connectivity() ));
   serviceLocator.registerSingleton<LocalizationBloc>(LocalizationBloc());
   await NetworkClientDependencyInjection.initDi();
 }
@@ -71,23 +72,23 @@ Future<void> _initDataSource() async {
 }
 
 Future<void> _initBloc() async {
-  serviceLocator.registerFactory<SignupCubit>(() => SignupCubit(authRemoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<OtpCubit>(() => OtpCubit(authRemoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<ForgotPasswordCubit>(() => ForgotPasswordCubit(authRemoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<OtpVerifyPasswordCubit>(() => OtpVerifyPasswordCubit(authRemoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<ResetPasswordCubit>(() => ResetPasswordCubit(authRemoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<LoginCubit>(() => LoginCubit(authRemoteDataSource: serviceLocator()));
+  serviceLocator.registerFactory<SignupCubit>(() => SignupCubit(authRemoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<OtpCubit>(() => OtpCubit(authRemoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<ForgotPasswordCubit>(() => ForgotPasswordCubit(authRemoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<OtpVerifyPasswordCubit>(() => OtpVerifyPasswordCubit(authRemoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<ResetPasswordCubit>(() => ResetPasswordCubit(authRemoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<LoginCubit>(() => LoginCubit(authRemoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
 
-  serviceLocator.registerFactory<LogoutCubit>(() => LogoutCubit(authRemoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<CodeTypesCubit>(() => CodeTypesCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<ProfileCubit>(() => ProfileCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<TelecomCubit>(() => TelecomCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<AddressCubit>(() => AddressCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<AppointmentCubit>(() => AppointmentCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<ClinicCubit>(() => ClinicCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<ServiceCubit>(() => ServiceCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<DoctorCubit>(() => DoctorCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<AllergyCubit>(() => AllergyCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<ReactionCubit>(() => ReactionCubit(remoteDataSource: serviceLocator()));
-  serviceLocator.registerFactory<EncounterCubit>(() => EncounterCubit(remoteDataSource: serviceLocator()));
+  serviceLocator.registerFactory<LogoutCubit>(() => LogoutCubit(authRemoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<CodeTypesCubit>(() => CodeTypesCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<ProfileCubit>(() => ProfileCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<TelecomCubit>(() => TelecomCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<AddressCubit>(() => AddressCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<AppointmentCubit>(() => AppointmentCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<ClinicCubit>(() => ClinicCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<ServiceCubit>(() => ServiceCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<DoctorCubit>(() => DoctorCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<AllergyCubit>(() => AllergyCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<ReactionCubit>(() => ReactionCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<EncounterCubit>(() => EncounterCubit(remoteDataSource: serviceLocator(),networkInfo: serviceLocator()));
 }

@@ -34,12 +34,13 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
   void initState() {
     super.initState();
     _clinicCubit = ClinicCubit(
-      remoteDataSource: serviceLocator<ClinicRemoteDataSource>(),
+      remoteDataSource: serviceLocator<ClinicRemoteDataSource>(), networkInfo: serviceLocator(),
     );
     _doctorCubit = DoctorCubit(
       remoteDataSource: serviceLocator<DoctorRemoteDataSource>(),
+      networkInfo: serviceLocator()
     );
-    _clinicCubit.getSpecificClinic(id: widget.clinicId);
+    _clinicCubit.getSpecificClinic(id: widget.clinicId,context: context);
     _doctorCubit.getDoctorsOfClinic(clinicId: widget.clinicId,context: context);
   }
 

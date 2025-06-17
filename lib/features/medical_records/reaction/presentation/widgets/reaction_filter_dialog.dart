@@ -31,8 +31,8 @@ class _ReactionFilterDialogState extends State<ReactionFilterDialog> {
     _selectedExposureRouteId = _filter.exposureRouteId?.toString();
     _selectedSort = _filter.key;
 
-    context.read<CodeTypesCubit>().getAllergyReactionSeverityCodes();
-    context.read<CodeTypesCubit>().getAllergyReactionExposureRouteCodes();
+    context.read<CodeTypesCubit>().getAllergyReactionSeverityCodes(context: context);
+    context.read<CodeTypesCubit>().getAllergyReactionExposureRouteCodes(context: context);
   }
 
   @override

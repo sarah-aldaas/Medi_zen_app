@@ -24,7 +24,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return BlocProvider<ForgotPasswordCubit>(
       create:
           (context) =>
-              ForgotPasswordCubit(authRemoteDataSource: serviceLocator()),
+              ForgotPasswordCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()),
       child: _ForgotPasswordContent(),
     );
   }
@@ -137,6 +137,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
                         if (_formKey.currentState!.validate()) {
                           context.read<ForgotPasswordCubit>().sendResetLink(
                             _emailController.text.trim(),
+                            context
                           );
                         }
                       },
