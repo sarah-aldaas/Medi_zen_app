@@ -36,7 +36,7 @@ class _ClinicsPageState extends State<ClinicsPage> {
             },
 
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.arrow_back,
               color: Theme.of(context).iconTheme.color,
             ),
           ),

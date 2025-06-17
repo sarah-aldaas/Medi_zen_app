@@ -28,7 +28,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         appBar: AppBar(
           title: Text("changePassword.title".tr(context), style: AppStyles.appBarTitle),
           centerTitle: true,
-          leading: IconButton(icon: Icon(Icons.arrow_back_ios_rounded), onPressed: () {}),
+          leading: IconButton(icon: Icon(Icons.arrow_back_rounded), onPressed: () {}),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

@@ -47,7 +47,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
           onPressed: () => context.pop(),
         ),
       ),

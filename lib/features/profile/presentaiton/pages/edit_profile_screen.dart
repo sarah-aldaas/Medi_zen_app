@@ -51,7 +51,7 @@ class EditProfileScreen extends StatelessWidget {
           leadingWidth: 100,
           leading: IconButton(
             icon: const Icon(
-              Icons.arrow_back_ios_new_outlined,
+              Icons.arrow_back,
               color: AppColors.primaryColor,
             ),
             onPressed: () => context.goNamed(AppRouter.profileDetails.name),

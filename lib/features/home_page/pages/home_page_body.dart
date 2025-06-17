@@ -122,19 +122,6 @@ class _HomePageBodyState extends State<HomePageBody> {
                   } else if (value == 'services') {
                     context.pushNamed(AppRouter.healthCareServicesPage.name);
                     // context.pushNamed(AppRouter.allAllergiesPage.name);
-                  } else if (value == 'encounter') {
-                    // context.pushNamed(AppRouter.allEncountersPage.name);
-                  } else if (value == 'reaction') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => AppointmentReactionsPage(
-                          appointmentId: "1",
-                          allergyId: "1",
-                        ),
-                      ),
-                    );
                   }
                 },
                 itemBuilder:
@@ -166,38 +153,6 @@ class _HomePageBodyState extends State<HomePageBody> {
 
                       title: Text(
                         'Health services',
-                        style: TextStyle(
-                          color: theme.textTheme.bodyLarge?.color,
-                        ),
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'encounter',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.group,
-                        color: Colors.orange,
-                      ),
-
-                      title: Text(
-                        'Encounter services',
-                        style: TextStyle(
-                          color: theme.textTheme.bodyLarge?.color,
-                        ),
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'reaction',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.warning_amber,
-                        color: Colors.red,
-                      ), // Fixed color
-
-                      title: Text(
-                        'Reaction services',
                         style: TextStyle(
                           color: theme.textTheme.bodyLarge?.color,
                         ),

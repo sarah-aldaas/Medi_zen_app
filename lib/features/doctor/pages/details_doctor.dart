@@ -214,7 +214,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
           ),
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.arrow_back,
               color: Theme.of(context).iconTheme.color,
             ),
             onPressed: () {

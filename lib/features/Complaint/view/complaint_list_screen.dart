@@ -26,7 +26,7 @@ class ComplaintListScreen extends StatelessWidget {
         backgroundColor: AppColors.backgroundColor,
         elevation: 1,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },

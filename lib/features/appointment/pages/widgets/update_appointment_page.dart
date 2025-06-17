@@ -80,7 +80,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
           onPressed: () {
             Navigator.of(context).pop(false);
           },
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(

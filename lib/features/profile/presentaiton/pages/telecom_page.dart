@@ -173,7 +173,7 @@ class _TelecomPageState extends State<TelecomPage> {
           ),
           backgroundColor: theme.appBarTheme.backgroundColor,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new_outlined, color: theme.appBarTheme.iconTheme?.color),
+            icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: PreferredSize(

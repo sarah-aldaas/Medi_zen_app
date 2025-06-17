@@ -30,7 +30,7 @@ class ComplaintSubmissionView extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.primaryColor),
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
         ),
         title: Text(
           'Complaint.title'.tr(context),

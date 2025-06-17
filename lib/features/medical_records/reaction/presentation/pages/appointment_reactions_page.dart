@@ -96,7 +96,7 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back_ios_new,
+            Icons.arrow_back,
             color: theme.appBarTheme.iconTheme?.color,
           ),
           onPressed: () {

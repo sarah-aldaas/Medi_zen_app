@@ -64,7 +64,7 @@ class _HealthCareServiceDetailsPageState
               ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: theme.iconTheme.color),
+          icon: Icon(Icons.arrow_back, color: theme.iconTheme.color),
           onPressed: () => context.pop(),
         ),
         elevation: 3,

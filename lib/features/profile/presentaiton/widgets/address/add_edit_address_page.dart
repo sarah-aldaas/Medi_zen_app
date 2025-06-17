@@ -80,7 +80,7 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_outlined),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
           color: AppColors.primaryColor,
         ),
