@@ -25,9 +25,10 @@ class OtpVerifyPasswordCubit extends Cubit<OtpVerifyPasswordState> {
     required String otp,
     required BuildContext context, // Add context parameter
   }) async {
+    emit(OtpLoadingVerify());
+
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(OtpLoadingVerify());
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);

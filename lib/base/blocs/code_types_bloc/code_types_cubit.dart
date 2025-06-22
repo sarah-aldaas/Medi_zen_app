@@ -41,10 +41,10 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
   Future<void> fetchCodeTypes({required BuildContext context}) async {
     if (isClosed) return;
 
+    emit(CodeTypesLoading());
     final isConnected = await networkInfo.isConnected;
 
 
-    emit(CodeTypesLoading());
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
       emit(CodeTypesError(error: 'No internet connection'));
@@ -97,11 +97,11 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     required BuildContext context,
   }) async {
     if (isClosed) return;
+    emit(CodesLoading());
 
     final isConnected = await networkInfo.isConnected;
 
 
-    emit(CodesLoading());
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
       emit(CodesError(error: 'No internet connection'));

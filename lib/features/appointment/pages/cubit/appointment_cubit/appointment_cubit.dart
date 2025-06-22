@@ -22,20 +22,17 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   final AppointmentRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
-  AppointmentCubit({
-    required this.remoteDataSource,
-    required this.networkInfo,
-  }) : super(AppointmentInitial());
+  AppointmentCubit({required this.remoteDataSource, required this.networkInfo}) : super(AppointmentInitial());
 
   Future<void> getSlotsAppointment({
     required String practitionerId,
     required String date,
     required BuildContext context, // Add context parameter
   }) async {
-    // Check internet connectivity
+    emit(SlotsAppointmentLoading());
+
     final isConnected = await networkInfo.isConnected;
 
-    emit(SlotsAppointmentLoading());
     if (!isConnected) {
       context.pushNamed('noInternet');
       emit(AppointmentError(error: 'No internet connection'));
@@ -51,13 +48,10 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> getDaysWorkDoctor({
-    required String doctorId,
-    required BuildContext context,
-  }) async {
-    // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
+  Future<void> getDaysWorkDoctor({required String doctorId, required BuildContext context}) async {
     emit(DaysWorkDoctorLoading());
+
+    final isConnected = await networkInfo.isConnected;
 
     if (!isConnected) {
       context.pushNamed('noInternet');
@@ -82,12 +76,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   Map<String, dynamic> _currentFilters = {};
   List<AppointmentModel> _allAppointments = [];
 
-  Future<void> getMyAppointment({
-    Map<String, dynamic>? filters,
-    bool loadMore = false,
-    required BuildContext context,
-  }) async {
-
+  Future<void> getMyAppointment({Map<String, dynamic>? filters, bool loadMore = false, required BuildContext context}) async {
     if (!loadMore) {
       _currentPage = 1;
       _hasMore = true;
@@ -96,7 +85,6 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     } else if (!_hasMore) {
       return;
     }
-
 
     if (filters != null) {
       _currentFilters = filters;
@@ -113,11 +101,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       }
     }
 
-    final result = await remoteDataSource.getMyAppointment(
-      filters: _currentFilters,
-      page: _currentPage,
-      perPage: 5,
-    );
+    final result = await remoteDataSource.getMyAppointment(filters: _currentFilters, page: _currentPage, perPage: 5);
 
     if (result is Success<PaginatedResponse<AppointmentModel>>) {
       if (result.data.msg == "Unauthorized. Please login first.") {
@@ -125,8 +109,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       }
       try {
         _allAppointments.addAll(result.data.paginatedData!.items);
-        _hasMore = result.data.paginatedData!.items.isNotEmpty &&
-            result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
         _currentPage++;
 
         emit(
@@ -147,13 +130,11 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> createAppointment({
-    required AppointmentCreateModel appointmentModel,
-    required BuildContext context,
-  }) async {
+  Future<void> createAppointment({required AppointmentCreateModel appointmentModel, required BuildContext context}) async {
+    emit(AppointmentLoading(isLoadMore: false));
+
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(AppointmentLoading(isLoadMore: false));
 
     if (!isConnected) {
       context.pushNamed('noInternet');
@@ -178,14 +159,11 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> updateAppointment({
-    required String id,
-    required AppointmentUpdateModel appointmentModel,
-    required BuildContext context,
-  }) async {
+  Future<void> updateAppointment({required String id, required AppointmentUpdateModel appointmentModel, required BuildContext context}) async {
+    emit(AppointmentLoading(isLoadMore: false));
+
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(AppointmentLoading(isLoadMore: false));
 
     if (!isConnected) {
       context.pushNamed('noInternet');
@@ -211,14 +189,11 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> cancelAppointment({
-    required String id,
-    required String cancellationReason,
-    required BuildContext context,
-  }) async {
+  Future<void> cancelAppointment({required String id, required String cancellationReason, required BuildContext context}) async {
+    emit(AppointmentLoading(isLoadMore: false));
+
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(AppointmentLoading(isLoadMore: false));
 
     if (!isConnected) {
       context.pushNamed('noInternet');
@@ -248,9 +223,8 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     required String id,
     required BuildContext context, // Add context parameter
   }) async {
-    // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
     emit(AppointmentLoading(isLoadMore: false));
+    final isConnected = await networkInfo.isConnected;
 
     if (!isConnected) {
       context.pushNamed('noInternet');

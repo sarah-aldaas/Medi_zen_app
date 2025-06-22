@@ -25,14 +25,14 @@ class LogoutCubit extends Cubit<LogoutState> {
   }) : super(LogoutInitial());
 
   void sendResetLink(int allDevices, BuildContext context) async {
-    // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
 
     if (allDevices == 1) {
       emit(LogoutLoadingAllDevices());
     } else {
       emit(LogoutLoadingOnlyThisDevice());
     }
+    final isConnected = await networkInfo.isConnected;
+
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
       emit(LogoutError(error: 'No internet connection'));

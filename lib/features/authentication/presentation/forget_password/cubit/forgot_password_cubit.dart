@@ -22,9 +22,10 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   }) : super(ForgotPasswordInitial());
 
   void sendResetLink(String email, BuildContext context) async {
+    emit(ForgotPasswordLoading());
+
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(ForgotPasswordLoading());
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);

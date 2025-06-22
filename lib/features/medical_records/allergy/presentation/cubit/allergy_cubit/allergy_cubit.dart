@@ -165,9 +165,10 @@ class AllergyCubit extends Cubit<AllergyState> {
     required String allergyId,
     required BuildContext context, // Add context parameter
   }) async {
+    emit(AllergyLoading(isLoadMore: false));
+
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(AllergyLoading(isLoadMore: false));
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
