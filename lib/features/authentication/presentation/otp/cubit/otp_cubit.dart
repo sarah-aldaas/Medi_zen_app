@@ -25,9 +25,9 @@ class OtpCubit extends Cubit<OtpState> {
     required String otp,
     required BuildContext context, // Add context parameter
   }) async {
-    // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
     emit(OtpLoadingVerify());
+
+    final isConnected = await networkInfo.isConnected;
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
@@ -57,9 +57,10 @@ class OtpCubit extends Cubit<OtpState> {
     required String email,
     required BuildContext context, // Add context parameter
   }) async {
+    emit(OtpLoadingResend());
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(OtpLoadingResend());
+
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);

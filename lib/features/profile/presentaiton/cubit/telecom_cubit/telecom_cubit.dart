@@ -57,6 +57,7 @@ class TelecomCubit extends Cubit<TelecomState> {
       final currentState = state as TelecomSuccess;
       final nextPage = currentState.currentPage + 1;
       if (nextPage <= currentState.paginatedResponse.meta!.lastPage) {
+        emit(TelecomLoading());
         // Check internet connectivity
         final isConnected = await networkInfo.isConnected;
         if (!isConnected) {
@@ -65,7 +66,7 @@ class TelecomCubit extends Cubit<TelecomState> {
           return;
         }
 
-        emit(TelecomLoading());
+
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
           paginationCount: currentState.paginatedResponse.meta!.perPage.toString(),
@@ -91,6 +92,8 @@ class TelecomCubit extends Cubit<TelecomState> {
       final currentState = state as TelecomSuccess;
       final prevPage = currentState.currentPage - 1;
       if (prevPage >= 1) {
+        emit(TelecomLoading());
+
         // Check internet connectivity
         final isConnected = await networkInfo.isConnected;
         if (!isConnected) {
@@ -99,7 +102,6 @@ class TelecomCubit extends Cubit<TelecomState> {
           return;
         }
 
-        emit(TelecomLoading());
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
           paginationCount: currentState.paginatedResponse.meta!.perPage.toString(),

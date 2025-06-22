@@ -9,16 +9,17 @@ import 'package:medizen_app/features/medical_records/service_request/data/models
 import '../../data/data_source/service_request_remote_data_source.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
-class ServiceRequestsPage extends StatefulWidget {
+class ServiceRequestsOfAppointmentPage extends StatefulWidget {
+  final String appointmentId;
   final ServiceRequestFilter filter;
 
-  const ServiceRequestsPage({super.key, required this.filter});
+  const ServiceRequestsOfAppointmentPage({super.key, required this.filter,required this.appointmentId});
 
   @override
-  State<ServiceRequestsPage> createState() => _ServiceRequestsPageState();
+  State<ServiceRequestsOfAppointmentPage> createState() => _ServiceRequestsOfAppointmentPageState();
 }
 
-class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
+class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppointmentPage> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
 
@@ -37,11 +38,11 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
 
   void _loadInitialRequests() {
     setState(() => _isLoadingMore = false);
-    context.read<ServiceRequestCubit>().getServiceRequests(filters: widget.filter.toJson(), context: context);
+    context.read<ServiceRequestCubit>().getServiceRequestsOfAppointment(appointmentId:widget.appointmentId,filters: widget.filter.toJson(), context: context);
   }
 
   @override
-  void didUpdateWidget(ServiceRequestsPage oldWidget) {
+  void didUpdateWidget(ServiceRequestsOfAppointmentPage oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.filter != oldWidget.filter) {
@@ -53,7 +54,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
   void _scrollListener() {
     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context.read<ServiceRequestCubit>().getServiceRequests(context: context, filters: widget.filter.toJson(), loadMore: true).then((_) {
+      context.read<ServiceRequestCubit>().getServiceRequestsOfAppointment(appointmentId: widget.appointmentId,context: context, filters: widget.filter.toJson(), loadMore: true).then((_) {
         setState(() => _isLoadingMore = false);
       });
     }

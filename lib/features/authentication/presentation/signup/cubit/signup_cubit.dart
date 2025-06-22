@@ -54,9 +54,10 @@ class SignupCubit extends Cubit<SignupState> {
     required RegisterRequestModel registerRequestModel,
     required BuildContext context, // Add context parameter
   }) async {
+    emit(SignupState.loading());
+
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(SignupState.loading());
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);

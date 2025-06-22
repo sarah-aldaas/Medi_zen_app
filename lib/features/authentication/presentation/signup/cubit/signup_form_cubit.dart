@@ -71,9 +71,6 @@ class SignupFormCubit extends Cubit<SignupFormState> {
   }) : super(SignupFormState());
 
   Future<void> loadCodes(BuildContext context) async {
-    // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
 
     if (state.isLoadingCodes) {
       final results = await Future.wait([
@@ -106,6 +103,9 @@ class SignupFormCubit extends Cubit<SignupFormState> {
         ),
       );
     }
+    // Check internet connectivity
+    final isConnected = await networkInfo.isConnected;
+
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
       emit(state.copyWith(isLoadingCodes: false));

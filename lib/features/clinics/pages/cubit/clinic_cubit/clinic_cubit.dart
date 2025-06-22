@@ -199,10 +199,10 @@ class ClinicCubit extends Cubit<ClinicState> {
     required BuildContext context, // Add context parameter
   }) async {
     if (_isClosed) return;
+    emit(ClinicLoading());
 
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(ClinicLoading());
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);

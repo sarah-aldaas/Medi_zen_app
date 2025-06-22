@@ -26,9 +26,10 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     required String newPassword,
     required BuildContext context, // Add context parameter
   }) async {
+    emit(ResetPasswordLoading());
+
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(ResetPasswordLoading());
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);

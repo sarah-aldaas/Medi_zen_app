@@ -17,9 +17,10 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
       String confirmPassword,
       BuildContext context, // Add context parameter
       ) async {
+    emit(ChangePasswordLoading());
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
-    emit(ChangePasswordLoading());
+
 
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);

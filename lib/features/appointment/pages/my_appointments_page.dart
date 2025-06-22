@@ -65,18 +65,6 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
     }
   }
 
-  // Map<String, dynamic> _getFilterForTab() {
-  //   final filter = _filter.toJson();
-  //   if (_selectedTab == 0) {
-  //     filter['status_id'] = 81;
-  //   } else if (_selectedTab == 1) {
-  //     filter['status_id'] = 82;
-  //   } else if (_selectedTab == 2) {
-  //     filter['status_id'] = 83;
-  //   }
-  //   return filter;
-  // }
-
   Future<void> _showFilterDialog() async {
     final result = await showDialog<AppointmentFilter>(
       context: context,
