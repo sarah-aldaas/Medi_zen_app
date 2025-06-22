@@ -25,7 +25,7 @@ class allDoctorsPageState extends State<DoctorsPage> {
             style: TextStyle(fontWeight: FontWeight.bold)
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
+          icon: Icon(Icons.arrow_back, color: Colors.grey),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [

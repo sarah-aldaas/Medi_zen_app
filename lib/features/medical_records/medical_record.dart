@@ -4,6 +4,9 @@ import 'package:medizen_app/features/medical_records/allergy/data/models/allergy
 import 'package:medizen_app/features/medical_records/allergy/presentation/pages/all_allergies_page.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/widgets/allergy_filter_dialog.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/all_encounters_page.dart';
+import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
+import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_requests_page.dart';
+import 'package:medizen_app/features/medical_records/service_request/presentation/widgets/service_request_filter_dialog.dart';
 
 import '../../base/theme/app_color.dart';
 import 'encounter/data/models/encounter_filter_model.dart';
@@ -19,6 +22,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
   late TabController _tabController;
   EncounterFilterModel _encounterFilter = EncounterFilterModel();
   AllergyFilterModel _allergyFilter = AllergyFilterModel();
+  ServiceRequestFilter _serviceRequestFilter = ServiceRequestFilter();
 
   @override
   void initState() {
@@ -55,6 +59,16 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
       setState(() => _allergyFilter = result);
     }
   }
+  Future<void> _showServiceRequestFilterDialog() async {
+    final result = await showDialog<ServiceRequestFilter>(
+      context: context,
+      builder: (context) => ServiceRequestFilterDialog(currentFilter: _serviceRequestFilter),
+    );
+
+    if (result != null) {
+      setState(() => _serviceRequestFilter = result);
+    }
+  }
 
   @override
   void dispose() {
@@ -68,6 +82,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     final List<String> _tabs = [
       'medicalRecordPage.tabs.encounters'.tr(context),
       'medicalRecordPage.tabs.allergies'.tr(context),
+      "Service request",
       'medicalRecordPage.tabs.conditions'.tr(context),
       'medicalRecordPage.tabs.observations'.tr(context),
       'medicalRecordPage.tabs.diagnosticReports'.tr(context),
@@ -100,6 +115,12 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
               onPressed: _showAllergyFilterDialog,
               tooltip: 'medicalRecordPage.filterAllergyTooltip'.tr(context),
             ),
+          if (_tabController.index == 2)
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showServiceRequestFilterDialog,
+              tooltip: "Filter service request"
+            ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48),
@@ -124,6 +145,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
           children: [
             AllEncountersPage(filter: _encounterFilter),
             AllAllergiesPage(filter: _allergyFilter),
+            ServiceRequestsPage(filter: _serviceRequestFilter),
             _buildObservationsList(),
             _buildDiagnosticReportsList(),
             _buildMedicationRequestsList(),

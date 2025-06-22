@@ -8,7 +8,7 @@ class DoctorReviewsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('doctorReviewsPage.title'.tr(context)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.grey),
+          icon: const Icon(Icons.arrow_back, color: Colors.grey),
           onPressed: () {
             Navigator.pop(context);
           },

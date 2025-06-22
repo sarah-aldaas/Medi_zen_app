@@ -20,6 +20,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../base/theme/app_style.dart';
+import '../../../base/widgets/show_toast.dart';
 import '../../Complaint/view/complaint_submission_screen.dart';
 import '../../appointment/data/models/days_work_doctor_model.dart';
 import '../../appointment/data/models/slots_model.dart';
@@ -152,14 +153,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       }
     } catch (e, stackTrace) {
       print('Error downloading/opening PDF: $e\n$stackTrace');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-        ),
-      );
+      ShowToast.showToastError(message: 'Error: ${e.toString()}');
     } finally {
       setState(() {
         _downloadProgress.remove(qualificationId);
@@ -201,9 +195,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
           setState(() {
             _isLoadingSlots = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(backgroundColor: Colors.red, content: Text(state.error)),
-          );
+          ShowToast.showToastError(message: state.error);
         }
       },
       child: Scaffold(
@@ -214,7 +206,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
           ),
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.arrow_back,
               color: Theme.of(context).iconTheme.color,
             ),
             onPressed: () {
@@ -580,17 +572,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                             final communication =
                             widget.doctorModel.communications![index];
                             return Text(
-                              communication.language.display,
+                              "${communication.language.display} ${communication.preferred?"(preferred)":""}",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
-
-                                color:
-                                communication.preferred
-                                    ? Theme.of(
-                                  context,
-                                ).colorScheme.onSurface
-                                    : Colors.grey.shade600,
                               ),
                             );
                           },
@@ -777,12 +762,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             if (state is CreateAppointmentSuccess) {
               Navigator.pop(context);
               _fetchDoctorAvailability();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.green,
-                  content: Text('doctorDetails.appointmentBooked'.tr(context)),
-                ),
-              );
+              ShowToast.showToastError(message: 'doctorDetails.appointmentBooked'.tr(context));
             } else if (state is AppointmentError) {
               Navigator.pop(context);
               _fetchDoctorAvailability();

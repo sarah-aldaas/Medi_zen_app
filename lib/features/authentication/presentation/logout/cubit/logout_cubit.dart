@@ -36,7 +36,6 @@ class LogoutCubit extends Cubit<LogoutState> {
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
       emit(LogoutError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
       return;
     }
 

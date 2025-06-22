@@ -47,10 +47,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 // ShowToast.showToastSuccess(message: state.message);
                 context.goNamed(AppRouter.verified.name);
               } else if (state is OtpResendSuccess) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message, style: TextStyle(color: Colors.white)), backgroundColor: Colors.indigo));
-              } else if (state is OtpError) {
+                ShowToast.showToastSuccess(message: state.message);
+                } else if (state is OtpError) {
                 ShowToast.showToastError(message: state.error);
               }
             },
@@ -98,9 +96,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 if (_otpController.text.length == 6) {
                                   context.read<OtpCubit>().verifyOtp(email: widget.email, otp: _otpController.text,context: context);
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("otp_verification_page.invalid_otp_error".tr(context)), backgroundColor: Colors.deepOrange),
-                                  );
+                                  ShowToast.showToastError(message: "otp_verification_page.invalid_otp_error".tr(context));
                                 }
                               },
                       style: ElevatedButton.styleFrom(

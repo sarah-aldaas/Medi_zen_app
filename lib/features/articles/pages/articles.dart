@@ -34,7 +34,7 @@ class _ArticlesState extends State<Articles> with ArticleMixin {
         ),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
+          icon: Icon(Icons.arrow_back, color: Colors.grey),
         ),
         actions: [
           IconButton(

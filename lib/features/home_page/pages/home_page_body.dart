@@ -9,6 +9,7 @@ import 'package:medizen_app/features/home_page/pages/widgets/some_articles.dart'
 import 'package:medizen_app/features/home_page/pages/widgets/some_clinics.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/appointment_reactions_page.dart';
+import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_requests_page.dart';
 
 import '../../../main.dart';
 import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
@@ -21,36 +22,21 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-  final String clinicId =
-      "1";
+  final String clinicId = "1";
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SingleChildScrollView(
           child: Column(
-
             children: [
               _buildHeader(context),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SomeClinics(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: DefinitionWidget(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SomeDoctors(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SomeArticles(),
-              ),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeClinics()),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: DefinitionWidget()),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeDoctors()),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeArticles()),
             ],
           ),
         ),
@@ -59,8 +45,7 @@ class _HomePageBodyState extends State<HomePageBody> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    PatientModel? myPatientModel =
-    loadingPatientModel();
+    PatientModel? myPatientModel = loadingPatientModel();
     final ThemeData theme = Theme.of(context);
 
     return Padding(
@@ -69,7 +54,7 @@ class _HomePageBodyState extends State<HomePageBody> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               context.pushNamed(AppRouter.profile.name);
             },
             child: Row(
@@ -83,10 +68,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                     Text(
                       "${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}",
 
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: theme.textTheme.bodyLarge?.color,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: theme.textTheme.bodyLarge?.color),
                     ),
                   ],
                 ),
@@ -95,116 +77,41 @@ class _HomePageBodyState extends State<HomePageBody> {
           ),
           Row(
             children: [
-              Icon(
-                Icons.notifications_outlined,
-
-                color: theme.iconTheme.color,
-              ),
+              Icon(Icons.notifications_outlined, color: theme.iconTheme.color),
               const SizedBox(width: 16.0),
               PopupMenuButton<String>(
-                icon: Icon(
-                  Icons.more_vert,
-
-                  color: theme.iconTheme.color,
-                ),
+                icon: Icon(Icons.more_vert, color: theme.iconTheme.color),
 
                 color: theme.cardColor,
                 elevation: 8.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 onSelected: (String value) {
                   if (value == 'favorites') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyFavorite()),
-                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyFavorite()));
                   } else if (value == 'services') {
                     context.pushNamed(AppRouter.healthCareServicesPage.name);
                     // context.pushNamed(AppRouter.allAllergiesPage.name);
-                  } else if (value == 'encounter') {
-                    // context.pushNamed(AppRouter.allEncountersPage.name);
-                  } else if (value == 'reaction') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => AppointmentReactionsPage(
-                          appointmentId: "1",
-                          allergyId: "1",
-                        ),
-                      ),
-                    );
                   }
                 },
                 itemBuilder:
                     (BuildContext context) => [
-                  PopupMenuItem<String>(
-                    value: 'favorites',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.favorite_border,
+                      PopupMenuItem<String>(
+                        value: 'favorites',
+                        child: ListTile(
+                          leading: Icon(Icons.favorite_border, color: Colors.blue),
 
-                        color: Colors.blue,
-                      ),
-
-                      title: Text(
-                        'Favorites',
-                        style: TextStyle(
-                          color: theme.textTheme.bodyLarge?.color,
+                          title: Text('Favorites', style: TextStyle(color: theme.textTheme.bodyLarge?.color)),
                         ),
                       ),
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'services',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.health_and_safety,
-                        color: Colors.green,
-                      ),
+                      PopupMenuItem<String>(
+                        value: 'services',
+                        child: ListTile(
+                          leading: Icon(Icons.health_and_safety, color: Colors.green),
 
-                      title: Text(
-                        'Health services',
-                        style: TextStyle(
-                          color: theme.textTheme.bodyLarge?.color,
+                          title: Text('Health services', style: TextStyle(color: theme.textTheme.bodyLarge?.color)),
                         ),
                       ),
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'encounter',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.group,
-                        color: Colors.orange,
-                      ),
-
-                      title: Text(
-                        'Encounter services',
-                        style: TextStyle(
-                          color: theme.textTheme.bodyLarge?.color,
-                        ),
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'reaction',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.warning_amber,
-                        color: Colors.red,
-                      ), // Fixed color
-
-                      title: Text(
-                        'Reaction services',
-                        style: TextStyle(
-                          color: theme.textTheme.bodyLarge?.color,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                    ],
               ),
             ],
           ),

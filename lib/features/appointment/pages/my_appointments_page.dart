@@ -8,6 +8,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_model.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/cancel_appointment_dialog.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/filter_appointment_dialog.dart';
@@ -92,6 +93,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: (){context.pushReplacementNamed(AppRouter.homePage.name);}, icon: Icon(Icons.arrow_back)),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           "myAppointments.title".tr(context),
@@ -118,9 +120,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
       body: BlocConsumer<AppointmentCubit, AppointmentState>(
         listener: (context, state) {
           if (state is AppointmentError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.error)));
+           ShowToast.showToastError(message: state.error);
           }
         },
         builder: (context, state) {
@@ -292,42 +292,42 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                   ),
                 ),
                 if (appointment.status!.code == 'booked_appointment')
-                  const Gap(30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => _cancelAppointment(appointment),
-                        child: Text(
-                          "myAppointments.buttons.cancelAppointment".tr(
-                            context,
+                ...[ const Gap(30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => _cancelAppointment(appointment),
+                          child: Text(
+                            "myAppointments.buttons.cancelAppointment".tr(
+                              context,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Theme.of(context).primaryColor,
+                            side: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Theme.of(context).primaryColor,
-                          side: BorderSide(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
-                        ),
-                      ),
 
-                      ElevatedButton(
-                        onPressed: () => _editAppointment(context, appointment),
-                        child: Text(
-                          "myAppointments.buttons.update".tr(context),
+                        ElevatedButton(
+                          onPressed: () => _editAppointment(context, appointment),
+                          child: Text(
+                            "myAppointments.buttons.update".tr(context),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                          ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                      ],
+                    ),
+                  ),],
               ],
             ),
           ),
@@ -369,12 +369,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
     ).then((success) {
       if (success) {
         _loadInitialAppointments();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.green,
-            content: Text("Appointment updated successfully"),
-          ),
-        );
+        ShowToast.showToastSuccess(message: "Appointment updated successfully");
       }
       if (!success) {
         _loadInitialAppointments();

@@ -64,7 +64,7 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                 onPressed: () {
                   context.pop();
                 },
-                icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
+                icon: Icon(Icons.arrow_back, color: Colors.grey),
               ),
             ),
             body: Padding(

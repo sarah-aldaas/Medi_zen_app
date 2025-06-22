@@ -9,6 +9,7 @@ import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import '../../../../../base/theme/app_color.dart';
 import '../../../../../base/theme/app_style.dart';
 import '../../../../../base/widgets/loading_page.dart';
+import '../../../../../base/widgets/show_toast.dart';
 import '../cubit/forgot_password_cubit.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -49,14 +50,8 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
             AppRouter.verifyPasswordOtp.name,
             extra: {'email': _emailController.text},
           );
-        } else if (state is ForgotPasswordError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.error ?? "forgotPassword.errors.default".tr(context),
-              ),
-            ),
-          );
+        } else if (state is ForgotPasswordError){
+          ShowToast.showToastError(message: state.error);
         }
       },
       builder: (context, state) {
@@ -67,7 +62,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
               backgroundColor: AppColors.whiteColor,
               leading: IconButton(
                 icon: Icon(
-                  Icons.arrow_back_ios_new_outlined,
+                  Icons.arrow_back,
                   color: AppColors.primaryColor,
                 ),
                 onPressed: () {

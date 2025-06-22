@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
+import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/encounter_filter_model.dart';
 import '../../data/models/encounter_model.dart';
 import '../cubit/encounter_cubit/encounter_cubit.dart';
@@ -73,12 +74,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
     return BlocConsumer<EncounterCubit, EncounterState>(
       listener: (context, state) {
         if (state is EncounterError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('encountersPge.errorLoading'.tr(context)),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ShowToast.showToastError(message: 'encountersPge.errorLoading'.tr(context));
         }
       },
       builder: (context, state) {

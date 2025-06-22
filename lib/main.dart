@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
@@ -13,8 +14,16 @@ import 'package:medizen_app/features/medical_records/allergy/data/data_source/al
 import 'package:medizen_app/features/medical_records/allergy/presentation/cubit/allergy_cubit/allergy_cubit.dart';
 import 'package:medizen_app/features/medical_records/encounter/data/data_source/encounter_remote_datasource.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/cubit/encounter_cubit/encounter_cubit.dart';
+import 'package:medizen_app/features/medical_records/imaging_study/data/data_source/imaging_study_remote_data_source.dart';
+import 'package:medizen_app/features/medical_records/imaging_study/presentation/cubit/imaging_study_cubit/imaging_study_cubit.dart';
+import 'package:medizen_app/features/medical_records/observation/data/data_source/observation_remote_data_source.dart';
+import 'package:medizen_app/features/medical_records/observation/presentation/cubit/observation_cubit/observation_cubit.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/data_source/reaction_remote_datasource.dart';
 import 'package:medizen_app/features/medical_records/reaction/presentation/cubit/reaction_cubit/reaction_cubit.dart';
+import 'package:medizen_app/features/medical_records/series/data/data_source/series_remote_data_source.dart';
+import 'package:medizen_app/features/medical_records/series/presentation/cubit/series_cubit/series_cubit.dart';
+import 'package:medizen_app/features/medical_records/service_request/data/data_source/service_request_remote_data_source.dart';
+import 'package:medizen_app/features/medical_records/service_request/presentation/cubit/service_request_cubit/service_request_cubit.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/address_cubit/address_cubit.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/telecom_cubit/telecom_cubit.dart';
@@ -88,28 +97,56 @@ class MyApp extends StatelessWidget {
                 BlocProvider<AddressCubit>(create: (context) => serviceLocator<AddressCubit>(), lazy: false),
                 BlocProvider<AppointmentCubit>(create: (context) => serviceLocator<AppointmentCubit>(), lazy: false),
                 BlocProvider<EditProfileFormCubit>(create: (context) => EditProfileFormCubit(serviceLocator<CodeTypesCubit>()), lazy: false),
-                BlocProvider<AllergyCubit>(create: (context) => AllergyCubit(remoteDataSource: serviceLocator<AllergyRemoteDataSource>(),networkInfo: serviceLocator()), lazy: false),
-                BlocProvider<ReactionCubit>(create: (context) => ReactionCubit(remoteDataSource: serviceLocator<ReactionRemoteDataSource>(),networkInfo: serviceLocator()), lazy: false),
-                BlocProvider<EncounterCubit>(create: (context) => EncounterCubit(remoteDataSource: serviceLocator<EncounterRemoteDataSource>(),networkInfo: serviceLocator()), lazy: false),
+                BlocProvider<AllergyCubit>(
+                  create: (context) => AllergyCubit(remoteDataSource: serviceLocator<AllergyRemoteDataSource>(), networkInfo: serviceLocator()),
+                  lazy: false,
+                ),
+                BlocProvider<ReactionCubit>(
+                  create: (context) => ReactionCubit(remoteDataSource: serviceLocator<ReactionRemoteDataSource>(), networkInfo: serviceLocator()),
+                  lazy: false,
+                ),
+                BlocProvider<EncounterCubit>(
+                  create: (context) => EncounterCubit(remoteDataSource: serviceLocator<EncounterRemoteDataSource>(), networkInfo: serviceLocator()),
+                  lazy: false,
+                ),
+                BlocProvider<ServiceRequestCubit>(
+                  create: (context) => ServiceRequestCubit(remoteDataSource: serviceLocator<ServiceRequestRemoteDataSource>(), networkInfo: serviceLocator()),
+                  lazy: false,
+                ),
+                BlocProvider<SeriesCubit>(
+                  create: (context) => SeriesCubit(remoteDataSource: serviceLocator<SeriesRemoteDataSource>(), networkInfo: serviceLocator()),
+                  lazy: false,
+                ),
+                BlocProvider<ObservationCubit>(
+                  create: (context) => ObservationCubit(remoteDataSource: serviceLocator<ObservationRemoteDataSource>(), networkInfo: serviceLocator()),
+                  lazy: false,
+                ),
+                BlocProvider<ImagingStudyCubit>(
+                  create:
+                      (context) => ImagingStudyCubit(
+                        imagingStudyDataSource: serviceLocator<ImagingStudyRemoteDataSource>(),
+                        networkInfo: serviceLocator(),
+                        seriesDataSource: serviceLocator<SeriesRemoteDataSource>(),
+                      ),
+                  lazy: false,
+                ),
               ],
               child: BlocBuilder<LocalizationBloc, LocalizationState>(
                 builder: (context, state) {
-                  return SafeArea(
-                    child: OKToast(
-                      child: MaterialApp.router(
-                        routerConfig: goRouter(),
-                        theme: theme,
-                        debugShowCheckedModeBanner: false,
-                        title: 'MediZen Mobile',
-                        locale: state.locale,
-                        supportedLocales: AppLocalizations.supportedLocales,
-                        localizationsDelegates: [
-                          AppLocalizations.delegate,
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalMaterialLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                        ],
-                      ),
+                  return OKToast(
+                    child: MaterialApp.router(
+                      routerConfig: goRouter(),
+                      theme: theme,
+                      debugShowCheckedModeBanner: false,
+                      title: 'MediZen Mobile',
+                      locale: state.locale,
+                      supportedLocales: AppLocalizations.supportedLocales,
+                      localizationsDelegates: [
+                        AppLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                      ],
                     ),
                   );
                 },

@@ -766,6 +766,151 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     }
     return [];
   }
+Future<List<CodeModel>> getServiceRequestStatusCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getServiceRequestStatusCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'service_request_status',
+      orElse: () => throw Exception('Service request status not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+
+  Future<List<CodeModel>> getServiceRequestCategoryCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getServiceRequestCategoryCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'service_request_category',
+      orElse: () => throw Exception('Service request category not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getServiceRequestPriorityCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getServiceRequestPriorityCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'service_request_priority',
+      orElse: () => throw Exception('Service request priority not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getBodySiteCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getBodySiteCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'body_site',
+      orElse: () => throw Exception('Body site not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
 
   Future<List<CodeTypeModel>?> getCachedCodeTypes() async {
     try {

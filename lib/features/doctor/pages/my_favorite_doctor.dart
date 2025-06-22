@@ -26,7 +26,7 @@ class _MyFavoriteDoctorPageState extends State<MyFavoriteDoctorPage> {
       appBar: AppBar(
         title: Text("favoriteDoctors.title".tr(context)),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
+          icon: Icon(Icons.arrow_back, color: Colors.grey),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [

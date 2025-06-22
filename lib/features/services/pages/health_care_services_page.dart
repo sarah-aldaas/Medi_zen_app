@@ -10,6 +10,7 @@ import 'package:medizen_app/features/services/data/model/health_care_services_mo
 import 'package:medizen_app/features/services/pages/widgets/health_care_service_filter_dialog.dart';
 
 import '../../../base/widgets/loading_page.dart';
+import '../../../base/widgets/show_toast.dart';
 import '../data/model/health_care_service_filter.dart';
 import 'cubits/service_cubit/service_cubit.dart';
 
@@ -99,16 +100,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
       body: BlocConsumer<ServiceCubit, ServiceState>(
         listener: (context, state) {
           if (state is ServiceHealthCareError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.error,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onError,
-                  ),
-                ),
-              ),
-            );
+            ShowToast.showToastError(message: state.error);
           }
         },
         builder: (context, state) {

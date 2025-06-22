@@ -40,7 +40,7 @@ class SignupScreen extends StatelessWidget {
                         context.replaceNamed(AppRouter.welcomeScreen.name);
                       },
                       icon: const Icon(
-                        Icons.arrow_back_ios_new,
+                        Icons.arrow_back,
                         color: Colors.grey,
                       ),
                     ),

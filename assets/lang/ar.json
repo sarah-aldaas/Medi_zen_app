@@ -462,7 +462,9 @@
     "inviteFriends": "دعوة الأصدقاء",
     "logout": "تسجيل الخروج",
     "logoutAllDevices": "جميع الأجهزة",
-    "logoutThisDevice": "هذا الجهاز فقط"
+    "logoutThisDevice": "هذا الجهاز فقط",
+    "english":"الانكليزية" ,
+    "arabic": "العربية"
   },
   "clinicCard": {
     "seeDetails": "عرض التفاصيل >"

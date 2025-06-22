@@ -44,11 +44,9 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
             listener: (context, state) {
               if (state is OtpSuccess) {
                 // ShowToast.showToastSuccess(message: state.message);
-                context.goNamed(AppRouter.resetPassword.name, extra: {'email':widget.email});
+                context.goNamed(AppRouter.resetPassword.name, extra: {'email': widget.email});
               } else if (state is OtpResendSuccess) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message, style: TextStyle(color: Colors.white)), backgroundColor: Colors.indigo));
+                ShowToast.showToastSuccess(message: state.message);
               } else if (state is OtpError) {
                 ShowToast.showToastError(message: state.error);
               }
@@ -77,7 +75,7 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
                         fieldHeight: 50,
                         fieldWidth: 40,
                         activeFillColor: Theme.of(context).scaffoldBackgroundColor,
-                        inactiveFillColor:Theme.of(context).scaffoldBackgroundColor,
+                        inactiveFillColor: Theme.of(context).scaffoldBackgroundColor,
                         selectedFillColor: Theme.of(context).scaffoldBackgroundColor,
                         activeColor: Theme.of(context).primaryColor,
                         inactiveColor: Colors.grey,
@@ -95,11 +93,9 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
                               ? null
                               : () {
                                 if (_otpController.text.length == 6) {
-                                  context.read<OtpVerifyPasswordCubit>().verifyOtp(email: widget.email, otp: _otpController.text,context: context);
+                                  context.read<OtpVerifyPasswordCubit>().verifyOtp(email: widget.email, otp: _otpController.text, context: context);
                                 } else {
-                                  ScaffoldMessenger.of(
-                                    context,
-                                  ).showSnackBar(const SnackBar(content: Text('Please enter a valid -digit OTP'), backgroundColor: Colors.deepOrange));
+                                  ShowToast.showToastError(message: 'Please enter a valid -digit OTP');
                                 }
                               },
                       style: ElevatedButton.styleFrom(

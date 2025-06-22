@@ -16,7 +16,6 @@ class NetworkInfoImplementation implements NetworkInfo {
     this.timeout = const Duration(seconds: 5),
   }) : connectivity = connectivity ?? Connectivity() {
     connectivity!.onConnectivityChanged.listen((status) {
-      // Map ConnectivityResult to a boolean or custom status for snackbar
       final hasConnection = status != ConnectivityResult.none;
       Utilities.showInternetConnectionSnackBar(
         hasConnection ? InternetStatus.connected : InternetStatus.disconnected,

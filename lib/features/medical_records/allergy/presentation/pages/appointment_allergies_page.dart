@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
+import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/allergy_filter_model.dart';
 import '../cubit/allergy_cubit/allergy_cubit.dart';
 import '../widgets/allergy_filter_dialog.dart';
@@ -104,15 +105,7 @@ class _AppointmentAllergiesPageState extends State<AppointmentAllergiesPage> {
       body: BlocConsumer<AllergyCubit, AllergyState>(
         listener: (context, state) {
           if (state is AllergyError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.error,
-                  style: TextStyle(color: theme.colorScheme.onError),
-                ),
-                backgroundColor: theme.colorScheme.error,
-              ),
-            );
+            ShowToast.showToastError(message: state.error);
           }
         },
         builder: (context, state) {

@@ -7,6 +7,7 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
+import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/encounter_model.dart';
 import '../cubit/encounter_cubit/encounter_cubit.dart';
 import '../widgets/service_list_item.dart';
@@ -58,15 +59,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
       body: BlocConsumer<EncounterCubit, EncounterState>(
         listener: (context, state) {
           if (state is EncounterError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  '${'encountersPge.Error'.tr(context)}: ${state.error}',
-                  style: TextStyle(color: theme.colorScheme.onError),
-                ),
-                backgroundColor: theme.colorScheme.error,
-              ),
-            );
+            ShowToast.showToastError(message: '${'encountersPge.Error'.tr(context)}: ${state.error}');
           }
         },
         builder: (context, state) {

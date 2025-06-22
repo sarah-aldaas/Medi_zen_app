@@ -60,7 +60,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
           onPressed: () => context.pop(),
 
           icon: Icon(
-            Icons.arrow_back_ios,
+            Icons.arrow_back,
             color: Theme.of(context).iconTheme.color,
           ),
         ),

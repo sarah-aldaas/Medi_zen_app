@@ -116,6 +116,9 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
+                  leading: IconButton(onPressed: (){
+                    context.pushReplacementNamed(AppRouter.profile.name);
+                  }, icon: Icon(Icons.arrow_back),color: Colors.white,),
                   expandedHeight: 200.0,
                   floating: false,
                   pinned: true,

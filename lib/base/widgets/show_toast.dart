@@ -24,7 +24,7 @@ class ShowToast {
       ),
       animationCurve: Curves.easeInQuart,
       duration: const Duration(seconds: 5),
-      position: const ToastPosition(align: Alignment(0, -0.9)),
+      position: ToastPosition.bottom,
     );
   }
 

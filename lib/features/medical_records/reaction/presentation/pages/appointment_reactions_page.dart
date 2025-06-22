@@ -5,6 +5,7 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/models/reaction_filter_model.dart';
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/reaction_details_page.dart';
 
+import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/reaction_model.dart';
 import '../cubit/reaction_cubit/reaction_cubit.dart';
 import '../widgets/reaction_filter_dialog.dart';
@@ -96,7 +97,7 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back_ios_new,
+            Icons.arrow_back,
             color: theme.appBarTheme.iconTheme?.color,
           ),
           onPressed: () {
@@ -134,15 +135,7 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
       body: BlocConsumer<ReactionCubit, ReactionState>(
         listener: (context, state) {
           if (state is ReactionError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.error,
-                  style: TextStyle(color: theme.colorScheme.onError),
-                ),
-                backgroundColor: theme.colorScheme.error,
-              ),
-            );
+            ShowToast.showToastError(message: state.error);
           }
         },
         builder: (context, state) {

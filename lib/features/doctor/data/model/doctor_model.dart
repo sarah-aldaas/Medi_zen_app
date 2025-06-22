@@ -1,4 +1,5 @@
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
 import 'package:medizen_app/features/doctor/data/model/qualification_model.dart';
 import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
 
@@ -20,6 +21,7 @@ class DoctorModel {
   final String email;
   final String? emailVerifiedAt;
   final bool active;
+  final ClinicModel? clinic;
   final CodeModel? gender;
   final List<TelecomModel>? telecoms;
   final List<CommunicationModel>? communications;
@@ -40,6 +42,7 @@ class DoctorModel {
     this.deceasedDate,
     required this.email,
     this.emailVerifiedAt,
+    this.clinic,
     required this.active,
     required this.gender,
     required this.telecoms,
@@ -68,6 +71,7 @@ class DoctorModel {
       telecoms:json['telecoms']!=null? (json['telecoms'] as List).map((item) => TelecomModel.fromJson(item as Map<String, dynamic>)).toList():null,
       communications:json['communications']!=null? (json['communications'] as List).map((item) => CommunicationModel.fromJson(item as Map<String, dynamic>)).toList():null,
       qualifications:json['qualifications']!=null? (json['qualifications'] as List).map((item) => QualificationModel.fromJson(item as Map<String, dynamic>)).toList():null,
+      clinic:json['clinic']!=null?  ClinicModel.fromJson(json['clinic'] as Map<String, dynamic>):null,
     );
   }
 
