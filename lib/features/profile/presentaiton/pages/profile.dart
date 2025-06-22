@@ -208,7 +208,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       context.goNamed(AppRouter.welcomeScreen.name);
                     } else if (state is LogoutError) {
                       _selectedLogoutOption = null;
-                      ShowToast.showToastError(message: state.error);
                       serviceLocator<StorageService>().removeFromDisk(
                         StorageKey.patientModel,
                       );

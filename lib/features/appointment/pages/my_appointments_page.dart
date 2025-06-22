@@ -93,6 +93,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: (){context.pushReplacementNamed(AppRouter.homePage.name);}, icon: Icon(Icons.arrow_back)),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           "myAppointments.title".tr(context),
@@ -291,42 +292,42 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                   ),
                 ),
                 if (appointment.status!.code == 'booked_appointment')
-                  const Gap(30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => _cancelAppointment(appointment),
-                        child: Text(
-                          "myAppointments.buttons.cancelAppointment".tr(
-                            context,
+                ...[ const Gap(30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => _cancelAppointment(appointment),
+                          child: Text(
+                            "myAppointments.buttons.cancelAppointment".tr(
+                              context,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Theme.of(context).primaryColor,
+                            side: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Theme.of(context).primaryColor,
-                          side: BorderSide(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
-                        ),
-                      ),
 
-                      ElevatedButton(
-                        onPressed: () => _editAppointment(context, appointment),
-                        child: Text(
-                          "myAppointments.buttons.update".tr(context),
+                        ElevatedButton(
+                          onPressed: () => _editAppointment(context, appointment),
+                          child: Text(
+                            "myAppointments.buttons.update".tr(context),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                          ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                      ],
+                    ),
+                  ),],
               ],
             ),
           ),

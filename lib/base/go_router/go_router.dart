@@ -13,6 +13,7 @@ import 'package:medizen_app/features/profile/presentaiton/pages/profile_details_
 import 'package:medizen_app/features/services/pages/health_care_service_details_page.dart';
 
 import '../../features/Complaint/view/complaint_list_screen.dart';
+import '../../features/appointment/pages/my_appointments_page.dart';
 import '../../features/articles/pages/articles.dart';
 import '../../features/articles/pages/my_book_mark.dart';
 import '../../features/authentication/presentation/forget_password/view/forget_password.dart';
@@ -24,6 +25,8 @@ import '../../features/doctor/pages/details_doctor.dart';
 import '../../features/doctor/pages/doctors_page.dart';
 import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
+import '../../features/home_page/pages/home_page_body.dart';
+import '../../features/medical_records/Medical_Record.dart';
 import '../../features/notifications/pages/notification_settings.dart';
 import '../../features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 import '../../features/profile/presentaiton/pages/address_page.dart';
@@ -74,7 +77,10 @@ enum AppRouter {
   telecomDetails,
   healthCareServicesPage,
   allAllergiesPage,
-  noInternet
+  noInternet,
+  appointmentPage,
+  medicalRecord,
+  homePageBody
 }
 
 GoRouter goRouter() {
@@ -316,6 +322,18 @@ GoRouter goRouter() {
             path: '/noInternet',
             name: AppRouter.noInternet.name,
             builder: (context, state) => const NoInternetPage(),
+          ),GoRoute(
+            path: '/appointmentPage',
+            name: AppRouter.appointmentPage.name,
+            builder: (context, state) => const MyAppointmentPage(),
+          ),GoRoute(
+            path: '/medicalRecord',
+            name: AppRouter.medicalRecord.name,
+            builder: (context, state) =>  MedicalRecordPage(),
+          ),GoRoute(
+            path: '/homePageBody',
+            name: AppRouter.homePageBody.name,
+            builder: (context, state) => const HomePageBody(),
           ),
         ],
       ),
