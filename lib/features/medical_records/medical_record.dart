@@ -59,10 +59,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
       setState(() => _allergyFilter = result);
     }
   }
+
   Future<void> _showServiceRequestFilterDialog() async {
     final result = await showDialog<ServiceRequestFilter>(
       context: context,
-      builder: (context) => ServiceRequestFilterDialog(currentFilter: _serviceRequestFilter),
+      builder:
+          (context) =>
+              ServiceRequestFilterDialog(currentFilter: _serviceRequestFilter),
     );
 
     if (result != null) {
@@ -82,7 +85,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     final List<String> _tabs = [
       'medicalRecordPage.tabs.encounters'.tr(context),
       'medicalRecordPage.tabs.allergies'.tr(context),
-      "Service request",
+      'medicalRecordPage.tabs.serviceRequest'.tr(context),
       'medicalRecordPage.tabs.conditions'.tr(context),
       'medicalRecordPage.tabs.observations'.tr(context),
       'medicalRecordPage.tabs.diagnosticReports'.tr(context),
@@ -119,7 +122,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
             IconButton(
               icon: const Icon(Icons.filter_list),
               onPressed: _showServiceRequestFilterDialog,
-              tooltip: "Filter service request"
+              tooltip: "Filter service request",
             ),
         ],
         bottom: PreferredSize(

@@ -29,7 +29,10 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
   void initState() {
     super.initState();
 
-    context.read<AppointmentCubit>().getDetailsAppointment(context: context, id: widget.appointmentId);
+    context.read<AppointmentCubit>().getDetailsAppointment(
+      context: context,
+      id: widget.appointmentId,
+    );
   }
 
   @override
@@ -37,8 +40,21 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text("appointmentDetails.title".tr(context), style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.bold)),
-        leading: IconButton(icon: Icon(Icons.arrow_back, color: AppColors.primaryColor), onPressed: () => context.pop()),
+
+        title: Text(
+          "appointmentDetails.title".tr(context),
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+        ),
       ),
       body: BlocConsumer<AppointmentCubit, AppointmentState>(
         listener: (context, state) {
@@ -52,7 +68,9 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           } else if (state is AppointmentLoading) {
             return const Center(child: LoadingPage());
           } else {
-            return const Center(child: Text('Failed to load appointment details'));
+            return const Center(
+              child: Text('Failed to load appointment details'),
+            );
           }
         },
       ),
@@ -77,13 +95,32 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           const SizedBox(height: 30),
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalRecordOfAppointmentPage(appointmentId: appointment.id!)));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => MedicalRecordOfAppointmentPage(
+                        appointmentId: appointment.id!,
+                      ),
+                ),
+              );
             },
-            child: Card(child: Container(width: context.width, padding: EdgeInsets.all(8), margin: EdgeInsets.all(8), child: Text("Medical record"))),
+            child: Card(
+              child: Container(
+                width: context.width,
+                padding: EdgeInsets.all(8),
+                margin: EdgeInsets.all(8),
+                child: Text(
+                  'appointmentDetails.medicalRecord'.tr(context),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: 50),
 
-          if (appointment.status!.code == 'booked_appointment') _buildActionButtons(context, appointment),
+          if (appointment.status!.code == 'booked_appointment')
+            _buildActionButtons(context, appointment),
         ],
       ),
     );
@@ -93,9 +130,20 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("appointmentDetails.scheduledAppointment".tr(context), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.cyan)),
+        Text(
+          "appointmentDetails.scheduledAppointment".tr(context),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppColors.cyan,
+          ),
+        ),
         const SizedBox(height: 8),
-        Text(DateFormat('EEEE, MMMM d, y').format(DateTime.parse(appointment.startDate!))),
+        Text(
+          DateFormat(
+            'EEEE, MMMM d, y',
+          ).format(DateTime.parse(appointment.startDate!)),
+        ),
         const SizedBox(height: 5),
         Text(
           '${DateFormat('HH:mm').format(DateTime.parse(appointment.startDate!))} - '
@@ -109,7 +157,11 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
   Widget _buildDoctorInfo(AppointmentModel appointment) {
     return Row(
       children: [
-        CircleAvatar(backgroundColor: Colors.transparent, radius: 40, backgroundImage: AssetImage(AppAssetImages.photoDoctor1 ?? '')),
+        CircleAvatar(
+          backgroundColor: Colors.transparent,
+          radius: 40,
+          backgroundImage: AssetImage(AppAssetImages.photoDoctor1 ?? ''),
+        ),
         const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +170,10 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
               '${appointment.doctor!.prefix} ${appointment.doctor!.fName} ${appointment.doctor!.lName}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(width: context.width / 1.5, child: Text(appointment.doctor!.text ?? 'General Practitioner')),
+            SizedBox(
+              width: context.width / 1.5,
+              child: Text(appointment.doctor!.text ?? 'General Practitioner'),
+            ),
             Text(appointment.doctor!.address),
           ],
         ),
@@ -130,11 +185,22 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("appointmentDetails.patientInformation".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.cyan)),
+        Text(
+          "appointmentDetails.patientInformation".tr(context),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppColors.cyan,
+          ),
+        ),
         const SizedBox(height: 8),
-        Text("${"appointmentDetails.labels.fullName".tr(context)}: ${appointment.patient!.fName} ${appointment.patient!.lName}"),
+        Text(
+          "${"appointmentDetails.labels.fullName".tr(context)}: ${appointment.patient!.fName} ${appointment.patient!.lName}",
+        ),
         const SizedBox(height: 5),
-        Text("${"appointmentDetails.labels.age".tr(context)}: ${_calculateAge(appointment.patient!.dateOfBirth!)}"),
+        Text(
+          "${"appointmentDetails.labels.age".tr(context)}: ${_calculateAge(appointment.patient!.dateOfBirth!)}",
+        ),
       ],
     );
   }
@@ -145,7 +211,11 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       children: [
         Text(
           "appointmentDetails.appointment_information".tr(context),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.cyan),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppColors.cyan,
+          ),
         ),
         const SizedBox(height: 8),
         Text("Reason: ${appointment.reason}"),
@@ -161,24 +231,44 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("appointmentDetails.type".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.cyan)),
+        Text(
+          "appointmentDetails.type".tr(context),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppColors.cyan,
+          ),
+        ),
         const SizedBox(height: 8),
-        ListTile(leading: const Icon(Icons.density_medium_rounded), title: Text(appointment.type!.display), subtitle: Text(appointment.description!)),
+        ListTile(
+          leading: const Icon(Icons.density_medium_rounded),
+          title: Text(appointment.type!.display),
+          subtitle: Text(appointment.description!),
+        ),
       ],
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, AppointmentModel appointment) {
+  Widget _buildActionButtons(
+    BuildContext context,
+    AppointmentModel appointment,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         ElevatedButton(
           onPressed: () => _cancelAppointment(context, appointment),
           child: Text("appointmentDetails.cancel".tr(context)),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+          ),
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor, foregroundColor: Colors.white),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).primaryColor,
+            foregroundColor: Colors.white,
+          ),
           onPressed: () => _editAppointment(context, appointment),
           child: Text("appointmentDetails.reschedule".tr(context)),
         ),
@@ -190,17 +280,30 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     final birthday = DateTime.parse(birthDate);
     final today = DateTime.now();
     int age = today.year - birthday.year;
-    if (today.month < birthday.month || (today.month == birthday.month && today.day < birthday.day)) {
+    if (today.month < birthday.month ||
+        (today.month == birthday.month && today.day < birthday.day)) {
       age--;
     }
     return age;
   }
 
-  Future<void> _cancelAppointment(BuildContext context, AppointmentModel appointment) async {
-    final reason = await showDialog<String>(context: context, builder: (context) => CancelAppointmentDialog(appointmentId: appointment.id.toString()));
+  Future<void> _cancelAppointment(
+    BuildContext context,
+    AppointmentModel appointment,
+  ) async {
+    final reason = await showDialog<String>(
+      context: context,
+      builder:
+          (context) =>
+              CancelAppointmentDialog(appointmentId: appointment.id.toString()),
+    );
 
     if (reason != null && reason.isNotEmpty) {
-      await context.read<AppointmentCubit>().cancelAppointment(context: context, id: appointment.id.toString(), cancellationReason: reason);
+      await context.read<AppointmentCubit>().cancelAppointment(
+        context: context,
+        id: appointment.id.toString(),
+        cancellationReason: reason,
+      );
       if (mounted) {
         context.pop(true);
       }
@@ -217,8 +320,14 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
             title: Text("appointmentDetails.confirmDelete".tr(context)),
             content: Text("appointmentDetails.deleteMessage".tr(context)),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context, false), child: Text("appointmentDetails.no".tr(context))),
-              TextButton(onPressed: () => Navigator.pop(context, true), child: Text("appointmentDetails.yes".tr(context))),
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text("appointmentDetails.no".tr(context)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text("appointmentDetails.yes".tr(context)),
+              ),
             ],
           ),
     );
@@ -240,8 +349,13 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       ),
     ).then((success) {
       if (success == true) {
-        context.read<AppointmentCubit>().getDetailsAppointment(context: context, id: widget.appointmentId);
-        ShowToast.showToastSuccess(message: "Appointment updated successfully");
+        context.read<AppointmentCubit>().getDetailsAppointment(
+          context: context,
+          id: widget.appointmentId,
+        );
+        ShowToast.showToastSuccess(
+          message: 'appointmentDetails.updateSuccess'.tr(context),
+        );
       }
     });
   }

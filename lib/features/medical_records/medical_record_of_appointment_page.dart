@@ -7,17 +7,23 @@ import 'package:medizen_app/features/medical_records/encounter/presentation/page
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_requests_of_appointment_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/widgets/service_request_filter_dialog.dart';
+
 import '../../base/theme/app_color.dart';
 
 class MedicalRecordOfAppointmentPage extends StatefulWidget {
-final String appointmentId;
+  final String appointmentId;
 
-  const MedicalRecordOfAppointmentPage({super.key, required this.appointmentId});
+  const MedicalRecordOfAppointmentPage({
+    super.key,
+    required this.appointmentId,
+  });
   @override
-  _MedicalRecordOfAppointmentPageState createState() => _MedicalRecordOfAppointmentPageState();
+  _MedicalRecordOfAppointmentPageState createState() =>
+      _MedicalRecordOfAppointmentPageState();
 }
 
-class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointmentPage>
+class _MedicalRecordOfAppointmentPageState
+    extends State<MedicalRecordOfAppointmentPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   // EncounterFilterModel _encounterFilter = EncounterFilterModel();
@@ -59,10 +65,13 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
       setState(() => _allergyFilter = result);
     }
   }
+
   Future<void> _showServiceRequestFilterDialog() async {
     final result = await showDialog<ServiceRequestFilter>(
       context: context,
-      builder: (context) => ServiceRequestFilterDialog(currentFilter: _serviceRequestFilter),
+      builder:
+          (context) =>
+              ServiceRequestFilterDialog(currentFilter: _serviceRequestFilter),
     );
 
     if (result != null) {
@@ -82,7 +91,7 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
     final List<String> _tabs = [
       'medicalRecordPage.tabs.encounters'.tr(context),
       'medicalRecordPage.tabs.allergies'.tr(context),
-      "Service request",
+      'medicalRecordPage.tabs.serviceRequest'.tr(context),
       'medicalRecordPage.tabs.conditions'.tr(context),
       'medicalRecordPage.tabs.observations'.tr(context),
       'medicalRecordPage.tabs.diagnosticReports'.tr(context),
@@ -119,7 +128,7 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
             IconButton(
               icon: const Icon(Icons.filter_list),
               onPressed: _showServiceRequestFilterDialog,
-              tooltip: "Filter service request"
+              tooltip: 'medicalRecordPage.filterServiceRequest'.tr(context),
             ),
         ],
         bottom: PreferredSize(
@@ -143,9 +152,15 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
         child: TabBarView(
           controller: _tabController,
           children: [
-            AllEncountersOfAppointmentPage(appointmentId:widget.appointmentId),
-            AllAllergiesOfAppointmentPage(appointmentId: widget.appointmentId,filter: _allergyFilter),
-            ServiceRequestsOfAppointmentPage(appointmentId: widget.appointmentId,filter: _serviceRequestFilter),
+            AllEncountersOfAppointmentPage(appointmentId: widget.appointmentId),
+            AllAllergiesOfAppointmentPage(
+              appointmentId: widget.appointmentId,
+              filter: _allergyFilter,
+            ),
+            ServiceRequestsOfAppointmentPage(
+              appointmentId: widget.appointmentId,
+              filter: _serviceRequestFilter,
+            ),
             _buildObservationsList(),
             _buildDiagnosticReportsList(),
             _buildMedicationRequestsList(),

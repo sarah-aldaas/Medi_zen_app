@@ -58,7 +58,11 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
       setState(() => _isLoadingMore = true);
       context
           .read<AppointmentCubit>()
-          .getMyAppointment(filters: _filter.toJson(), loadMore: true,context: context)
+          .getMyAppointment(
+            filters: _filter.toJson(),
+            loadMore: true,
+            context: context,
+          )
           .then((_) {
             setState(() => _isLoadingMore = false);
           });
@@ -81,7 +85,12 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){context.pushReplacementNamed(AppRouter.homePage.name);}, icon: Icon(Icons.arrow_back)),
+        leading: IconButton(
+          onPressed: () {
+            context.pushReplacementNamed(AppRouter.homePage.name);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           "myAppointments.title".tr(context),
@@ -108,7 +117,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
       body: BlocConsumer<AppointmentCubit, AppointmentState>(
         listener: (context, state) {
           if (state is AppointmentError) {
-           ShowToast.showToastError(message: state.error);
+            ShowToast.showToastError(message: state.error);
           }
         },
         builder: (context, state) {
@@ -279,8 +288,8 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                     ],
                   ),
                 ),
-                if (appointment.status!.code == 'booked_appointment')
-                ...[ const Gap(30),
+                if (appointment.status!.code == 'booked_appointment') ...[
+                  const Gap(30),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
@@ -299,12 +308,13 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                               color: Theme.of(context).primaryColor,
                             ),
                             backgroundColor:
-                            Theme.of(context).scaffoldBackgroundColor,
+                                Theme.of(context).scaffoldBackgroundColor,
                           ),
                         ),
 
                         ElevatedButton(
-                          onPressed: () => _editAppointment(context, appointment),
+                          onPressed:
+                              () => _editAppointment(context, appointment),
                           child: Text(
                             "myAppointments.buttons.update".tr(context),
                           ),
@@ -315,7 +325,8 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                         ),
                       ],
                     ),
-                  ),],
+                  ),
+                ],
               ],
             ),
           ),
@@ -357,7 +368,9 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
     ).then((success) {
       if (success) {
         _loadInitialAppointments();
-        ShowToast.showToastSuccess(message: "Appointment updated successfully");
+        ShowToast.showToastSuccess(
+          message: 'appointmentDetails.updateSuccess'.tr(context),
+        );
       }
       if (!success) {
         _loadInitialAppointments();
