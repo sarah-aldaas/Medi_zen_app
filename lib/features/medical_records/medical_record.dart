@@ -3,12 +3,17 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/models/allergy_filter_model.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/pages/all_allergies_page.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/widgets/allergy_filter_dialog.dart';
+import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_filter_model.dart';
+import 'package:medizen_app/features/medical_records/conditions/presentation/widgets/condition_filter_dialog.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/all_encounters_page.dart';
+import 'package:medizen_app/features/medical_records/medication/presentation/pages/my_medications_page.dart';
+import 'package:medizen_app/features/medical_records/medication_request/presentation/pages/my_medication_requests_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_requests_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/widgets/service_request_filter_dialog.dart';
 
 import '../../base/theme/app_color.dart';
+import 'conditions/presentation/pages/conditions_list_page.dart';
 import 'encounter/data/models/encounter_filter_model.dart';
 import 'encounter/presentation/widgets/encounter_filter_dialog.dart';
 
@@ -23,11 +28,12 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
   EncounterFilterModel _encounterFilter = EncounterFilterModel();
   AllergyFilterModel _allergyFilter = AllergyFilterModel();
   ServiceRequestFilter _serviceRequestFilter = ServiceRequestFilter();
+  ConditionsFilterModel _conditionFilter = ConditionsFilterModel();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 7, vsync: this);
+    _tabController = TabController(length: 8, vsync: this);
     _tabController.addListener(_handleTabSelection);
   }
 
@@ -70,6 +76,19 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     }
   }
 
+
+  Future<void> _showConditionFilterDialog() async {
+    final result = await showDialog<ConditionsFilterModel>(
+      context: context,
+      builder: (context) => ConditionsFilterDialog(currentFilter: _conditionFilter),
+    );
+
+    if (result != null) {
+      setState(() => _conditionFilter = result);
+    }
+  }
+
+
   @override
   void dispose() {
     _tabController.removeListener(_handleTabSelection);
@@ -82,11 +101,11 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     final List<String> _tabs = [
       'medicalRecordPage.tabs.encounters'.tr(context),
       'medicalRecordPage.tabs.allergies'.tr(context),
-      "Service request",
+      'medicalRecordPage.tabs.serviceRequest'.tr(context),
       'medicalRecordPage.tabs.conditions'.tr(context),
-      'medicalRecordPage.tabs.observations'.tr(context),
-      'medicalRecordPage.tabs.diagnosticReports'.tr(context),
       'medicalRecordPage.tabs.medicationRequests'.tr(context),
+      'medicalRecordPage.tabs.medication'.tr(context),
+      'medicalRecordPage.tabs.diagnosticReports'.tr(context),
       'medicalRecordPage.tabs.chronicDiseases'.tr(context),
     ];
 
@@ -121,6 +140,12 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
               onPressed: _showServiceRequestFilterDialog,
               tooltip: "Filter service request"
             ),
+          if (_tabController.index == 3)
+            IconButton(
+                icon: const Icon(Icons.filter_list),
+                onPressed: _showConditionFilterDialog,
+                tooltip: "Filter condition"
+            ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48),
@@ -146,10 +171,10 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
             AllEncountersPage(filter: _encounterFilter),
             AllAllergiesPage(filter: _allergyFilter),
             ServiceRequestsPage(filter: _serviceRequestFilter),
-            _buildObservationsList(),
+            ConditionsListPage(filter: _conditionFilter),
+            MyMedicationRequestsPage(),
+            MyMedicationsPage(),
             _buildDiagnosticReportsList(),
-            _buildMedicationRequestsList(),
-            _buildAllergiesList(),
             _buildChronicDiseasesList(),
           ],
         ),
@@ -157,18 +182,6 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     );
   }
 
-  Widget _buildObservationsList() {
-    return ListView(
-      padding: EdgeInsets.all(16),
-      children: [
-        _buildObservationTile(
-          observationName: 'الملاحظات',
-          value: '120/80 mmHg',
-          date: '2023-11-20',
-        ),
-      ],
-    );
-  }
 
   Widget _buildDiagnosticReportsList() {
     return ListView(
@@ -182,33 +195,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
       ],
     );
   }
-
-  Widget _buildMedicationRequestsList() {
-    return ListView(
-      padding: EdgeInsets.all(16),
-      children: [
-        _buildMedicationRequestTile(
-          medicationName: 'ميتفورمين',
-          startDate: '2020-05-15',
-          dosage: '1000 ملغ يوميًا',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAllergiesList() {
-    return ListView(
-      padding: EdgeInsets.all(16),
-      children: [
-        _buildAllergyTile(
-          allergyName: 'البنسلين',
-          reaction: 'طفح جلدي',
-          notes: 'تجنب الأدوية المحتوية على البنسلين.',
-        ),
-      ],
-    );
-  }
-
+  
   Widget _buildChronicDiseasesList() {
     return ListView(
       padding: EdgeInsets.all(16),
@@ -222,38 +209,6 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     );
   }
 
-  Widget _buildObservationTile({
-    required String observationName,
-    required String value,
-    required String date,
-  }) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      padding: EdgeInsets.all(18.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            observationName,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          Text('Value: $value', style: TextStyle(fontSize: 16)),
-          Text('Date: $date', style: TextStyle(fontSize: 16)),
-        ],
-      ),
-    );
-  }
 
   Widget _buildDiagnosticReportTile({
     required String reportName,

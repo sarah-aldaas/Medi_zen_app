@@ -3,11 +3,12 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
-import 'package:medizen_app/features/articles/pages/articles.dart';
 import 'package:medizen_app/features/home_page/pages/home_page_body.dart';
 import 'package:medizen_app/features/appointment/pages/my_appointments_page.dart';
 import 'package:medizen_app/features/medical_records/Medical_Record.dart';
 import 'package:flutter/services.dart';
+
+import '../../articles/presentation/pages/articles.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
       const HomePageBody(),
       const MyAppointmentPage(),
        MedicalRecordPage(),
-      const Articles(),
+      const ArticlesPage(),
     ];
 
     return WillPopScope(

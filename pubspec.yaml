@@ -57,6 +57,13 @@ dependencies:
   pretty_dio_logger:
   equatable:
   device_info_plus:
+  firebase_core:
+  firebase_auth:
+  flutter_local_notifications: ^19.3.0
+  cloud_firestore:
+  firebase_messaging:
+  http:
+  firebase_storage:
   permission_handler:
 #  health:
   loading_animation_widget:

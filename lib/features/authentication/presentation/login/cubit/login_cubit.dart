@@ -25,16 +25,11 @@ class LoginCubit extends Cubit<LoginState> {
   }) : super(LoginInitial());
 
   void login(String email, String password, BuildContext context) async {
-    // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(LoginError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
 
     emit(LoginLoading());
+
+    final isConnected = await networkInfo.isConnected;
+
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
       emit(LoginError(error: 'No internet connection'));

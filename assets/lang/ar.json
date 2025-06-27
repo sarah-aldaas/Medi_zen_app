@@ -917,6 +917,8 @@
       "allergies": "الحساسية",
       "conditions": "الحالات",
       "observations": "الملاحظات",
+      "medication": "الادوية",
+      "serviceRequest": "طلب الخدمات",
       "diagnosticReports": "التقارير التشخيصية",
       "medicationRequests": "طلبات الأدوية",
       "chronicDiseases": "الأمراض المزمنة"
@@ -968,5 +970,85 @@
     "free": "مجاني",
     "service": "معرف الخدمة",
     "viewDetails": "عرض التفاصيل"
+  },
+  "medicationDetails": {
+    "title": "تفاصيل الدواء",
+    "failedToLoad": "فشل تحميل تفاصيل الدواء",
+    "dosageInfo": "معلومات الجرعة",
+    "instructions": "التعليمات",
+    "statusAndDates": "الحالة والتواريخ"
+  },
+  "myMedications": {
+    "title": "أدويتي",
+    "noMedications": "لا توجد أدوية",
+    "filter": {
+      "title": "تصفية الأدوية",
+      "search": "بحث",
+      "searchHint": "ابحث باسم الدواء",
+      "status": "الحالة",
+      "allStatuses": "جميع الحالات",
+      "doseForm": "شكل الجرعة",
+      "selectDoseForm": "اختر شكل الجرعة",
+      "allDoseForms": "جميع أشكال الجرعات",
+      "route": "طريقة التناول",
+      "selectRoute": "اختر طريقة التناول",
+      "allRoutes": "جميع الطرق",
+      "site": "الموقع",
+      "selectSite": "اختر الموقع",
+      "allSites": "جميع المواقع",
+      "asNeeded": "حسب الحاجة",
+      "asNeededLabel": "عرض الأدوية حسب الحاجة فقط",
+      "medicationRequestId": "معرف طلب الدواء",
+      "enterMedicationRequestId": "أدخل معرف الطلب",
+      "dateRange": "النطاق الزمني",
+      "startFrom": "بداية من",
+      "endUntil": "نهاية حتى",
+      "selectDate": "اختر تاريخ",
+      "clearFilters": "مسح الفلاتر",
+      "cancel": "إلغاء",
+      "apply": "تطبيق",
+      "invalidDateRange": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية"
+    }
+  },
+  "medicationRequestDetails": {
+    "title": "تفاصيل طلب الدواء",
+    "failedToLoad": "فشل تحميل تفاصيل طلب الدواء",
+    "requestInfo": "معلومات الطلب",
+    "conditionInfo": "معلومات الحالة",
+    "additionalInfo": "معلومات إضافية"
+  },
+  "myMedicationRequests": {
+    "title": "طلبات الأدوية الخاصة بي",
+    "noRequests": "لا توجد طلبات أدوية",
+    "filter": {
+      "title": "تصفية طلبات الأدوية",
+      "search": "بحث",
+      "searchHint": "ابحث بالسبب أو الملاحظة",
+      "doNotPerform": "عدم التنفيذ",
+      "doNotPerformLabel": "عرض الطلبات غير المطلوب تنفيذها فقط",
+      "status": "الحالة",
+      "allStatuses": "جميع الحالات",
+      "intent": "النية",
+      "selectIntent": "اختر النية",
+      "allIntents": "جميع النوايا",
+      "priority": "الأولوية",
+      "selectPriority": "اختر الأولوية",
+      "allPriorities": "جميع الأولويات",
+      "courseOfTherapy": "مسار العلاج",
+      "selectCourseOfTherapy": "اختر مسار العلاج",
+      "allCourses": "جميع المسارات",
+      "condition": "الحالة",
+      "selectCondition": "اختر الحالة",
+      "allConditions": "جميع الحالات",
+      "startDate": "تاريخ البدء",
+      "selectStartDate": "اختر تاريخ البدء",
+      "endDate": "تاريخ الانتهاء",
+      "selectEndDate": "اختر تاريخ الانتهاء",
+      "clearFilters": "مسح الفلاتر",
+      "cancel": "إلغاء",
+      "apply": "تطبيق"
+    }
   }
+
+
 }

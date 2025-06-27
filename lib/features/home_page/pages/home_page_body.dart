@@ -36,7 +36,7 @@ class _HomePageBodyState extends State<HomePageBody> {
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeClinics()),
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: DefinitionWidget()),
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeDoctors()),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeArticles()),
+              // Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeArticles()),
             ],
           ),
         ),
@@ -87,7 +87,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 onSelected: (String value) {
                   if (value == 'favorites') {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyFavorite()));
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => MyFavorite()));
                   } else if (value == 'services') {
                     context.pushNamed(AppRouter.healthCareServicesPage.name);
                     // context.pushNamed(AppRouter.allAllergiesPage.name);

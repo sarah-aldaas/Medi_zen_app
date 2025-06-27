@@ -14,8 +14,9 @@ import 'package:medizen_app/features/services/pages/health_care_service_details_
 
 import '../../features/Complaint/view/complaint_list_screen.dart';
 import '../../features/appointment/pages/my_appointments_page.dart';
-import '../../features/articles/pages/articles.dart';
-import '../../features/articles/pages/my_book_mark.dart';
+
+import '../../features/articles/presentation/pages/articles.dart';
+import '../../features/articles/presentation/pages/my_book_mark.dart';
 import '../../features/authentication/presentation/forget_password/view/forget_password.dart';
 import '../../features/authentication/presentation/login/view/login_screen.dart';
 import '../../features/authentication/presentation/otp/otp_verification_screen.dart';
@@ -27,6 +28,10 @@ import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
 import '../../features/home_page/pages/home_page_body.dart';
 import '../../features/medical_records/Medical_Record.dart';
+import '../../features/medical_records/conditions/presentation/pages/condition_details_page.dart';
+import '../../features/medical_records/conditions/presentation/pages/conditions_list_page.dart';
+import '../../features/medical_records/medication/presentation/pages/medication_details_page.dart';
+import '../../features/medical_records/medication_request/presentation/pages/medication_request_details_page.dart';
 import '../../features/notifications/pages/notification_settings.dart';
 import '../../features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 import '../../features/profile/presentaiton/pages/address_page.dart';
@@ -80,7 +85,10 @@ enum AppRouter {
   noInternet,
   appointmentPage,
   medicalRecord,
-  homePageBody
+  homePageBody,
+  conditions,conditionDetails,
+  medicationDetails,
+  medicationRequestDetails
 }
 
 GoRouter goRouter() {
@@ -162,13 +170,13 @@ GoRouter goRouter() {
               return HelpCenterPage();
             },
           ),
-          GoRoute(
-            path: "/articles",
-            name: AppRouter.articles.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return Articles();
-            },
-          ),
+          // GoRoute(
+          //   path: "/articles",
+          //   name: AppRouter.articles.name,
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     return Articles();
+          //   },
+          // ),
           GoRoute(
             path: "/clinics",
             name: AppRouter.clinics.name,
@@ -183,13 +191,13 @@ GoRouter goRouter() {
               return DoctorsPage();
             },
           ),
-          GoRoute(
-            path: "/myBookMark",
-            name: AppRouter.myBookMark.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return MyBookmarkPage();
-            },
-          ),
+          // GoRoute(
+          //   path: "/myBookMark",
+          //   name: AppRouter.myBookMark.name,
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     return MyBookmarkPage();
+          //   },
+          // ),
           GoRoute(
             path: "/myClinics",
             name: AppRouter.clinic.name,
@@ -334,6 +342,32 @@ GoRouter goRouter() {
             path: '/homePageBody',
             name: AppRouter.homePageBody.name,
             builder: (context, state) => const HomePageBody(),
+          ),
+          // GoRoute(
+          //   path: '/conditions',
+          //   name: AppRouter.conditions.name,
+          //   builder: (context, state) => ConditionsListPage(),
+          // ),
+          GoRoute(
+            path: '/conditions/:id',
+            name: AppRouter.conditionDetails.name,
+            builder: (context, state) => ConditionDetailsPage(
+              conditionId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            name: AppRouter.medicationDetails.name,
+            path: '/medication-details/:id',
+            builder: (context, state) => MedicationDetailsPage(
+              medicationId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            name: AppRouter.medicationRequestDetails.name,
+            path: '/medication-request-details',
+            builder: (context, state) => MedicationRequestDetailsPage(
+              medicationRequestId:  state.pathParameters['id']!,
+            ),
           ),
         ],
       ),
