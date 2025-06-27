@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
+import 'package:medizen_app/features/medical_records/medication_request/presentation/pages/medication_request_details_page.dart';
 
 import '../../data/models/medication_request_filter.dart';
 import '../../data/models/medication_request_model.dart';
 import '../cubit/medication_request_cubit/medication_request_cubit.dart';
-import '../widgets/medication_request_filter_dialog.dart';
 
 class MyMedicationRequestsPage extends StatefulWidget {
-  const MyMedicationRequestsPage({super.key});
+  final MedicationRequestFilterModel filter;
+
+  const MyMedicationRequestsPage({super.key, required this.filter});
 
   @override
   _MyMedicationRequestsPageState createState() => _MyMedicationRequestsPageState();
@@ -21,7 +21,6 @@ class MyMedicationRequestsPage extends StatefulWidget {
 
 class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
   final ScrollController _scrollController = ScrollController();
-  MedicationRequestFilterModel _filter = MedicationRequestFilterModel();
   bool _isLoadingMore = false;
 
   @override
@@ -39,10 +38,7 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
 
   void _loadInitialMedicationRequests() {
     _isLoadingMore = false;
-    context.read<MedicationRequestCubit>().getAllMedicationRequests(
-      context: context,
-      filters: _filter.toJson(),
-    );
+    context.read<MedicationRequestCubit>().getAllMedicationRequests(context: context, filters: widget.filter.toJson());
   }
 
   void _scrollListener() {
@@ -50,51 +46,25 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
       setState(() => _isLoadingMore = true);
       context
           .read<MedicationRequestCubit>()
-          .getAllMedicationRequests(
-        filters: _filter.toJson(),
-        loadMore: true,
-        context: context,
-      )
+          .getAllMedicationRequests(filters: widget.filter.toJson(), loadMore: true, context: context)
           .then((_) => setState(() => _isLoadingMore = false));
     }
   }
 
-  Future<void> _showFilterDialog() async {
-    final result = await showDialog<MedicationRequestFilterModel>(
-      context: context,
-      builder: (context) => MedicationRequestFilterDialog(currentFilter: _filter),
-    );
+  @override
+  void didUpdateWidget(MyMedicationRequestsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-    if (result != null) {
-      setState(() => _filter = result);
+    if (widget.filter != oldWidget.filter) {
       _loadInitialMedicationRequests();
+      // _scrollController.jumpTo(0.0);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => context.pushReplacementNamed(AppRouter.homePage.name),
-          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
-        ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text(
-          "myMedicationRequests.title".tr(context),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
-            fontSize: 22,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_list, color: AppColors.primaryColor),
-            onPressed: _showFilterDialog,
-          ),
-        ],
-      ),
       body: BlocConsumer<MedicationRequestCubit, MedicationRequestState>(
         listener: (context, state) {
           if (state is MedicationRequestError) {
@@ -116,10 +86,7 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
                 children: [
                   Icon(Icons.medical_services, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
-                  Text(
-                    "myMedicationRequests.noRequests".tr(context),
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  ),
+                  Text("myMedicationRequests.noRequests".tr(context), style: TextStyle(fontSize: 18, color: Colors.grey[600])),
                 ],
               ),
             );
@@ -145,10 +112,11 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
 
   Widget _buildMedicationRequestCard(MedicationRequestModel request) {
     return GestureDetector(
-      onTap: () => context.pushNamed(
-        AppRouter.medicationRequestDetails.name,
-        extra: {"id": request.id.toString()},
-      ).then((_) => _loadInitialMedicationRequests()),
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MedicationRequestDetailsPage(medicationRequestId: request.id.toString())),
+          ).then((_) => _loadInitialMedicationRequests()),
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -166,18 +134,9 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          request.reason ?? 'Medication Request',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        Text(request.reason ?? 'Medication Request', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 4),
-                        Text(
-                          request.note ?? 'No additional notes',
-                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                        ),
+                        Text(request.note ?? 'No additional notes', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                       ],
                     ),
                   ),
@@ -189,21 +148,11 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
                   if (request.status != null)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        request.status!.display,
-                        style: TextStyle(color: AppColors.primaryColor),
-                      ),
+                      decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
+                      child: Text(request.status!.display, style: TextStyle(color: AppColors.primaryColor)),
                     ),
                   const Spacer(),
-                  if (request.statusChanged != null)
-                    Text(
-                      request.statusChanged!,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    ),
+                  if (request.statusChanged != null) Text(request.statusChanged!, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                 ],
               ),
             ],

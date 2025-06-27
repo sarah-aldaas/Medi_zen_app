@@ -465,7 +465,7 @@
     "logout": "Logout",
     "logoutAllDevices": "All devices",
     "logoutThisDevice": "Only this device",
-    "english":"English" ,
+    "english": "English",
     "arabic": "Arabic"
   },
   "clinicCard": {
@@ -1245,8 +1245,62 @@
       "cancel": "Cancel",
       "apply": "Apply"
     }
-
+  },
+  "filterMedications": {
+    "title": "Filter Medications",
+    "search": "Search",
+    "searchHint": "Search by medication name",
+    "status": "Status",
+    "allStatuses": "All Statuses",
+    "doseForm": "Dose Form",
+    "selectDoseForm": "Select Dose Form",
+    "allDoseForms": "All Dose Forms",
+    "route": "Route",
+    "selectRoute": "Select Route",
+    "allRoutes": "All Routes",
+    "site": "Site",
+    "selectSite": "Select Site",
+    "allSites": "All Sites",
+    "asNeeded": "As Needed",
+    "asNeededLabel": "Show only PRN medications",
+    "medicationRequestId": "Medication Request ID",
+    "enterMedicationRequestId": "Enter request ID",
+    "dateRange": "Date Range",
+    "startFrom": "Start From",
+    "endUntil": "End Until",
+    "selectDate": "Select Date",
+    "clearFilters": "Clear Filters",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "invalidDateRange": "Invalid date range - start date must be before end date"
+  },
+  "filterMedicationRequests": {
+    "title": "Filter Medication Requests",
+    "search": "Search",
+    "searchHint": "Search by medication name",
+    "doNotPerform": "Do Not Perform",
+    "doNotPerformLabel": "Show only non-performed requests",
+    "status": "Status",
+    "allStatuses": "All Statuses",
+    "intent": "Intent",
+    "selectIntent": "Select Intent",
+    "allIntents": "All Intents",
+    "priority": "Priority",
+    "selectPriority": "Select Priority",
+    "allPriorities": "All Priorities",
+    "courseOfTherapy": "Course of Therapy",
+    "selectCourseOfTherapy": "Select Course",
+    "allCourses": "All Courses",
+    "condition": "Condition",
+    "selectCondition": "Select Condition",
+    "allConditions": "All Conditions",
+    "startDate": "Start Date",
+    "selectStartDate": "Select Start Date",
+    "endDate": "End Date",
+    "selectEndDate": "Select End Date",
+    "clearFilters": "Clear Filters",
+    "cancel": "Cancel",
+    "apply": "Apply"
   }
-
 
 }

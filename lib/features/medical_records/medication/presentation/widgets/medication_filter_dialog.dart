@@ -129,7 +129,7 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                         if (state is CodeTypesSuccess) {
                           statusTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_status').toList() ?? [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return Column(
@@ -165,7 +165,7 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                         if (state is CodeTypesSuccess) {
                           doseForms = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_dose_form').toList() ?? [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return DropdownButtonFormField<String>(
@@ -191,7 +191,7 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                         if (state is CodeTypesSuccess) {
                           routes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_route').toList() ?? [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return DropdownButtonFormField<String>(
@@ -217,7 +217,7 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                         if (state is CodeTypesSuccess) {
                           sites = state.codes?.where((code) => code.codeTypeModel?.name == 'body_site').toList() ?? [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return DropdownButtonFormField<String>(

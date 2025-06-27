@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
+import 'package:medizen_app/features/medical_records/medication/presentation/pages/medication_details_page.dart';
 
 import '../../data/models/medication_filter_model.dart';
 import '../../data/models/medication_model.dart';
 import '../cubit/medication_cubit/medication_cubit.dart';
-import '../widgets/medication_filter_dialog.dart';
 
 class MyMedicationsPage extends StatefulWidget {
-  const MyMedicationsPage({super.key});
+  final MedicationFilterModel filter;
+
+  const MyMedicationsPage({super.key, required this.filter});
 
   @override
   _MyMedicationsPageState createState() => _MyMedicationsPageState();
@@ -22,7 +22,6 @@ class MyMedicationsPage extends StatefulWidget {
 
 class _MyMedicationsPageState extends State<MyMedicationsPage> {
   final ScrollController _scrollController = ScrollController();
-  MedicationFilterModel _filter = MedicationFilterModel();
   bool _isLoadingMore = false;
 
   @override
@@ -40,10 +39,7 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
 
   void _loadInitialMedications() {
     _isLoadingMore = false;
-    context.read<MedicationCubit>().getAllMedications(
-      context: context,
-      filters: _filter.toJson(),
-    );
+    context.read<MedicationCubit>().getAllMedications(context: context, filters: widget.filter.toJson());
   }
 
   void _scrollListener() {
@@ -51,51 +47,23 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
       setState(() => _isLoadingMore = true);
       context
           .read<MedicationCubit>()
-          .getAllMedications(
-        filters: _filter.toJson(),
-        loadMore: true,
-        context: context,
-      )
+          .getAllMedications(filters: widget.filter.toJson(), loadMore: true, context: context)
           .then((_) => setState(() => _isLoadingMore = false));
     }
   }
+  @override
+  void didUpdateWidget(MyMedicationsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-  Future<void> _showFilterDialog() async {
-    final result = await showDialog<MedicationFilterModel>(
-      context: context,
-      builder: (context) => MedicationFilterDialog(currentFilter: _filter),
-    );
-
-    if (result != null) {
-      setState(() => _filter = result);
+    if (widget.filter != oldWidget.filter) {
       _loadInitialMedications();
+      // _scrollController.jumpTo(0.0);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => context.pushReplacementNamed(AppRouter.homePage.name),
-          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
-        ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text(
-          "myMedications.title".tr(context),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
-            fontSize: 22,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_list, color: AppColors.primaryColor),
-            onPressed: _showFilterDialog,
-          ),
-        ],
-      ),
       body: BlocConsumer<MedicationCubit, MedicationState>(
         listener: (context, state) {
           if (state is MedicationError) {
@@ -117,10 +85,7 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
                 children: [
                   Icon(Icons.medical_services, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
-                  Text(
-                    "myMedications.noMedications".tr(context),
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  ),
+                  Text("myMedications.noMedications".tr(context), style: TextStyle(fontSize: 18, color: Colors.grey[600])),
                 ],
               ),
             );
@@ -146,10 +111,11 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
 
   Widget _buildMedicationCard(MedicationModel medication) {
     return GestureDetector(
-      onTap: () => context.pushNamed(
-        AppRouter.medicationDetails.name,
-        extra: {"id": medication.id.toString()},
-      ).then((_) => _loadInitialMedications()),
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MedicationDetailsPage(medicationId: medication.id.toString())),
+          ).then((_) => _loadInitialMedications()),
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -167,18 +133,9 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          medication.name ?? 'Unknown Medication',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        Text(medication.name ?? 'Unknown Medication', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 4),
-                        Text(
-                          medication.dosageInstructions ?? 'No instructions',
-                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                        ),
+                        Text(medication.dosageInstructions ?? 'No instructions', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                       ],
                     ),
                   ),
@@ -190,21 +147,12 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
                   if (medication.status != null)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        medication.status!.display,
-                        style: TextStyle(color: AppColors.primaryColor),
-                      ),
+                      decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
+                      child: Text(medication.status!.display, style: TextStyle(color: AppColors.primaryColor)),
                     ),
                   const Spacer(),
                   if (medication.effectiveMedicationStartDate != null)
-                    Text(
-                      DateFormat('MMM d, y').format(medication.effectiveMedicationStartDate!),
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    ),
+                    Text(DateFormat('MMM d, y').format(medication.effectiveMedicationStartDate!), style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                 ],
               ),
             ],

@@ -7,7 +7,9 @@ import 'package:medizen_app/features/medical_records/conditions/data/models/cond
 import 'package:medizen_app/features/medical_records/conditions/presentation/widgets/condition_filter_dialog.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/all_encounters_page.dart';
 import 'package:medizen_app/features/medical_records/medication/presentation/pages/my_medications_page.dart';
+import 'package:medizen_app/features/medical_records/medication_request/data/models/medication_request_filter.dart';
 import 'package:medizen_app/features/medical_records/medication_request/presentation/pages/my_medication_requests_page.dart';
+import 'package:medizen_app/features/medical_records/medication_request/presentation/widgets/medication_request_filter_dialog.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_requests_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/widgets/service_request_filter_dialog.dart';
@@ -16,6 +18,8 @@ import '../../base/theme/app_color.dart';
 import 'conditions/presentation/pages/conditions_list_page.dart';
 import 'encounter/data/models/encounter_filter_model.dart';
 import 'encounter/presentation/widgets/encounter_filter_dialog.dart';
+import 'medication/data/models/medication_filter_model.dart';
+import 'medication/presentation/widgets/medication_filter_dialog.dart';
 
 class MedicalRecordPage extends StatefulWidget {
   @override
@@ -29,6 +33,8 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
   AllergyFilterModel _allergyFilter = AllergyFilterModel();
   ServiceRequestFilter _serviceRequestFilter = ServiceRequestFilter();
   ConditionsFilterModel _conditionFilter = ConditionsFilterModel();
+  MedicationRequestFilterModel _medicationRequestFilter = MedicationRequestFilterModel();
+  MedicationFilterModel _medicationFilter = MedicationFilterModel();
 
   @override
   void initState() {
@@ -91,6 +97,27 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     }
   }
 
+  Future<void> _showMedicationRequestFilterDialog() async {
+    final result = await showDialog<MedicationRequestFilterModel>(
+      context: context,
+      builder: (context) => MedicationRequestFilterDialog(currentFilter: _medicationRequestFilter),
+    );
+
+    if (result != null) {
+      setState(() => _medicationRequestFilter = result);
+    }
+  }
+  Future<void> _showMedicationFilterDialog() async {
+    final result = await showDialog<MedicationFilterModel>(
+      context: context,
+      builder: (context) => MedicationFilterDialog(currentFilter: _medicationFilter),
+    );
+
+    if (result != null) {
+      setState(() => _medicationFilter = result);
+    }
+  }
+
 
   @override
   void dispose() {
@@ -149,6 +176,18 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
                 onPressed: _showConditionFilterDialog,
                 tooltip: "Filter condition"
             ),
+          if (_tabController.index == 4)
+            IconButton(
+                icon: const Icon(Icons.filter_list),
+                onPressed: _showMedicationRequestFilterDialog,
+                tooltip: "Filter mediation request"
+            ),
+          if (_tabController.index == 5)
+            IconButton(
+                icon: const Icon(Icons.filter_list),
+                onPressed: _showMedicationFilterDialog,
+                tooltip: "Filter mediation"
+            ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48),
@@ -175,8 +214,8 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
             AllAllergiesPage(filter: _allergyFilter),
             ServiceRequestsPage(filter: _serviceRequestFilter),
             ConditionsListPage(filter: _conditionFilter),
-            MyMedicationRequestsPage(),
-            MyMedicationsPage(),
+            MyMedicationRequestsPage(filter: _medicationRequestFilter),
+            MyMedicationsPage(filter: _medicationFilter),
             _buildDiagnosticReportsList(),
             _buildChronicDiseasesList(),
           ],

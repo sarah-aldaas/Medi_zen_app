@@ -140,7 +140,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                         if (state is CodeTypesSuccess) {
                           statusTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_request_status').toList() ?? [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return Column(
@@ -177,7 +177,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                         if (state is CodeTypesSuccess) {
                           intentTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_request_intent').toList() ?? [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return DropdownButtonFormField<String>(
@@ -214,7 +214,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                         if (state is CodeTypesSuccess) {
                           priorityTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_request_priority').toList() ?? [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return DropdownButtonFormField<String>(
@@ -251,7 +251,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                         if (state is CodeTypesSuccess) {
                           therapyTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_request_therapy_type').toList() ?? [];
                         }
-                        if (state is CodeTypesLoading) {
+                        if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return DropdownButtonFormField<String>(

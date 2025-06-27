@@ -150,7 +150,9 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
           MaterialPageRoute(
             builder: (context) => ConditionDetailsPage(conditionId: condition.id!),
           ),
-        ),
+        ).then((value){
+          _loadInitialConditions();
+        }),
       ),
     );
   }
