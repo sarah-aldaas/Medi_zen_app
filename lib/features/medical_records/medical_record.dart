@@ -65,10 +65,13 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
       setState(() => _allergyFilter = result);
     }
   }
+
   Future<void> _showServiceRequestFilterDialog() async {
     final result = await showDialog<ServiceRequestFilter>(
       context: context,
-      builder: (context) => ServiceRequestFilterDialog(currentFilter: _serviceRequestFilter),
+      builder:
+          (context) =>
+              ServiceRequestFilterDialog(currentFilter: _serviceRequestFilter),
     );
 
     if (result != null) {
@@ -138,7 +141,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
             IconButton(
               icon: const Icon(Icons.filter_list),
               onPressed: _showServiceRequestFilterDialog,
-              tooltip: "Filter service request"
+              tooltip: "Filter service request",
             ),
           if (_tabController.index == 3)
             IconButton(
@@ -243,71 +246,6 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     );
   }
 
-  Widget _buildMedicationRequestTile({
-    required String medicationName,
-    required String startDate,
-    required String dosage,
-  }) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      padding: EdgeInsets.all(18.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            medicationName,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          Text('Start Date: $startDate', style: TextStyle(fontSize: 16)),
-          Text('Dosage: $dosage', style: TextStyle(fontSize: 16)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAllergyTile({
-    required String allergyName,
-    required String reaction,
-    required String notes,
-  }) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      padding: EdgeInsets.all(18.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            allergyName,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          Text('Reaction: $reaction', style: TextStyle(fontSize: 16)),
-          Text('Notes: $notes', style: TextStyle(fontSize: 16)),
-        ],
-      ),
-    );
-  }
 
   Widget _buildChronicDiseaseTile({
     required String diseaseName,

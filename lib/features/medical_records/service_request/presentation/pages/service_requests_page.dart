@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_request_details_page.dart';
-import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_model.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
+import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_model.dart';
+import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_request_details_page.dart';
+
 import '../../data/data_source/service_request_remote_data_source.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
@@ -37,7 +40,10 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
 
   void _loadInitialRequests() {
     setState(() => _isLoadingMore = false);
-    context.read<ServiceRequestCubit>().getServiceRequests(filters: widget.filter.toJson(), context: context);
+    context.read<ServiceRequestCubit>().getServiceRequests(
+      filters: widget.filter.toJson(),
+      context: context,
+    );
   }
 
   @override
@@ -51,17 +57,30 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context.read<ServiceRequestCubit>().getServiceRequests(context: context, filters: widget.filter.toJson(), loadMore: true).then((_) {
-        setState(() => _isLoadingMore = false);
-      });
+      context
+          .read<ServiceRequestCubit>()
+          .getServiceRequests(
+            context: context,
+            filters: widget.filter.toJson(),
+            loadMore: true,
+          )
+          .then((_) {
+            setState(() => _isLoadingMore = false);
+          });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
+      backgroundColor: colorScheme.background,
       body: BlocBuilder<ServiceRequestCubit, ServiceRequestState>(
         builder: (context, state) {
           if (state is ServiceRequestLoading && !state.isLoadMore) {
@@ -69,7 +88,52 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
           }
 
           if (state is ServiceRequestError) {
-            return Center(child: Text(state.message));
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 80,
+                      color: colorScheme.error,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'serviceRequestsPage.errorOccurred'.tr(context),
+                      textAlign: TextAlign.center,
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.error,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: _loadInitialRequests,
+                      icon: const Icon(Icons.refresh),
+                      label: Text(
+                        'serviceRequestsPage.tryAgain'.tr(context),
+                        style: textTheme.labelLarge?.copyWith(
+                          color: colorScheme.onPrimary,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        elevation: 5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
           if (state is ServiceRequestLoaded) {
@@ -81,9 +145,25 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.assignment, size: 64, color: Colors.grey),
+                    Icon(
+                      Icons.assignment,
+                      size: 80,
+                      color: colorScheme.onBackground.withOpacity(0.4),
+                    ),
                     const SizedBox(height: 16),
-                    const Text('No service requests found', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                    Text(
+                      'serviceRequestsPage.noRequestsFound'.tr(context),
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onBackground.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'serviceRequestsPage.adjustFilters'.tr(context),
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onBackground.withOpacity(0.6),
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -96,7 +176,14 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                 if (index < requests.length) {
                   return _buildRequestItem(context, requests[index]);
                 } else {
-                  return const Padding(padding: EdgeInsets.all(16.0), child: Center(child: LoadingPage()));
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  );
                 }
               },
             );
@@ -109,8 +196,11 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
   }
 
   Widget _buildRequestItem(BuildContext context, ServiceRequestModel request) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -119,110 +209,127 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
               builder:
                   (context) => BlocProvider(
                     create:
-                        (context) =>
-                            ServiceRequestCubit(networkInfo: serviceLocator(), remoteDataSource: serviceLocator<ServiceRequestRemoteDataSource>())
-                              ..getServiceRequestDetails(request.id!, context),
+                        (context) => ServiceRequestCubit(
+                          networkInfo: serviceLocator(),
+                          remoteDataSource:
+                              serviceLocator<ServiceRequestRemoteDataSource>(),
+                        )..getServiceRequestDetails(request.id!, context),
                     child: ServiceRequestDetailsPage(serviceId: request.id!),
                   ),
             ),
           );
         },
+        borderRadius: BorderRadius.circular(20.0),
+        splashFactory: InkRipple.splashFactory,
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(25.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Service Name and Status
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    request.healthCareService?.name ?? 'Unknown Service',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  Flexible(
+                    child: Text(
+                      request.healthCareService?.name ??
+                          'serviceRequestsPage.unknownService'.tr(context),
+                      style: textTheme.headlineMedium?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                    decoration: BoxDecoration(color: _getStatusColor(request.serviceRequestStatus?.code), borderRadius: BorderRadius.circular(12.0)),
-                    child: Text(request.serviceRequestStatus?.display ?? 'Unknown', style: const TextStyle(color: Colors.white)),
+                  const SizedBox(width: 18),
+                  _buildStatusChip(
+                    context,
+                    request.serviceRequestStatus?.code,
+                    request.serviceRequestStatus?.display,
                   ),
                 ],
               ),
-              const SizedBox(height: 8.0),
-
-              // Order Details
-              if (request.orderDetails != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Order Details:', style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
-                    Text(request.orderDetails!),
-                    const SizedBox(height: 8.0),
-                  ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 18.0),
+                child: Divider(
+                  height: 1,
+                  thickness: 1.8,
+                  color: colorScheme.onSurface.withOpacity(0.1),
                 ),
+              ),
 
-              // Reason
-              if (request.reason != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Reason:', style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
-                    Text(request.reason!),
-                    const SizedBox(height: 8.0),
-                  ],
+              if (request.orderDetails != null) ...[
+                _buildInfoRow(
+                  context,
+                  'serviceRequestsPage.orderDetails'.tr(context),
+                  request.orderDetails!,
+                  icon: Icons.description_outlined,
                 ),
+                const SizedBox(height: 14),
+              ],
 
-              // Category and Priority
-              Row(
+              if (request.reason != null) ...[
+                _buildInfoRow(
+                  context,
+                  'serviceRequestsPage.reason'.tr(context),
+                  request.reason!,
+                  icon: Icons.info_outline,
+                ),
+                const SizedBox(height: 14),
+              ],
+
+              Wrap(
+                spacing: 12.0,
+                runSpacing: 8.0,
                 children: [
                   if (request.serviceRequestCategory != null)
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Category:', style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
-                          Text(request.serviceRequestCategory!.display, style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
+                    _buildAttributeChip(
+                      context,
+                      'serviceRequestsPage.category'.tr(context),
+                      request.serviceRequestCategory!.display,
+                      colorScheme.secondary,
                     ),
                   if (request.serviceRequestPriority != null)
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Priority:', style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
-                          Text(request.serviceRequestPriority!.display, style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
+                    _buildAttributeChip(
+                      context,
+                      'serviceRequestsPage.priority'.tr(context),
+                      request.serviceRequestPriority!.display,
+                      colorScheme.tertiary,
                     ),
                   if (request.serviceRequestBodySite != null)
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Body site:', style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
-                          Text(request.serviceRequestBodySite!.display, style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
+                    _buildAttributeChip(
+                      context,
+                      'serviceRequestsPage.bodySite'.tr(context),
+                      request.serviceRequestBodySite!.display,
+                      colorScheme.primary.withOpacity(0.7),
                     ),
                 ],
               ),
-              const SizedBox(height: 8.0),
-
-              // Doctor and Date
+              const SizedBox(height: 28),
               if (request.encounter?.appointment?.doctor != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Doctor:', style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
-                    Text(
-                      '${request.encounter!.appointment!.doctor!.prefix} ${request.encounter!.appointment!.doctor!.given} ${request.encounter!.appointment!.doctor!.family}',
-                    ),
-                    const SizedBox(height: 8.0),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: _buildInfoRow(
+                    context,
+                    'serviceRequestsPage.doctor'.tr(context),
+                    '${request.encounter!.appointment!.doctor!.prefix} ${request.encounter!.appointment!.doctor!.given} ${request.encounter!.appointment!.doctor!.family}',
+                    icon: Icons.person_outline,
+                  ),
                 ),
 
               if (request.encounter?.actualStartDate != null)
-                Text('Date: ${_formatDate(DateTime.parse(request.encounter!.actualStartDate!))}', style: Theme.of(context).textTheme.bodySmall),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    'serviceRequestsPage.date'.tr(context) +
+                        ': ${_formatDate(DateTime.parse(request.encounter!.actualStartDate!))}',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onBackground.withOpacity(0.7),
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -230,18 +337,137 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     );
   }
 
+  Widget _buildInfoRow(
+    BuildContext context,
+    String title,
+    String value, {
+    IconData? icon,
+  }) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (icon != null) ...[
+          Icon(icon, size: 22, color: AppColors.primaryColor),
+          const SizedBox(width: 12),
+        ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$title:',
+                style: textTheme.labelLarge?.copyWith(
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+
+              const SizedBox(height: 6),
+              Text(
+                value,
+                style: textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurface.withOpacity(0.95),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatusChip(
+    BuildContext context,
+    String? statusCode,
+    String? statusDisplay,
+  ) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 9.0),
+      decoration: BoxDecoration(
+        color: _getStatusColor(statusCode),
+        borderRadius: BorderRadius.circular(30.0),
+        boxShadow: [
+          BoxShadow(
+            color: _getStatusColor(statusCode).withOpacity(0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Text(
+        _getLocalizedStatusDisplay(context, statusCode) ??
+            'serviceRequestsPage.unknownStatus'.tr(context),
+        style: textTheme.labelLarge?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
+  String? _getLocalizedStatusDisplay(BuildContext context, String? statusCode) {
+    switch (statusCode) {
+      case 'completed':
+        return 'serviceRequestsPage.statusCompleted'.tr(context);
+      case 'in-progress':
+        return 'serviceRequestsPage.statusInProgress'.tr(context);
+      case 'cancelled':
+        return 'serviceRequestsPage.statusCancelled'.tr(context);
+      case 'on-hold':
+        return 'serviceRequestsPage.statusOnHold'.tr(context);
+      default:
+        return null;
+    }
+  }
+
+  Widget _buildAttributeChip(
+    BuildContext context,
+    String title,
+    String value,
+    Color baseColor,
+  ) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return Chip(
+      avatar: Icon(
+        Icons.label_important_outline,
+        color: AppColors.blackColor,
+        size: 18,
+      ),
+      label: Text('$title: $value'),
+      backgroundColor: baseColor.withOpacity(0.15),
+      labelStyle: textTheme.bodySmall?.copyWith(
+        color:
+            baseColor.computeLuminance() > 0.5
+                ? AppColors.blackColor
+                : baseColor.withOpacity(0.9),
+        fontWeight: FontWeight.w600,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      side: BorderSide(color: baseColor.withOpacity(0.6), width: 1.2),
+    );
+  }
+
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
       case 'completed':
-        return Colors.green;
+        return Colors.green.shade700;
       case 'in-progress':
-        return Colors.blue;
+        return Colors.blue.shade700;
       case 'cancelled':
-        return Colors.red;
+        return Colors.red.shade700;
       case 'on-hold':
-        return Colors.orange;
+        return Colors.orange.shade700;
       default:
-        return Colors.grey;
+        return Colors.grey.shade700;
     }
   }
 

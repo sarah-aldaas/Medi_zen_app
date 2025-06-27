@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/features/medical_records/encounter/data/models/encounter_model.dart';
 import 'package:medizen_app/features/medical_records/imaging_study/presentation/pages/imaging_study_details_page.dart';
-import 'package:medizen_app/features/medical_records/observation/data/models/observation_model.dart';
 import 'package:medizen_app/features/medical_records/observation/presentation/pages/observation_details_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_model.dart';
-import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
-import '../../../imaging_study/data/models/imaging_study_model.dart';
+
+import '../../../../../base/theme/app_color.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
 class ServiceRequestDetailsPage extends StatelessWidget {
@@ -18,342 +17,682 @@ class ServiceRequestDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Service Request Details')),
+      backgroundColor: colorScheme.background,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+        ),
+        title: Text(
+          'serviceRequestDetailsPage.appBarTitle'.tr(context),
+          style: TextStyle(
+            color: AppColors.primaryColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 4,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      ),
       body: BlocConsumer<ServiceRequestCubit, ServiceRequestState>(
         listener: (context, state) {
           if (state is ServiceRequestError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: colorScheme.error,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
           }
         },
         builder: (context, state) {
           if (state is ServiceRequestLoading && state.isDetailsLoading) {
-            return  Center(child: LoadingPage());
+            return Center(child: LoadingPage());
           }
 
-          if (state is ServiceRequestLoaded && state.serviceRequestDetails != null) {
+          if (state is ServiceRequestLoaded &&
+              state.serviceRequestDetails != null) {
             return _buildDetailsContent(context, state.serviceRequestDetails!);
           }
 
-          return const Center(child: Text('No details available'));
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.sentiment_dissatisfied_outlined,
+                    size: 80,
+                    color: colorScheme.onBackground.withOpacity(0.5),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'serviceRequestDetailsPage.noDetailsFoundTitle'.tr(context),
+                    textAlign: TextAlign.center,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onBackground.withOpacity(0.8),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'serviceRequestDetailsPage.noDetailsFoundMessage'.tr(
+                      context,
+                    ),
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onBackground.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
-  Widget _buildDetailsContent(BuildContext context, ServiceRequestModel request) {
+  Widget _buildDetailsContent(
+    BuildContext context,
+    ServiceRequestModel request,
+  ) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Service Request Header
           _buildServiceHeader(context, request),
           const SizedBox(height: 24),
 
-          // Service Details Section
-          _buildServiceDetailsSection(request),
-          const SizedBox(height: 24),
-
-          // Observation Section
-          if (request.observation != null) _buildObservationSection(request.observation!,context),
-          if (request.observation != null) const SizedBox(height: 24),
-          if (request.imagingStudy != null)
-            _buildImagingStudySection(request.imagingStudy!,context),
-          if (request.imagingStudy != null) const SizedBox(height: 24),
-          // Encounter Section
-          if (request.encounter != null) _buildEncounterSection(request.encounter!),
-          if (request.encounter != null) const SizedBox(height: 24),
-
-          // Healthcare Service Section
-          if (request.healthCareService != null) _buildHealthcareServiceSection(request.healthCareService!),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServiceHeader(BuildContext context, ServiceRequestModel request) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    request.healthCareService?.name ?? 'Unknown Service',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Chip(
-                  backgroundColor: _getStatusColor(request.serviceRequestStatus?.code),
-                  label: Text(request.serviceRequestStatus?.display ?? 'Unknown', style: const TextStyle(color: Colors.white)),
-                ),
-              ],
+          _buildSectionCard(
+            context,
+            title: 'serviceRequestDetailsPage.serviceDetailsSectionTitle'.tr(
+              context,
             ),
-            const SizedBox(height: 8),
-            if (request.orderDetails != null) Padding(padding: const EdgeInsets.only(top: 8.0), child: Text(request.orderDetails!)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildServiceDetailsSection(ServiceRequestModel request) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Service Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const Divider(),
-            _buildDetailRow('Category', request.serviceRequestCategory?.display),
-            _buildDetailRow('Priority', request.serviceRequestPriority?.display),
-            if (request.serviceRequestBodySite != null) _buildDetailRow('Body Site', request.serviceRequestBodySite?.display),
-            _buildDetailRow('Reason', request.reason),
-            _buildDetailRow('Notes', request.note),
-            if (request.occurrenceDate != null) _buildDetailRow('Request Date', DateFormat('MMM d, y - hh:mm a').format(request.occurrenceDate!)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildObservationSection(ObservationModel observation,BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ObservationDetailsPage(serviceId: serviceId, observationId: observation.id!)));
-      },
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            icon: Icons.assignment_outlined,
             children: [
-              const Text('Observations', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const Divider(),
-              _buildDetailRow('Test Name', observation.observationDefinition?.title),
-              _buildDetailRow('Result', observation.value),
-              _buildDetailRow('Interpretation', observation.interpretation?.display),
-              _buildDetailRow('Status', observation.status?.display),
-              _buildDetailRow('Method', observation.method?.display),
-              _buildDetailRow('Body Site', observation.bodySite?.display),
-              _buildDetailRow('Notes', observation.note),
-              if (observation.effectiveDateTime != null) _buildDetailRow('Date', DateFormat('MMM d, y - hh:mm a').format(observation.effectiveDateTime!)),
-              if (observation.laboratory != null) ...[
-                const SizedBox(height: 12),
-                const Text('Laboratory Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const Divider(),
-                _buildDetailRow('Lab Specialist', '${observation.laboratory?.prefix} ${observation.laboratory?.given} ${observation.laboratory?.family}'),
-                _buildDetailRow('Clinic', observation.laboratory?.clinic?.name),
-              ],
-              if (observation.pdf != null) ...[
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle PDF view
-                  },
-                  child: const Text('View Test Report PDF'),
+              _buildDetailRow(
+                context,
+                'serviceRequestDetailsPage.categoryLabel'.tr(context),
+                request.serviceRequestCategory?.display,
+              ),
+              _buildDetailRow(
+                context,
+                'serviceRequestDetailsPage.priorityLabel'.tr(context),
+                request.serviceRequestPriority?.display,
+              ),
+              if (request.serviceRequestBodySite != null)
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.bodySiteLabel'.tr(context),
+                  request.serviceRequestBodySite?.display,
                 ),
-              ],
+              _buildDetailRow(
+                context,
+                'serviceRequestDetailsPage.reasonLabel'.tr(context),
+                request.reason,
+              ),
+              _buildDetailRow(
+                context,
+                'serviceRequestDetailsPage.notesLabel'.tr(context),
+                request.note,
+              ),
+              if (request.occurrenceDate != null)
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.requestDateLabel'.tr(context),
+                  DateFormat(
+                    'MMM d, y - hh:mm a',
+                  ).format(request.occurrenceDate!),
+                ),
             ],
           ),
-        ),
-      ),
-    );
-  }
+          const SizedBox(height: 24),
 
-  Widget _buildEncounterSection(EncounterModel encounter) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Encounter Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const Divider(),
-            _buildDetailRow('Type', encounter.type?.display),
-            _buildDetailRow('Status', encounter.status?.display),
-            _buildDetailRow('Reason', encounter.reason),
-            if (encounter.actualStartDate != null)
-              _buildDetailRow('Start Date', DateFormat('MMM d, y - hh:mm a').format(DateTime.parse(encounter.actualStartDate!))),
-            if (encounter.actualEndDate != null) _buildDetailRow('End Date', DateFormat('MMM d, y - hh:mm a').format(DateTime.parse(encounter.actualEndDate!))),
-            _buildDetailRow('Special Arrangements', encounter.specialArrangement),
-
-            if (encounter.appointment != null) ...[
-              const SizedBox(height: 12),
-              const Text('Appointment Details', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              const Divider(),
-              _buildDetailRow('Appointment Type', encounter.appointment?.type?.display),
-              _buildDetailRow('Appointment Status', encounter.appointment?.status?.display),
-              _buildDetailRow('Description', encounter.appointment?.description),
-              _buildDetailRow('Notes', encounter.appointment?.note),
-
-              if (encounter.appointment?.doctor != null) ...[
-                const SizedBox(height: 12),
-                const Text('Doctor Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const Divider(),
+          if (request.observation != null)
+            _buildSectionCard(
+              context,
+              title: 'serviceRequestDetailsPage.observationsSectionTitle'.tr(
+                context,
+              ),
+              icon: Icons.medical_information_outlined,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => ObservationDetailsPage(
+                          serviceId: serviceId,
+                          observationId: request.observation!.id!,
+                        ),
+                  ),
+                );
+              },
+              children: [
                 _buildDetailRow(
-                  'Name',
-                  '${encounter.appointment!.doctor!.prefix} ${encounter.appointment!.doctor!.given} ${encounter.appointment!.doctor!.family}',
-                ),
-                _buildDetailRow('Specialty', encounter.appointment!.doctor!.clinic?.name),
-                _buildDetailRow('About', encounter.appointment!.doctor!.text),
-              ],
-
-              if (encounter.appointment?.patient != null) ...[
-                const SizedBox(height: 12),
-                const Text('Patient Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const Divider(),
-                _buildDetailRow(
-                  'Name',
-                  '${encounter.appointment!.patient!.prefix} ${encounter.appointment!.patient!.given} ${encounter.appointment!.patient!.family}',
+                  context,
+                  'serviceRequestDetailsPage.testNameLabel'.tr(context),
+                  request.observation?.observationDefinition?.title,
                 ),
                 _buildDetailRow(
-                  'Date of Birth',
-                  encounter.appointment!.patient!.dateOfBirth != null
-                      ? DateFormat('MMM d, y').format(DateTime.parse(encounter.appointment!.patient!.dateOfBirth!))
+                  context,
+                  'serviceRequestDetailsPage.resultLabel'.tr(context),
+                  request.observation?.value,
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.interpretationLabel'.tr(context),
+                  request.observation?.interpretation?.display,
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.statusLabel'.tr(context),
+                  request.observation?.status?.display,
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.dateLabel'.tr(context),
+                  request.observation?.effectiveDateTime != null
+                      ? DateFormat(
+                        'MMM d, y - hh:mm a',
+                      ).format(request.observation!.effectiveDateTime!)
                       : null,
                 ),
-                _buildDetailRow('Gender', encounter.appointment!.patient!.gender?.display),
-                _buildDetailRow('Blood Type', encounter.appointment!.patient!.bloodType?.display),
-                _buildDetailRow('Marital Status', encounter.appointment!.patient!.maritalStatus?.display),
-                _buildDetailRow('Height', encounter.appointment!.patient!.height != null ? '${encounter.appointment!.patient!.height} cm' : null),
-                _buildDetailRow('Weight', encounter.appointment!.patient!.weight != null ? '${encounter.appointment!.patient!.weight} kg' : null),
-              ],
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHealthcareServiceSection(HealthCareServiceModel service) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Service Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const Divider(),
-            _buildDetailRow('Category', service.category?.display),
-            _buildDetailRow('Price', service.price != null ? '${service.price} ${service.price!.contains('\$') ? '' : '\$'}' : null),
-            _buildDetailRow('Description', service.comment),
-            _buildDetailRow('Additional Details', service.extraDetails),
-            if (service.clinic != null) _buildDetailRow('Service Location', service.clinic?.name),
-            if (service.photo != null) ...[
-              const SizedBox(height: 12),
-              Center(
-                child: Image.network(
-                  service.photo!,
-                  height: 150,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String? value) {
-    if (value == null || value.isEmpty) return const SizedBox.shrink();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [SizedBox(width: 150, child: Text('$label:', style: const TextStyle(fontWeight: FontWeight.bold))), Expanded(child: Text(value))],
-      ),
-    );
-  }
-  Widget _buildImagingStudySection(ImagingStudyModel imagingStudy,BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ImagingStudyDetailsPage(serviceId: serviceId, imagingStudyId: imagingStudy.id!)));
-      },
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Imaging Study',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Chip(
-                    backgroundColor: _getImagingStatusColor(imagingStudy.status?.code),
-                    label: Text(
-                      imagingStudy.status?.display ?? 'Unknown',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-              const Divider(),
-              _buildDetailRow('Title', imagingStudy.title),
-              _buildDetailRow('Description', imagingStudy.description),
-              _buildDetailRow('Modality', imagingStudy.modality?.display),
-              _buildDetailRow('Status', imagingStudy.status?.display),
-              if (imagingStudy.started != null)
-                _buildDetailRow(
-                  'Started',
-                  DateFormat('MMM d, y - hh:mm a').format(imagingStudy.started!),
-                ),
-              if (imagingStudy.cancelledReason != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDetailRow('Cancellation Reason', imagingStudy.cancelledReason),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.red[50],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        'Study was cancelled: ${imagingStudy.cancelledReason}',
-                        style: TextStyle(color: Colors.red[800]),
-                      ),
-                    ),
-                  ],
-                ),
-
-              if (imagingStudy.status?.description != null)
-                Tooltip(
-                  message: imagingStudy.status!.description,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          WidgetSpan(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
-                              child: Icon(Icons.info_outline, size: 20),
-                            ),
+                if (request.observation!.pdf != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Center(
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.picture_as_pdf_outlined,
+                          color: Theme.of(context).colorScheme.onSecondary,
+                        ),
+                        label: Text(
+                          'serviceRequestDetailsPage.viewTestReportPDFButton'
+                              .tr(context),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onSecondary,
                           ),
-                          TextSpan(
-                            text: 'Status meaning: ${imagingStudy.status!.description}',
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.secondaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          elevation: 4,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          if (request.observation != null) const SizedBox(height: 24),
+
+          if (request.imagingStudy != null)
+            _buildSectionCard(
+              context,
+              title: 'serviceRequestDetailsPage.imagingStudySectionTitle'.tr(
+                context,
+              ),
+              icon: Icons.camera_alt_outlined,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => ImagingStudyDetailsPage(
+                          serviceId: serviceId,
+                          imagingStudyId: request.imagingStudy!.id!,
+                        ),
+                  ),
+                );
+              },
+              children: [
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.titleLabel'.tr(context),
+                  request.imagingStudy?.title,
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.modalityLabel'.tr(context),
+                  request.imagingStudy?.modality?.display,
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.statusLabel'.tr(context),
+                  request.imagingStudy?.status?.display,
+                ),
+                if (request.imagingStudy?.started != null)
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.startedLabel'.tr(context),
+                    DateFormat(
+                      'MMM d, y - hh:mm a',
+                    ).format(request.imagingStudy!.started!),
+                  ),
+                if (request.imagingStudy?.cancelledReason != null)
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.cancellationReasonLabel'.tr(
+                      context,
+                    ),
+                    request.imagingStudy?.cancelledReason,
+                  ),
+                if (request.imagingStudy?.status?.description != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Tooltip(
+                      message: request.imagingStudy!.status!.description!,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            size: 20,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withOpacity(0.7),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              '${'serviceRequestDetailsPage.statusMeaningPrefix'.tr(context)} ${request.imagingStudy!.status!.description!}',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.copyWith(
+                                fontStyle: FontStyle.italic,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.6),
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
+              ],
+            ),
+          if (request.imagingStudy != null) const SizedBox(height: 24),
+
+          if (request.encounter != null)
+            _buildSectionCard(
+              context,
+              title: 'serviceRequestDetailsPage.encounterDetailsSectionTitle'
+                  .tr(context),
+              icon: Icons.meeting_room_outlined,
+              children: [
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.typeLabel'.tr(context),
+                  request.encounter?.type?.display,
                 ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.statusLabel'.tr(context),
+                  request.encounter?.status?.display,
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.reasonLabel'.tr(context),
+                  request.encounter?.reason,
+                ),
+                if (request.encounter?.actualStartDate != null)
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.startDateLabel'.tr(context),
+                    DateFormat('MMM d, y - hh:mm a').format(
+                      DateTime.parse(request.encounter!.actualStartDate!),
+                    ),
+                  ),
+                if (request.encounter?.actualEndDate != null)
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.endDateLabel'.tr(context),
+                    DateFormat(
+                      'MMM d, y - hh:mm a',
+                    ).format(DateTime.parse(request.encounter!.actualEndDate!)),
+                  ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.specialArrangementsLabel'.tr(
+                    context,
+                  ),
+                  request.encounter?.specialArrangement,
+                ),
+
+                if (request.encounter?.appointment != null) ...[
+                  const SizedBox(height: 16),
+                  _buildSubSectionTitle(
+                    context,
+                    'serviceRequestDetailsPage.appointmentDetailsSubSectionTitle'
+                        .tr(context),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1.5,
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.typeLabel'.tr(context),
+                    request.encounter?.appointment?.type?.display,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.statusLabel'.tr(context),
+                    request.encounter?.appointment?.status?.display,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.descriptionLabel'.tr(context),
+                    request.encounter?.appointment?.description,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.notesLabel'.tr(context),
+                    request.encounter?.appointment?.note,
+                  ),
+                ],
+
+                if (request.encounter?.appointment?.doctor != null) ...[
+                  const SizedBox(height: 16),
+                  _buildSubSectionTitle(
+                    context,
+                    'serviceRequestDetailsPage.doctorInformationSubSectionTitle'
+                        .tr(context),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1.5,
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.nameLabel'.tr(context),
+                    '${request.encounter!.appointment!.doctor!.prefix} ${request.encounter!.appointment!.doctor!.given} ${request.encounter!.appointment!.doctor!.family}',
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.specialtyLabel'.tr(context),
+                    request.encounter!.appointment!.doctor!.clinic?.name,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.aboutLabel'.tr(context),
+                    request.encounter!.appointment!.doctor!.text,
+                  ),
+                ],
+
+                if (request.encounter?.appointment?.patient != null) ...[
+                  const SizedBox(height: 16),
+                  _buildSubSectionTitle(
+                    context,
+                    'serviceRequestDetailsPage.patientInformationSubSectionTitle'
+                        .tr(context),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1.5,
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.nameLabel'.tr(context),
+                    '${request.encounter!.appointment!.patient!.prefix} ${request.encounter!.appointment!.patient!.given} ${request.encounter!.appointment!.patient!.family}',
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.dateOfBirthLabel'.tr(context),
+                    request.encounter!.appointment!.patient!.dateOfBirth != null
+                        ? DateFormat('MMM d, y').format(
+                          DateTime.parse(
+                            request
+                                .encounter!
+                                .appointment!
+                                .patient!
+                                .dateOfBirth!,
+                          ),
+                        )
+                        : null,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.genderLabel'.tr(context),
+                    request.encounter!.appointment!.patient!.gender?.display,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.bloodTypeLabel'.tr(context),
+                    request.encounter!.appointment!.patient!.bloodType?.display,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.maritalStatusLabel'.tr(context),
+                    request
+                        .encounter!
+                        .appointment!
+                        .patient!
+                        .maritalStatus
+                        ?.display,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.heightLabel'.tr(context),
+                    request.encounter!.appointment!.patient!.height != null
+                        ? '${request.encounter!.appointment!.patient!.height} ${'serviceRequestDetailsPage.cmSuffix'.tr(context)}'
+                        : null,
+                  ),
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.weightLabel'.tr(context),
+                    request.encounter!.appointment!.patient!.weight != null
+                        ? '${request.encounter!.appointment!.patient!.weight} ${'serviceRequestDetailsPage.kgSuffix'.tr(context)}'
+                        : null,
+                  ),
+                ],
+              ],
+            ),
+          if (request.encounter != null) const SizedBox(height: 24),
+
+          if (request.healthCareService != null)
+            _buildSectionCard(
+              context,
+              title: 'serviceRequestDetailsPage.serviceInformationSectionTitle'
+                  .tr(context),
+              icon: Icons.local_hospital_outlined,
+              children: [
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.categoryLabel'.tr(context),
+                  request.healthCareService?.category?.display,
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.priceLabel'.tr(context),
+                  servicePriceFormatted(request.healthCareService?.price),
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.descriptionLabel'.tr(context),
+                  request.healthCareService?.comment,
+                ),
+                _buildDetailRow(
+                  context,
+                  'serviceRequestDetailsPage.additionalDetailsLabel'.tr(
+                    context,
+                  ),
+                  request.healthCareService?.extraDetails,
+                ),
+                if (request.healthCareService?.clinic != null)
+                  _buildDetailRow(
+                    context,
+                    'serviceRequestDetailsPage.serviceLocationLabel'.tr(
+                      context,
+                    ),
+                    request.healthCareService?.clinic?.name,
+                  ),
+                if (request.healthCareService?.photo != null) ...[
+                  const SizedBox(height: 16),
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0),
+                      child: Image.network(
+                        request.healthCareService!.photo!,
+                        height: 180,
+                        fit: BoxFit.cover,
+                        errorBuilder:
+                            (context, error, stackTrace) => Container(
+                              height: 180,
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                              child: Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  size: 50,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.5),
+                                ),
+                              ),
+                            ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  String? servicePriceFormatted(String? price) {
+    if (price == null || price.isEmpty) return null;
+    return price.contains('\$') ? price : '$price\$';
+  }
+
+  Widget _buildServiceHeader(
+    BuildContext context,
+    ServiceRequestModel request,
+  ) {
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    request.healthCareService?.name ??
+                        'serviceRequestDetailsPage.unknownService'.tr(context),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                _buildStatusChip(
+                  context,
+                  request.serviceRequestStatus?.code,
+                  request.serviceRequestStatus?.display,
+                ),
+              ],
+            ),
+            if (request.orderDetails != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Text(
+                  request.orderDetails!,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionCard(
+    BuildContext context, {
+    required String title,
+    required List<Widget> children,
+    IconData? icon,
+    VoidCallback? onTap,
+  }) {
+    return Card(
+      elevation: Theme.of(context).cardTheme.elevation,
+      shape: Theme.of(context).cardTheme.shape,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  if (icon != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(icon, size: 28, color: AppColors.green300),
+                    ),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ),
+                  if (onTap != null)
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                      color: AppColors.primaryColor,
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Divider(
+                height: 1,
+                thickness: 1.5,
+                color: AppColors.primaryColor.withOpacity(0.1),
+              ),
+              const SizedBox(height: 12),
+              ...children,
             ],
           ),
         ),
@@ -361,48 +700,146 @@ class ServiceRequestDetailsPage extends StatelessWidget {
     );
   }
 
-// Add this to your status color method for imaging study statuses
-  Color _getImagingStatusColor(String? statusCode) {
+  Widget _buildSubSectionTitle(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 18,
+          color: AppColors.primaryColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(BuildContext context, String label, String? value) {
+    if (value == null || value.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 130,
+            child: Text(
+              '$label:',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.cyan1,
+                fontSize: 15,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(
+    BuildContext context,
+    String? statusCode,
+    String? statusDisplay,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: _getStatusColor(statusCode),
+        borderRadius: BorderRadius.circular(25.0),
+        boxShadow: [
+          BoxShadow(
+            color: _getStatusColor(statusCode).withOpacity(0.3),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Text(
+        _getLocalizedStatusDisplay(context, statusCode) ??
+            'serviceRequestDetailsPage.unknownStatus'.tr(context),
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
+  String? _getLocalizedStatusDisplay(BuildContext context, String? statusCode) {
     switch (statusCode) {
-      case 'registered':
-        return Colors.blue;
-      case 'preliminary':
-        return Colors.orange;
-      case 'final':
-        return Colors.green;
-      case 'amended':
-        return Colors.purple;
-      case 'cancelled':
-        return Colors.red;
+      case 'active':
+        return 'serviceRequestDetailsPage.statusActive'.tr(context);
+      case 'on-hold':
+        return 'serviceRequestDetailsPage.statusOnHold'.tr(context);
+      case 'revoked':
+        return 'serviceRequestDetailsPage.statusRevoked'.tr(context);
       case 'entered-in-error':
-        return Colors.deepOrange;
+        return 'serviceRequestDetailsPage.statusEnteredInError'.tr(context);
+      case 'rejected':
+        return 'serviceRequestDetailsPage.statusRejected'.tr(context);
+      case 'completed':
+        return 'serviceRequestDetailsPage.statusCompleted'.tr(context);
+      case 'in-progress':
+        return 'serviceRequestDetailsPage.statusInProgress'.tr(context);
+      case 'cancelled':
+        return 'serviceRequestDetailsPage.statusCancelled'.tr(context);
+      case 'registered':
+        return 'serviceRequestDetailsPage.imagingStatusRegistered'.tr(context);
+      case 'preliminary':
+        return 'serviceRequestDetailsPage.imagingStatusPreliminary'.tr(context);
+      case 'final':
+        return 'serviceRequestDetailsPage.imagingStatusFinal'.tr(context);
+      case 'amended':
+        return 'serviceRequestDetailsPage.imagingStatusAmended'.tr(context);
       case 'unknown':
-        return Colors.grey;
+        return 'serviceRequestDetailsPage.unknownStatus'.tr(context);
       default:
-        return Colors.grey[600]!;
+        return null;
     }
   }
 
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
       case 'active':
-        return Colors.lightBlue;
+        return Colors.lightBlue.shade600;
       case 'on-hold':
-        return Colors.orange;
+        return Colors.orange.shade600;
       case 'revoked':
-        return Colors.red[400]!;
+        return Colors.red.shade600;
       case 'entered-in-error':
-        return Colors.purple;
+        return Colors.purple.shade600;
       case 'rejected':
-        return Colors.red;
+        return Colors.red.shade700;
       case 'completed':
-        return Colors.green;
+        return Colors.green.shade600;
       case 'in-progress':
-        return Colors.blue;
+        return Colors.blue.shade600;
       case 'cancelled':
-        return Colors.red[800]!;
+        return Colors.red.shade800;
+      case 'registered':
+        return Colors.blue.shade600;
+      case 'preliminary':
+        return Colors.orange.shade600;
+      case 'final':
+        return Colors.green.shade600;
+      case 'amended':
+        return Colors.purple.shade600;
       default:
-        return Colors.grey;
+        return Colors.grey.shade600;
     }
+  }
+
+  Color _getImagingStatusColor(String? statusCode) {
+    return _getStatusColor(statusCode);
   }
 }
