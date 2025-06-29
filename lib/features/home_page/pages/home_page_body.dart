@@ -32,7 +32,7 @@ class _HomePageBodyState extends State<HomePageBody> {
               _buildHeader(context),
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeClinics()),
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: DefinitionWidget()),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeDoctors()),
+              // Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeDoctors()),
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SimpleArticlesPage()),
             ],
           ),
