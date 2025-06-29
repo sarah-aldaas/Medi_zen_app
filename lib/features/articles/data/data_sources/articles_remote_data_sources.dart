@@ -55,7 +55,7 @@ class ArticlesRemoteDataSourceImpl implements ArticlesRemoteDataSource {
   Future<Resource<PaginatedResponse<ArticleModel>>> getMyFavoriteArticles({Map<String, dynamic>? filters, int page = 1, int perPage = 10}) async {
     final params = {'page': page.toString(), 'pagination_count': perPage.toString(), if (filters != null) ...filters};
 
-    final response = await networkClient.invoke(ArticlesEndPoints.getAllArticles(), RequestType.get, queryParameters: params);
+    final response = await networkClient.invoke(ArticlesEndPoints.getMyFavoriteArticles(), RequestType.get, queryParameters: params);
 
     return ResponseHandler<PaginatedResponse<ArticleModel>>(
       response,

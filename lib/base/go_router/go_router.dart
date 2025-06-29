@@ -14,9 +14,6 @@ import 'package:medizen_app/features/services/pages/health_care_service_details_
 
 import '../../features/Complaint/view/complaint_list_screen.dart';
 import '../../features/appointment/pages/my_appointments_page.dart';
-
-import '../../features/articles/presentation/pages/articles.dart';
-import '../../features/articles/presentation/pages/my_book_mark.dart';
 import '../../features/authentication/presentation/forget_password/view/forget_password.dart';
 import '../../features/authentication/presentation/login/view/login_screen.dart';
 import '../../features/authentication/presentation/otp/otp_verification_screen.dart';

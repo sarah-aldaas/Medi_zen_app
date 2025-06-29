@@ -47,7 +47,7 @@ class ArticleCubit extends Cubit<ArticleState> {
       return;
     }
 
-    final result = await remoteDataSource.getAllArticles(filters: _currentFilters, page: _currentPage, perPage: 10);
+    final result = await remoteDataSource.getAllArticles(filters: _currentFilters, page: _currentPage, perPage: 6);
 
     if (result is Success<PaginatedResponse<ArticleModel>>) {
       if (result.data.msg == "Unauthorized. Please login first.") {

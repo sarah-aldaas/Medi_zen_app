@@ -112,9 +112,9 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                 if (index < conditions.length) {
                   return _buildConditionItem(conditions[index]);
                 } else {
-                  return const Padding(
+                  return  Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Center(child: LoadingPage()),
+                    child: Center(child: LoadingButton()),
                   );
                 }
               },

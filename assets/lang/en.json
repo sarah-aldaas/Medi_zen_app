@@ -199,33 +199,21 @@
     "cancel": "Cancel",
     "apply": "Apply"
   },
-  "articleDetails": {
-    "actions": {
-      "bookmark": "Bookmark",
-      "share": "Share",
-      "more": "More options"
-    },
-    "content": {
-      "category": "Category",
-      "published": "Published"
-    }
-  },
   "articles": {
     "title": "Articles",
-    "trending": "Trending",
-    "seeAll": "See all",
+    "searchHint": "Search articles...",
+    "noArticles": "No articles found",
     "filters": {
-      "newest": "Newest",
-      "health": "Health",
-      "covid": "Covid-19",
-      "lifestyle": "Lifestyle"
-    },
-    "actions": {
-      "search": "Search",
-      "bookmark": "Bookmarks"
+      "title": "Filter Articles",
+      "sortBy": "Sort by",
+      "none": "None",
+      "asc": "Oldest first",
+      "desc": "Newest first",
+      "category": "Category",
+      "allCategories": "All Categories"
     }
   },
-  "bookmark": {
+    "bookmark": {
     "title": "My Bookmarks",
     "actions": {
       "search": "Search",
@@ -1301,6 +1289,20 @@
     "clearFilters": "Clear Filters",
     "cancel": "Cancel",
     "apply": "Apply"
+  },
+  "articleDetails": {
+    "actions": {
+      "bookmark": "Bookmark article",
+      "removeBookmark": "Remove bookmark"
+    },
+    "content": {
+      "category": "Category"
+    },
+    "removeFavoriteTitle": "Remove from favorites?",
+    "removeFavoriteMessage": "Are you sure you want to remove this article from your favorites?",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "author": "Author"
   }
 
 }

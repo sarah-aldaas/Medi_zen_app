@@ -1,104 +1,11 @@
-// import 'package:flutter/material.dart';
-// import 'package:gap/gap.dart';
-// import 'package:medizen_app/base/extensions/localization_extensions.dart';
-//
-// import '../../data/model/article_model.dart';
-// import 'my_book_mark.dart';
-//
-// class ArticleDetailsPage extends StatelessWidget {
-//   final ArticleModel article;
-//
-//   const ArticleDetailsPage({
-//     super.key,
-//     required this.article,
-//     required String articleTitle,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-//         leading: IconButton(
-//           icon: Icon(Icons.arrow_back, color: Colors.grey),
-//           onPressed: () => Navigator.pop(context),
-//         ),
-//         actions: [
-//           IconButton(
-//             icon: Icon(Icons.bookmark_border, color: Colors.grey),
-//             tooltip: "articleDetails.actions.bookmark".tr(context),
-//             onPressed:
-//                 () => Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => MyBookmarkPage()),
-//                 ),
-//           ),
-//           IconButton(
-//             icon: Icon(Icons.share, color: Colors.grey),
-//             tooltip: "articleDetails.actions.share".tr(context),
-//             onPressed: () {
-//               // Handle share
-//             },
-//           ),
-//           IconButton(
-//             icon: Icon(Icons.more_vert, color: Colors.grey),
-//             tooltip: "articleDetails.actions.more".tr(context),
-//             onPressed: () {
-//               // Handle more options
-//             },
-//           ),
-//         ],
-//       ),
-//       body: SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               ClipRRect(
-//                 borderRadius: BorderRadius.circular(8.0),
-//                 child: Image.asset(article.imageUrl, fit: BoxFit.fill),
-//               ),
-//               Gap(5),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Text(
-//                     "${"articleDetails.content.category".tr(context)}: ${article.category}",
-//                     style: TextStyle(
-//                       color: Theme.of(context).primaryColor,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                   Text(
-//                     "${"articleDetails.content.published".tr(context)} ${article.date}",
-//                     style: TextStyle(color: Colors.grey),
-//                   ),
-//                 ],
-//               ),
-//               SizedBox(height: 16),
-//               Text(
-//                 article.title,
-//                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//               ),
-//               SizedBox(height: 16),
-//               Text(
-//                 article.content,
-//                 style: Theme.of(context).textTheme.bodyMedium,
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/articles/data/model/article_model.dart';
+
+import '../cubit/article_cubit/article_cubit.dart';
 
 class ArticleDetailsPage extends StatelessWidget {
   final ArticleModel article;
@@ -118,16 +25,27 @@ class ArticleDetailsPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.bookmark_border, color: Colors.grey),
-            tooltip: "articleDetails.actions.bookmark".tr(context),
-            onPressed: () => _handleBookmark(context),
-          ),
-          IconButton(
-            icon: const Icon(Icons.share, color: Colors.grey),
-            tooltip: "articleDetails.actions.share".tr(context),
-            onPressed: () => _shareArticle(context),
-          ),
+          BlocBuilder<ArticleCubit, ArticleState>(
+  builder: (context, state) {
+    if(state is FavoriteOperationLoading){
+      return Center(child:Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: LoadingButton(),
+      ) ,);
+    }
+    return IconButton(
+                icon: Icon(
+                  article.isFavorite! ? Icons.bookmark : Icons.bookmark_border,
+                  color: Colors.grey,
+                ),
+                tooltip: article.isFavorite!
+                    ? "articleDetails.actions.removeBookmark".tr(context)
+                    : "articleDetails.actions.bookmark".tr(context),
+                onPressed: () => _handleBookmark(context),
+              );
+  },
+)
+           
         ],
       ),
       body: SingleChildScrollView(
@@ -227,15 +145,39 @@ class ArticleDetailsPage extends StatelessWidget {
   }
 
   void _handleBookmark(BuildContext context) {
-    // Implement bookmark functionality using your cubit
-    // Example: context.read<ArticleCubit>().addArticleFavorite(articleId: article.id!);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("articleDetails.bookmarkAdded".tr(context))),
-    );
+    if (article.isFavorite!) {
+      _showRemoveFromFavoritesDialog(context);
+    } else {
+      // Add to favorites logic
+      // You'll need to access your ArticleCubit here
+      context.read<ArticleCubit>().addArticleFavorite(articleId: article.id!, context: context);
+    }
   }
 
-  void _shareArticle(BuildContext context) {
-    // Implement share functionality
-    // Example: Share.share('Check out this article: ${article.title}\n${article.content?.substring(0, 100)}...');
+  void _showRemoveFromFavoritesDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("articleDetails.removeFavoriteTitle".tr(context)),
+          content: Text("articleDetails.removeFavoriteMessage".tr(context)),
+          actions: <Widget>[
+            TextButton(
+              child: Text("articleDetails.cancel".tr(context)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text("articleDetails.remove".tr(context)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Remove from favorites logic
+                // You'll need to access your ArticleCubit here
+                context.read<ArticleCubit>().removeArticleFavorite(articleId:article.id! ,context: context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
