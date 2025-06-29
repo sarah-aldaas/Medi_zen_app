@@ -18,7 +18,7 @@ abstract class ArticlesRemoteDataSource {
 
   Future<Resource<PublicResponseModel>> removeArticleFavorite({required String articleId});
 
-  Future<Resource<ArticleModel>> getArticleOfCondition({required String conditionId});
+  Future<Resource<ArticleResponseModel>> getArticleOfCondition({required String conditionId});
 
   Future<Resource<ArticleModel>> getDetailsArticle({required String articleId});
 }
@@ -69,9 +69,9 @@ class ArticlesRemoteDataSourceImpl implements ArticlesRemoteDataSource {
   }
 
   @override
-  Future<Resource<ArticleModel>> getArticleOfCondition({required String conditionId}) async {
+  Future<Resource<ArticleResponseModel>> getArticleOfCondition({required String conditionId}) async {
     final response = await networkClient.invoke(ArticlesEndPoints.getArticleOfCondition(conditionId: conditionId), RequestType.get);
-    return ResponseHandler<ArticleModel>(response).processResponse(fromJson: (json) => ArticleModel.fromJson(json['article']));
+    return ResponseHandler<ArticleResponseModel>(response).processResponse(fromJson: (json) => ArticleResponseModel.fromJson(json));
   }
 
   @override

@@ -76,3 +76,34 @@ class ArticleModel {
     return 'ArticleModel(id: $id, title: $title, content: ${content?.substring(0, 20)}..., source: $source)';
   }
 }
+
+class ArticleResponseModel {
+  final bool status;
+  final String errNum;
+  final String msg;
+  final ArticleModel? articleModel;
+
+  ArticleResponseModel({
+    required this.status,
+    required this.errNum,
+    required this.msg,
+    this.articleModel
+  });
+
+  factory ArticleResponseModel.fromJson(Map<String, dynamic> json) {
+    return ArticleResponseModel(
+      status: json['status'] as bool,
+      errNum: json['errNum'].toString(), // Handle both string and int (e.g., "201" or 201)
+      msg: json['msg'].toString(),
+      articleModel:json['article']!=null? ArticleModel.fromJson(json['article']):null
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'errNum': errNum,
+      'msg': msg,
+    };
+  }
+}
