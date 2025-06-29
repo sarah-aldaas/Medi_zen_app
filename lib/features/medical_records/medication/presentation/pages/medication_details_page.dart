@@ -23,7 +23,10 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<MedicationCubit>().getMedicationDetails(context: context, medicationId: widget.medicationId);
+    context.read<MedicationCubit>().getMedicationDetails(
+      context: context,
+      medicationId: widget.medicationId,
+    );
   }
 
   @override
@@ -33,7 +36,11 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           "medicationDetails.title".tr(context),
-          style: TextStyle(color: AppColors.primaryColor, fontSize: 22, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppColors.primaryColor,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
@@ -52,7 +59,9 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
           } else if (state is MedicationLoading) {
             return const Center(child: LoadingPage());
           } else {
-            return Center(child: Text("medicationDetails.failedToLoad".tr(context)));
+            return Center(
+              child: Text("medicationDetails.failedToLoad".tr(context)),
+            );
           }
         },
       ),
@@ -66,12 +75,80 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(medication),
-          const SizedBox(height: 20),
-          _buildDosageInfo(medication),
-          const SizedBox(height: 20),
-          _buildInstructions(medication),
-          const SizedBox(height: 20),
-          _buildStatusAndDates(medication),
+          const SizedBox(height: 24),
+
+          _buildInfoCard(
+            title: "medicationDetails.dosageInfo".tr(context),
+            children: [
+              if (medication.dose != null && medication.doseUnit != null)
+                _buildDetailRow(
+                  "medicationDetails.dose".tr(context),
+                  "${medication.dose} ${medication.doseUnit}",
+                ),
+              if (medication.maxDosePerPeriod != null)
+                _buildDetailRow(
+                  "medicationDetails.maxDose".tr(context),
+                  "${medication.maxDosePerPeriod!.numerator.value} ${medication.maxDosePerPeriod!.numerator.unit} ${"medicationDetails.per".tr(context)} ${medication.maxDosePerPeriod!.denominator.value} ${medication.maxDosePerPeriod!.denominator.unit}",
+                ),
+              if (medication.dosageInstructions != null)
+                _buildDetailRow(
+                  "medicationDetails.instructions".tr(context),
+                  medication.dosageInstructions!,
+                ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          _buildInfoCard(
+            title: "medicationDetails.patientAndAdditionalInstructions".tr(
+              context,
+            ),
+            children: [
+              if (medication.patientInstructions != null)
+                _buildDetailRow(
+                  "medicationDetails.patientInstructions".tr(context),
+                  medication.patientInstructions!,
+                ),
+              if (medication.additionalInstructions != null)
+                _buildDetailRow(
+                  "medicationDetails.additionalInstructions".tr(context),
+                  medication.additionalInstructions!,
+                ),
+              if (medication.asNeeded != null)
+                _buildDetailRow(
+                  "medicationDetails.asNeeded".tr(context),
+                  medication.asNeeded!
+                      ? 'medicationDetails.yes'.tr(context)
+                      : 'medicationDetails.no'.tr(context),
+                ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          _buildInfoCard(
+            title: "medicationDetails.statusAndDates".tr(context),
+            children: [
+              if (medication.status != null)
+                _buildDetailRow(
+                  "medicationDetails.status".tr(context),
+                  medication.status!.display,
+                ),
+              if (medication.effectiveMedicationStartDate != null)
+                _buildDetailRow(
+                  "medicationDetails.startDate".tr(context),
+                  DateFormat(
+                    'MMM d, y',
+                  ).format(medication.effectiveMedicationStartDate!),
+                ),
+              if (medication.effectiveMedicationEndDate != null)
+                _buildDetailRow(
+                  "medicationDetails.endDate".tr(context),
+                  DateFormat(
+                    'MMM d, y',
+                  ).format(medication.effectiveMedicationEndDate!),
+                ),
+            ],
+          ),
         ],
       ),
     );
@@ -79,21 +156,28 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
 
   Widget _buildHeader(MedicationModel medication) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(Icons.medication, color: AppColors.primaryColor, size: 50),
-        const SizedBox(width: 16),
+        Icon(Icons.medication, color: AppColors.primaryColor, size: 60),
+        const SizedBox(width: 20),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                medication.name ?? 'Unknown Medication',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                medication.name ??
+                    'medicationDetails.unknownMedication'.tr(context),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               Text(
-                medication.definition ?? 'No description available',
-                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                medication.definition ??
+                    'medicationDetails.noDescriptionAvailable'.tr(context),
+                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
               ),
             ],
           ),
@@ -102,59 +186,62 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
     );
   }
 
-  Widget _buildDosageInfo(MedicationModel medication) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "medicationDetails.dosageInfo".tr(context),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.cyan),
+  Widget _buildInfoCard({
+    required String title,
+    required List<Widget> children,
+  }) {
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.cyan,
+              ),
+            ),
+            const Divider(height: 16, thickness: 1),
+            ...children
+                .map(
+                  (widget) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: widget,
+                  ),
+                )
+                .toList(),
+          ],
         ),
-        const SizedBox(height: 8),
-        if (medication.dose != null && medication.doseUnit != null)
-          Text("Dose: ${medication.dose} ${medication.doseUnit}"),
-        if (medication.maxDosePerPeriod != null)
-          Text("Max Dose: ${medication.maxDosePerPeriod!.numerator.value} ${medication.maxDosePerPeriod!.numerator.unit} per ${medication.maxDosePerPeriod!.denominator.value} ${medication.maxDosePerPeriod!.denominator.unit}"),
-        if (medication.dosageInstructions != null)
-          Text("Instructions: ${medication.dosageInstructions}"),
-      ],
+      ),
     );
   }
 
-  Widget _buildInstructions(MedicationModel medication) {
-    return Column(
+  Widget _buildDetailRow(String label, String value) {
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "medicationDetails.instructions".tr(context),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.cyan),
+        SizedBox(
+          width: 120,
+          child: Text(
+            "$label:",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: AppColors.label,
+            ),
+          ),
         ),
-        const SizedBox(height: 8),
-        if (medication.patientInstructions != null)
-          Text("Patient Instructions: ${medication.patientInstructions}"),
-        if (medication.additionalInstructions != null)
-          Text("Additional Instructions: ${medication.additionalInstructions}"),
-        if (medication.asNeeded != null)
-          Text("As Needed: ${medication.asNeeded! ? 'Yes' : 'No'}"),
-      ],
-    );
-  }
-
-  Widget _buildStatusAndDates(MedicationModel medication) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "medicationDetails.statusAndDates".tr(context),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.cyan),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 15, color: AppColors.blackColor),
+          ),
         ),
-        const SizedBox(height: 8),
-        if (medication.status != null)
-          Text("Status: ${medication.status!.display}"),
-        if (medication.effectiveMedicationStartDate != null)
-          Text("Start Date: ${DateFormat('MMM d, y').format(medication.effectiveMedicationStartDate!)}"),
-        if (medication.effectiveMedicationEndDate != null)
-          Text("End Date: ${DateFormat('MMM d, y').format(medication.effectiveMedicationEndDate!)}"),
       ],
     );
   }

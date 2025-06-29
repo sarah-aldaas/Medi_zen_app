@@ -1,5 +1,6 @@
 import 'package:medizen_app/base/data/models/code_type_model.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_model.dart';
+import 'package:medizen_app/features/medical_records/medication/data/models/medication_model.dart';
 
 class MedicationRequestModel {
   final String? id;
@@ -39,13 +40,26 @@ class MedicationRequestModel {
       reason: json['reason']?.toString(),
       numberOfRepeatsAllowed: json['number_of_repeats_allowed']?.toString(),
       note: json['note']?.toString(),
-      status: json['status'] != null ? CodeModel.fromJson(json['status']) : null,
-      intent: json['intent'] != null ? CodeModel.fromJson(json['intent']) : null,
-      priority: json['priority'] != null ? CodeModel.fromJson(json['priority']) : null,
-      courseOfTherapyType: json['course_of_therapy_type'] != null ? CodeModel.fromJson(json['course_of_therapy_type']) : null,
-      condition: json['condition'] != null ? ConditionsModel.fromJson(json['condition']) : null,
+      status:
+          json['status'] != null ? CodeModel.fromJson(json['status']) : null,
+      intent:
+          json['intent'] != null ? CodeModel.fromJson(json['intent']) : null,
+      priority:
+          json['priority'] != null
+              ? CodeModel.fromJson(json['priority'])
+              : null,
+      courseOfTherapyType:
+          json['course_of_therapy_type'] != null
+              ? CodeModel.fromJson(json['course_of_therapy_type'])
+              : null,
+      condition:
+          json['condition'] != null
+              ? ConditionsModel.fromJson(json['condition'])
+              : null,
     );
   }
+
+  MedicationModel? get medication => null;
 
   Map<String, dynamic> toJson() {
     return {

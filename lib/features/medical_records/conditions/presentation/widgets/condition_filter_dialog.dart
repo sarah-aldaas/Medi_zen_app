@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_filter_model.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_filter_model.dart';
+
+import '../../../../../base/theme/app_color.dart';
 
 class ConditionsFilterDialog extends StatefulWidget {
   final ConditionsFilterModel currentFilter;
+
   const ConditionsFilterDialog({super.key, required this.currentFilter});
 
   @override
@@ -24,13 +27,14 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
   DateTime? _minAbatementDate;
   DateTime? _maxAbatementDate;
   bool? _isChronic;
-  TextEditingController _minOnSetAgeController = TextEditingController();
-  TextEditingController _maxOnSetAgeController = TextEditingController();
-  TextEditingController _minAbatementAgeController = TextEditingController();
-  TextEditingController _maxAbatementAgeController = TextEditingController();
-  TextEditingController _searchQueryController = TextEditingController();
+  final TextEditingController _minOnSetAgeController = TextEditingController();
+  final TextEditingController _maxOnSetAgeController = TextEditingController();
+  final TextEditingController _minAbatementAgeController =
+      TextEditingController();
+  final TextEditingController _maxAbatementAgeController =
+      TextEditingController();
+  final TextEditingController _searchQueryController = TextEditingController();
 
-  // Code type filter variables
   String? _selectedBodySiteId;
   String? _selectedClinicalStatusId;
   String? _selectedVerificationStatusId;
@@ -57,10 +61,13 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
     _selectedVerificationStatusId = _filter.verificationStatusId;
     _selectedStageId = _filter.stageId;
 
-    // Load code types
     context.read<CodeTypesCubit>().getBodySiteCodes(context: context);
-    context.read<CodeTypesCubit>().getConditionClinicalStatusTypeCodes(context: context);
-    context.read<CodeTypesCubit>().getConditionVerificationStatusTypeCodes(context: context);
+    context.read<CodeTypesCubit>().getConditionClinicalStatusTypeCodes(
+      context: context,
+    );
+    context.read<CodeTypesCubit>().getConditionVerificationStatusTypeCodes(
+      context: context,
+    );
     context.read<CodeTypesCubit>().getConditionStageTypeCodes(context: context);
   }
 
@@ -90,31 +97,45 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
         const SizedBox(height: 8),
         BlocBuilder<CodeTypesCubit, CodeTypesState>(
           builder: (context, state) {
-            if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
+            if (state is CodeTypesLoading ||
+                state is CodesLoading ||
+                state is CodeTypesInitial) {
               return LoadingButton();
             }
 
             List<CodeModel> codes = [];
             if (state is CodeTypesSuccess) {
-              codes = state.codes?.where((code) =>
-              code.codeTypeModel?.name == codeTypeName).toList() ?? [];
+              codes =
+                  state.codes
+                      ?.where(
+                        (code) => code.codeTypeModel?.name == codeTypeName,
+                      )
+                      .toList() ??
+                  [];
             }
 
             return DropdownButtonFormField<String>(
               value: value,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
               ),
               items: [
                 DropdownMenuItem(
                   value: null,
-                  child: Text('All'.tr(context)),
+                  child: Text('conditionsFilter.all'.tr(context)),
                 ),
-                ...codes.map((code) => DropdownMenuItem(
-                  value: code.id,
-                  child: Text(code.display),
-                )).toList(),
+                ...codes
+                    .map(
+                      (code) => DropdownMenuItem(
+                        value: code.id,
+                        child: Text(code.display),
+                      ),
+                    )
+                    .toList(),
               ],
               onChanged: onChanged,
             );
@@ -139,16 +160,19 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Filter Conditions".tr(context),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  "conditionsFilter.title".tr(context),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: Icon(Icons.close, color: AppColors.primaryColor),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -159,57 +183,67 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Search Query
                     Text(
-                      "Search".tr(context),
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      "conditionsFilter.search".tr(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _searchQueryController,
                       decoration: InputDecoration(
-                        hintText: "Enter search term".tr(context),
-                        border: OutlineInputBorder(),
+                        hintText: "conditionsFilter.enterSearchTerm".tr(
+                          context,
+                        ),
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 20),
 
-                    // Body Site Filter
                     _buildCodeDropdown(
-                      title: "Body Site",
+                      title: "conditionsFilter.bodySite",
                       value: _selectedBodySiteId,
                       codeTypeName: 'body_site',
-                      onChanged: (value) => setState(() => _selectedBodySiteId = value),
+                      onChanged:
+                          (value) =>
+                              setState(() => _selectedBodySiteId = value),
                     ),
 
-                    // Clinical Status Filter
                     _buildCodeDropdown(
-                      title: "Clinical Status",
+                      title: "conditionsFilter.clinicalStatus",
                       value: _selectedClinicalStatusId,
                       codeTypeName: 'condition_clinical_status',
-                      onChanged: (value) => setState(() => _selectedClinicalStatusId = value),
+                      onChanged:
+                          (value) =>
+                              setState(() => _selectedClinicalStatusId = value),
                     ),
 
-                    // Verification Status Filter
                     _buildCodeDropdown(
-                      title: "Verification Status",
+                      title: "conditionsFilter.verificationStatus",
                       value: _selectedVerificationStatusId,
                       codeTypeName: 'condition_verification_status',
-                      onChanged: (value) => setState(() => _selectedVerificationStatusId = value),
+                      onChanged:
+                          (value) => setState(
+                            () => _selectedVerificationStatusId = value,
+                          ),
                     ),
 
-                    // Stage Filter
                     _buildCodeDropdown(
-                      title: "Stage",
+                      title: "conditionsFilter.stage",
                       value: _selectedStageId,
                       codeTypeName: 'condition_stage',
-                      onChanged: (value) => setState(() => _selectedStageId = value),
+                      onChanged:
+                          (value) => setState(() => _selectedStageId = value),
                     ),
 
-                    // Chronic Filter
                     Text(
-                      "Chronic Condition".tr(context),
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      "conditionsFilter.chronicCondition".tr(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -217,31 +251,36 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                         Radio<bool?>(
                           value: null,
                           groupValue: _isChronic,
-                          onChanged: (value) => setState(() => _isChronic = value),
+                          onChanged:
+                              (value) => setState(() => _isChronic = value),
                         ),
-                        Text("All".tr(context)),
+                        Text("conditionsFilter.all".tr(context)),
                         const SizedBox(width: 16),
                         Radio<bool?>(
                           value: true,
                           groupValue: _isChronic,
-                          onChanged: (value) => setState(() => _isChronic = value),
+                          onChanged:
+                              (value) => setState(() => _isChronic = value),
                         ),
-                        Text("Chronic".tr(context)),
+                        Text("conditionsFilter.chronic".tr(context)),
                         const SizedBox(width: 16),
                         Radio<bool?>(
                           value: false,
                           groupValue: _isChronic,
-                          onChanged: (value) => setState(() => _isChronic = value),
+                          onChanged:
+                              (value) => setState(() => _isChronic = value),
                         ),
-                        Text("Acute".tr(context)),
+                        Text("conditionsFilter.acute".tr(context)),
                       ],
                     ),
                     const SizedBox(height: 20),
 
-                    // Onset Age Range
                     Text(
-                      "Onset Age Range".tr(context),
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      "conditionsFilter.onSetAgeRange".tr(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -250,9 +289,9 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: TextFormField(
                             controller: _minOnSetAgeController,
                             decoration: InputDecoration(
-                              labelText: "Min Age".tr(context),
+                              labelText: "conditionsFilter.minAge".tr(context),
                               hintText: "10",
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
                           ),
@@ -262,9 +301,9 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: TextFormField(
                             controller: _maxOnSetAgeController,
                             decoration: InputDecoration(
-                              labelText: "Max Age".tr(context),
+                              labelText: "conditionsFilter.maxAge".tr(context),
                               hintText: "25",
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
                           ),
@@ -273,10 +312,12 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Onset Date Range
                     Text(
-                      "Onset Date Range".tr(context),
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      "conditionsFilter.onSetDateRange".tr(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -285,8 +326,10 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: ListTile(
                             title: Text(
                               _minOnSetDate != null
-                                  ? DateFormat('MMM d, y').format(_minOnSetDate!)
-                                  : "From".tr(context),
+                                  ? DateFormat(
+                                    'MMM d, y',
+                                  ).format(_minOnSetDate!)
+                                  : "conditionsFilter.from".tr(context),
                             ),
                             trailing: const Icon(Icons.calendar_today),
                             onTap: () async {
@@ -306,8 +349,10 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: ListTile(
                             title: Text(
                               _maxOnSetDate != null
-                                  ? DateFormat('MMM d, y').format(_maxOnSetDate!)
-                                  : "To".tr(context),
+                                  ? DateFormat(
+                                    'MMM d, y',
+                                  ).format(_maxOnSetDate!)
+                                  : "conditionsFilter.to".tr(context),
                             ),
                             trailing: const Icon(Icons.calendar_today),
                             onTap: () async {
@@ -327,10 +372,12 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Record Date Range
                     Text(
-                      "Record Date Range".tr(context),
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      "conditionsFilter.recordDateRange".tr(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -339,8 +386,10 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: ListTile(
                             title: Text(
                               _minRecordDate != null
-                                  ? DateFormat('MMM d, y').format(_minRecordDate!)
-                                  : "From".tr(context),
+                                  ? DateFormat(
+                                    'MMM d, y',
+                                  ).format(_minRecordDate!)
+                                  : "conditionsFilter.from".tr(context),
                             ),
                             trailing: const Icon(Icons.calendar_today),
                             onTap: () async {
@@ -360,8 +409,10 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: ListTile(
                             title: Text(
                               _maxRecordDate != null
-                                  ? DateFormat('MMM d, y').format(_maxRecordDate!)
-                                  : "To".tr(context),
+                                  ? DateFormat(
+                                    'MMM d, y',
+                                  ).format(_maxRecordDate!)
+                                  : "conditionsFilter.to".tr(context),
                             ),
                             trailing: const Icon(Icons.calendar_today),
                             onTap: () async {
@@ -381,10 +432,12 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Abatement Age Range
                     Text(
-                      "Abatement Age Range".tr(context),
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      "conditionsFilter.abatementAgeRange".tr(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -393,9 +446,9 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: TextFormField(
                             controller: _minAbatementAgeController,
                             decoration: InputDecoration(
-                              labelText: "Min Age".tr(context),
+                              labelText: "conditionsFilter.minAge".tr(context),
                               hintText: "10",
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
                           ),
@@ -405,9 +458,9 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: TextFormField(
                             controller: _maxAbatementAgeController,
                             decoration: InputDecoration(
-                              labelText: "Max Age".tr(context),
+                              labelText: "conditionsFilter.maxAge".tr(context),
                               hintText: "25",
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
                           ),
@@ -416,10 +469,12 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Abatement Date Range
                     Text(
-                      "Abatement Date Range".tr(context),
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      "conditionsFilter.abatementDateRange".tr(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -428,8 +483,10 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: ListTile(
                             title: Text(
                               _minAbatementDate != null
-                                  ? DateFormat('MMM d, y').format(_minAbatementDate!)
-                                  : "From".tr(context),
+                                  ? DateFormat(
+                                    'MMM d, y',
+                                  ).format(_minAbatementDate!)
+                                  : "conditionsFilter.from".tr(context),
                             ),
                             trailing: const Icon(Icons.calendar_today),
                             onTap: () async {
@@ -449,14 +506,17 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           child: ListTile(
                             title: Text(
                               _maxAbatementDate != null
-                                  ? DateFormat('MMM d, y').format(_maxAbatementDate!)
-                                  : "To".tr(context),
+                                  ? DateFormat(
+                                    'MMM d, y',
+                                  ).format(_maxAbatementDate!)
+                                  : "conditionsFilter.to".tr(context),
                             ),
                             trailing: const Icon(Icons.calendar_today),
                             onTap: () async {
                               final date = await showDatePicker(
                                 context: context,
-                                initialDate: _minAbatementDate ?? DateTime.now(),
+                                initialDate:
+                                    _minAbatementDate ?? DateTime.now(),
                                 firstDate: _minAbatementDate ?? DateTime(2000),
                                 lastDate: DateTime.now(),
                               );
@@ -473,7 +533,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
               ),
             ),
             const SizedBox(height: 20),
-            // Action Buttons
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -498,13 +558,25 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                       _selectedStageId = null;
                     });
                   },
-                  child: Text("Clear Filters".tr(context)),
+                  child: Text(
+                    "conditionsFilter.clearFilters".tr(context),
+                    style: TextStyle(
+                      color: AppColors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 Row(
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text("Cancel".tr(context)),
+                      child: Text(
+                        "conditionsFilter.cancel".tr(context),
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
@@ -512,26 +584,31 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                         Navigator.pop(
                           context,
                           ConditionsFilterModel(
-                            searchQuery: _searchQueryController.text.isNotEmpty
-                                ? _searchQueryController.text
-                                : null,
+                            searchQuery:
+                                _searchQueryController.text.isNotEmpty
+                                    ? _searchQueryController.text
+                                    : null,
                             isChronic: _isChronic,
                             minOnSetDate: _minOnSetDate,
                             maxOnSetDate: _maxOnSetDate,
                             minRecordDate: _minRecordDate,
                             maxRecordDate: _maxRecordDate,
-                            minOnSetAge: _minOnSetAgeController.text.isNotEmpty
-                                ? _minOnSetAgeController.text
-                                : null,
-                            maxOnSetAge: _maxOnSetAgeController.text.isNotEmpty
-                                ? _maxOnSetAgeController.text
-                                : null,
-                            minAbatementAge: _minAbatementAgeController.text.isNotEmpty
-                                ? _minAbatementAgeController.text
-                                : null,
-                            maxAbatementAge: _maxAbatementAgeController.text.isNotEmpty
-                                ? _maxAbatementAgeController.text
-                                : null,
+                            minOnSetAge:
+                                _minOnSetAgeController.text.isNotEmpty
+                                    ? _minOnSetAgeController.text
+                                    : null,
+                            maxOnSetAge:
+                                _maxOnSetAgeController.text.isNotEmpty
+                                    ? _maxOnSetAgeController.text
+                                    : null,
+                            minAbatementAge:
+                                _minAbatementAgeController.text.isNotEmpty
+                                    ? _minAbatementAgeController.text
+                                    : null,
+                            maxAbatementAge:
+                                _maxAbatementAgeController.text.isNotEmpty
+                                    ? _maxAbatementAgeController.text
+                                    : null,
                             minAbatementDate: _minAbatementDate,
                             maxAbatementDate: _maxAbatementDate,
                             bodySiteId: _selectedBodySiteId,
@@ -541,7 +618,14 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                           ),
                         );
                       },
-                      child: Text("Apply".tr(context)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text("conditionsFilter.apply".tr(context)),
                     ),
                   ],
                 ),

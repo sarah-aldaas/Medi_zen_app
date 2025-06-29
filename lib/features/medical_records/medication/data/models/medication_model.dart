@@ -24,6 +24,7 @@ class MedicationModel {
   final CodeModel? route;
   final String? offsetUnit;
   final MedicationRequestModel? medicationRequest;
+  final String? medication;
 
   MedicationModel({
     this.id,
@@ -47,6 +48,7 @@ class MedicationModel {
     this.route,
     this.offsetUnit,
     this.medicationRequest,
+    this.medication,
   });
 
   factory MedicationModel.fromJson(Map<String, dynamic> json) {
@@ -55,23 +57,39 @@ class MedicationModel {
       name: json['name']?.toString(),
       dose: json['dose'] as int?,
       doseUnit: json['dose_unit']?.toString(),
-      effectiveMedicationStartDate: json['effective_medication_start_date'] != null ? DateTime.parse(json['effective_medication_start_date']) : null,
-      effectiveMedicationEndDate: json['effective_medication_end_date'] != null ? DateTime.parse(json['effective_medication_end_date']) : null,
+      effectiveMedicationStartDate:
+          json['effective_medication_start_date'] != null
+              ? DateTime.parse(json['effective_medication_start_date'])
+              : null,
+      effectiveMedicationEndDate:
+          json['effective_medication_end_date'] != null
+              ? DateTime.parse(json['effective_medication_end_date'])
+              : null,
       definition: json['definition']?.toString(),
       dosageInstructions: json['dosage_instructions']?.toString(),
       additionalInstructions: json['additional_instructions']?.toString(),
       patientInstructions: json['patient_instructions']?.toString(),
       asNeeded: json['as_needed'] as bool?,
-      maxDosePerPeriod: json['max_dose_per_period'] != null ? MaxDose.fromJson(json['max_dose_per_period']) : null,
+      maxDosePerPeriod:
+          json['max_dose_per_period'] != null
+              ? MaxDose.fromJson(json['max_dose_per_period'])
+              : null,
       event: json['event']?.toString(),
       when: json['when']?.toString(),
       offset: json['offset'] as int?,
-      doseForm: json['dose_form'] != null ? CodeModel.fromJson(json['dose_form']) : null,
-      status: json['status'] != null ? CodeModel.fromJson(json['status']) : null,
+      doseForm:
+          json['dose_form'] != null
+              ? CodeModel.fromJson(json['dose_form'])
+              : null,
+      status:
+          json['status'] != null ? CodeModel.fromJson(json['status']) : null,
       site: json['site'] != null ? CodeModel.fromJson(json['site']) : null,
       route: json['route'] != null ? CodeModel.fromJson(json['route']) : null,
       offsetUnit: json['offset_unit']?.toString(),
-      medicationRequest: json['medication_request'] != null ? MedicationRequestModel.fromJson(json['medication_request']) : null,
+      medicationRequest:
+          json['medication_request'] != null
+              ? MedicationRequestModel.fromJson(json['medication_request'])
+              : null,
     );
   }
 
@@ -81,8 +99,10 @@ class MedicationModel {
       'name': name,
       'dose': dose,
       'dose_unit': doseUnit,
-      'effective_medication_start_date': effectiveMedicationStartDate?.toIso8601String(),
-      'effective_medication_end_date': effectiveMedicationEndDate?.toIso8601String(),
+      'effective_medication_start_date':
+          effectiveMedicationStartDate?.toIso8601String(),
+      'effective_medication_end_date':
+          effectiveMedicationEndDate?.toIso8601String(),
       'definition': definition,
       'dosage_instructions': dosageInstructions,
       'additional_instructions': additionalInstructions,
@@ -109,11 +129,17 @@ class MaxDose {
   MaxDose({required this.numerator, required this.denominator});
 
   factory MaxDose.fromJson(Map<String, dynamic> json) {
-    return MaxDose(numerator: DoseComponent.fromJson(json['numerator']), denominator: DoseComponent.fromJson(json['denominator']));
+    return MaxDose(
+      numerator: DoseComponent.fromJson(json['numerator']),
+      denominator: DoseComponent.fromJson(json['denominator']),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    return {'numerator': numerator.toJson(), 'denominator': denominator.toJson()};
+    return {
+      'numerator': numerator.toJson(),
+      'denominator': denominator.toJson(),
+    };
   }
 }
 
@@ -124,7 +150,10 @@ class DoseComponent {
   DoseComponent({required this.value, required this.unit});
 
   factory DoseComponent.fromJson(Map<String, dynamic> json) {
-    return DoseComponent(value: json['value'] as int, unit: json['unit'] as String);
+    return DoseComponent(
+      value: json['value'] as int,
+      unit: json['unit'] as String,
+    );
   }
 
   Map<String, dynamic> toJson() {

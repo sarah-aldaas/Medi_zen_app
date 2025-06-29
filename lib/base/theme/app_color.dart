@@ -27,4 +27,8 @@ class AppColors {
   static const Color darkCard = Color(0xFF2C2C2C);
   static const Color powderLight = Color(0xFFE0E0E0);
   static const Color deepPurple = Color(0xFF673AB7);
+  static const Color green = Color(0xFF1D837F);
+  static const Color icon = Color(0xFF9FD8E1);
+  static const Color label = Color(0xFF61BACA);
+  static const Color titel = Color(0xFF3EAEB1);
 }

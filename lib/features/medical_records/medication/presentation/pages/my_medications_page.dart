@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/medication/presentation/pages/medication_details_page.dart';
 
+import '../../../../../base/theme/app_color.dart';
 import '../../data/models/medication_filter_model.dart';
 import '../../data/models/medication_model.dart';
 import '../cubit/medication_cubit/medication_cubit.dart';
@@ -39,25 +39,34 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
 
   void _loadInitialMedications() {
     _isLoadingMore = false;
-    context.read<MedicationCubit>().getAllMedications(context: context, filters: widget.filter.toJson());
+    context.read<MedicationCubit>().getAllMedications(
+      context: context,
+      filters: widget.filter.toJson(),
+    );
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<MedicationCubit>()
-          .getAllMedications(filters: widget.filter.toJson(), loadMore: true, context: context)
+          .getAllMedications(
+            filters: widget.filter.toJson(),
+            loadMore: true,
+            context: context,
+          )
           .then((_) => setState(() => _isLoadingMore = false));
     }
   }
+
   @override
   void didUpdateWidget(MyMedicationsPage oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.filter != oldWidget.filter) {
       _loadInitialMedications();
-      // _scrollController.jumpTo(0.0);
     }
   }
 
@@ -75,7 +84,10 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
             return const Center(child: LoadingPage());
           }
 
-          final medications = state is MedicationSuccess ? state.paginatedResponse.paginatedData!.items : [];
+          final medications =
+              state is MedicationSuccess
+                  ? state.paginatedResponse.paginatedData!.items
+                  : [];
           final hasMore = state is MedicationSuccess ? state.hasMore : false;
 
           if (medications.isEmpty) {
@@ -83,9 +95,16 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.medical_services, size: 64, color: Colors.grey[400]),
+                  Icon(
+                    Icons.medical_services,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
                   const SizedBox(height: 16),
-                  Text("myMedications.noMedications".tr(context), style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                  Text(
+                    "myMedications.noMedicationsFound".tr(context),
+                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                  ),
                 ],
               ),
             );
@@ -114,7 +133,12 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
       onTap:
           () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MedicationDetailsPage(medicationId: medication.id.toString())),
+            MaterialPageRoute(
+              builder:
+                  (context) => MedicationDetailsPage(
+                    medicationId: medication.id.toString(),
+                  ),
+            ),
           ).then((_) => _loadInitialMedications()),
       child: Card(
         elevation: 4,
@@ -127,15 +151,34 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.medication, color: AppColors.primaryColor, size: 40),
+                  Icon(
+                    Icons.medication,
+                    color: AppColors.primaryColor,
+                    size: 40,
+                  ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(medication.name ?? 'Unknown Medication', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(
+                          medication.name ??
+                              'myMedications.unknownMedication'.tr(context),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        ),
                         const SizedBox(height: 4),
-                        Text(medication.dosageInstructions ?? 'No instructions', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                        Text(
+                          medication.dosageInstructions ??
+                              'myMedications.noInstructions'.tr(context),
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey[600],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -146,13 +189,27 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
                 children: [
                   if (medication.status != null)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(color: AppColors.primaryColor.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
-                      child: Text(medication.status!.display, style: TextStyle(color: AppColors.primaryColor)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 7,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        medication.status!.display,
+                        style: TextStyle(color: AppColors.primaryColor),
+                      ),
                     ),
                   const Spacer(),
                   if (medication.effectiveMedicationStartDate != null)
-                    Text(DateFormat('MMM d, y').format(medication.effectiveMedicationStartDate!), style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                    Text(
+                      DateFormat(
+                        'MMM d, y',
+                      ).format(medication.effectiveMedicationStartDate!),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
                 ],
               ),
             ],

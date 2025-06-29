@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
@@ -7,9 +8,9 @@ import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_model.dart';
 import 'package:medizen_app/features/medical_records/conditions/presentation/pages/condition_details_page.dart';
 
+import '../../../../../base/theme/app_color.dart';
 import '../../data/models/conditions_filter_model.dart';
 import '../cubit/condition_cubit/conditions_cubit.dart';
-import '../widgets/condition_filter_dialog.dart';
 
 class ConditionsListPage extends StatefulWidget {
   final ConditionsFilterModel filter;
@@ -43,7 +44,6 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
 
     if (widget.filter != oldWidget.filter) {
       _loadInitialConditions();
-      // _scrollController.jumpTo(0.0);
     }
   }
 
@@ -56,13 +56,18 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context.read<ConditionsCubit>().getAllConditions(
-        loadMore: true,
-        context: context,
-        filters: widget.filter.toJson(),
-      ).then((_) => setState(() => _isLoadingMore = false));
+      context
+          .read<ConditionsCubit>()
+          .getAllConditions(
+            loadMore: true,
+            context: context,
+            filters: widget.filter.toJson(),
+          )
+          .then((_) => setState(() => _isLoadingMore = false));
     }
   }
 
@@ -80,7 +85,10 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
             return const Center(child: LoadingPage());
           }
 
-          final conditions = state is ConditionsSuccess ? state.paginatedResponse.paginatedData!.items : [];
+          final conditions =
+              state is ConditionsSuccess
+                  ? state.paginatedResponse.paginatedData!.items
+                  : [];
           final hasMore = state is ConditionsSuccess ? state.hasMore : false;
 
           if (conditions.isEmpty) {
@@ -88,13 +96,42 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.medical_services, size: 64, color: Colors.grey[400]),
+                  Icon(
+                    Icons.medical_services_outlined,
+                    size: 80,
+                    color: Colors.blueGrey[300],
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    "conditionsList.noConditionsFound".tr(context),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blueGrey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "conditionsList.tapToRefresh".tr(context),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14, color: Colors.blueGrey[400]),
+                  ),
                   const SizedBox(height: 16),
-                  Text("No conditions found".tr(context), style: TextStyle(fontSize: 18, color: Colors.grey[600])),
-                  const SizedBox(height: 8),
-                  TextButton(
+                  ElevatedButton.icon(
                     onPressed: () => _loadInitialConditions(),
-                    child: Text("Refresh".tr(context)),
+                    icon: const Icon(Icons.refresh),
+                    label: Text("conditionsList.refresh".tr(context)),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -105,6 +142,7 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
             onRefresh: () async {
               _loadInitialConditions();
             },
+            color: Theme.of(context).primaryColor,
             child: ListView.builder(
               controller: _scrollController,
               itemCount: conditions.length + (hasMore ? 1 : 0),
@@ -114,7 +152,7 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                 } else {
                   return const Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Center(child: LoadingPage()),
+                    child: Center(child: CircularProgressIndicator()),
                   );
                 }
               },
@@ -127,32 +165,120 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
 
   Widget _buildConditionItem(ConditionsModel condition) {
     return Card(
-      margin: const EdgeInsets.all(8),
-      child: ListTile(
-        leading: Icon(Icons.medical_services, color: Theme.of(context).primaryColor),
-        title: Text(condition.healthIssue ?? 'Unknown condition'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (condition.onSetDate != null)
-              Text('Onset: ${DateFormat('MMM d, y').format(DateTime.parse(condition.onSetDate!))}'),
-            if (condition.clinicalStatus != null)
-              Text('Status: ${condition.clinicalStatus!.display}'),
-            if (condition.verificationStatus != null)
-              Text('Verification: ${condition.verificationStatus!.display}'),
-            if (condition.stage != null)
-              Text('Stage: ${condition.stage!.display}'),
-          ],
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ConditionDetailsPage(conditionId: condition.id!),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        ConditionDetailsPage(conditionId: condition.id!),
+              ),
+            ).then((value) {
+              _loadInitialConditions();
+            }),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.medical_information,
+                    color: AppColors.primaryColor,
+                    size: 28,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      condition.healthIssue ??
+                          'conditionsList.unknownCondition'.tr(context),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.green,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right, color: AppColors.green),
+                ],
+              ),
+              Divider(height: 20, thickness: 1, color: Colors.grey[200]),
+              const Gap(10),
+              _buildInfoRow(
+                icon: Icons.calendar_today,
+                label: 'conditionsList.onsetDate'.tr(context),
+                value:
+                    condition.onSetDate != null
+                        ? DateFormat(
+                          'MMM d, y',
+                        ).format(DateTime.parse(condition.onSetDate!))
+                        : 'conditionsList.notAvailable'.tr(context),
+                color: Colors.teal,
+              ),
+              if (condition.clinicalStatus != null)
+                _buildInfoRow(
+                  icon: Icons.monitor_heart,
+                  label: 'conditionsList.clinicalStatus'.tr(context),
+                  value: condition.clinicalStatus!.display,
+                  color: Colors.indigo,
+                ),
+              if (condition.verificationStatus != null)
+                _buildInfoRow(
+                  icon: Icons.verified,
+                  label: 'conditionsList.verification'.tr(context),
+                  value: condition.verificationStatus!.display,
+                  color: Colors.green,
+                ),
+              if (condition.stage != null)
+                _buildInfoRow(
+                  icon: Icons.stairs,
+                  label: 'conditionsList.stage'.tr(context),
+                  value: condition.stage!.display,
+                  color: Colors.orange,
+                ),
+            ],
           ),
-        ).then((value){
-          _loadInitialConditions();
-        }),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 18, color: color),
+          const SizedBox(width: 10),
+          Text(
+            '$label: ',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: AppColors.label,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(color: Colors.blueGrey[600]),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }
