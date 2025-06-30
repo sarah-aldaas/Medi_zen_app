@@ -36,7 +36,7 @@ class ArticleDetailsSuccess extends ArticleState {
 }
 
 class ArticleConditionSuccess extends ArticleState {
-  final ArticleModel article;
+  final ArticleModel? article;
 
   const ArticleConditionSuccess({
     required this.article,
@@ -59,6 +59,12 @@ class ArticleGenerateSuccess extends ArticleState {
   });
 }
 
+class ArticleGenerateProgress extends ArticleState {
+  final double progress;
+  final String? message;
+
+  const ArticleGenerateProgress({this.progress = 0, this.message});
+}
 class ArticleError extends ArticleState {
   final String error;
 

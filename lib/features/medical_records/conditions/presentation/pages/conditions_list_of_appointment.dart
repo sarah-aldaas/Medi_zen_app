@@ -11,16 +11,17 @@ import '../../data/models/conditions_filter_model.dart';
 import '../cubit/condition_cubit/conditions_cubit.dart';
 import '../widgets/condition_filter_dialog.dart';
 
-class ConditionsListPage extends StatefulWidget {
+class ConditionsListOfAppointment extends StatefulWidget {
+  final String appointmentId;
   final ConditionsFilterModel filter;
 
-  const ConditionsListPage({super.key, required this.filter});
+  const ConditionsListOfAppointment({super.key, required this.filter, required this.appointmentId});
 
   @override
-  _ConditionsListPageState createState() => _ConditionsListPageState();
+  _ConditionsListOfAppointmentState createState() => _ConditionsListOfAppointmentState();
 }
 
-class _ConditionsListPageState extends State<ConditionsListPage> {
+class _ConditionsListOfAppointmentState extends State<ConditionsListOfAppointment> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
 
@@ -38,7 +39,7 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
   }
 
   @override
-  void didUpdateWidget(ConditionsListPage oldWidget) {
+  void didUpdateWidget(ConditionsListOfAppointment oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.filter != oldWidget.filter) {
@@ -49,7 +50,8 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
 
   void _loadInitialConditions() {
     _isLoadingMore = false;
-    context.read<ConditionsCubit>().getAllConditions(
+    context.read<ConditionsCubit>().getConditionsForAppointment(
+      appointmentId: widget.appointmentId,
       context: context,
       filters: widget.filter.toJson(),
     );
@@ -58,7 +60,8 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
   void _scrollListener() {
     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context.read<ConditionsCubit>().getAllConditions(
+      context.read<ConditionsCubit>().getConditionsForAppointment(
+        appointmentId: widget.appointmentId,
         loadMore: true,
         context: context,
         filters: widget.filter.toJson(),
@@ -112,9 +115,9 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                 if (index < conditions.length) {
                   return _buildConditionItem(conditions[index]);
                 } else {
-                  return const Padding(
+                  return  Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Center(child: LoadingPage()),
+                    child: Center(child: LoadingButton()),
                   );
                 }
               },

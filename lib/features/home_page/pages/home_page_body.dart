@@ -4,12 +4,9 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/definition_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/greeting_widget.dart';
-import 'package:medizen_app/features/home_page/pages/widgets/my_favorite.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_articles.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_clinics.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
-import 'package:medizen_app/features/medical_records/reaction/presentation/pages/appointment_reactions_page.dart';
-import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_requests_page.dart';
 
 import '../../../main.dart';
 import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
@@ -35,8 +32,8 @@ class _HomePageBodyState extends State<HomePageBody> {
               _buildHeader(context),
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeClinics()),
               Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: DefinitionWidget()),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeDoctors()),
-              // Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeArticles()),
+              // Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeDoctors()),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SimpleArticlesPage()),
             ],
           ),
         ),

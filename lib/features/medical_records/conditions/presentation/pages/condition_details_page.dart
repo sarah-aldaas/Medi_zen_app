@@ -23,32 +23,13 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<ConditionsCubit>().getConditionDetails(
-      conditionId: widget.conditionId,
-      context: context,
-    );
+    context.read<ConditionsCubit>().getConditionDetails(conditionId: widget.conditionId, context: context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "conditionDetails.title".tr(context),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
-            fontSize: 22,
-          ),
-        ),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-          onPressed: () => context.pop(),
-        ),
-      ),
+      appBar: AppBar(title: Text("Condition Details".tr(context)), leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop())),
       body: BlocConsumer<ConditionsCubit, ConditionsState>(
         listener: (context, state) {
           if (state is ConditionsError) {
@@ -61,42 +42,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
           } else if (state is ConditionsLoading) {
             return const Center(child: LoadingPage());
           } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 80, color: Colors.red[300]),
-                  const SizedBox(height: 20),
-                  Text(
-                    'conditionDetails.failedToLoad'.tr(context),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed:
-                        () =>
-                            context.read<ConditionsCubit>().getConditionDetails(
-                              conditionId: widget.conditionId,
-                              context: context,
-                            ),
-                    icon: const Icon(Icons.refresh),
-                    label: Text("conditionDetails.retry".tr(context)),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: AppColors.primaryColor,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
+            return const Center(child: Text('Failed to load condition details'));
           }
         },
       ),
@@ -109,132 +55,56 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header with condition name and status
           _buildHeaderSection(context, condition),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
 
+          // Main details card
           _buildMainDetailsCard(context, condition),
           const SizedBox(height: 16),
 
-          if (condition.onSetDate != null ||
-              condition.abatementDate != null ||
-              condition.recordDate != null) ...[
-            _buildSectionHeader(
-              context,
-              'conditionDetails.timeline'.tr(context),
-            ),
-            _buildTimelineSection(context, condition),
-            const SizedBox(height: 16),
-          ],
+          // Timeline section
+          if (condition.onSetDate != null || condition.abatementDate != null || condition.recordDate != null) _buildTimelineSection(context, condition),
 
-          if (condition.bodySite != null) ...[
-            _buildSectionHeader(
-              context,
-              'conditionDetails.bodySite'.tr(context),
-            ),
-            _buildBodySiteSection(context, condition),
-            const SizedBox(height: 16),
-          ],
+          // Body site section
+          if (condition.bodySite != null) _buildBodySiteSection(context, condition),
 
-          _buildSectionHeader(
-            context,
-            'conditionDetails.clinicalInformation'.tr(context),
-          ),
+          // Clinical information
           _buildClinicalInfoSection(context, condition),
-          const SizedBox(height: 16),
 
-          if (condition.encounters != null &&
-              condition.encounters!.isNotEmpty) ...[
-            _buildSectionHeader(
-              context,
-              'conditionDetails.relatedEncounters'.tr(context),
-            ),
-            _buildEncountersSection(context, condition),
-            const SizedBox(height: 16),
-          ],
+          // Related encounters
+          if (condition.encounters != null && condition.encounters!.isNotEmpty) _buildEncountersSection(context, condition),
 
-          if (condition.serviceRequests != null &&
-              condition.serviceRequests!.isNotEmpty) ...[
-            _buildSectionHeader(
-              context,
-              'conditionDetails.relatedServiceRequests'.tr(context),
-            ),
-            _buildServiceRequestsSection(context, condition),
-            const SizedBox(height: 16),
-          ],
+          // Related service requests
+          if (condition.serviceRequests != null && condition.serviceRequests!.isNotEmpty) _buildServiceRequestsSection(context, condition),
 
-          if (condition.note != null ||
-              condition.summary != null ||
-              condition.extraNote != null) ...[
-            _buildSectionHeader(context, 'conditionDetails.notes'.tr(context)),
-            _buildNotesSection(context, condition),
-            const SizedBox(height: 16),
-          ],
+          // Notes section
+          if (condition.note != null || condition.summary != null || condition.extraNote != null) _buildNotesSection(context, condition),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(BuildContext context, String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: AppColors.titel,
-        ),
       ),
     );
   }
 
   Widget _buildHeaderSection(BuildContext context, ConditionsModel condition) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: Theme.of(context).colorScheme.surfaceVariant,
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.health_and_safety,
-              size: 50,
-              color: AppColors.primaryColor,
-            ),
-            const SizedBox(width: 18),
+            Icon(Icons.medical_services, size: 40, color: Theme.of(context).primaryColor),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    condition.healthIssue ??
-                        'conditionDetails.unknownCondition'.tr(context),
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.green,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
+                  Text(condition.healthIssue ?? 'Unknown Condition', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
                   if (condition.clinicalStatus != null)
                     Chip(
-                      backgroundColor: _getStatusColor(
-                        condition.clinicalStatus!.code,
-                      ),
-                      label: Text(
-                        condition.clinicalStatus!.display,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
+                      backgroundColor: _getStatusColor(condition.clinicalStatus!.code),
+                      label: Text(condition.clinicalStatus!.display, style: const TextStyle(color: Colors.white)),
                     ),
                 ],
               ),
@@ -245,100 +115,75 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
     );
   }
 
-  Widget _buildMainDetailsCard(
-    BuildContext context,
-    ConditionsModel condition,
-  ) {
+  Widget _buildMainDetailsCard(BuildContext context, ConditionsModel condition) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(
-              context,
-              'conditionDetails.overview'.tr(context),
-            ),
-            const Divider(height: 10, thickness: 1.5, color: Colors.grey),
+            Text('Overview'.tr(context), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
+            const Divider(),
             const SizedBox(height: 8),
 
+            // Chronic status
             _buildDetailRow(
-              icon: Icons.calendar_month,
-              label: 'conditionDetails.type'.tr(context),
-              value:
-                  condition.isChronic != null
-                      ? (condition.isChronic!
-                          ? 'conditionDetails.chronic'.tr(context)
-                          : 'conditionDetails.acute'.tr(context))
-                      : 'conditionDetails.notSpecified'.tr(context),
-              iconColor: Colors.blueAccent,
+              icon: Icons.calendar_today,
+              label: 'Type'.tr(context),
+              value: condition.isChronic != null ? (condition.isChronic! ? 'Chronic' : 'Acute') : 'Not specified',
             ),
 
+            // Verification status
             if (condition.verificationStatus != null)
-              _buildDetailRow(
-                icon: Icons.verified_user,
-                label: 'conditionDetails.verification'.tr(context),
-                value: condition.verificationStatus!.display,
-                iconColor: Colors.green,
-              ),
+              _buildDetailRow(icon: Icons.verified, label: 'Verification'.tr(context), value: condition.verificationStatus!.display),
 
-            if (condition.stage != null)
-              _buildDetailRow(
-                icon: Icons.insights,
-                label: 'conditionDetails.stage'.tr(context),
-                value: condition.stage!.display,
-                iconColor: Colors.orange,
-              ),
+            // Stage
+            if (condition.stage != null) _buildDetailRow(icon: Icons.stacked_line_chart, label: 'Stage'.tr(context), value: condition.stage!.display),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTimelineSection(
-    BuildContext context,
-    ConditionsModel condition,
-  ) {
+  Widget _buildTimelineSection(BuildContext context, ConditionsModel condition) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Timeline'.tr(context), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
+            const Divider(),
+            const SizedBox(height: 8),
+
+            // Onset date/age
             if (condition.onSetDate != null)
               _buildTimelineItem(
-                icon: Icons.history,
-                title: 'conditionDetails.onsetDate'.tr(context),
-                date: DateFormat(
-                  'MMM d, y',
-                ).format(DateTime.parse(condition.onSetDate!)),
+                icon: Icons.event,
+                title: 'Onset Date'.tr(context),
+                date: DateFormat('MMM d, y').format(DateTime.parse(condition.onSetDate!)),
                 age: condition.onSetAge,
-                color: Colors.purple,
               ),
 
+            // Abatement date/age
             if (condition.abatementDate != null)
               _buildTimelineItem(
-                icon: Icons.check_circle_outline,
-                title: 'conditionDetails.abatementDate'.tr(context),
-                date: DateFormat(
-                  'MMM d, y',
-                ).format(DateTime.parse(condition.abatementDate!)),
+                icon: Icons.event_available,
+                title: 'Abatement Date'.tr(context),
+                date: DateFormat('MMM d, y').format(DateTime.parse(condition.abatementDate!)),
                 age: condition.abatementAge,
-                color: Colors.teal,
               ),
 
+            // Record date
             if (condition.recordDate != null)
               _buildTimelineItem(
-                icon: Icons.assignment,
-                title: 'conditionDetails.recordedDate'.tr(context),
-                date: DateFormat(
-                  'MMM d, y',
-                ).format(DateTime.parse(condition.recordDate!)),
-                color: Colors.indigo,
+                icon: Icons.note_add,
+                title: 'Recorded Date'.tr(context),
+                date: DateFormat('MMM d, y').format(DateTime.parse(condition.recordDate!)),
               ),
           ],
         ),
@@ -346,40 +191,23 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
     );
   }
 
-  Widget _buildBodySiteSection(
-    BuildContext context,
-    ConditionsModel condition,
-  ) {
+  Widget _buildBodySiteSection(BuildContext context, ConditionsModel condition) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Body Site'.tr(context), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
+            const Divider(),
+            const SizedBox(height: 8),
+
             ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(
-                Icons.location_on,
-                color: Colors.redAccent,
-                size: 28,
-              ),
-              title: Text(
-                condition.bodySite!.display,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              subtitle:
-                  condition.bodySite!.description != null
-                      ? Text(
-                        condition.bodySite!.description!,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[700],
-                        ),
-                      )
-                      : null,
+              leading: const Icon(Icons.location_on, color: Colors.red),
+              title: Text(condition.bodySite!.display, style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: condition.bodySite!.description != null ? Text(condition.bodySite!.description!) : null,
             ),
           ],
         ),
@@ -387,99 +215,56 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
     );
   }
 
-  Widget _buildClinicalInfoSection(
-    BuildContext context,
-    ConditionsModel condition,
-  ) {
+  Widget _buildClinicalInfoSection(BuildContext context, ConditionsModel condition) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Clinical Information'.tr(context), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
+            const Divider(),
+            const SizedBox(height: 8),
+
             if (condition.clinicalStatus != null)
-              _buildDetailRow(
-                icon: Icons.local_hospital,
-                label: 'conditionDetails.clinicalStatus'.tr(context),
-                value: condition.clinicalStatus!.display,
-                iconColor: Colors.blueAccent,
-              ),
+              _buildDetailRow(icon: Icons.medical_information, label: 'Clinical Status'.tr(context), value: condition.clinicalStatus!.display),
 
             if (condition.verificationStatus != null)
-              _buildDetailRow(
-                icon: Icons.verified_outlined,
-                label: 'conditionDetails.verificationStatus'.tr(context),
-                value: condition.verificationStatus!.display,
-                iconColor: Colors.deepOrange,
-              ),
+              _buildDetailRow(icon: Icons.verified_user, label: 'Verification Status'.tr(context), value: condition.verificationStatus!.display),
 
-            if (condition.stage != null)
-              _buildDetailRow(
-                icon: Icons.bar_chart,
-                label: 'conditionDetails.stage'.tr(context),
-                value: condition.stage!.display,
-                iconColor: Colors.greenAccent,
-              ),
+            if (condition.stage != null) _buildDetailRow(icon: Icons.timeline, label: 'Stage'.tr(context), value: condition.stage!.display),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildEncountersSection(
-    BuildContext context,
-    ConditionsModel condition,
-  ) {
+  Widget _buildEncountersSection(BuildContext context, ConditionsModel condition) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Related Encounters'.tr(context),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
+            ),
+            const Divider(),
+            const SizedBox(height: 8),
+
             ...condition.encounters!
                 .map(
                   (encounter) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: const Icon(
-                        Icons.event_note,
-                        color: Colors.indigo,
-                        size: 28,
-                      ),
-                      title: Text(
-                        encounter.reason ??
-                            'conditionDetails.unknownReason'.tr(context),
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        encounter.actualStartDate != null
-                            ? DateFormat(
-                              'MMM d, y, hh:mm a',
-                            ).format(DateTime.parse(encounter.actualStartDate!))
-                            : 'conditionDetails.noDateProvided'.tr(context),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      trailing: const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                        color: Colors.grey,
-                      ),
-                      onTap: () {
-                        ShowToast.showToastInfo(
-                          message: "conditionDetails.encounterDetailsToast".tr(
-                            context,
-                          ),
-                        );
-                      },
+                      leading: const Icon(Icons.event_note),
+                      title: Text(encounter.reason ?? 'Unknown reason'),
+                      subtitle: Text(encounter.actualStartDate != null ? DateFormat('MMM d, y').format(DateTime.parse(encounter.actualStartDate!)) : 'No date'),
                     ),
                   ),
                 )
@@ -490,57 +275,36 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
     );
   }
 
-  Widget _buildServiceRequestsSection(
-    BuildContext context,
-    ConditionsModel condition,
-  ) {
+  Widget _buildServiceRequestsSection(BuildContext context, ConditionsModel condition) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Related Service Requests (${condition.serviceRequests!.length})'.tr(context),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
+            ),
+            const Divider(),
+            const SizedBox(height: 8),
+
             ...condition.serviceRequests!
                 .map(
                   (request) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(
-                        Icons.medical_services,
-                        color: AppColors.primaryColor,
-                        size: 28,
-                      ),
-                      title: Text(
-                        request.healthCareService?.name ??
-                            'conditionDetails.unknownService'.tr(context),
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      leading: const Icon(Icons.medical_services),
+                      title: Text(request.healthCareService?.name ?? 'Unknown service'),
                       subtitle: Text(
-                        request.serviceRequestStatus?.display ??
-                            'conditionDetails.unknownStatus'.tr(context),
-                        style: TextStyle(
-                          color: _getStatusColor(
-                            request.serviceRequestStatus?.code,
-                          ),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
+                        request.serviceRequestStatus?.display ?? 'Unknown status',
+                        style: TextStyle(color: _getStatusColor(request.serviceRequestStatus?.code), fontWeight: FontWeight.bold),
                       ),
-                      trailing: const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                        color: Colors.grey,
-                      ),
+                      trailing: const Icon(Icons.chevron_right),
                       onTap: () {
-                        ShowToast.showToastInfo(
-                          message: "conditionDetails.serviceRequestDetailsToast"
-                              .tr(context),
-                        );
+                        // Navigate to service request details
                       },
                     ),
                   ),
@@ -554,74 +318,43 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
 
   Widget _buildNotesSection(BuildContext context, ConditionsModel condition) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (condition.summary != null)
-              _buildNoteItem(
-                icon: Icons.summarize,
-                title: 'conditionDetails.summary'.tr(context),
-                content: condition.summary!,
-                color: Colors.blueGrey,
-              ),
+            Text('Notes'.tr(context), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
+            const Divider(),
+            const SizedBox(height: 8),
 
-            if (condition.note != null)
-              _buildNoteItem(
-                icon: Icons.note_alt,
-                title: 'conditionDetails.notesLabel'.tr(context),
-                content: condition.note!,
-                color: Colors.deepOrange,
-              ),
+            if (condition.summary != null) _buildNoteItem(icon: Icons.summarize, title: 'Summary'.tr(context), content: condition.summary!),
 
-            if (condition.extraNote != null)
-              _buildNoteItem(
-                icon: Icons.bookmark_add,
-                title: 'conditionDetails.additionalNotes'.tr(context),
-                content: condition.extraNote!,
-                color: Colors.teal,
-              ),
+            if (condition.note != null) _buildNoteItem(icon: Icons.note, title: 'Notes'.tr(context), content: condition.note!),
+
+            if (condition.extraNote != null) _buildNoteItem(icon: Icons.note_add, title: 'Additional Notes'.tr(context), content: condition.extraNote!),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDetailRow({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color iconColor,
-  }) {
+  Widget _buildDetailRow({required IconData icon, required String label, required String value}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 24, color: iconColor),
+          Icon(icon, size: 20, color: Colors.grey),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
                 const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
-                  ),
-                ),
+                Text(value, style: const TextStyle(fontSize: 16)),
               ],
             ),
           ),
@@ -630,50 +363,23 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
     );
   }
 
-  Widget _buildTimelineItem({
-    required IconData icon,
-    required String title,
-    required String date,
-    String? age,
-    required Color color,
-  }) {
+  Widget _buildTimelineItem({required IconData icon, required String title, required String date, String? age}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 24, color: color),
+          Icon(icon, size: 20, color: Colors.grey),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                Text(title, style: const TextStyle(fontSize: 14, color: Colors.grey)),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(
-                      date,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    if (age != null) ...[
-                      const SizedBox(width: 8),
-                      Text(
-                        'conditionDetails.yearsAge'.tr(context),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                    ],
+                    Text(date, style: const TextStyle(fontSize: 16)),
+                    if (age != null) ...[const SizedBox(width: 8), Text('($age years)', style: const TextStyle(fontSize: 14, color: Colors.grey))],
                   ],
                 ),
               ],
@@ -684,37 +390,15 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
     );
   }
 
-  Widget _buildNoteItem({
-    required IconData icon,
-    required String title,
-    required String content,
-    required Color color,
-  }) {
+  Widget _buildNoteItem({required IconData icon, required String title, required String content}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(icon, size: 24, color: color),
-              const SizedBox(width: 10),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
-                ),
-              ),
-            ],
-          ),
+          Row(children: [Icon(icon, size: 20, color: Colors.grey), const SizedBox(width: 8), Text(title, style: const TextStyle(fontWeight: FontWeight.bold))]),
           const SizedBox(height: 8),
-          Text(
-            content,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
-          ),
+          Text(content, style: const TextStyle(fontSize: 15)),
         ],
       ),
     );
@@ -731,11 +415,11 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
       case 'inactive':
       case 'remission':
       case 'resolved':
-        return AppColors.secondaryColor;
+        return Colors.green;
       case 'completed':
         return Colors.purple;
       case 'entered-in-error':
-        return AppColors.red;
+        return Colors.red;
       default:
         return Colors.grey;
     }

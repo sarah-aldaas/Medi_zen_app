@@ -10,16 +10,15 @@ class NetworkClientDependencyInjection {
   static Future<void> initDi() async {
     final Dio dio = Dio();
     BaseOptions baseOptions = BaseOptions(
+        connectTimeout: const Duration(minutes: 5),
+        receiveTimeout: const Duration(minutes: 10),
+        sendTimeout: const Duration(minutes: 5),
         headers: {
           "Access-Control-Allow-Origin": '*',
           "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
           "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
           "Access-Control-Allow-Methods": "*"
         },
-        // Default receive timeout
-        receiveTimeout: const Duration(milliseconds: 30000),
-        // Default connect timeout
-        connectTimeout: const Duration(milliseconds: 30000),
         baseUrl: AppConfig.baseUrl,
         contentType: Headers.jsonContentType,
         maxRedirects: 2);

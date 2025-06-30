@@ -6,23 +6,19 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/articles/data/model/article_filter_model.dart';
 import 'package:medizen_app/features/articles/data/model/article_model.dart';
 import 'package:medizen_app/features/articles/presentation/pages/article_details_page.dart';
-import 'package:medizen_app/features/articles/presentation/pages/my_favorite_articles.dart';
 
 import '../../../../base/data/models/code_type_model.dart';
 import '../cubit/article_cubit/article_cubit.dart';
 
-class ArticlesPage extends StatefulWidget {
-  const ArticlesPage({super.key});
+class MyFavoriteArticles extends StatefulWidget {
+  const MyFavoriteArticles({super.key});
 
   @override
-  State<ArticlesPage> createState() => _ArticlesPageState();
+  State<MyFavoriteArticles> createState() => _MyFavoriteArticlesState();
 }
 
-class _ArticlesPageState extends State<ArticlesPage> {
-  final List<String> _sortOptions = [
-    "articles.filters.asc",
-    "articles.filters.desc",
-  ];
+class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
+  final List<String> _sortOptions = ["articles.filters.asc", "articles.filters.desc"];
   String? _selectedSort; // Changed to nullable to handle default case
   String? _selectedCategoryId;
   String? _selectedCategoryDisplay;
@@ -51,21 +47,13 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
   void _loadInitialArticles() {
     _isLoadingMore = false;
-    context.read<ArticleCubit>().getAllArticles(
-      context: context,
-      filters: _buildFilters(),
-    );
+    context.read<ArticleCubit>().getMyFavoriteArticles(context: context, filters: _buildFilters());
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent &&
-        !_isLoadingMore) {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context.read<ArticleCubit>().getAllArticles(
-        filters: _buildFilters(),
-        loadMore: true,
-        context: context,
-      ).then((_) {
+      context.read<ArticleCubit>().getMyFavoriteArticles(filters: _buildFilters(), loadMore: true, context: context).then((_) {
         setState(() => _isLoadingMore = false);
       });
     }
@@ -80,10 +68,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
   void _loadArticles() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ArticleCubit>().getAllArticles(
-        context: context,
-        filters: _buildFilters(),
-      );
+      context.read<ArticleCubit>().getMyFavoriteArticles(context: context, filters: _buildFilters());
     });
   }
 
@@ -107,14 +92,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("articles.title".tr(context)),
-        actions: _buildAppBarActions(),
-      ),
+      appBar: AppBar(title: Text("My favorite articles"), actions: _buildAppBarActions()),
       body: Column(
         children: [
           if (_showSearchField) _buildSearchField(),
@@ -122,9 +103,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
             child: BlocConsumer<ArticleCubit, ArticleState>(
               listener: (context, state) {
                 if (state is ArticleError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
                 }
               },
               builder: (context, state) {
@@ -136,13 +115,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(state.error),
-                        ElevatedButton(
-                          onPressed: _loadArticles,
-                          child: Text("Retry"),
-                        ),
-                      ],
+                      children: [Text(state.error), ElevatedButton(onPressed: _loadArticles, child: Text("Retry"))],
                     ),
                   );
                 }
@@ -178,14 +151,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
           });
         },
       ),
-      IconButton(
-        icon: const Icon(Icons.bookmark_border),
-        onPressed: () => _navigateToBookmarks(context),
-      ),
-      IconButton(
-        icon: const Icon(Icons.filter_list),
-        onPressed: _showFilterDialog,
-      ),
+      IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
     ];
   }
 
@@ -197,9 +163,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
         focusNode: _searchFocusNode,
         decoration: InputDecoration(
           hintText: "articles.searchHint".tr(context),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           prefixIcon: const Icon(Icons.search),
           suffixIcon: IconButton(
             icon: const Icon(Icons.close),
@@ -223,43 +187,30 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<ArticleCubit>().getAllArticles(
-          context: context,
-          filters: _buildFilters(),
-        );
+        await context.read<ArticleCubit>().getMyFavoriteArticles(context: context, filters: _buildFilters());
       },
       child: CustomScrollView(
         controller: _scrollController, // Add controller here
         slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            sliver: _buildActiveFilters(),
-          ),
+          SliverPadding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), sliver: _buildActiveFilters()),
           SliverPadding(
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  if (index < articles.length) {
-                    return _buildArticleItem(article: articles[index], context: context);
-                  } else if (hasMore) {
-                    return  Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: LoadingButton(),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-                childCount: articles.length + (hasMore ? 1 : 0),
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                if (index < articles.length) {
+                  return _buildArticleItem(article: articles[index], context: context);
+                } else if (hasMore) {
+                  return Center(child: Padding(padding: EdgeInsets.all(16), child: LoadingButton()));
+                }
+                return const SizedBox.shrink();
+              }, childCount: articles.length + (hasMore ? 1 : 0)),
             ),
           ),
         ],
       ),
     );
   }
+
   Widget _buildActiveFilters() {
     final activeFilters = <Widget>[];
 
@@ -306,21 +257,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
       );
     }
 
-    return SliverToBoxAdapter(
-      child: activeFilters.isNotEmpty
-          ? Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: activeFilters,
-      )
-          : const SizedBox.shrink(),
-    );
+    return SliverToBoxAdapter(child: activeFilters.isNotEmpty ? Wrap(spacing: 8, runSpacing: 8, children: activeFilters) : const SizedBox.shrink());
   }
 
-  Widget _buildArticleItem({
-    required ArticleModel article,
-    required BuildContext context,
-  }) {
+  Widget _buildArticleItem({required ArticleModel article, required BuildContext context}) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
@@ -337,13 +277,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   width: 80,
                   height: 80,
                   color: Colors.grey[200],
-                  child: article.image != null && article.image!.isNotEmpty
-                      ? Image.network(
-                    article.image!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Icon(Icons.article),
-                  )
-                      : Icon(Icons.article, size: 40),
+                  child:
+                      article.image != null && article.image!.isNotEmpty
+                          ? Image.network(article.image!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => Icon(Icons.article))
+                          : Icon(Icons.article, size: 40),
                 ),
               ),
               const SizedBox(width: 12),
@@ -351,22 +288,11 @@ class _ArticlesPageState extends State<ArticlesPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (article.category != null)
-                      Text(
-                        article.category!.display,
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 12,
-                        ),
-                      ),
+                    if (article.category != null) Text(article.category!.display, style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 12)),
                     const SizedBox(height: 4),
-                    Text(
-                      article.title ?? 'No title',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Text(article.title ?? 'No title', style: TextStyle(fontWeight: FontWeight.bold), maxLines: 2, overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 4),
+
                     // Text(
                     //   article.content ?? 'No description',
                     //   style: TextStyle(fontSize: 12, color: Colors.grey),
@@ -374,11 +300,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                     //   overflow: TextOverflow.ellipsis,
                     // ),
                     // const SizedBox(height: 4),
-
-                    Text(
-                      article.createdAt?.toLocal().toString().split(' ')[0] ?? '',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
+                    Text(article.createdAt?.toLocal().toString().split(' ')[0] ?? '', style: TextStyle(fontSize: 12, color: Colors.grey)),
                   ],
                 ),
               ),
@@ -434,23 +356,15 @@ class _ArticlesPageState extends State<ArticlesPage> {
                     DropdownButtonFormField<String>(
                       value: tempCategoryId,
                       items: [
-                        DropdownMenuItem(
-                          value: null,
-                          child: Text("articles.filters.allCategories".tr(context)),
-                        ),
+                        DropdownMenuItem(value: null, child: Text("articles.filters.allCategories".tr(context))),
                         ..._categories.map((category) {
-                          return DropdownMenuItem(
-                            value: category.id,
-                            child: Text(category.display),
-                          );
+                          return DropdownMenuItem(value: category.id, child: Text(category.display));
                         }).toList(),
                       ],
                       onChanged: (value) {
                         setState(() {
                           tempCategoryId = value;
-                          tempCategoryDisplay = value != null
-                              ? _categories.firstWhere((c) => c.id == value).display
-                              : null;
+                          tempCategoryDisplay = value != null ? _categories.firstWhere((c) => c.id == value).display : null;
                         });
                       },
                     ),
@@ -458,17 +372,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
                 ),
               ),
               actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("cancel".tr(context)),
-                ),
+                TextButton(onPressed: () => Navigator.pop(context), child: Text("cancel".tr(context))),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, {
-                      'sort': tempSort,
-                      'categoryId': tempCategoryId,
-                      'categoryDisplay': tempCategoryDisplay,
-                    });
+                    Navigator.pop(context, {'sort': tempSort, 'categoryId': tempCategoryId, 'categoryDisplay': tempCategoryDisplay});
                   },
                   child: Text("apply".tr(context)),
                 ),
@@ -490,24 +397,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
   }
 
   void _navigateToDetails(ArticleModel article, BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ArticleDetailsPage(article: article),
-      ),
-    ).then((value){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleDetailsPage(article: article))).then((value) {
       _loadInitialArticles();
     });
-  }
-
-  void _navigateToBookmarks(BuildContext context) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyFavoriteArticles(),
-          ),
-        ).then((value){
-          _loadInitialArticles();
-        });
   }
 }

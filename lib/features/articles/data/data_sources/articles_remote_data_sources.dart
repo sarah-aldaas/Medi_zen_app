@@ -18,7 +18,7 @@ abstract class ArticlesRemoteDataSource {
 
   Future<Resource<PublicResponseModel>> removeArticleFavorite({required String articleId});
 
-  Future<Resource<ArticleModel>> getArticleOfCondition({required String conditionId});
+  Future<Resource<ArticleResponseModel>> getArticleOfCondition({required String conditionId});
 
   Future<Resource<ArticleModel>> getDetailsArticle({required String articleId});
 }
@@ -55,7 +55,7 @@ class ArticlesRemoteDataSourceImpl implements ArticlesRemoteDataSource {
   Future<Resource<PaginatedResponse<ArticleModel>>> getMyFavoriteArticles({Map<String, dynamic>? filters, int page = 1, int perPage = 10}) async {
     final params = {'page': page.toString(), 'pagination_count': perPage.toString(), if (filters != null) ...filters};
 
-    final response = await networkClient.invoke(ArticlesEndPoints.getAllArticles(), RequestType.get, queryParameters: params);
+    final response = await networkClient.invoke(ArticlesEndPoints.getMyFavoriteArticles(), RequestType.get, queryParameters: params);
 
     return ResponseHandler<PaginatedResponse<ArticleModel>>(
       response,
@@ -69,9 +69,9 @@ class ArticlesRemoteDataSourceImpl implements ArticlesRemoteDataSource {
   }
 
   @override
-  Future<Resource<ArticleModel>> getArticleOfCondition({required String conditionId}) async {
+  Future<Resource<ArticleResponseModel>> getArticleOfCondition({required String conditionId}) async {
     final response = await networkClient.invoke(ArticlesEndPoints.getArticleOfCondition(conditionId: conditionId), RequestType.get);
-    return ResponseHandler<ArticleModel>(response).processResponse(fromJson: (json) => ArticleModel.fromJson(json['article']));
+    return ResponseHandler<ArticleResponseModel>(response).processResponse(fromJson: (json) => ArticleResponseModel.fromJson(json));
   }
 
   @override

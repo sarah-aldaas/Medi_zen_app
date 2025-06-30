@@ -3,12 +3,21 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/models/allergy_filter_model.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/pages/all_allergies_of_appointment_page.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/widgets/allergy_filter_dialog.dart';
+import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_filter_model.dart';
+import 'package:medizen_app/features/medical_records/conditions/presentation/widgets/condition_filter_dialog.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/all_encounters_of_appointment_page.dart';
+import 'package:medizen_app/features/medical_records/medication_request/data/models/medication_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_requests_of_appointment_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/widgets/service_request_filter_dialog.dart';
 
 import '../../base/theme/app_color.dart';
+import 'conditions/presentation/pages/conditions_list_of_appointment.dart';
+import 'medication/data/models/medication_filter_model.dart';
+import 'medication/presentation/pages/my_medications_of_appointment_page.dart';
+import 'medication/presentation/widgets/medication_filter_dialog.dart';
+import 'medication_request/presentation/pages/my_medication_requests_of_appointment_page.dart';
+import 'medication_request/presentation/widgets/medication_request_filter_dialog.dart';
 
 class MedicalRecordOfAppointmentPage extends StatefulWidget {
   final String appointmentId;
@@ -25,6 +34,9 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
   // EncounterFilterModel _encounterFilter = EncounterFilterModel();
   AllergyFilterModel _allergyFilter = AllergyFilterModel();
   ServiceRequestFilter _serviceRequestFilter = ServiceRequestFilter();
+  ConditionsFilterModel _conditionFilter = ConditionsFilterModel();
+  MedicationRequestFilterModel _medicationRequestFilter = MedicationRequestFilterModel();
+  MedicationFilterModel _medicationFilter = MedicationFilterModel();
 
   @override
   void initState() {
@@ -58,6 +70,36 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
     }
   }
 
+  Future<void> _showConditionFilterDialog() async {
+    final result = await showDialog<ConditionsFilterModel>(context: context, builder: (context) => ConditionsFilterDialog(currentFilter: _conditionFilter));
+
+    if (result != null) {
+      setState(() => _conditionFilter = result);
+    }
+  }
+
+  Future<void> _showMedicationRequestFilterDialog() async {
+    final result = await showDialog<MedicationRequestFilterModel>(
+      context: context,
+      builder: (context) => MedicationRequestFilterDialog(currentFilter: _medicationRequestFilter),
+    );
+
+    if (result != null) {
+      setState(() => _medicationRequestFilter = result);
+    }
+  }
+
+  Future<void> _showMedicationFilterDialog() async {
+    final result = await showDialog<MedicationFilterModel>(
+      context: context,
+      builder: (context) => MedicationFilterDialog(currentFilter: _medicationFilter),
+    );
+
+    if (result != null) {
+      setState(() => _medicationFilter = result);
+    }
+  }
+
   @override
   void dispose() {
     _tabController.removeListener(_handleTabSelection);
@@ -72,9 +114,9 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
       'medicalRecordPage.tabs.allergies'.tr(context),
       'medicalRecordPage.tabs.serviceRequest'.tr(context),
       'medicalRecordPage.tabs.conditions'.tr(context),
-      'medicalRecordPage.tabs.observations'.tr(context),
-      'medicalRecordPage.tabs.diagnosticReports'.tr(context),
       'medicalRecordPage.tabs.medicationRequests'.tr(context),
+      'medicalRecordPage.tabs.medication'.tr(context),
+      'medicalRecordPage.tabs.diagnosticReports'.tr(context),
       'medicalRecordPage.tabs.chronicDiseases'.tr(context),
     ];
 
@@ -92,6 +134,11 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
               onPressed: _showServiceRequestFilterDialog,
               tooltip: 'medicalRecordPage.filterServiceRequest'.tr(context),
             ),
+          if (_tabController.index == 3) IconButton(icon: const Icon(Icons.filter_list), onPressed: _showConditionFilterDialog, tooltip: 'Condition filter'),
+          if (_tabController.index == 4)
+            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showMedicationRequestFilterDialog, tooltip: 'Medication request filter'),
+         if (_tabController.index == 5)
+            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showMedicationFilterDialog, tooltip: 'Medication filter'),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48),
@@ -117,9 +164,9 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
             AllEncountersOfAppointmentPage(appointmentId: widget.appointmentId),
             AllAllergiesOfAppointmentPage(appointmentId: widget.appointmentId, filter: _allergyFilter),
             ServiceRequestsOfAppointmentPage(appointmentId: widget.appointmentId, filter: _serviceRequestFilter),
-            _buildObservationsList(),
-            _buildDiagnosticReportsList(),
-            _buildMedicationRequestsList(),
+            ConditionsListOfAppointment(appointmentId: widget.appointmentId, filter: _conditionFilter),
+            MyMedicationRequestsOfAppointmentPage(appointmentId: widget.appointmentId, filter: _medicationRequestFilter),
+            MyMedicationsOfAppointmentPage(appointmentId: widget.appointmentId,filter: _medicationFilter,),
             _buildAllergiesList(),
             _buildChronicDiseasesList(),
           ],

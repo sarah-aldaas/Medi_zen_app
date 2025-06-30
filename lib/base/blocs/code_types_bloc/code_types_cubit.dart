@@ -1311,6 +1311,43 @@ Future<List<CodeModel>> getServiceRequestStatusCodes({required BuildContext cont
     return [];
   }
 
+Future<List<CodeModel>> articleCategoryTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return articleCategoryTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'article_category',
+      orElse: () => throw Exception('Article category not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+
 
   Future<List<CodeTypeModel>?> getCachedCodeTypes() async {
     try {
