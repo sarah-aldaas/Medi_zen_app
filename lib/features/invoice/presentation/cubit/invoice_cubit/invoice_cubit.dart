@@ -21,27 +21,42 @@ class InvoiceCubit extends Cubit<InvoiceState> {
     required this.networkInfo,
   }) : super(InvoiceInitial());
 
-  int _currentPage = 1;
-  bool _hasMore = true;
-  Map<String, dynamic> _currentFilters = {};
-  List<AppointmentModel> _allAppointments = [];
+  int _currentPagePaid = 1;
+  int _currentPageUnpaid = 1;
+  bool _hasMorePaid = true;
+  bool _hasMoreUnpaid = true;
+  Map<String, dynamic> _currentFiltersPaid = {};
+  Map<String, dynamic> _currentFiltersUnpaid = {};
+  List<AppointmentModel> _paidAppointments = [];
+  List<AppointmentModel> _unpaidAppointments = [];
 
   Future<void> getFinishedAppointments({
     Map<String, dynamic>? filters,
     bool loadMore = false,
     required BuildContext context,
+    required bool isPaid,
   }) async {
     if (!loadMore) {
-      _currentPage = 1;
-      _hasMore = true;
-      _allAppointments = [];
+      if (isPaid) {
+        _currentPagePaid = 1;
+        _hasMorePaid = true;
+        _paidAppointments = [];
+      } else {
+        _currentPageUnpaid = 1;
+        _hasMoreUnpaid = true;
+        _unpaidAppointments = [];
+      }
       emit(InvoiceLoading());
-    } else if (!_hasMore) {
+    } else if ((isPaid && !_hasMorePaid) || (!isPaid && !_hasMoreUnpaid)) {
       return;
     }
 
     if (filters != null) {
-      _currentFilters = filters;
+      if (isPaid) {
+        _currentFiltersPaid = filters;
+      } else {
+        _currentFiltersUnpaid = filters;
+      }
     }
 
     final isConnected = await networkInfo.isConnected;
@@ -52,9 +67,12 @@ class InvoiceCubit extends Cubit<InvoiceState> {
       return;
     }
 
+    final currentFilters = isPaid ? _currentFiltersPaid : _currentFiltersUnpaid;
+    final currentPage = isPaid ? _currentPagePaid : _currentPageUnpaid;
+
     final result = await remoteDataSource.getMyAppointmentFinished(
-      filters: _currentFilters,
-      page: _currentPage,
+      filters: currentFilters,
+      page: currentPage,
       perPage: 10,
     );
 
@@ -63,18 +81,23 @@ class InvoiceCubit extends Cubit<InvoiceState> {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
       try {
-        _allAppointments.addAll(result.data.paginatedData!.items);
-        _hasMore = result.data.paginatedData!.items.isNotEmpty &&
-            result.data.meta!.currentPage < result.data.meta!.lastPage;
-        _currentPage++;
+        if (isPaid) {
+          _paidAppointments.addAll(result.data.paginatedData!.items);
+          _hasMorePaid = result.data.paginatedData!.items.isNotEmpty &&
+              result.data.meta!.currentPage < result.data.meta!.lastPage;
+          _currentPagePaid++;
+        } else {
+          _unpaidAppointments.addAll(result.data.paginatedData!.items);
+          _hasMoreUnpaid = result.data.paginatedData!.items.isNotEmpty &&
+              result.data.meta!.currentPage < result.data.meta!.lastPage;
+          _currentPageUnpaid++;
+        }
 
         emit(InvoiceAppointmentsSuccess(
-          hasMore: _hasMore,
-          paginatedResponse: PaginatedResponse<AppointmentModel>(
-            paginatedData: PaginatedData<AppointmentModel>(items: _allAppointments),
-            meta: result.data.meta,
-            links: result.data.links,
-          ),
+          paidAppointments: _paidAppointments,
+          unpaidAppointments: _unpaidAppointments,
+          hasMorePaid: _hasMorePaid,
+          hasMoreUnpaid: _hasMoreUnpaid,
         ));
       } catch (e) {
         emit(InvoiceError(error: result.data.msg ?? 'Failed to fetch appointments'));

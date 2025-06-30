@@ -14,13 +14,18 @@ class InvoiceLoading extends InvoiceState {
 }
 
 class InvoiceAppointmentsSuccess extends InvoiceState {
-  final bool hasMore;
-  final PaginatedResponse<AppointmentModel> paginatedResponse;
+  final List<AppointmentModel> paidAppointments;
+  final List<AppointmentModel> unpaidAppointments;
+  final bool hasMorePaid;
+  final bool hasMoreUnpaid;
 
   const InvoiceAppointmentsSuccess({
-    required this.paginatedResponse,
-    required this.hasMore,
+    required this.paidAppointments,
+    required this.unpaidAppointments,
+    required this.hasMorePaid,
+    required this.hasMoreUnpaid,
   });
+
 }
 
 class InvoiceDetailsSuccess extends InvoiceState {

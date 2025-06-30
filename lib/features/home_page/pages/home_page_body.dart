@@ -9,6 +9,7 @@ import 'package:medizen_app/features/home_page/pages/widgets/some_clinics.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/some_doctors.dart';
 
 import '../../../main.dart';
+import '../../invoice/presentation/pages/my_appointment_finished_invoice_page.dart';
 import '../../profile/presentaiton/widgets/avatar_image_widget.dart';
 
 class HomePageBody extends StatefulWidget {
@@ -88,6 +89,12 @@ class _HomePageBodyState extends State<HomePageBody> {
                   } else if (value == 'services') {
                     context.pushNamed(AppRouter.healthCareServicesPage.name);
                     // context.pushNamed(AppRouter.allAllergiesPage.name);
+                  } else if (value == 'invoice') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppointmentFinishedInvoicePage()));
+
+                    // context.pushNamed(AppRouter.healthCareServicesPage.name);
+
+                    // context.pushNamed(AppRouter.allAllergiesPage.name);
                   }
                 },
                 itemBuilder:
@@ -106,6 +113,15 @@ class _HomePageBodyState extends State<HomePageBody> {
                           leading: Icon(Icons.health_and_safety, color: Colors.green),
 
                           title: Text('Health services', style: TextStyle(color: theme.textTheme.bodyLarge?.color)),
+                        ),
+                      ),
+
+                      PopupMenuItem<String>(
+                        value: 'invoice',
+                        child: ListTile(
+                          leading: Icon(Icons.paid, color: Colors.green),
+
+                          title: Text('Invoices', style: TextStyle(color: theme.textTheme.bodyLarge?.color)),
                         ),
                       ),
                     ],
