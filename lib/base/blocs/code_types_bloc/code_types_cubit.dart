@@ -912,6 +912,443 @@ Future<List<CodeModel>> getServiceRequestStatusCodes({required BuildContext cont
     return [];
   }
 
+
+  Future<List<CodeModel>> getMedicationStatusTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getMedicationStatusTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'medication_status',
+      orElse: () => throw Exception('medication status not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getMedicationRouteTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getMedicationRouteTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'medication_route',
+      orElse: () => throw Exception('medication route not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getMedicationOffsetUnitTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getMedicationOffsetUnitTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'medication_offset_unit',
+      orElse: () => throw Exception('medication route not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getMedicationDoseFormTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getMedicationDoseFormTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'medication_dose_form',
+      orElse: () => throw Exception('medication route not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+
+  Future<List<CodeModel>> getMedicationRequestStatusTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getMedicationRequestStatusTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'medication_request_status',
+      orElse: () => throw Exception('medication request status not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getMedicationRequestIntentTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getMedicationRequestIntentTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'medication_request_intent',
+      orElse: () => throw Exception('medication request intent not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getMedicationRequestPriorityTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getMedicationRequestPriorityTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'medication_request_priority',
+      orElse: () => throw Exception('medication request priority not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getMedicationRequestTherapyTypeTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getMedicationRequestTherapyTypeTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'medication_request_therapy_type',
+      orElse: () => throw Exception('medication request therapy type not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getConditionStageTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getConditionStageTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'condition_stage',
+      orElse: () => throw Exception('condition stage not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getConditionVerificationStatusTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getConditionVerificationStatusTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'condition_verification_status',
+      orElse: () => throw Exception('condition verification status not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+  Future<List<CodeModel>> getConditionClinicalStatusTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getConditionClinicalStatusTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'condition_clinical_status',
+      orElse: () => throw Exception('condition clinical status not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+
+Future<List<CodeModel>> articleCategoryTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return articleCategoryTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'article_category',
+      orElse: () => throw Exception('Article category not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+
+
   Future<List<CodeTypeModel>?> getCachedCodeTypes() async {
     try {
       final jsonString = serviceLocator<StorageService>().getFromDisk(

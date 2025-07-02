@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 
 import '../../../../../base/data/models/code_type_model.dart';
 import '../../data/models/reaction_model.dart';
@@ -48,7 +49,7 @@ class ReactionListItem extends StatelessWidget {
       default:
         chipColor =
             theme.textTheme.bodySmall?.color?.withOpacity(0.5) ??
-                Colors.grey.shade500;
+            Colors.grey.shade500;
         displayText = 'reactionsPage.notApplicable'.tr(context);
     }
 
@@ -71,9 +72,6 @@ class ReactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-
-    final Color dateBackgroundColor = theme.primaryColor.withOpacity(0.1);
-    final Color dateTextColor = theme.primaryColor;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
@@ -180,7 +178,7 @@ class ReactionListItem extends StatelessWidget {
             '$label:',
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: theme.textTheme.bodySmall?.color,
+              color: AppColors.label,
             ),
           ),
         ),

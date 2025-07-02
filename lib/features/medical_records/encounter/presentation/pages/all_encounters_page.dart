@@ -54,27 +54,41 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent &&
+            _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       final currentState = context.read<EncounterCubit>().state;
       if (currentState is EncountersSuccess && currentState.hasMore) {
         setState(() => _isLoadingMore = true);
         context
             .read<EncounterCubit>()
-            .getAllMyEncounter(filters: widget.filter.toJson(), loadMore: true,context:context)
+            .getAllMyEncounter(
+              filters: widget.filter.toJson(),
+              loadMore: true,
+              context: context,
+            )
             .then((_) {
-          setState(() => _isLoadingMore = false);
-        });
+              setState(() => _isLoadingMore = false);
+            });
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Define your primary and accent colors here for better readability and maintainability
+    final Color primaryColor =
+        Theme.of(context).primaryColor; // Or a specific color like Colors.teal
+    final Color accentColor =
+        Theme.of(context)
+            .colorScheme
+            .secondary; // Or a specific color like Colors.tealAccent[400]
+
     return BlocConsumer<EncounterCubit, EncounterState>(
       listener: (context, state) {
         if (state is EncounterError) {
-          ShowToast.showToastError(message: 'encountersPge.errorLoading'.tr(context));
+          ShowToast.showToastError(
+            message: 'encountersPge.errorLoading'.tr(context),
+          );
         }
       },
       builder: (context, state) {
@@ -83,11 +97,11 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
         }
 
         final List<EncounterModel> encounters =
-        state is EncountersSuccess
-            ? state.paginatedResponse.paginatedData?.items
-            ?.cast<EncounterModel>() ??
-            []
-            : [];
+            state is EncountersSuccess
+                ? state.paginatedResponse.paginatedData?.items
+                        ?.cast<EncounterModel>() ??
+                    []
+                : [];
         final bool hasMore = state is EncountersSuccess ? state.hasMore : false;
 
         if (encounters.isEmpty) {
@@ -95,20 +109,28 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.event_note, size: 70, color: Colors.grey[400]),
+                Icon(
+                  Icons.event_note,
+                  size: 70,
+                  color: primaryColor,
+                ), // Changed color
                 const SizedBox(height: 20),
                 Text(
                   'encountersPge.noFound'.tr(context),
-                  style: const TextStyle(
+                  style: TextStyle(
+                    // Changed color
                     fontSize: 20,
-                    color: Colors.grey,
+                    color: primaryColor.withOpacity(0.8),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'encountersPge.checkFilters'.tr(context),
-                  style: const TextStyle(fontSize: 15, color: Colors.grey),
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: primaryColor.withOpacity(0.6),
+                  ),
                 ),
               ],
             ),
@@ -125,7 +147,9 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
                 onTap: () => _navigateToEncounterDetails(encounters[index].id!),
               );
             } else {
-              return Center(child: LoadingButton());
+              return Center(
+                child: CircularProgressIndicator(color: accentColor),
+              );
             }
           },
         );

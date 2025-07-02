@@ -1,5 +1,6 @@
 
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/features/medical_records/encounter/data/models/encounter_model.dart';
 
 import '../../../authentication/data/models/patient_model.dart';
 import '../../../doctor/data/model/doctor_model.dart';
@@ -18,6 +19,7 @@ class AppointmentModel {
   final CodeModel? status;
   final DoctorModel? doctor;
   final PatientModel? patient;
+  final EncounterModel? encounterModel;
   final dynamic previousAppointment;
   final dynamic createdByPractitioner;
 
@@ -36,6 +38,7 @@ class AppointmentModel {
     required this.doctor,
     required this.patient,
     this.previousAppointment,
+    this.encounterModel,
     this.createdByPractitioner,
   });
 
@@ -54,6 +57,7 @@ class AppointmentModel {
       status:json['status']!=null? CodeModel.fromJson(json['status'] as Map<String, dynamic>):null,
       doctor:json['doctor']!=null? DoctorModel.fromJson(json['doctor'] as Map<String, dynamic>):null,
       patient:json['patient']!=null? PatientModel.fromJson(json['patient'] as Map<String, dynamic>):null,
+      encounterModel:json['encounter']!=null? EncounterModel.fromJson(json['encounter'] as Map<String, dynamic>):null,
       previousAppointment: json['previous_appointment'],
       createdByPractitioner: json['created_by_practitioner'],
     );

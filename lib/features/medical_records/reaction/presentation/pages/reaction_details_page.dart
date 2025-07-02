@@ -30,7 +30,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
     context.read<ReactionCubit>().getSpecificReaction(
       allergyId: widget.allergyId,
       reactionId: widget.reactionId,
-      context: context
+      context: context,
     );
   }
 
@@ -40,14 +40,23 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: theme.appBarTheme.iconTheme?.color,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Text('reactionsPage.reactionDetails'.tr(context)),
         elevation: 0,
         backgroundColor: theme.appBarTheme.backgroundColor,
         titleTextStyle:
-        theme.appBarTheme.titleTextStyle?.copyWith(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ) ??
+            theme.appBarTheme.titleTextStyle?.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ) ??
             TextStyle(
               color: theme.primaryColor,
               fontSize: 20,
@@ -219,7 +228,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
       default:
         chipColor =
             theme.textTheme.bodySmall?.color?.withOpacity(0.5) ??
-                Colors.grey.shade400;
+            Colors.grey.shade400;
         displayText = 'reactionsPage.unknown'.tr(context);
     }
 

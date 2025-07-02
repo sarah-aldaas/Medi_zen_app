@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/encounter_details_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/presentation/pages/appointment_reactions_page.dart';
@@ -49,7 +50,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
             color: theme.appBarTheme.iconTheme?.color,
           ),
           onPressed: () => Navigator.pop(context),
@@ -57,11 +58,10 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
         title: Text(
           'allergiesPage.allergyDetails'.tr(context),
           style:
-          theme.appBarTheme.titleTextStyle?.copyWith(
-            // Title style from theme
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ) ??
+              theme.appBarTheme.titleTextStyle?.copyWith(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ) ??
               TextStyle(
                 color: theme.primaryColor,
                 fontSize: 22,
@@ -232,9 +232,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                       MaterialPageRoute(
                         builder:
                             (context) => ReactionDetailsPage(
-                          allergyId: allergy.id!,
-                          reactionId: reaction.id!,
-                        ),
+                              allergyId: allergy.id!,
+                              reactionId: reaction.id!,
+                            ),
                       ),
                     ).then((_) => _loadAllergyDetails());
                   },
@@ -257,9 +257,9 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     MaterialPageRoute(
                       builder:
                           (context) => AppointmentReactionsPage(
-                        appointmentId: widget.appointmentId!,
-                        allergyId: widget.allergyId,
-                      ),
+                            appointmentId: widget.appointmentId!,
+                            allergyId: widget.allergyId,
+                          ),
                     ),
                   ).then((_) => _loadAllergyDetails());
                 },
@@ -302,8 +302,8 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                       MaterialPageRoute(
                         builder:
                             (context) => EncounterDetailsPage(
-                          encounterId: allergy.encounter!.id!,
-                        ),
+                              encounterId: allergy.encounter!.id!,
+                            ),
                       ),
                     ).then((_) => _loadAllergyDetails());
                   },
@@ -384,11 +384,11 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
   }
 
   Widget _buildDetailRow(
-      BuildContext context,
-      IconData icon,
-      String label,
-      String? value,
-      ) {
+    BuildContext context,
+    IconData icon,
+    String label,
+    String? value,
+  ) {
     final ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -403,7 +403,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
               '$label:',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: theme.textTheme.bodySmall?.color,
+                color: AppColors.label,
               ),
             ),
           ),
@@ -442,7 +442,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
       default:
         chipColor =
             theme.textTheme.bodySmall?.color?.withOpacity(0.5) ??
-                Colors.grey.shade500;
+            Colors.grey.shade500;
         displayText = 'allergiesPage.notApplicable'.tr(context);
     }
 

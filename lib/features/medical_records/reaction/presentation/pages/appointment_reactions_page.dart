@@ -58,21 +58,21 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent &&
+            _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<ReactionCubit>()
           .getAllReactionOfAppointment(
-        context: context,
-        appointmentId: widget.appointmentId,
-        allergyId: widget.allergyId,
-        filters: _filter.toJson(),
-        loadMore: true,
-      )
+            context: context,
+            appointmentId: widget.appointmentId,
+            allergyId: widget.allergyId,
+            filters: _filter.toJson(),
+            loadMore: true,
+          )
           .then((_) {
-        setState(() => _isLoadingMore = false);
-      });
+            setState(() => _isLoadingMore = false);
+          });
     }
   }
 
@@ -97,7 +97,7 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
             color: theme.appBarTheme.iconTheme?.color,
           ),
           onPressed: () {
@@ -107,10 +107,10 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
         title: Text(
           'reactionsPage.allergyReactions'.tr(context),
           style:
-          theme.appBarTheme.titleTextStyle?.copyWith(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ) ??
+              theme.appBarTheme.titleTextStyle?.copyWith(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ) ??
               TextStyle(
                 color: theme.primaryColor,
                 fontSize: 22,
@@ -144,11 +144,11 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
           }
 
           final reactions =
-          state is ReactionsOfAppointmentSuccess
-              ? state.paginatedResponse.paginatedData?.items
-              : [];
+              state is ReactionsOfAppointmentSuccess
+                  ? state.paginatedResponse.paginatedData?.items
+                  : [];
           final hasMore =
-          state is ReactionsOfAppointmentSuccess ? state.hasMore : false;
+              state is ReactionsOfAppointmentSuccess ? state.hasMore : false;
           if (reactions == null || reactions.isEmpty) {
             return Center(
               child: Column(
@@ -211,9 +211,9 @@ class _AppointmentReactionsPageState extends State<AppointmentReactionsPage> {
       MaterialPageRoute(
         builder:
             (context) => ReactionDetailsPage(
-          allergyId: widget.allergyId,
-          reactionId: reactionId,
-        ),
+              allergyId: widget.allergyId,
+              reactionId: reactionId,
+            ),
       ),
     ).then((_) => _loadReactions());
   }

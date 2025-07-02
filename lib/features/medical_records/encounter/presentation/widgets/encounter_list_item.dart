@@ -19,37 +19,40 @@ class EncounterListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
+    final Color primaryColor = theme.primaryColor;
+    final Color accentColor = theme.colorScheme.secondary;
+    final Color cardBackgroundColor = theme.cardColor;
+    final Color titleColor =
+        theme.textTheme.titleLarge?.color ?? Colors.black87;
+    final Color subtitleColor =
+        theme.textTheme.bodyMedium?.color ?? Colors.grey[700]!;
 
-    final Color dateBackgroundColor = theme.colorScheme.primary.withOpacity(
-      0.1,
-    );
-    final Color dateTextColor =
-        theme.primaryColor;
+    final Color dateBackgroundColor = primaryColor.withOpacity(0.1);
+    final Color dateTextColor = primaryColor;
 
     final String type =
         encounter.type?.display ?? 'encountersPge.encounter'.tr(context);
     final String scheduledDate =
-    encounter.actualStartDate != null
-        ? DateFormat(
-      'MMM d, y - h:mm a',
-    ).format(DateTime.parse(encounter.actualStartDate!))
-        : 'encountersPge.dateNotAvailable'.tr(context);
+        encounter.actualStartDate != null
+            ? DateFormat(
+              'MMM d, y - h:mm a',
+            ).format(DateTime.parse(encounter.actualStartDate!))
+            : 'encountersPge.dateNotAvailable'.tr(context);
     final String status =
         encounter.status?.display ?? 'encountersPge.unknownStatus'.tr(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Card(
-        elevation: 8,
-
-        color: theme.cardColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        elevation: 4,
+        color: cardBackgroundColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(18),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -62,42 +65,37 @@ class EncounterListItem extends StatelessWidget {
                             'encountersPge.encounter'.tr(context),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
-
-                          color: theme.textTheme.bodyLarge?.color,
+                          fontSize: 18,
+                          color: titleColor,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       if (encounter.type?.display != null) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 6),
                         Text(
                           type,
-                          style: TextStyle(
-
-                            color: theme.textTheme.bodySmall?.color,
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(color: subtitleColor, fontSize: 15),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
                       if (encounter.actualStartDate != null) ...[
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 10),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 7,
+                            horizontal: 10,
+                            vertical: 6,
                           ),
                           decoration: BoxDecoration(
                             color: dateBackgroundColor,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             scheduledDate,
                             style: TextStyle(
                               color: dateTextColor,
-                              fontSize: 15,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -112,7 +110,8 @@ class EncounterListItem extends StatelessWidget {
                   child: _buildStatusIcon(
                     context,
                     encounter.status,
-                  ), // Pass context
+                    accentColor,
+                  ),
                 ),
               ],
             ),
@@ -122,7 +121,11 @@ class EncounterListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusIcon(BuildContext context, CodeModel? status) {
+  Widget _buildStatusIcon(
+    BuildContext context,
+    CodeModel? status,
+    Color accentColor,
+  ) {
     IconData iconData;
     Color iconColor;
     String tooltipText;
@@ -130,41 +133,39 @@ class EncounterListItem extends StatelessWidget {
     switch (status?.code) {
       case 'planned':
         iconData = Icons.event_note;
-        iconColor = Colors.blue.shade600;
+        iconColor = Colors.blue.shade700;
         tooltipText = 'encountersPge.planned'.tr(context);
         break;
       case 'in-progress':
         iconData = Icons.hourglass_full;
-        iconColor = Colors.orange.shade600;
+        iconColor = Colors.orange.shade700;
         tooltipText = 'encountersPge.inProgress'.tr(context);
         break;
       case 'completed':
         iconData = Icons.check_circle;
-        iconColor = Colors.green.shade600;
+        iconColor = Colors.green.shade700;
         tooltipText = 'encountersPge.completed'.tr(context);
         break;
       case 'cancelled':
         iconData = Icons.cancel;
-        iconColor = Colors.red.shade600;
+        iconColor = Colors.red.shade700;
         tooltipText = 'encountersPge.cancelled'.tr(context);
         break;
       default:
         iconData = Icons.help_outline;
-        iconColor =
-            Theme.of(context).textTheme.bodySmall?.color ??
-                Colors.grey.shade500;
+        iconColor = accentColor.withOpacity(0.7);
         tooltipText = 'encountersPge.unknownStatus'.tr(context);
     }
 
     return Tooltip(
       message: tooltipText,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(9),
         decoration: BoxDecoration(
-          color: iconColor.withOpacity(0.15),
+          color: iconColor.withOpacity(0.1),
           shape: BoxShape.circle,
         ),
-        child: Icon(iconData, color: iconColor, size: 25),
+        child: Icon(iconData, color: iconColor, size: 24),
       ),
     );
   }
