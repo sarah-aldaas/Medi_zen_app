@@ -6,7 +6,7 @@ class QualificationModel {
   final String startDate;
   final String? endDate;
   final String? pdf;
-  final CodeModel type;
+  final CodeModel? type;
 
   QualificationModel({
     required this.id,
@@ -24,7 +24,7 @@ class QualificationModel {
       startDate: json['start_date'] as String,
       endDate: json['end_date'] as String?,
       pdf: json['pdf'] as String?,
-      type: CodeModel.fromJson(json['type'] as Map<String, dynamic>),
+      type:json['type'] !=null? CodeModel.fromJson(json['type'] as Map<String, dynamic>):null,
     );
   }
 
@@ -35,7 +35,7 @@ class QualificationModel {
       'start_date': startDate,
       'end_date': endDate,
       'pdf': pdf,
-      'type': type.toJson(),
+      'type': type!.toJson(),
     };
   }
 

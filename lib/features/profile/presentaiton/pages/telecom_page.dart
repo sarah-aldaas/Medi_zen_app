@@ -5,6 +5,7 @@ import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
 import '../../../../base/data/models/code_type_model.dart';
 import '../cubit/telecom_cubit/telecom_cubit.dart';
@@ -47,7 +48,7 @@ class _TelecomPageState extends State<TelecomPage> {
     context.read<TelecomCubit>().fetchTelecoms(context: context, rank: '1', paginationCount: '100');
   }
 
-  Widget _buildTelecomCard(BuildContext context, TelecomModel telecom) {
+  Widget _buildTelecomCard(BuildContext context, TelecomModel telecom,TelecomState state) {
     final ThemeData theme = Theme.of(context);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -79,7 +80,7 @@ class _TelecomPageState extends State<TelecomPage> {
           ),
           const Gap(25),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
                 icon: Icon(Icons.edit, color: theme.colorScheme.secondary, size: 20),
@@ -94,7 +95,7 @@ class _TelecomPageState extends State<TelecomPage> {
               ),
               const Gap(10),
               IconButton(
-                icon: Icon(Icons.delete, color: theme.colorScheme.error, size: 20),
+                icon: Icon(Icons.delete, color: Colors.red.shade400, size: 20),
                 onPressed: () => context.read<TelecomCubit>().deleteTelecom(id: telecom.id!, context: context),
               ),
               const Gap(10),
@@ -139,7 +140,7 @@ class _TelecomPageState extends State<TelecomPage> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: filteredTelecoms.length,
                     itemBuilder: (context, index) {
-                      return _buildTelecomCard(context, filteredTelecoms[index]);
+                      return _buildTelecomCard(context, filteredTelecoms[index],state);
                     },
                   ),
             ],

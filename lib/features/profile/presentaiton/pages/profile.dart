@@ -7,7 +7,6 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/theme.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/presentation/logout/cubit/logout_cubit.dart';
 import 'package:medizen_app/main.dart';
 
@@ -16,7 +15,9 @@ import '../../../../base/constant/app_images.dart';
 import '../../../../base/constant/storage_key.dart';
 import '../../../../base/services/di/injection_container_common.dart';
 import '../../../../base/services/storage/storage_service.dart';
+import '../../../../base/widgets/flexible_image.dart';
 import '../../../authentication/data/models/patient_model.dart';
+import '../../../complains/presentation/pages/complain_list_page.dart';
 import '../widgets/avatar_image_widget.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -61,7 +62,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 Center(
                   child: Column(
                     children: [
-                      AvatarImage(imageUrl: myPatientModel!.avatar, radius: 50),
+                      CircleAvatar(
+                    radius: 50,
+                        backgroundColor: Colors.transparent,
+                        child: ClipOval(
+                          child: FlexibleImage(
+                            imageUrl:myPatientModel.avatar,assetPath: "assets/images/person.jpg",
+                          ),
+                        ),
+                      ),
+                      // AvatarImage(imageUrl: myPatientModel.avatar, radius: 50),
                       SizedBox(height: 16),
                       Text(
                         myPatientModel == null
@@ -124,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text('profilePage.complaint'.tr(context)),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
-                    context.pushNamed(AppRouter.complaint.name);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ComplainListPage()));
                   },
                 ),
                 ExpansionTile(
@@ -182,15 +192,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.info_outline,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text('profilePage.helpCenter'.tr(context)),
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {},
-                ),
+                // ListTile(
+                //   leading: Icon(
+                //     Icons.info_outline,
+                //     color: Theme.of(context).primaryColor,
+                //   ),
+                //   title: Text('profilePage.helpCenter'.tr(context)),
+                //   trailing: Icon(Icons.chevron_right),
+                //   onTap: () {},
+                // ),
                 // ListTile(
                 //   leading: Icon(
                 //     Icons.people_outline,

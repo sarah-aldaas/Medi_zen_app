@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/articles/data/model/article_model.dart';
 import 'package:medizen_app/features/articles/presentation/cubit/article_cubit/article_cubit.dart';
 import 'package:medizen_app/features/articles/presentation/pages/article_details_page.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SimpleArticlesPage extends StatefulWidget {
   const SimpleArticlesPage({super.key});
@@ -51,7 +51,7 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
           },
           builder: (context, state) {
             if (state is ArticleLoading) {
-              return Center(child: LoadingButton());
+              return _buildShimmerLoader();
             }
 
             if (state is ArticleError) {
@@ -171,5 +171,80 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
     ).then((value) {
       _loadInitialArticles();
     });
+  }
+  Widget _buildShimmerLoader() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDarkMode ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDarkMode ? Colors.grey[600]! : Colors.grey[100]!;
+    final containerColor = isDarkMode ? Colors.grey[700]! : Colors.white;
+
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      padding: const EdgeInsets.all(16),
+      itemCount: 5, // Show 5 shimmer items
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: baseColor,
+          highlightColor: highlightColor,
+          child: Card(
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image placeholder
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      color: containerColor,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  // Text content placeholders
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Category placeholder
+                        Container(
+                          width: 80,
+                          height: 16,
+                          color: containerColor,
+                        ),
+                        const SizedBox(height: 8),
+                        // Title placeholder
+                        Container(
+                          width: double.infinity,
+                          height: 16,
+                          color: containerColor,
+                        ),
+                        const SizedBox(height: 4),
+                        Container(
+                          width: double.infinity,
+                          height: 16,
+                          color: containerColor,
+                        ),
+                        const SizedBox(height: 4),
+                        // Date placeholder
+                        Container(
+                          width: 100,
+                          height: 12,
+                          color: containerColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../base/constant/app_images.dart';
 import '../../../../base/go_router/go_router.dart';
@@ -104,7 +105,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
 
   Widget _buildClinicList(ClinicState state) {
     if (state is ClinicLoading && state.isInitialLoad) {
-      return Center(child: LoadingButton(isWhite: false));
+      return _buildShimmerLoader();
     } else if (state is ClinicError) {
       return Center(
         child: Column(
@@ -191,5 +192,48 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
     _searchDebounce?.cancel();
     _searchController.dispose();
     super.dispose();
+  }
+
+  Widget _buildShimmerLoader() {
+    final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 30.0,
+        mainAxisSpacing: 30,
+        childAspectRatio: 0.7,
+      ),
+      itemCount: 8,
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
+          highlightColor: isDarkMode ? Colors.grey[600]! : Colors.grey[100]!,
+          child: SizedBox(
+            width: (MediaQuery.of(context).size.width - (2 * 16) - (3 * 20)) / 5,
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    color: isDarkMode ? Colors.grey[700]! : Colors.white,
+                    height: 60,
+                    width: double.infinity,
+                  ),
+                ),
+                const SizedBox(height: 4.0),
+                Container(
+                  color: isDarkMode ? Colors.grey[700]! : Colors.white,
+                  height: 12,
+                  width: 50,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

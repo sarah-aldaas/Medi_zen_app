@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
+import '../../../../../base/theme/app_color.dart';
 import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/allergy_filter_model.dart';
 import '../../data/models/allergy_model.dart';
@@ -126,15 +127,18 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
 
         return ListView.builder(
           controller: _scrollController,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          padding: const EdgeInsets.all(10),
           itemCount: allergies.length + (hasMore ? 1 : 0),
           itemBuilder: (context, index) {
             if (index < allergies.length) {
               final AllergyModel allergy = allergies[index];
-              return AllergyListItem(
-                allergy: allergy,
-                onTap: () => _navigateToAllergyDetails(allergy.id!),
+              return _buildAllergyItem(
+                allergy,Theme.of(context)
               );
+              //   AllergyListItem(
+              //   allergy: allergy,
+              //   onTap: () => _navigateToAllergyDetails(allergy.id!),
+              // );
             } else {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -147,14 +151,112 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
     );
   }
 
-  void _navigateToAllergyDetails(String allergyId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AllergyDetailsPage(allergyId: allergyId),
+
+  Widget _buildAllergyItem(AllergyModel allergy, ThemeData theme) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8,),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => AllergyDetailsPage(
+                allergyId: allergy.id!,
+              ),
+            ),
+          );
+          _loadInitialAllergies();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                allergy.name ?? 'allergyPage.unknown_allergy'.tr(context),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (allergy.type != null)
+                _buildInfoRow(
+                  icon: Icons.category,
+                  label: 'allergyPage.type_label'.tr(context),
+                  value: allergy.type!.display,
+                  theme: theme,
+                ),
+              const SizedBox(height: 10),
+              if (allergy.clinicalStatus != null)
+                _buildInfoRow(
+                  icon: Icons.healing,
+                  label: 'allergyPage.status_label'.tr(context),
+                  value: allergy.clinicalStatus!.display,
+                  theme: theme,
+                ),
+              const SizedBox(height: 10),
+              if (allergy.lastOccurrence != null &&
+                  allergy.lastOccurrence!.isNotEmpty)
+                _buildInfoRow(
+                  icon: Icons.calendar_today,
+                  label: 'allergyPage.last_occurrence_label'.tr(context),
+                  value: allergy.lastOccurrence!,
+                  theme: theme,
+                ),
+              const SizedBox(height: 10),
+              if (allergy.onSetAge != null && allergy.onSetAge!.isNotEmpty)
+                _buildInfoRow(
+                  icon: Icons.cake,
+                  label: 'allergyPage.onset_age_label'.tr(context),
+                  value: allergy.onSetAge!,
+                  theme: theme,
+                ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        ),
       ),
-    ).then((_) {
-      _loadInitialAllergies();
-    });
+    );
+  }
+
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    required ThemeData theme,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 18, color: AppColors.primaryColor),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface.withOpacity(0.8),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              value,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.9),
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

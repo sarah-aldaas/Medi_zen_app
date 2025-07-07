@@ -80,7 +80,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      // backgroundColor: colorScheme.background,
       body: BlocBuilder<ServiceRequestCubit, ServiceRequestState>(
         builder: (context, state) {
           if (state is ServiceRequestLoading && !state.isLoadMore) {
@@ -179,9 +179,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Center(
-                      child: CircularProgressIndicator(
-                        color: colorScheme.primary,
-                      ),
+                      child: LoadingButton()
                     ),
                   );
                 }
@@ -234,10 +232,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                     child: Text(
                       request.healthCareService?.name ??
                           'serviceRequestsPage.unknownService'.tr(context),
-                      style: textTheme.headlineMedium?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style:TextStyle(fontWeight: FontWeight.bold,fontSize: 20 ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
@@ -284,25 +279,23 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                 runSpacing: 8.0,
                 children: [
                   if (request.serviceRequestCategory != null)
-                    _buildAttributeChip(
-                      context,
+                    _buildInfoRowSome(context,
                       'serviceRequestsPage.category'.tr(context),
                       request.serviceRequestCategory!.display,
-                      colorScheme.secondary,
+                      icon: Icons.category,
                     ),
+
                   if (request.serviceRequestPriority != null)
-                    _buildAttributeChip(
-                      context,
+                    _buildInfoRowSome(context,
                       'serviceRequestsPage.priority'.tr(context),
                       request.serviceRequestPriority!.display,
-                      colorScheme.tertiary,
+                      icon: Icons.paste,
                     ),
                   if (request.serviceRequestBodySite != null)
-                    _buildAttributeChip(
-                      context,
+                    _buildInfoRowSome(context,
                       'serviceRequestsPage.bodySite'.tr(context),
                       request.serviceRequestBodySite!.display,
-                      colorScheme.primary.withOpacity(0.7),
+                      icon: Icons.emoji_people,
                     ),
                 ],
               ),
@@ -379,6 +372,49 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
       ],
     );
   }
+  Widget _buildInfoRowSome(
+    BuildContext context,
+    String title,
+    String value, {
+    IconData? icon,
+  }) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (icon != null) ...[
+          Icon(icon, size: 22, color: AppColors.primaryColor),
+          const SizedBox(width: 12),
+        ],
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 5,
+            children: [
+              Text(
+                '$title:',
+                style: textTheme.labelLarge?.copyWith(
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+
+              const SizedBox(height: 6),
+              Text(
+                value,
+                style: textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurface.withOpacity(0.95),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _buildStatusChip(
     BuildContext context,
@@ -431,7 +467,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     BuildContext context,
     String title,
     String value,
-    Color baseColor,
+    // Color baseColor,
   ) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
@@ -442,17 +478,19 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
         size: 18,
       ),
       label: Text('$title: $value'),
-      backgroundColor: baseColor.withOpacity(0.15),
+      // backgroundColor: baseColor.withOpacity(0.15),
       labelStyle: textTheme.bodySmall?.copyWith(
-        color:
-            baseColor.computeLuminance() > 0.5
-                ? AppColors.blackColor
-                : baseColor.withOpacity(0.9),
+        // color:
+        //     baseColor.computeLuminance() > 0.5
+        //         ? AppColors.blackColor
+        //         : baseColor.withOpacity(0.9),
         fontWeight: FontWeight.w600,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-      side: BorderSide(color: baseColor.withOpacity(0.6), width: 1.2),
+      side: BorderSide(
+          // color: baseColor.withOpacity(0.6),
+          width: 1.2),
     );
   }
 

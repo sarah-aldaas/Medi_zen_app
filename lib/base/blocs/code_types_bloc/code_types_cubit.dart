@@ -1347,6 +1347,114 @@ Future<List<CodeModel>> articleCategoryTypeCodes({required BuildContext context}
     }
     return [];
   }
+Future<List<CodeModel>> getDiagnosticReportStatusTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getDiagnosticReportStatusTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'diagnostic_report_status',
+      orElse: () => throw Exception('Article category not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+Future<List<CodeModel>> getComplainTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getComplainTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'complaint_type',
+      orElse: () => throw Exception('Article category not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
+Future<List<CodeModel>> getComplainStatusTypeCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getComplainStatusTypeCodes(context: context);
+    }
+
+    final codeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'complaint_status',
+      orElse: () => throw Exception('Article category not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel?.id == codeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: codeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel?.id == codeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
 
 
   Future<List<CodeTypeModel>?> getCachedCodeTypes() async {

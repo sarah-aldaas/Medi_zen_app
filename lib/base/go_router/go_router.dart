@@ -11,8 +11,6 @@ import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
 import 'package:medizen_app/features/profile/data/models/update_profile_request_Model.dart';
 import 'package:medizen_app/features/profile/presentaiton/pages/profile_details_page.dart';
 import 'package:medizen_app/features/services/pages/health_care_service_details_page.dart';
-
-import '../../features/Complaint/view/complaint_list_screen.dart';
 import '../../features/appointment/pages/my_appointments_page.dart';
 import '../../features/articles/presentation/pages/articles.dart';
 import '../../features/authentication/presentation/forget_password/view/forget_password.dart';
@@ -203,13 +201,13 @@ GoRouter goRouter() {
               return ClinicsPage();
             },
           ),
-          GoRoute(
-            path: "/complaint",
-            name: AppRouter.complaint.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return ComplaintListScreen();
-            },
-          ),
+          // GoRoute(
+          //   path: "/complaint",
+          //   name: AppRouter.complaint.name,
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     return ComplaintListScreen();
+          //   },
+          // ),
           GoRoute(
             path: "/verified",
             name: AppRouter.verified.name,

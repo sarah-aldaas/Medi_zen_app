@@ -354,7 +354,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
     final ThemeData theme = Theme.of(context);
     return Card(
       elevation: 4,
-      color: theme.cardColor,
+      // color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       clipBehavior: Clip.antiAlias,
       child: Padding(

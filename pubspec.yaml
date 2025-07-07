@@ -45,6 +45,7 @@ dependencies:
   responsive_framework:
   oktoast:
   open_filex:
+  shimmer:
   intl:
   connectivity_plus:
   go_router:

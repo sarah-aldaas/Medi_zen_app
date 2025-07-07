@@ -193,12 +193,16 @@ class TelecomCubit extends Cubit<TelecomState> {
         emit(
           TelecomError(error: result.data.msg ?? 'Failed to update telecom'),
         );
+        await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
+
       }
     } else if (result is ResponseError<PublicResponseModel>) {
       ShowToast.showToastError(
         message: result.message ?? 'Failed to update telecom',
       );
       emit(TelecomError(error: result.message ?? 'Failed to update telecom'));
+      await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
+
     }
   }
 
@@ -207,7 +211,6 @@ class TelecomCubit extends Cubit<TelecomState> {
     required BuildContext context,
   }) async {
     emit(TelecomLoading());
-
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
     if (!isConnected) {
@@ -229,6 +232,8 @@ class TelecomCubit extends Cubit<TelecomState> {
         emit(
           TelecomError(error: result.data.msg ?? 'Failed to delete telecom'),
         );
+        await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
+
       }
     } else if (result is ResponseError<PublicResponseModel>) {
       ShowToast.showToastError(

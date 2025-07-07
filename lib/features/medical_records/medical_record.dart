@@ -5,6 +5,7 @@ import 'package:medizen_app/features/medical_records/allergy/presentation/pages/
 import 'package:medizen_app/features/medical_records/allergy/presentation/widgets/allergy_filter_dialog.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_filter_model.dart';
 import 'package:medizen_app/features/medical_records/conditions/presentation/widgets/condition_filter_dialog.dart';
+import 'package:medizen_app/features/medical_records/diagnostic_report/data/models/diagnostic_report_filter_model.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/all_encounters_page.dart';
 import 'package:medizen_app/features/medical_records/medication/presentation/pages/my_medications_page.dart';
 import 'package:medizen_app/features/medical_records/medication_request/data/models/medication_request_filter.dart';
@@ -16,6 +17,8 @@ import 'package:medizen_app/features/medical_records/service_request/presentatio
 
 import '../../base/theme/app_color.dart';
 import 'conditions/presentation/pages/conditions_list_page.dart';
+import 'diagnostic_report/presentation/pages/diagnostic_report_list_page.dart';
+import 'diagnostic_report/presentation/widgets/diagnostic_report_filter_dialog.dart';
 import 'encounter/data/models/encounter_filter_model.dart';
 import 'encounter/presentation/widgets/encounter_filter_dialog.dart';
 import 'medication/data/models/medication_filter_model.dart';
@@ -36,11 +39,12 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
   MedicationRequestFilterModel _medicationRequestFilter =
       MedicationRequestFilterModel();
   MedicationFilterModel _medicationFilter = MedicationFilterModel();
+  DiagnosticReportFilterModel _diagnosticReportFilter = DiagnosticReportFilterModel();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 8, vsync: this);
+    _tabController = TabController(length: 7, vsync: this);
     _tabController.addListener(_handleTabSelection);
   }
 
@@ -124,6 +128,18 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
     }
   }
 
+  Future<void> _showDiagnosticReportFilterDialog() async {
+    final result = await showDialog<DiagnosticReportFilterModel>(
+      context: context,
+      builder:
+          (context) => DiagnosticReportFilterDialog(currentFilter: _diagnosticReportFilter),
+    );
+
+    if (result != null) {
+      setState(() => _diagnosticReportFilter = result);
+    }
+  }
+
   @override
   void dispose() {
     _tabController.removeListener(_handleTabSelection);
@@ -141,7 +157,6 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
       'medicalRecordPage.tabs.medicationRequests'.tr(context),
       'medicalRecordPage.tabs.medication'.tr(context),
       'medicalRecordPage.tabs.diagnosticReports'.tr(context),
-      'medicalRecordPage.tabs.chronicDiseases'.tr(context),
     ];
 
     return Scaffold(
@@ -193,6 +208,12 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
               onPressed: _showMedicationFilterDialog,
               tooltip: "Filter mediation",
             ),
+          if (_tabController.index == 6)
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showDiagnosticReportFilterDialog,
+              tooltip: "Filter mediation",
+            ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48),
@@ -221,8 +242,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage>
             ConditionsListPage(filter: _conditionFilter),
             MyMedicationRequestsPage(filter: _medicationRequestFilter),
             MyMedicationsPage(filter: _medicationFilter),
-            _buildDiagnosticReportsList(),
-            _buildChronicDiseasesList(),
+            DiagnosticReportListPage(filter: _diagnosticReportFilter,),
           ],
         ),
       ),

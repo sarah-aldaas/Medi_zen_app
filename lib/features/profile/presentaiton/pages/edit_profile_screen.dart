@@ -284,8 +284,8 @@ class _EditProfileFormState extends State<EditProfileForm> {
       decoration: InputDecoration(
         hintText: hintKey.tr(context),
         prefixIcon: Icon(
-          key == 'genderId' ? Icons.male : Icons.people,
-          color: const Color(0xFF47BD93),
+          key == 'genderId' ? Icons.emoji_people : Icons.people,
+          color: Theme.of(context).primaryColor,
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0)),
       ),
@@ -294,7 +294,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
         return DropdownMenuItem<String>(
           value: code.id.toString(),
           child: Container(
-            color: Colors.white,
+            // color: Colors.white,
             child:
             key == 'genderId'
                 ? Row(

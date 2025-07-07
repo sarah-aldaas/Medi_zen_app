@@ -12,6 +12,17 @@
     "login": "Login",
     "sign_up": "Sign up"
   },
+  "allergyPage": {
+    "add_allergy": "Add allergy",
+    "unknown_allergy": "Unknown Allergy",
+    "type_label": "Type:",
+    "status_label": "Status:",
+    "last_occurrence_label": "Last Occurrence:",
+    "onset_age_label": "Onset Age:",
+    "retry_button": "Retry",
+    "failed_to_load_allergies": "Failed to load allergies.",
+    "no_allergies_found": "No allergies found. Tap the '+' button to add a new allergy."
+  },
   "on_boarding": {
     "get_start": "Get start",
     "manage_medical_records": "Manage medical records",
@@ -510,7 +521,7 @@
     "help_center": "Help center"
   },
   "searchField": {
-    "title": "Search..."
+    "title": "Search clinic..."
   },
   "someArticles": {
     "seeAll": "See all",

@@ -5,6 +5,17 @@
   "loading": {
     "title": "جاري التحميل..."
   },
+  "allergyPage": {
+    "add_allergy": "إضافة حساسية",
+    "unknown_allergy": "حساسية غير معروفة",
+    "type_label": "النوع:",
+    "status_label": "الحالة:",
+    "last_occurrence_label": "آخر ظهور:",
+    "onset_age_label": "عمر البدء:",
+    "retry_button": "إعادة المحاولة",
+    "failed_to_load_allergies": "فشل في تحميل الحساسيات.",
+    "no_allergies_found": "لم يتم العثور على حساسيات. انقر على زر '+' لإضافة حساسية جديدة."
+  },
   "welcome": {
     "title": "مرحبا بك! هيا بنا",
     "loading_to_enjoy": "هيا للاستمتاع بالميزات المقدمة",
@@ -515,7 +526,7 @@
     "help_center": "مركز المساعدة"
   },
   "searchField": {
-    "title": "بحث..."
+    "title": "بحث عن عيادة..."
   },
   "someArticles": {
     "seeAll": "عرض الكل",

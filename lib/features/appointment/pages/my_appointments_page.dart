@@ -7,12 +7,14 @@ import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
+import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_model.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/cancel_appointment_dialog.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/filter_appointment_dialog.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/update_appointment_page.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../data/models/appointment_filter.dart';
 import 'cubit/appointment_cubit/appointment_cubit.dart';
@@ -27,7 +29,6 @@ class MyAppointmentPage extends StatefulWidget {
 class _MyAppointmentPageState extends State<MyAppointmentPage> {
   final ScrollController _scrollController = ScrollController();
   AppointmentFilter _filter = AppointmentFilter();
-  int _selectedTab = 0;
   bool _isLoadingMore = false;
 
   @override
@@ -45,35 +46,20 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
 
   void _loadInitialAppointments() {
     _isLoadingMore = false;
-    context.read<AppointmentCubit>().getMyAppointment(
-      context: context,
-      filters: _filter.toJson(),
-    );
+    context.read<AppointmentCubit>().getMyAppointment(context: context, filters: _filter.toJson());
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        !_isLoadingMore) {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context
-          .read<AppointmentCubit>()
-          .getMyAppointment(
-            filters: _filter.toJson(),
-            loadMore: true,
-            context: context,
-          )
-          .then((_) {
-            setState(() => _isLoadingMore = false);
-          });
+      context.read<AppointmentCubit>().getMyAppointment(filters: _filter.toJson(), loadMore: true, context: context).then((_) {
+        setState(() => _isLoadingMore = false);
+      });
     }
   }
 
   Future<void> _showFilterDialog() async {
-    final result = await showDialog<AppointmentFilter>(
-      context: context,
-      builder: (context) => AppointmentFilterDialog(currentFilter: _filter),
-    );
+    final result = await showDialog<AppointmentFilter>(context: context, builder: (context) => AppointmentFilterDialog(currentFilter: _filter));
 
     if (result != null) {
       setState(() => _filter = result);
@@ -92,18 +78,9 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           icon: Icon(Icons.arrow_back),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text(
-          "myAppointments.title".tr(context),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
-          ),
-        ),
+        title: Text("myAppointments.title".tr(context), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
         actions: [
-          IconButton(
-            icon: Icon(Icons.filter_list, color: AppColors.primaryColor),
-            onPressed: _showFilterDialog,
-          ),
+          IconButton(icon: Icon(Icons.filter_list, color: AppColors.primaryColor), onPressed: _showFilterDialog),
           IconButton(
             icon: Icon(Icons.add, color: AppColors.primaryColor),
             onPressed: () {
@@ -122,13 +99,10 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
         },
         builder: (context, state) {
           if (state is AppointmentLoading && !state.isLoadMore) {
-            return Center(child: LoadingPage());
+            return _buildShimmerLoader();
           }
 
-          final appointments =
-              state is AppointmentSuccess
-                  ? state.paginatedResponse.paginatedData!.items
-                  : [];
+          final appointments = state is AppointmentSuccess ? state.paginatedResponse.paginatedData!.items : [];
           final hasMore = state is AppointmentSuccess ? state.hasMore : false;
           if (appointments.isEmpty) {
             return Center(
@@ -137,10 +111,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                 children: [
                   Icon(Icons.calendar_today, size: 64, color: Colors.grey[400]),
                   SizedBox(height: 16),
-                  Text(
-                    "There are not any appointments.",
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  ),
+                  Text("There are not any appointments.", style: TextStyle(fontSize: 18, color: Colors.grey[600])),
                   SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
@@ -175,38 +146,25 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         onTap:
-            () => context
-                .pushNamed(
-                  AppRouter.appointmentDetails.name,
-                  extra: {"appointmentId": appointment.id.toString()},
-                )
-                .then((value) {
-                  _loadInitialAppointments();
-                }),
+            () => context.pushNamed(AppRouter.appointmentDetails.name, extra: {"appointmentId": appointment.id.toString()}).then((value) {
+              _loadInitialAppointments();
+            }),
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                    horizontal: 20,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
                   child: Row(
-                    spacing: 5,
+                    spacing: 10,
                     children: [
                       SizedBox(
                         height: 100,
                         width: 100,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            AppAssetImages.photoDoctor1,
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.fill,
-                          ),
+                          child: FlexibleImage(imageUrl: appointment.doctor!.avatar, assetPath: AppAssetImages.photoDoctor1, height: 100, width: 100),
                         ),
                       ),
                       Column(
@@ -214,40 +172,21 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            appointment.doctor!.prefix +
-                                appointment.doctor!.fName +
-                                " " +
-                                appointment.doctor!.lName,
+                            appointment.doctor!.prefix + appointment.doctor!.fName + " " + appointment.doctor!.lName,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Row(
                             spacing: 10,
                             children: [
-                              Icon(
-                                Icons.date_range_outlined,
-                                color: Theme.of(context).primaryColor,
-                                size: 20,
-                              ),
-                              Text(
-                                DateFormat('yyyy-M-d').format(
-                                  DateTime.parse(appointment.startDate!),
-                                ),
-                              ),
+                              Icon(Icons.date_range_outlined, color: Theme.of(context).primaryColor, size: 20),
+                              Text(DateFormat('yyyy-M-d').format(DateTime.parse(appointment.startDate!))),
                             ],
                           ),
                           Row(
                             spacing: 10,
                             children: [
-                              Icon(
-                                Icons.timer,
-                                color: Theme.of(context).primaryColor,
-                                size: 20,
-                              ),
-                              Text(
-                                DateFormat('hh:mma').format(
-                                  DateTime.parse(appointment.startDate!),
-                                ),
-                              ),
+                              Icon(Icons.timer, color: Theme.of(context).primaryColor, size: 20),
+                              Text(DateFormat('hh:mma').format(DateTime.parse(appointment.startDate!))),
                             ],
                           ),
                           // Text(DateFormat('yyyy-M-d / hh:mma').format(DateTime.parse(appointment.startDate!))),
@@ -255,32 +194,13 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                             spacing: 20,
                             children: [
                               Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                  vertical: 4.0,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(
-                                    context,
-                                  ).primaryColor.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Text(
-                                  appointment.status!.display,
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.2), borderRadius: BorderRadius.circular(10.0)),
+                                child: Text(appointment.status!.display, style: TextStyle(color: Theme.of(context).primaryColor)),
                               ),
-                              if (appointment.status!.code ==
-                                  "canceled_appointment")
-                                Icon(Icons.block, color: Colors.red),
-                              if (appointment.status!.code ==
-                                  "finished_appointment")
-                                Icon(Icons.check, color: Colors.green),
-                              if (appointment.status!.code ==
-                                  "booked_appointment")
-                                Icon(Icons.timelapse, color: Colors.orange),
+                              if (appointment.status!.code == "canceled_appointment") Icon(Icons.block, color: Colors.red),
+                              if (appointment.status!.code == "finished_appointment") Icon(Icons.check, color: Colors.green),
+                              if (appointment.status!.code == "booked_appointment") Icon(Icons.timelapse, color: Colors.orange),
                             ],
                           ),
                         ],
@@ -297,31 +217,18 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                       children: [
                         ElevatedButton(
                           onPressed: () => _cancelAppointment(appointment),
-                          child: Text(
-                            "myAppointments.buttons.cancelAppointment".tr(
-                              context,
-                            ),
-                          ),
+                          child: Text("myAppointments.buttons.cancelAppointment".tr(context)),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Theme.of(context).primaryColor,
-                            side: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            backgroundColor:
-                                Theme.of(context).scaffoldBackgroundColor,
+                            side: BorderSide(color: Theme.of(context).primaryColor),
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                           ),
                         ),
 
                         ElevatedButton(
-                          onPressed:
-                              () => _editAppointment(context, appointment),
-                          child: Text(
-                            "myAppointments.buttons.update".tr(context),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            foregroundColor: Colors.white,
-                          ),
+                          onPressed: () => _editAppointment(context, appointment),
+                          child: Text("myAppointments.buttons.update".tr(context)),
+                          style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor, foregroundColor: Colors.white),
                         ),
                       ],
                     ),
@@ -336,19 +243,10 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   }
 
   Future<void> _cancelAppointment(AppointmentModel appointment) async {
-    final reason = await showDialog<String>(
-      context: context,
-      builder:
-          (context) =>
-              CancelAppointmentDialog(appointmentId: appointment.id.toString()),
-    );
+    final reason = await showDialog<String>(context: context, builder: (context) => CancelAppointmentDialog(appointmentId: appointment.id.toString()));
 
     if (reason != null && reason.isNotEmpty) {
-      await context.read<AppointmentCubit>().cancelAppointment(
-        context: context,
-        id: appointment.id.toString(),
-        cancellationReason: reason,
-      );
+      await context.read<AppointmentCubit>().cancelAppointment(context: context, id: appointment.id.toString(), cancellationReason: reason);
       _loadInitialAppointments();
     }
   }
@@ -368,13 +266,143 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
     ).then((success) {
       if (success) {
         _loadInitialAppointments();
-        ShowToast.showToastSuccess(
-          message: 'appointmentDetails.updateSuccess'.tr(context),
-        );
+        ShowToast.showToastSuccess(message: 'appointmentDetails.updateSuccess'.tr(context));
       }
       if (!success) {
         _loadInitialAppointments();
       }
     });
+  }
+  Widget _buildShimmerLoader() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDarkMode ? Colors.grey[800]! : Colors.grey[300]!;
+    final highlightColor = isDarkMode ? Colors.grey[600]! : Colors.grey[100]!;
+    final containerColor = isDarkMode ? Colors.grey[700]! : Colors.white;
+
+    return Shimmer.fromColors(
+      baseColor: baseColor,
+      highlightColor: highlightColor,
+      // Apply shimmer to each card individually for better control
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    // Doctor info row
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Doctor avatar placeholder
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: containerColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Doctor details column
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Doctor name
+                              Container(
+                                width: 150,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: containerColor,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              // Date row
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    color: containerColor,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Container(
+                                    width: 100,
+                                    height: 16,
+                                    color: containerColor,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              // Time row
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    color: containerColor,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Container(
+                                    width: 80,
+                                    height: 16,
+                                    color: containerColor,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              // Status
+                              Container(
+                                width: 100,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: containerColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Buttons (only for some items)
+                    if (index % 2 == 0) ...[
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            width: 120,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: containerColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          Container(
+                            width: 80,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: containerColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

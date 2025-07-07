@@ -77,7 +77,6 @@ class ReactionListItem extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Card(
         elevation: 4,
-        color: theme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
