@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
@@ -138,6 +139,7 @@ void showUpdateTelecomDialog({
     },
   );
 }
+
 
 
 
@@ -339,7 +341,7 @@ void showCreateTelecomDialog({
                               context: context,
                               telecomModel: newTelecom,
                             );
-                            Navigator.pop(context);
+                            if (context.mounted) Navigator.pop(context); // Check if mounted
                           } else {
                             ShowToast.showToastError(
                               message: 'telecomPage.allFieldsRequired'.tr(
