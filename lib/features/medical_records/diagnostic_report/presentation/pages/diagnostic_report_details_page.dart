@@ -15,13 +15,18 @@ import '../cubit/diagnostic_report_cubit/diagnostic_report_cubit.dart';
 class DiagnosticReportDetailsPage extends StatefulWidget {
   final String diagnosticReportId;
 
-  const DiagnosticReportDetailsPage({super.key, required this.diagnosticReportId});
+  const DiagnosticReportDetailsPage({
+    super.key,
+    required this.diagnosticReportId,
+  });
 
   @override
-  State<DiagnosticReportDetailsPage> createState() => _DiagnosticReportDetailsPageState();
+  State<DiagnosticReportDetailsPage> createState() =>
+      _DiagnosticReportDetailsPageState();
 }
 
-class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPage> {
+class _DiagnosticReportDetailsPageState
+    extends State<DiagnosticReportDetailsPage> {
   @override
   void initState() {
     super.initState();
@@ -36,7 +41,7 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "diagnosticReportDetails",
+          "diagnosticDetailsPage.diagnosticReportDetails_pageTitle".tr(context),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.primaryColor,
@@ -70,18 +75,26 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
                   Icon(Icons.error_outline, size: 80, color: Colors.red[300]),
                   const SizedBox(height: 20),
                   Text(
-                    'failedToLoadReport',
+                    'diagnosticDetailsPage.diagnosticReportDetails_failedToLoadReport'
+                        .tr(context),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
-                    onPressed: () => context.read<DiagnosticReportCubit>().getDiagnosticReportDetails(
-                      diagnosticReportId: widget.diagnosticReportId,
-                      context: context,
-                    ),
+                    onPressed:
+                        () => context
+                            .read<DiagnosticReportCubit>()
+                            .getDiagnosticReportDetails(
+                              diagnosticReportId: widget.diagnosticReportId,
+                              context: context,
+                            ),
                     icon: const Icon(Icons.refresh),
-                    label: Text("retry"),
+                    label: Text(
+                      "diagnosticDetailsPage.diagnosticReportDetails_retry".tr(
+                        context,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: AppColors.primaryColor,
@@ -115,31 +128,55 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
           const SizedBox(height: 16),
 
           if (report.conclusion != null || report.note != null) ...[
-            _buildSectionHeader(context, 'results'),
+            _buildSectionHeader(
+              context,
+              'diagnosticDetailsPage.diagnosticReportDetails_results'.tr(
+                context,
+              ),
+            ),
             _buildResultsSection(context, report),
             const SizedBox(height: 16),
           ],
 
           if (report.condition != null) ...[
-            _buildSectionHeader(context, 'relatedCondition'),
+            _buildSectionHeader(
+              context,
+              'diagnosticDetailsPage.diagnosticReportDetails_relatedConditionSection'
+                  .tr(context),
+            ),
             _buildConditionSection(context, report),
             const SizedBox(height: 16),
           ],
 
           if (report.status != null) ...[
-            _buildSectionHeader(context, 'status'),
+            _buildSectionHeader(
+              context,
+              'diagnosticDetailsPage.diagnosticReportDetails_status'.tr(
+                context,
+              ),
+            ),
             _buildStatusSection(context, report),
             const SizedBox(height: 16),
           ],
 
-          if (report.condition?.encounters != null && report.condition!.encounters!.isNotEmpty) ...[
-            _buildSectionHeader(context, 'relatedEncounters'),
+          if (report.condition?.encounters != null &&
+              report.condition!.encounters!.isNotEmpty) ...[
+            _buildSectionHeader(
+              context,
+              'diagnosticDetailsPage.diagnosticReportDetails_relatedEncounters'
+                  .tr(context),
+            ),
             _buildEncountersSection(context, report),
             const SizedBox(height: 16),
           ],
 
-          if (report.condition?.serviceRequests != null && report.condition!.serviceRequests!.isNotEmpty) ...[
-            _buildSectionHeader(context, 'relatedServiceRequests'),
+          if (report.condition?.serviceRequests != null &&
+              report.condition!.serviceRequests!.isNotEmpty) ...[
+            _buildSectionHeader(
+              context,
+              'diagnosticDetailsPage.diagnosticReportDetails_relatedServiceRequests'
+                  .tr(context),
+            ),
             _buildServiceRequestsSection(context, report),
           ],
         ],
@@ -161,7 +198,10 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     );
   }
 
-  Widget _buildHeaderSection(BuildContext context, DiagnosticReportModel report) {
+  Widget _buildHeaderSection(
+    BuildContext context,
+    DiagnosticReportModel report,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -171,18 +211,16 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.assignment,
-              size: 50,
-              color: AppColors.primaryColor,
-            ),
+            Icon(Icons.assignment, size: 50, color: AppColors.primaryColor),
             const SizedBox(width: 18),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    report.name ?? 'unknownReport',
+                    report.name ??
+                        'diagnosticDetailsPage.diagnosticReportDetails_unknownReport'
+                            .tr(context),
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.green,
@@ -215,7 +253,10 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     );
   }
 
-  Widget _buildMainDetailsCard(BuildContext context, DiagnosticReportModel report) {
+  Widget _buildMainDetailsCard(
+    BuildContext context,
+    DiagnosticReportModel report,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -224,14 +265,21 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(context, 'overview'),
+            _buildSectionHeader(
+              context,
+              'diagnosticDetailsPage.diagnosticReportDetails_overview'.tr(
+                context,
+              ),
+            ),
             const Divider(height: 10, thickness: 1.5, color: Colors.grey),
             const SizedBox(height: 8),
 
             if (report.name != null)
               _buildDetailRow(
                 icon: Icons.description,
-                label: 'reportName',
+                label:
+                    'diagnosticDetailsPage.diagnosticReportDetails_reportName'
+                        .tr(context),
                 value: report.name!,
                 iconColor: Colors.blueAccent,
               ),
@@ -239,8 +287,13 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (report.condition != null)
               _buildDetailRow(
                 icon: Icons.medical_services,
-                label: 'relatedCondition',
-                value: report.condition!.healthIssue ?? 'unknownCondition',
+                label:
+                    'diagnosticDetailsPage.diagnosticReportDetails_relatedCondition'
+                        .tr(context),
+                value:
+                    report.condition!.healthIssue ??
+                    'diagnosticDetailsPage.diagnosticReportDetails_unknownCondition'
+                        .tr(context),
                 iconColor: Colors.green,
               ),
           ],
@@ -249,7 +302,10 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     );
   }
 
-  Widget _buildResultsSection(BuildContext context, DiagnosticReportModel report) {
+  Widget _buildResultsSection(
+    BuildContext context,
+    DiagnosticReportModel report,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -261,7 +317,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (report.conclusion != null)
               _buildNoteItem(
                 icon: Icons.assignment_turned_in,
-                title: 'conclusion',
+                title:
+                    'diagnosticDetailsPage.diagnosticReportDetails_conclusion'
+                        .tr(context),
                 content: report.conclusion!,
                 color: Colors.teal,
               ),
@@ -269,7 +327,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (report.note != null)
               _buildNoteItem(
                 icon: Icons.notes,
-                title: 'notes',
+                title: 'diagnosticDetailsPage.diagnosticReportDetails_notes'.tr(
+                  context,
+                ),
                 content: report.note!,
                 color: Colors.deepOrange,
               ),
@@ -279,7 +339,10 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     );
   }
 
-  Widget _buildConditionSection(BuildContext context, DiagnosticReportModel report) {
+  Widget _buildConditionSection(
+    BuildContext context,
+    DiagnosticReportModel report,
+  ) {
     final condition = report.condition!;
     return Card(
       elevation: 4,
@@ -297,37 +360,51 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
                 size: 28,
               ),
               title: Text(
-                condition.healthIssue ?? 'unknownCondition',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                condition.healthIssue ??
+                    'diagnosticDetailsPage.diagnosticReportDetails_unknownCondition'
+                        .tr(context),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
-              subtitle: condition.clinicalStatus != null
-                  ? Text(
-                condition.clinicalStatus!.display,
-                style: TextStyle(
-                  color: _getStatusColor(condition.clinicalStatus!.code),
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-                  : null,
+              subtitle:
+                  condition.clinicalStatus != null
+                      ? Text(
+                        condition.clinicalStatus!.display,
+                        style: TextStyle(
+                          color: _getStatusColor(
+                            condition.clinicalStatus!.code,
+                          ),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                      : null,
             ),
 
             const Divider(height: 20, thickness: 1, color: Colors.grey),
 
-            // Condition Details
             if (condition.isChronic != null)
               _buildDetailRow(
                 icon: Icons.timelapse,
-                label: 'chronicCondition',
-                value: condition.isChronic! ? 'yes' : 'no',
+                label:
+                    'diagnosticDetailsPage.diagnosticReportDetails_chronicCondition'
+                        .tr(context),
+                value:
+                    condition.isChronic!
+                        ? 'diagnosticDetailsPage.diagnosticReportDetails_yes'
+                            .tr(context)
+                        : 'diagnosticDetailsPage.diagnosticReportDetails_no'.tr(
+                          context,
+                        ),
                 iconColor: Colors.orange,
               ),
 
             if (condition.onSetDate != null)
               _buildDetailRow(
                 icon: Icons.calendar_today,
-                label: 'onsetDate',
+                label: 'diagnosticDetailsPage.diagnosticReport_onset_date'.tr(
+                  context,
+                ),
                 value: _formatDate(condition.onSetDate!),
                 iconColor: Colors.purple,
               ),
@@ -335,7 +412,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (condition.recordDate != null)
               _buildDetailRow(
                 icon: Icons.date_range,
-                label: 'recordDate',
+                label:
+                    'diagnosticDetailsPage.diagnosticReportDetails_recordDate'
+                        .tr(context),
                 value: _formatDate(condition.recordDate!),
                 iconColor: Colors.blue,
               ),
@@ -343,7 +422,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (condition.verificationStatus != null)
               _buildDetailRow(
                 icon: Icons.verified_user,
-                label: 'verificationStatus',
+                label:
+                    'diagnosticDetailsPage.diagnosticReport_verificationStatus'
+                        .tr(context),
                 value: condition.verificationStatus!.display,
                 iconColor: Colors.green,
               ),
@@ -351,7 +432,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (condition.bodySite != null)
               _buildDetailRow(
                 icon: Icons.location_on,
-                label: 'bodySite',
+                label: 'diagnosticDetailsPage.diagnosticReport_bodySite'.tr(
+                  context,
+                ),
                 value: condition.bodySite!.display,
                 iconColor: Colors.deepPurple,
               ),
@@ -359,7 +442,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (condition.stage != null)
               _buildDetailRow(
                 icon: Icons.stacked_line_chart,
-                label: 'stage',
+                label: 'diagnosticDetailsPage.diagnosticReport_stage'.tr(
+                  context,
+                ),
                 value: condition.stage!.display,
                 iconColor: Colors.amber,
               ),
@@ -367,7 +452,8 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (condition.summary != null && condition.summary!.isNotEmpty)
               _buildNoteItem(
                 icon: Icons.summarize,
-                title: 'summary',
+                title: 'diagnosticDetailsPage.diagnosticReportDetails_summary'
+                    .tr(context),
                 content: condition.summary!,
                 color: Colors.teal,
               ),
@@ -375,7 +461,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (condition.extraNote != null && condition.extraNote!.isNotEmpty)
               _buildNoteItem(
                 icon: Icons.note_add,
-                title: 'additionalNotes',
+                title:
+                    'diagnosticDetailsPage.diagnosticReportDetails_additionalNotes'
+                        .tr(context),
                 content: condition.extraNote!,
                 color: Colors.deepOrange,
               ),
@@ -385,7 +473,10 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     );
   }
 
-  Widget _buildStatusSection(BuildContext context, DiagnosticReportModel report) {
+  Widget _buildStatusSection(
+    BuildContext context,
+    DiagnosticReportModel report,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -396,12 +487,15 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
           children: [
             _buildDetailRow(
               icon: Icons.info,
-              label: 'status',
+              label: 'diagnosticDetailsPage.diagnosticReportDetails_status'.tr(
+                context,
+              ),
               value: report.status!.display,
               iconColor: _getStatusColor(report.status!.code),
             ),
 
-            if (report.status!.description != null && report.status!.description!.isNotEmpty)
+            if (report.status!.description != null &&
+                report.status!.description!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -418,7 +512,10 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     );
   }
 
-  Widget _buildEncountersSection(BuildContext context, DiagnosticReportModel report) {
+  Widget _buildEncountersSection(
+    BuildContext context,
+    DiagnosticReportModel report,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -426,11 +523,11 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            ...report.condition!.encounters!.map((encounter) =>
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: _buildEncounterItem(context, encounter),
-                ),
+            ...report.condition!.encounters!.map(
+              (encounter) => Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: _buildEncounterItem(context, encounter),
+              ),
             ),
           ],
         ),
@@ -456,7 +553,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    encounter.reason ?? 'unknownReason',
+                    encounter.reason ??
+                        'diagnosticDetailsPage.diagnosticReportDetails_unknownReason'
+                            .tr(context),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -470,7 +569,8 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (encounter.actualStartDate != null)
               _buildDetailRow(
                 icon: Icons.timer,
-                label: 'startTime',
+                label: 'diagnosticDetailsPage.diagnosticReportDetails_startTime'
+                    .tr(context),
                 value: _formatDateTime(encounter.actualStartDate!),
                 iconColor: Colors.green,
                 small: true,
@@ -479,16 +579,20 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (encounter.actualEndDate != null)
               _buildDetailRow(
                 icon: Icons.timer_off,
-                label: 'endTime',
+                label: 'diagnosticDetailsPage.diagnosticReportDetails_endTime'
+                    .tr(context),
                 value: _formatDateTime(encounter.actualEndDate!),
                 iconColor: Colors.red,
                 small: true,
               ),
 
-            if (encounter.specialArrangement != null && encounter.specialArrangement!.isNotEmpty)
+            if (encounter.specialArrangement != null &&
+                encounter.specialArrangement!.isNotEmpty)
               _buildDetailRow(
                 icon: Icons.settings,
-                label: 'specialArrangements',
+                label:
+                    'diagnosticDetailsPage.diagnosticReportDetails_specialArrangements'
+                        .tr(context),
                 value: encounter.specialArrangement!,
                 iconColor: Colors.blue,
                 small: true,
@@ -497,7 +601,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (encounter.type != null)
               _buildDetailRow(
                 icon: Icons.category,
-                label: 'encounterType',
+                label:
+                    'diagnosticDetailsPage.diagnosticReportDetails_encounterType'
+                        .tr(context),
                 value: encounter.type!.display,
                 iconColor: Colors.purple,
                 small: true,
@@ -506,7 +612,8 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (encounter.status != null)
               _buildDetailRow(
                 icon: Icons.info,
-                label: 'status',
+                label: 'diagnosticDetailsPage.diagnosticReportDetails_status'
+                    .tr(context),
                 value: encounter.status!.display,
                 iconColor: _getStatusColor(encounter.status!.code),
                 small: true,
@@ -517,7 +624,10 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     );
   }
 
-  Widget _buildServiceRequestsSection(BuildContext context, DiagnosticReportModel report) {
+  Widget _buildServiceRequestsSection(
+    BuildContext context,
+    DiagnosticReportModel report,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -525,11 +635,11 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            ...report.condition!.serviceRequests!.map((request) =>
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: _buildServiceRequestItem(context, request),
-                ),
+            ...report.condition!.serviceRequests!.map(
+              (request) => Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: _buildServiceRequestItem(context, request),
+              ),
             ),
           ],
         ),
@@ -537,7 +647,10 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
     );
   }
 
-  Widget _buildServiceRequestItem(BuildContext context, ServiceRequestModel request) {
+  Widget _buildServiceRequestItem(
+    BuildContext context,
+    ServiceRequestModel request,
+  ) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -555,7 +668,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    request.healthCareService?.name ?? 'unknownService',
+                    request.healthCareService?.name ??
+                        'diagnosticDetailsPage.diagnosticReportDetails_unknownService'
+                            .tr(context),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -569,16 +684,20 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (request.serviceRequestStatus != null)
               _buildDetailRow(
                 icon: Icons.info,
-                label: 'status',
+                label: 'diagnosticDetailsPage.diagnosticReportDetails_status'
+                    .tr(context),
                 value: request.serviceRequestStatus!.display,
                 iconColor: _getStatusColor(request.serviceRequestStatus!.code),
                 small: true,
               ),
 
-            if (request.orderDetails != null && request.orderDetails!.isNotEmpty)
+            if (request.orderDetails != null &&
+                request.orderDetails!.isNotEmpty)
               _buildDetailRow(
                 icon: Icons.description,
-                label: 'orderDetails',
+                label:
+                    'diagnosticDetailsPage.diagnosticReportDetails_orderDetails'
+                        .tr(context),
                 value: request.orderDetails!,
                 iconColor: Colors.blue,
                 small: true,
@@ -587,7 +706,8 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (request.reason != null && request.reason!.isNotEmpty)
               _buildDetailRow(
                 icon: Icons.medical_information,
-                label: 'reason',
+                label: 'diagnosticDetailsPage.diagnosticReportDetails_reason'
+                    .tr(context),
                 value: request.reason!,
                 iconColor: Colors.green,
                 small: true,
@@ -596,7 +716,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (request.note != null && request.note!.isNotEmpty)
               _buildDetailRow(
                 icon: Icons.note,
-                label: 'notes',
+                label: 'diagnosticDetailsPage.diagnosticReportDetails_notes'.tr(
+                  context,
+                ),
                 value: request.note!,
                 iconColor: Colors.deepOrange,
                 small: true,
@@ -605,8 +727,12 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
             if (request.occurrenceDate != null)
               _buildDetailRow(
                 icon: Icons.date_range,
-                label: 'occurrenceDate',
-                value: DateFormat('MMM dd, yyyy').format(request.occurrenceDate!),
+                label:
+                    'diagnosticDetailsPage.diagnosticReportDetails_occurrenceDate'
+                        .tr(context),
+                value: DateFormat(
+                  'MMM dd, yyyy',
+                ).format(request.occurrenceDate!),
                 iconColor: Colors.purple,
                 small: true,
               ),
@@ -636,28 +762,30 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
               children: [
                 Text(
                   label,
-                  style: small
-                      ? Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  )
-                      : Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style:
+                      small
+                          ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          )
+                          : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: small
-                      ? Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
-                  )
-                      : Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
-                  ),
+                  style:
+                      small
+                          ? Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[800],
+                          )
+                          : Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[800],
+                          ),
                 ),
               ],
             ),
@@ -694,9 +822,9 @@ class _DiagnosticReportDetailsPageState extends State<DiagnosticReportDetailsPag
           const SizedBox(height: 8),
           Text(
             content,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[700],
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
           ),
         ],
       ),

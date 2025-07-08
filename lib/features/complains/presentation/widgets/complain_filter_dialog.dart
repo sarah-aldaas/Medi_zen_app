@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/complains/data/models/complain_filter_model.dart';
@@ -56,7 +58,7 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'complain filter',
+                  'complainFilterPage.complainFilter_title'.tr(context),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -70,6 +72,7 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
               ],
             ),
             const Divider(),
+            const Gap(12),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -78,21 +81,27 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        labelText: 'search',
+                        labelText: 'complainFilterPage.complainFilter_search'
+                            .tr(context),
                         border: const OutlineInputBorder(),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
                     _buildStatusDropdown(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
                     _buildTypeDropdown(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
                     SwitchListTile(
-                      title: Text('assignedToAdmin'),
+                      title: Text(
+                        'complainFilterPage.complainFilter_assignedToAdmin'.tr(
+                          context,
+                        ),
+                      ),
                       value: _filter.assignedToAdmin ?? false,
-                      onChanged: (value) => setState(() {
-                        _filter = _filter.copyWith(assignedToAdmin: value);
-                      }),
+                      onChanged:
+                          (value) => setState(() {
+                            _filter = _filter.copyWith(assignedToAdmin: value);
+                          }),
                     ),
                   ],
                 ),
@@ -112,15 +121,26 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
                     });
                   },
                   child: Text(
-                    'reset',
-                    style: TextStyle(color: AppColors.red),
+                    'complainFilterPage.complainFilter_reset'.tr(context),
+                    style: TextStyle(
+                      color: AppColors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
                 Row(
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text('cancel'),
+                      child: Text(
+                        'complainFilterPage.cancelButton'.tr(context),
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
@@ -128,15 +148,35 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
                         Navigator.pop(
                           context,
                           _filter.copyWith(
-                            searchQuery: _searchController.text.isNotEmpty
-                                ? _searchController.text
-                                : null,
+                            searchQuery:
+                                _searchController.text.isNotEmpty
+                                    ? _searchController.text
+                                    : null,
                             statusId: _selectedStatusId,
                             typeId: _selectedTypeId,
                           ),
                         );
                       },
-                      child: Text('apply'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 3,
+                      ),
+                      child: Text(
+                        'complainFilterPage.complainFilter_apply'.tr(context),
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -152,28 +192,33 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
     return BlocBuilder<CodeTypesCubit, CodeTypesState>(
       builder: (context, state) {
         if (state is CodeTypesLoading) {
-          return LoadingButton();
+          return const Center(child: LoadingPage());
         }
 
-        final statusCodes = state is CodeTypesSuccess
-            ? state.codes?.where((code) => code.codeTypeModel?.name == 'complaint_status').toList()
-            : [];
+        final statusCodes =
+            state is CodeTypesSuccess
+                ? state.codes
+                    ?.where(
+                      (code) => code.codeTypeModel?.name == 'complaint_status',
+                    )
+                    .toList()
+                : [];
 
         return DropdownButtonFormField<String>(
           value: _selectedStatusId,
           decoration: InputDecoration(
-            labelText: 'status',
+            labelText: 'complainFilterPage.complainFilter_status'.tr(context),
             border: const OutlineInputBorder(),
           ),
           items: [
             DropdownMenuItem(
               value: null,
-              child: Text('all'),
+              child: Text('complainFilterPage.complainFilter_all'.tr(context)),
             ),
-            ...?statusCodes?.map((code) => DropdownMenuItem(
-              value: code.id,
-              child: Text(code.display),
-            )),
+            ...?statusCodes?.map(
+              (code) =>
+                  DropdownMenuItem(value: code.id, child: Text(code.display)),
+            ),
           ],
           onChanged: (value) => setState(() => _selectedStatusId = value),
         );
@@ -185,28 +230,33 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
     return BlocBuilder<CodeTypesCubit, CodeTypesState>(
       builder: (context, state) {
         if (state is CodeTypesLoading) {
-          return LoadingButton();
+          return const Center(child: LoadingPage());
         }
 
-        final typeCodes = state is CodeTypesSuccess
-            ? state.codes?.where((code) => code.codeTypeModel?.name == 'complaint_type').toList()
-            : [];
+        final typeCodes =
+            state is CodeTypesSuccess
+                ? state.codes
+                    ?.where(
+                      (code) => code.codeTypeModel?.name == 'complaint_type',
+                    )
+                    .toList()
+                : [];
 
         return DropdownButtonFormField<String>(
           value: _selectedTypeId,
           decoration: InputDecoration(
-            labelText: 'type',
+            labelText: 'complainFilterPage.complainFilter_type'.tr(context),
             border: const OutlineInputBorder(),
           ),
           items: [
             DropdownMenuItem(
               value: null,
-              child: Text('all'),
+              child: Text('complainFilterPage.complainFilter_all'.tr(context)),
             ),
-            ...?typeCodes?.map((code) => DropdownMenuItem(
-              value: code.id,
-              child: Text(code.display),
-            )),
+            ...?typeCodes?.map(
+              (code) =>
+                  DropdownMenuItem(value: code.id, child: Text(code.display)),
+            ),
           ],
           onChanged: (value) => setState(() => _selectedTypeId = value),
         );

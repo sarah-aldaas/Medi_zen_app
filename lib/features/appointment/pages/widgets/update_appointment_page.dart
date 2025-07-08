@@ -61,7 +61,8 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
         note: _noteController.text.isNotEmpty ? _noteController.text : null,
       );
 
-      await context.read<AppointmentCubit>().updateAppointment(context: context,
+      await context.read<AppointmentCubit>().updateAppointment(
+        context: context,
         id: widget.appointmentId,
         appointmentModel: updateModel,
       );
@@ -80,14 +81,14 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
           onPressed: () {
             Navigator.of(context).pop(false);
           },
-          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           'appointmentDetails.reschedule'.tr(context),
           style: TextStyle(
             color: Theme.of(context).primaryColor,
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
