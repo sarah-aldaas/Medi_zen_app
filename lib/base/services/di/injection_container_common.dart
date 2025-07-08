@@ -11,11 +11,15 @@ import 'package:medizen_app/features/authentication/presentation/logout/cubit/lo
 import 'package:medizen_app/features/authentication/presentation/reset_password/cubit/reset_password_cubit.dart';
 import 'package:medizen_app/features/authentication/presentation/signup/cubit/signup_cubit.dart';
 import 'package:medizen_app/features/clinics/data/datasources/clinic_remote_datasources.dart';
+import 'package:medizen_app/features/complains/data/data_source/complain_remote_datasource.dart';
+import 'package:medizen_app/features/complains/presentation/cubit/complain_cubit/complain_cubit.dart';
 import 'package:medizen_app/features/doctor/data/datasource/doctor_remote_datasource.dart';
 import 'package:medizen_app/features/doctor/pages/cubit/doctor_cubit/doctor_cubit.dart';
 import 'package:medizen_app/features/invoice/presentation/cubit/invoice_cubit/invoice_cubit.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/data_source/allergy_remote_datasource.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/cubit/allergy_cubit/allergy_cubit.dart';
+import 'package:medizen_app/features/medical_records/diagnostic_report/data/data_source/diagnostic_report_remote_datasource.dart';
+import 'package:medizen_app/features/medical_records/diagnostic_report/presentation/cubit/diagnostic_report_cubit/diagnostic_report_cubit.dart';
 import 'package:medizen_app/features/medical_records/encounter/data/data_source/encounter_remote_datasource.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/cubit/encounter_cubit/encounter_cubit.dart';
 import 'package:medizen_app/features/medical_records/imaging_study/data/data_source/imaging_study_remote_data_source.dart';
@@ -95,6 +99,8 @@ Future<void> _initDataSource() async {
   serviceLocator.registerLazySingleton<ConditionRemoteDataSource>(() => ConditionRemoteDataSourceImpl(networkClient: serviceLocator()));
   serviceLocator.registerLazySingleton<ArticlesRemoteDataSource>(() => ArticlesRemoteDataSourceImpl(networkClient: serviceLocator()));
   serviceLocator.registerLazySingleton<InvoiceRemoteDataSource>(() => InvoiceRemoteDataSourceImpl(networkClient: serviceLocator()));
+  serviceLocator.registerLazySingleton<ComplainRemoteDataSource>(() => ComplainRemoteDataSourceImpl(networkClient: serviceLocator()));
+  serviceLocator.registerLazySingleton<DiagnosticReportRemoteDataSource>(() => DiagnosticReportRemoteDataSourceImpl(networkClient: serviceLocator()));
 }
 
 Future<void> _initBloc() async {
@@ -128,5 +134,6 @@ Future<void> _initBloc() async {
   serviceLocator.registerFactory<MedicationCubit>(() => MedicationCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
   serviceLocator.registerFactory<InvoiceCubit>(() => InvoiceCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
   serviceLocator.registerFactory<ArticleCubit>(() => ArticleCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-
+  serviceLocator.registerFactory<ComplainCubit>(() => ComplainCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<DiagnosticReportCubit>(() => DiagnosticReportCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
 }

@@ -17,6 +17,7 @@ import 'package:medizen_app/features/medical_records/allergy/data/data_source/al
 import 'package:medizen_app/features/medical_records/allergy/presentation/cubit/allergy_cubit/allergy_cubit.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/data_source/condition_remote_data_source.dart';
 import 'package:medizen_app/features/medical_records/conditions/presentation/cubit/condition_cubit/conditions_cubit.dart';
+import 'package:medizen_app/features/medical_records/diagnostic_report/presentation/cubit/diagnostic_report_cubit/diagnostic_report_cubit.dart';
 import 'package:medizen_app/features/medical_records/encounter/data/data_source/encounter_remote_datasource.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/cubit/encounter_cubit/encounter_cubit.dart';
 import 'package:medizen_app/features/medical_records/imaging_study/data/data_source/imaging_study_remote_data_source.dart';
@@ -45,6 +46,7 @@ import 'base/services/localization/app_localization_service.dart';
 import 'base/services/storage/storage_service.dart';
 import 'base/theme/theme.dart';
 import 'features/appointment/pages/cubit/appointment_cubit/appointment_cubit.dart';
+import 'features/complains/presentation/cubit/complain_cubit/complain_cubit.dart';
 import 'features/medical_records/medication/presentation/cubit/medication_cubit/medication_cubit.dart';
 import 'features/services/pages/cubits/service_cubit/service_cubit.dart';
 
@@ -157,6 +159,13 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider<InvoiceCubit>(
                   create: (context) => InvoiceCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()),
+                  lazy: false,
+                ),BlocProvider<DiagnosticReportCubit>(
+                  create: (context) => DiagnosticReportCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()),
+                  lazy: false,
+                ),
+                BlocProvider<ComplainCubit>(
+                  create: (context) => ComplainCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()),
                   lazy: false,
                 ),
               ],

@@ -3,7 +3,7 @@ import '../../../../base/data/models/code_type_model.dart';
 class CommunicationModel {
   final int id;
   final bool preferred;
-  final CodeModel language;
+  final CodeModel? language;
 
   CommunicationModel({
     required this.id,
@@ -15,7 +15,7 @@ class CommunicationModel {
     return CommunicationModel(
       id: json['id'] as int,
       preferred: json['preferred'] as bool,
-      language: CodeModel.fromJson(json['language'] as Map<String, dynamic>),
+      language:json['language'] !=null? CodeModel.fromJson(json['language'] as Map<String, dynamic>):null,
     );
   }
 
@@ -23,7 +23,7 @@ class CommunicationModel {
     return {
       'id': id,
       'preferred': preferred,
-      'language': language.toJson(),
+      'language': language!.toJson(),
     };
   }
 

@@ -123,45 +123,39 @@ class TelecomCubit extends Cubit<TelecomState> {
       }
     }
   }
-
   Future<void> createTelecom({
     required TelecomModel telecomModel,
     required BuildContext context,
   }) async {
     emit(TelecomLoading());
 
-    // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
     if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
+      if (context.mounted) {
+        context.pushNamed(AppRouter.noInternet.name);
+      }
       emit(TelecomError(error: 'No internet connection'));
       ShowToast.showToastError(message: 'No internet connection. Please check your network.');
       return;
     }
 
-    final result = await remoteDataSource.createTelecom(
-      telecomModel: telecomModel,
-    );
+    final result = await remoteDataSource.createTelecom(telecomModel: telecomModel);
+    await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
+
     if (result is Success<PublicResponseModel>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
+      if (result.data.msg == "Unauthorized. Please login first." && context.mounted) {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
       if (result.data.status) {
-        await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
       } else {
         ShowToast.showToastError(message: result.data.msg);
-        emit(
-          TelecomError(error: result.data.msg ?? 'Failed to create telecom'),
-        );
+        emit(TelecomError(error: result.data.msg ?? 'Failed to create telecom'));
       }
     } else if (result is ResponseError<PublicResponseModel>) {
-      ShowToast.showToastError(
-        message: result.message ?? 'Failed to create telecom',
-      );
+      ShowToast.showToastError(message: result.message ?? 'Failed to create telecom');
       emit(TelecomError(error: result.message ?? 'Failed to create telecom'));
     }
   }
-
   Future<void> updateTelecom({
     required String id,
     required TelecomModel telecomModel,
@@ -193,12 +187,16 @@ class TelecomCubit extends Cubit<TelecomState> {
         emit(
           TelecomError(error: result.data.msg ?? 'Failed to update telecom'),
         );
+        await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
+
       }
     } else if (result is ResponseError<PublicResponseModel>) {
       ShowToast.showToastError(
         message: result.message ?? 'Failed to update telecom',
       );
       emit(TelecomError(error: result.message ?? 'Failed to update telecom'));
+      await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
+
     }
   }
 
@@ -207,7 +205,6 @@ class TelecomCubit extends Cubit<TelecomState> {
     required BuildContext context,
   }) async {
     emit(TelecomLoading());
-
     // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
     if (!isConnected) {
@@ -229,6 +226,8 @@ class TelecomCubit extends Cubit<TelecomState> {
         emit(
           TelecomError(error: result.data.msg ?? 'Failed to delete telecom'),
         );
+        await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
+
       }
     } else if (result is ResponseError<PublicResponseModel>) {
       ShowToast.showToastError(

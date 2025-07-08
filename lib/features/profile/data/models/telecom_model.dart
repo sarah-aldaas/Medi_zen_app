@@ -34,8 +34,8 @@ class TelecomModel {
       endDate:json['end_date']!=null? json['end_date']?.toString():null,
       type: json['type']!=null?CodeModel.fromJson(json['type'] as Map<String, dynamic>):null,
       use: json['use']!=null?CodeModel.fromJson(json['use'] as Map<String, dynamic>):null,
-      typeId: json['type']['id']!=null?json['type']["id"].toString():null,
-      useId: json['use']['id']!=null?json['use']["id"].toString():null,
+      typeId:json['type']!=null? json['type']['id']!=null?json['type']["id"].toString():null:null,
+      useId:json['use']!=null? json['use']['id']!=null?json['use']["id"].toString():null:null,
     );
   }
 
