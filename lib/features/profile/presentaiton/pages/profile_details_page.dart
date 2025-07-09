@@ -24,7 +24,8 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     final dob = DateTime.parse(dateOfBirthStr);
     final today = DateTime.now();
     int age = today.year - dob.year;
-    if (today.month < dob.month || (today.month == dob.month && today.day < dob.day)) {
+    if (today.month < dob.month ||
+        (today.month == dob.month && today.day < dob.day)) {
       age--;
     }
     return age;
@@ -33,7 +34,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   Widget _buildInfoTile(IconData icon, String titleKey, String value) {
     return ListTile(
       leading: Icon(icon, color: Theme.of(context).primaryColor),
-      title: Text(titleKey.tr(context), style: const TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(
+        titleKey.tr(context),
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
       subtitle: Text(value, style: const TextStyle(color: Colors.grey)),
       dense: true,
     );
@@ -46,13 +50,24 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         children: [
           Icon(icon, color: Theme.of(context).primaryColor),
           const Gap(8),
-          Text(titleKey.tr(context), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Theme.of(context).primaryColor)),
+          Text(
+            titleKey.tr(context),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildNavigationItem(String titleKey, IconData icon, VoidCallback onTap) {
+  Widget _buildNavigationItem(
+    String titleKey,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       child: InkWell(
@@ -63,7 +78,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             children: [
               Icon(icon, color: Theme.of(context).primaryColor),
               const Gap(12),
-              Text(titleKey.tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              Text(
+                titleKey.tr(context),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               const Spacer(),
               const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
             ],
@@ -115,11 +136,22 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     background: Stack(
                       fit: StackFit.expand,
                       children: [
-                        FlexibleImage(imageUrl: patient.avatar!, errorWidget: const Icon(Icons.person, size: 60, color: Colors.white70)),
+                        FlexibleImage(
+                          imageUrl: patient.avatar!,
+                          errorWidget: const Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.white70,
+                          ),
+                        ),
 
                         const DecoratedBox(
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Colors.black, Colors.transparent]),
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [Colors.black, Colors.transparent],
+                            ),
                           ),
                         ),
                       ],
@@ -152,15 +184,29 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     delegate: SliverChildListDelegate([
                       Card(
                         elevation: 2,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildInfoTile(Icons.email_outlined, "profileDetailsPage.email", patient.email),
-                              _buildInfoTile(Icons.person_outline, "profileDetailsPage.gender", patient.gender!.display),
-                              _buildInfoTile(Icons.favorite_outline, "profileDetailsPage.maritalStatus", patient.maritalStatus!.display),
+                              _buildInfoTile(
+                                Icons.email_outlined,
+                                "profileDetailsPage.email",
+                                patient.email,
+                              ),
+                              _buildInfoTile(
+                                Icons.person_outline,
+                                "profileDetailsPage.gender",
+                                patient.gender!.display,
+                              ),
+                              _buildInfoTile(
+                                Icons.favorite_outline,
+                                "profileDetailsPage.maritalStatus",
+                                patient.maritalStatus!.display,
+                              ),
                               if (patient.dateOfBirth != null)
                                 _buildInfoTile(
                                   Icons.cake_outlined,
@@ -172,30 +218,60 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         ),
                       ),
                       const Gap(16),
-                      _buildSectionTitle("profileDetailsPage.aboutMe", Icons.info_outline),
+                      _buildSectionTitle(
+                        "profileDetailsPage.aboutMe",
+                        Icons.info_outline,
+                      ),
                       Card(
                         elevation: 1,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Text(patient.text ?? 'profileDetailsPage.noBioAvailable'.tr(context), style: const TextStyle(fontSize: 16)),
+                          child: Text(
+                            patient.text ??
+                                'profileDetailsPage.noBioAvailable'.tr(context),
+                            style: const TextStyle(fontSize: 16),
+                          ),
                         ),
                       ),
                       const Gap(16),
-                      _buildSectionTitle("profileDetailsPage.healthSnapshot", Icons.healing_outlined),
+                      _buildSectionTitle(
+                        "profileDetailsPage.healthSnapshot",
+                        Icons.healing_outlined,
+                      ),
                       Card(
-                        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 16,
+                        ),
                         child: ExpansionTile(
-                          leading: const Icon(Icons.medical_information_outlined, color: AppColors.primaryColor),
-                          title: Text("profileDetailsPage.healthInformation".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                          leading: const Icon(
+                            Icons.medical_information_outlined,
+                            color: AppColors.primaryColor,
+                          ),
+                          title: Text(
+                            "profileDetailsPage.healthInformation".tr(context),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           children: <Widget>[
-                            if (patient.bloodType != null && patient.bloodType!.display != null)
+                            if (patient.bloodType != null &&
+                                patient.bloodType!.display != null)
                               Column(
                                 children: [
                                   ListTile(
-                                    leading: const Icon(Icons.bloodtype, color: AppColors.primaryColor),
-                                    title: Text("${"profileDetailsPage.bloodType".tr(context)}: ${patient.bloodType!.display}"),
+                                    leading: const Icon(
+                                      Icons.bloodtype,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    title: Text(
+                                      "${"profileDetailsPage.bloodType".tr(context)}: ${patient.bloodType!.display}",
+                                    ),
                                   ),
                                   const Divider(indent: 16.0, endIndent: 16.0),
                                 ],
@@ -203,8 +279,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                             Column(
                               children: [
                                 ListTile(
-                                  leading: const Icon(Icons.height, color: AppColors.primaryColor),
-                                  title: Text("${"profileDetailsPage.height".tr(context)}: ${patient.height ?? 'N/A'} cm"),
+                                  leading: const Icon(
+                                    Icons.height,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "${"profileDetailsPage.height".tr(context)}: ${patient.height ?? 'N/A'} cm",
+                                  ),
                                 ),
                                 const Divider(indent: 16.0, endIndent: 16.0),
                               ],
@@ -212,8 +293,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                             Column(
                               children: [
                                 ListTile(
-                                  leading: const Icon(Icons.fitness_center, color: AppColors.primaryColor),
-                                  title: Text("${"profileDetailsPage.weight".tr(context)}: ${patient.weight ?? 'N/A'} kg"),
+                                  leading: const Icon(
+                                    Icons.fitness_center,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "${"profileDetailsPage.weight".tr(context)}: ${patient.weight ?? 'N/A'} kg",
+                                  ),
                                 ),
                                 const Divider(indent: 16.0, endIndent: 16.0),
                               ],
@@ -222,8 +308,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                               Column(
                                 children: [
                                   ListTile(
-                                    leading: const Icon(Icons.calendar_today_outlined, color: AppColors.primaryColor),
-                                    title: Text("${"profileDetailsPage.birthDate".tr(context)}: ${patient.dateOfBirth!}"),
+                                    leading: const Icon(
+                                      Icons.calendar_today_outlined,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    title: Text(
+                                      "${"profileDetailsPage.birthDate".tr(context)}: ${patient.dateOfBirth!}",
+                                    ),
                                   ),
                                   const Divider(indent: 16.0, endIndent: 16.0),
                                 ],
@@ -231,8 +322,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                             Column(
                               children: [
                                 ListTile(
-                                  leading: const Icon(Icons.smoke_free, color: AppColors.primaryColor),
-                                  title: Text("${"profileDetailsPage.smoker".tr(context)}: ${patient.smoker == true ? 'Yes' : 'No'}"),
+                                  leading: const Icon(
+                                    Icons.smoke_free,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "${"profileDetailsPage.smoker".tr(context)}: ${patient.smoker == true ? 'Yes' : 'No'}",
+                                  ),
                                 ),
                                 const Divider(indent: 16.0, endIndent: 16.0),
                               ],
@@ -240,8 +336,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                             Column(
                               children: [
                                 ListTile(
-                                  leading: const Icon(Icons.local_bar_outlined, color: AppColors.primaryColor),
-                                  title: Text("${"profileDetailsPage.alcohol".tr(context)}: ${patient.alcoholDrinker == true ? 'Yes' : 'No'}"),
+                                  leading: const Icon(
+                                    Icons.local_bar_outlined,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "${"profileDetailsPage.alcohol".tr(context)}: ${patient.alcoholDrinker == true ? 'Yes' : 'No'}",
+                                  ),
                                 ),
                               ],
                             ),
@@ -249,18 +350,35 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         ),
                       ),
                       const Gap(16),
-                      _buildSectionTitle("profileDetailsPage.contactInformation", Icons.contact_phone),
+                      _buildSectionTitle(
+                        "profileDetailsPage.contactInformation",
+                        Icons.contact_phone,
+                      ),
                       const Gap(30),
-                      _buildNavigationItem("profileDetailsPage.telecom", Icons.phone, () {
-                        context.pushNamed(AppRouter.telecomDetails.name);
-                      }),
-                      _buildNavigationItem("profileDetailsPage.address", Icons.home, () {
-                        if (patient.addressModel != null) {
-                          context.pushNamed(AppRouter.addressListPage.name, extra: {'addressModel': patient.addressModel!});
-                        } else {
-                          ShowToast.showToastInfo(message: "profileDetailsPage.noAddressAvailable".tr(context));
-                        }
-                      }),
+                      _buildNavigationItem(
+                        "profileDetailsPage.telecom",
+                        Icons.phone,
+                        () {
+                          context.pushNamed(AppRouter.telecomDetails.name);
+                        },
+                      ),
+                      _buildNavigationItem(
+                        "profileDetailsPage.address",
+                        Icons.home,
+                        () {
+                          if (patient.addressModel != null) {
+                            context.pushNamed(
+                              AppRouter.addressListPage.name,
+                              extra: {'addressModel': patient.addressModel!},
+                            );
+                          } else {
+                            ShowToast.showToastInfo(
+                              message: "profileDetailsPage.noAddressAvailable"
+                                  .tr(context),
+                            );
+                          }
+                        },
+                      ),
                       const Gap(40),
                     ]),
                   ),
@@ -269,7 +387,9 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             );
           }
 
-          return Center(child: Text("profileDetailsPage.noDataAvailable".tr(context)));
+          return Center(
+            child: Text("profileDetailsPage.noDataAvailable".tr(context)),
+          );
         },
       ),
     );

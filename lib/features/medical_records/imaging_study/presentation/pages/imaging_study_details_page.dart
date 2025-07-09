@@ -522,9 +522,9 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
                     height: 120,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: series.images.length,
+                      itemCount: series.images!.length,
                       itemBuilder: (context, index) {
-                        final imageUrl = series.images[index];
+                        final imageUrl = series.images![index];
                         return Padding(
                           padding: const EdgeInsets.only(right: 12.0),
                           child: GestureDetector(
