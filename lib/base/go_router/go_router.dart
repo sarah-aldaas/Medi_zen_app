@@ -152,13 +152,13 @@ GoRouter goRouter() {
               return ForgotPasswordScreen();
             },
           ),
-          GoRoute(
-            path: "/notificationSettings",
-            name: AppRouter.notificationSettings.name,
-            builder: (BuildContext context, GoRouterState state) {
-              return NotificationSettingsPage();
-            },
-          ),
+          // GoRoute(
+          //   path: "/notificationSettings",
+          //   name: AppRouter.notificationSettings.name,
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     return NotificationSettingsPage();
+          //   },
+          // ),
           GoRoute(
             path: "/helpCenter",
             name: AppRouter.helpCenter.name,

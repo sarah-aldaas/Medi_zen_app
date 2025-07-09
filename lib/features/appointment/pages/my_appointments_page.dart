@@ -403,11 +403,9 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
                   children: [
-                    // Doctor info row
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Doctor avatar placeholder
                         Container(
                           width: 80,
                           height: 80,

@@ -13,7 +13,7 @@ class ArticleLoading extends ArticleState {
   const ArticleLoading({this.isLoadMore = false});
 }
 
-class FavoriteOperationLoading extends ArticleState {}
+// class FavoriteOperationLoading extends ArticleState {}
 
 class ArticleGenerateLoading extends ArticleState {}
 
@@ -43,13 +43,13 @@ class ArticleConditionSuccess extends ArticleState {
   });
 }
 
-class FavoriteOperationSuccess extends ArticleState {
-  final bool isFavorite;
-
-  const FavoriteOperationSuccess({
-    required this.isFavorite,
-  });
-}
+// class FavoriteOperationSuccess extends ArticleState {
+//   final bool isFavorite;
+//
+//   const FavoriteOperationSuccess({
+//     required this.isFavorite,
+//   });
+// }
 
 class ArticleGenerateSuccess extends ArticleState {
   final PublicResponseModel response;
@@ -69,4 +69,20 @@ class ArticleError extends ArticleState {
   final String error;
 
   const ArticleError({required this.error});
+}
+
+class FavoriteOperationLoading extends ArticleState {
+  final ArticleState previousState;
+
+  const FavoriteOperationLoading({required this.previousState});
+}
+
+class FavoriteOperationSuccess extends ArticleState {
+  final bool isFavorite;
+  final ArticleState previousState;
+
+  const FavoriteOperationSuccess({
+    required this.isFavorite,
+    required this.previousState,
+  });
 }

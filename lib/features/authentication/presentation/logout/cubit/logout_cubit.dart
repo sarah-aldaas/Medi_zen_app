@@ -8,6 +8,7 @@ import 'package:medizen_app/base/services/network/resource.dart';
 import 'package:medizen_app/base/services/storage/storage_service.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:meta/meta.dart';
+import '../../../../../FCM_manager.dart';
 import '../../../../../base/data/models/respons_model.dart';
 import '../../../../../base/error/exception.dart';
 import '../../../../../base/go_router/go_router.dart';
@@ -41,6 +42,7 @@ class LogoutCubit extends Cubit<LogoutState> {
 
 
     try {
+      await serviceLocator<FCMManager>().deleteToken(context);
       final result = await authRemoteDataSource.logout(allDevices: allDevices);
 
       if (result is Success<AuthResponseModel>) {

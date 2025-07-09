@@ -202,29 +202,15 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
                 'imagingStudyDetailsPage.studyDateLabel'.tr(context),
                 DateFormat('MMM d, y - hh:mm a').format(study.started!),
               ),
-            if (study.cancelledReason != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.redAccent.withOpacity(0.5),
-                    ),
-                  ),
-                  child: Text(
-                    'imagingStudyDetailsPage.cancellationReasonPrefix'.tr(
-                      context,
-                    ),
-                    style: TextStyle(
-                      color: Colors.red[800],
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+            if (study.cancelledReason != null &&
+                study.cancelledReason!.isNotEmpty)
+              _buildDetailRow(
+                context,
+                'imagingStudyDetailsPage.cancellationReasonLabel'.tr(context),
+                study.cancelledReason!,
+                valueColor: Colors.red[800],
               ),
+            // MODIFICATION END HERE
           ],
         ),
       ),

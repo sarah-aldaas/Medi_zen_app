@@ -32,12 +32,16 @@ import 'package:medizen_app/features/medical_records/series/data/data_source/ser
 import 'package:medizen_app/features/medical_records/series/presentation/cubit/series_cubit/series_cubit.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/data_source/service_request_remote_data_source.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/cubit/service_request_cubit/service_request_cubit.dart';
+import 'package:medizen_app/features/notifications/data/data_source/notification_remote_datasource.dart';
+import 'package:medizen_app/features/notifications/presentation/cubit/notification_cubit/notification_cubit.dart';
+import 'package:medizen_app/features/organization/data/data_source/organization_remote_datasource.dart';
+import 'package:medizen_app/features/organization/presentation/cubit/organization_cubit/organization_cubit.dart';
 import 'package:medizen_app/features/profile/data/data_sources/address_remote_data_sources.dart';
 import 'package:medizen_app/features/profile/data/data_sources/telecom_remote_data_sources.dart';
 import 'package:medizen_app/features/profile/data/data_sources/profile_remote_data_sources.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/address_cubit/address_cubit.dart';
 import 'package:medizen_app/features/services/pages/cubits/service_cubit/service_cubit.dart';
-
+import '../../../FCM_manager.dart';
 import '../../../features/articles/data/data_sources/articles_remote_data_sources.dart';
 import '../../../features/authentication/data/datasource/auth_remote_data_source.dart';
 import '../../../features/authentication/presentation/login/cubit/login_cubit.dart';
@@ -101,9 +105,16 @@ Future<void> _initDataSource() async {
   serviceLocator.registerLazySingleton<InvoiceRemoteDataSource>(() => InvoiceRemoteDataSourceImpl(networkClient: serviceLocator()));
   serviceLocator.registerLazySingleton<ComplainRemoteDataSource>(() => ComplainRemoteDataSourceImpl(networkClient: serviceLocator()));
   serviceLocator.registerLazySingleton<DiagnosticReportRemoteDataSource>(() => DiagnosticReportRemoteDataSourceImpl(networkClient: serviceLocator()));
+  serviceLocator.registerLazySingleton<NotificationRemoteDataSource>(() => NotificationRemoteDataSourceImpl(networkClient: serviceLocator()));
+  serviceLocator.registerLazySingleton<OrganizationRemoteDataSource>(() => OrganizationRemoteDataSourceImpl(networkClient: serviceLocator()));
 }
 
 Future<void> _initBloc() async {
+  serviceLocator.registerLazySingleton(() => FCMManager(
+    notificationCubit: serviceLocator(),
+    storageService: serviceLocator(),
+  ));
+
   serviceLocator.registerFactory<SignupCubit>(() => SignupCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
   serviceLocator.registerFactory<OtpCubit>(() => OtpCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
   serviceLocator.registerFactory<ForgotPasswordCubit>(() => ForgotPasswordCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
@@ -136,4 +147,6 @@ Future<void> _initBloc() async {
   serviceLocator.registerFactory<ArticleCubit>(() => ArticleCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
   serviceLocator.registerFactory<ComplainCubit>(() => ComplainCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
   serviceLocator.registerFactory<DiagnosticReportCubit>(() => DiagnosticReportCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<NotificationCubit>(() => NotificationCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
+  serviceLocator.registerFactory<OrganizationCubit>(() => OrganizationCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
 }

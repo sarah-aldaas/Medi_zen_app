@@ -8,6 +8,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/theme.dart';
 import 'package:medizen_app/features/authentication/presentation/logout/cubit/logout_cubit.dart';
+import 'package:medizen_app/features/invoice/presentation/pages/my_appointment_finished_invoice_page.dart';
 import 'package:medizen_app/main.dart';
 
 import '../../../../base/blocs/localization_bloc/localization_bloc.dart';
@@ -15,10 +16,11 @@ import '../../../../base/constant/app_images.dart';
 import '../../../../base/constant/storage_key.dart';
 import '../../../../base/services/di/injection_container_common.dart';
 import '../../../../base/services/storage/storage_service.dart';
+import '../../../../base/theme/app_color.dart';
 import '../../../../base/widgets/flexible_image.dart';
 import '../../../authentication/data/models/patient_model.dart';
 import '../../../complains/presentation/pages/complain_list_page.dart';
-import '../widgets/avatar_image_widget.dart';
+import '../../../organization/presentation/pages/organization_details_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -38,6 +40,11 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+            onPressed: () => Navigator.of(context).pop(),
+            color: AppColors.primaryColor,
+          ),
           title: Row(
             spacing: 10,
             children: [
@@ -63,15 +70,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: [
                       CircleAvatar(
-                    radius: 50,
+                        radius: 50,
                         backgroundColor: Colors.transparent,
                         child: ClipOval(
                           child: FlexibleImage(
-                            imageUrl:myPatientModel.avatar,assetPath: "assets/images/person.jpg",
+                            imageUrl: myPatientModel.avatar,
+                            assetPath: "assets/images/person.jpg",
                           ),
                         ),
                       ),
-                      // AvatarImage(imageUrl: myPatientModel.avatar, radius: 50),
+
                       SizedBox(height: 16),
                       Text(
                         myPatientModel == null
@@ -97,35 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     context.pushNamed(AppRouter.profileDetails.name);
                   },
                 ),
-                // ListTile(
-                //   leading: Icon(
-                //     Icons.notifications_none,
-                //     color: Theme.of(context).primaryColor,
-                //   ),
-                //   title: Text('profilePage.notification'.tr(context)),
-                //   trailing: Icon(Icons.chevron_right),
-                //   onTap: () {
-                //     context.pushNamed(AppRouter.notificationSettings.name);
-                //   },
-                // ),
-                // ListTile(
-                //   leading: Icon(
-                //     Icons.payment_outlined,
-                //     color: Theme.of(context).primaryColor,
-                //   ),
-                //   title: Text('profilePage.payment'.tr(context)),
-                //   trailing: Icon(Icons.chevron_right),
-                //   onTap: () {},
-                // ),
-                // ListTile(
-                //   leading: Icon(
-                //     Icons.security_outlined,
-                //     color: Theme.of(context).primaryColor,
-                //   ),
-                //   title: Text('profilePage.security'.tr(context)),
-                //   trailing: Icon(Icons.chevron_right),
-                //   onTap: () {},
-                // ),
+
                 ListTile(
                   leading: Icon(
                     Icons.insert_comment_outlined,
@@ -134,7 +114,48 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text('profilePage.complaint'.tr(context)),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ComplainListPage()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ComplainListPage(),
+                      ),
+                    );
+                  },
+                ),
+
+                ListTile(
+                  leading: Icon(
+                    Icons.maps_home_work_sharp,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text(
+                    'organizationDetailsPage.organization'.tr(context),
+                  ),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrganizationDetailsPage(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.monetization_on,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text('invoicesPage.invoice'.tr(context)),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => MyAppointmentFinishedInvoicePage(),
+                      ),
+                    );
                   },
                 ),
                 ExpansionTile(
@@ -146,23 +167,28 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Row(
                       children: [
-                        SizedBox(width: 50,),
-                        TextButton(onPressed: (){
-                          final bloc = context.read<LocalizationBloc>();
-                          if(bloc.isArabic())
-                            bloc.add(const ChangeLanguageEvent(Locale('en')));
-
-                        }, child: Text("profilePage.english".tr(context))),
+                        SizedBox(width: 50),
+                        TextButton(
+                          onPressed: () {
+                            final bloc = context.read<LocalizationBloc>();
+                            if (bloc.isArabic())
+                              bloc.add(const ChangeLanguageEvent(Locale('en')));
+                          },
+                          child: Text("profilePage.english".tr(context)),
+                        ),
                       ],
                     ),
                     Row(
                       children: [
-                        SizedBox(width: 50,),
-                        TextButton(onPressed: (){
-                          final bloc = context.read<LocalizationBloc>();
-                          if(!bloc.isArabic())
-                            bloc.add(const ChangeLanguageEvent(Locale('ar')));
-                        }, child: Text("profilePage.arabic".tr(context))),
+                        SizedBox(width: 50),
+                        TextButton(
+                          onPressed: () {
+                            final bloc = context.read<LocalizationBloc>();
+                            if (!bloc.isArabic())
+                              bloc.add(const ChangeLanguageEvent(Locale('ar')));
+                          },
+                          child: Text("profilePage.arabic".tr(context)),
+                        ),
                       ],
                     ),
                   ],
@@ -261,7 +287,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             setState(() {
                               _selectedLogoutOption = value;
                             });
-                            context.read<LogoutCubit>().sendResetLink(0,context);
+                            context.read<LogoutCubit>().sendResetLink(
+                              0,
+                              context,
+                            );
                           },
                           activeColor: Theme.of(context).primaryColor,
                         ),
@@ -293,7 +322,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             setState(() {
                               _selectedLogoutOption = value;
                             });
-                            context.read<LogoutCubit>().sendResetLink(1,context);
+                            context.read<LogoutCubit>().sendResetLink(
+                              1,
+                              context,
+                            );
                           },
                           activeColor: Theme.of(context).primaryColor,
                         ),
