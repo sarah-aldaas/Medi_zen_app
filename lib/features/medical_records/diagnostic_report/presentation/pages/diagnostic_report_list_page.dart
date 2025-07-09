@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Make sure this is imported
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
@@ -18,7 +18,8 @@ class DiagnosticReportListPage extends StatefulWidget {
   const DiagnosticReportListPage({super.key, required this.filter});
 
   @override
-  _DiagnosticReportListPageState createState() => _DiagnosticReportListPageState();
+  _DiagnosticReportListPageState createState() =>
+      _DiagnosticReportListPageState();
 }
 
 class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
@@ -56,13 +57,18 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context.read<DiagnosticReportCubit>().getAllDiagnosticReports(
-        loadMore: true,
-        context: context,
-        filters: widget.filter.toJson(),
-      ).then((_) => setState(() => _isLoadingMore = false));
+      context
+          .read<DiagnosticReportCubit>()
+          .getAllDiagnosticReports(
+            loadMore: true,
+            context: context,
+            filters: widget.filter.toJson(),
+          )
+          .then((_) => setState(() => _isLoadingMore = false));
     }
   }
 
@@ -80,8 +86,12 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
             return const Center(child: LoadingPage());
           }
 
-          final reports = state is DiagnosticReportSuccess ? state.paginatedResponse.paginatedData!.items : [];
-          final hasMore = state is DiagnosticReportSuccess ? state.hasMore : false;
+          final reports =
+              state is DiagnosticReportSuccess
+                  ? state.paginatedResponse.paginatedData!.items
+                  : [];
+          final hasMore =
+              state is DiagnosticReportSuccess ? state.hasMore : false;
 
           if (reports.isEmpty) {
             return Center(
@@ -95,7 +105,9 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    "noReportsFound",
+                    "diagnosticReportList.diagnosticReport_noReportsFound".tr(
+                      context,
+                    ),
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -104,7 +116,9 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "tapToRefresh",
+                    "diagnosticReportList.diagnosticReport_tapToRefresh".tr(
+                      context,
+                    ),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14, color: Colors.blueGrey[400]),
                   ),
@@ -112,7 +126,11 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                   ElevatedButton.icon(
                     onPressed: () => _loadInitialReports(),
                     icon: const Icon(Icons.refresh),
-                    label: Text("refresh"),
+                    label: Text(
+                      "diagnosticReportList.diagnosticReport_refresh".tr(
+                        context,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Theme.of(context).primaryColor,
@@ -161,16 +179,18 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DiagnosticReportDetailsPage(
-              diagnosticReportId: report.id!,
-            ),
-          ),
-        ).then((value) {
-          _loadInitialReports();
-        }),
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => DiagnosticReportDetailsPage(
+                      diagnosticReportId: report.id!,
+                    ),
+              ),
+            ).then((value) {
+              _loadInitialReports();
+            }),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -187,7 +207,9 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      report.name ?? 'unnamedReport',
+                      report.name ??
+                          'diagnosticReportList.diagnosticReport_unnamedReport'
+                              .tr(context),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.green,
@@ -202,87 +224,88 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
               Divider(height: 20, thickness: 1, color: Colors.grey[200]),
               const Gap(10),
 
-              // Report Note (if available)
               if (report.note != null && report.note!.isNotEmpty)
                 _buildInfoRow(
                   icon: Icons.note,
-                  label: 'note',
+                  label: 'diagnosticReportList.diagnosticReport_note'.tr(
+                    context,
+                  ),
                   value: report.note!,
-                  color: Colors.blue,
                 ),
 
-              // Condition Information
               if (report.condition != null) ...[
                 _buildInfoRow(
                   icon: Icons.medical_services,
-                  label: 'condition',
-                  value: report.condition!.healthIssue ?? 'unknownCondition',
-                  color: Colors.teal,
+                  label: 'diagnosticReportList.diagnosticReport_condition'.tr(
+                    context,
+                  ),
+                  value:
+                      report.condition!.healthIssue ??
+                      'diagnosticReportList.diagnosticReport_unknownCondition'
+                          .tr(context),
                 ),
 
-                // Condition Status
                 if (report.condition!.clinicalStatus != null)
                   _buildInfoRow(
                     icon: Icons.info_outline,
-                    label: 'clinicalStatus',
+                    label:
+                        'diagnosticReportList.diagnosticReport_clinicalStatus'
+                            .tr(context),
                     value: report.condition!.clinicalStatus!.display,
-                    color: _getStatusColor(report.condition!.clinicalStatus!.code),
                   ),
 
-                // Verification Status
                 if (report.condition!.verificationStatus != null)
                   _buildInfoRow(
                     icon: Icons.verified,
-                    label: 'verificationStatus',
+                    label:
+                        'diagnosticReportList.diagnosticReport_verificationStatus'
+                            .tr(context),
                     value: report.condition!.verificationStatus!.display,
-                    color: _getStatusColor(report.condition!.verificationStatus!.code),
                   ),
 
-                // Body Site
                 if (report.condition!.bodySite != null)
                   _buildInfoRow(
                     icon: Icons.location_on,
-                    label: 'bodySite',
+                    label: 'diagnosticReportList.diagnosticReport_bodySite'.tr(
+                      context,
+                    ),
                     value: report.condition!.bodySite!.display,
-                    color: Colors.deepPurple,
                   ),
 
-                // Stage
                 if (report.condition!.stage != null)
                   _buildInfoRow(
                     icon: Icons.stacked_line_chart,
-                    label: 'stage',
+                    label: 'diagnosticReportList.diagnosticReport_stage'.tr(
+                      context,
+                    ),
                     value: report.condition!.stage!.display,
-                    color: Colors.orange,
                   ),
 
-                // Onset Date
                 if (report.condition!.onSetDate != null)
                   _buildInfoRow(
                     icon: Icons.calendar_today,
-                    label: 'onsetDate',
+                    label: 'diagnosticReportList.diagnosticReport_onset_date'
+                        .tr(context),
                     value: _formatDate(report.condition!.onSetDate!),
-                    color: Colors.brown,
                   ),
               ],
 
-              // Report Conclusion
               if (report.conclusion != null && report.conclusion!.isNotEmpty)
                 _buildInfoRow(
                   icon: Icons.assignment_turned_in,
-                  label: 'conclusion',
+                  label: 'diagnosticReportList.diagnosticReport_conclusion'.tr(
+                    context,
+                  ),
                   value: report.conclusion!,
-                  color: Colors.indigo,
                   maxLines: 3,
                 ),
 
-              // Report Status
               if (report.status != null)
                 _buildInfoRow(
                   icon: Icons.star,
-                  label: 'reportStatus',
+                  label: 'diagnosticReportList.diagnosticReport_reportStatus'
+                      .tr(context),
                   value: report.status!.display,
-                  color: _getStatusColor(report.status!.code),
                 ),
             ],
           ),
@@ -295,7 +318,6 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
     required IconData icon,
     required String label,
     required String value,
-    required Color color,
     int maxLines = 1,
   }) {
     return Padding(
@@ -303,7 +325,11 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: color),
+          Icon(
+            icon,
+            size: 18,
+            color: AppColors.secondaryColor.withOpacity(0.7),
+          ),
           const SizedBox(width: 10),
           Text(
             '$label: ',
@@ -330,7 +356,7 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
       final dateTime = DateTime.parse(dateString);
       return DateFormat('MMM dd, yyyy').format(dateTime);
     } catch (e) {
-      return dateString; // Return original string if parsing fails
+      return dateString;
     }
   }
 

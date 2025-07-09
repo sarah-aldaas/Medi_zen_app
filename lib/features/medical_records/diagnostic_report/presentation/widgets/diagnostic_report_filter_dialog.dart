@@ -13,10 +13,12 @@ class DiagnosticReportFilterDialog extends StatefulWidget {
   const DiagnosticReportFilterDialog({super.key, required this.currentFilter});
 
   @override
-  _DiagnosticReportFilterDialogState createState() => _DiagnosticReportFilterDialogState();
+  _DiagnosticReportFilterDialogState createState() =>
+      _DiagnosticReportFilterDialogState();
 }
 
-class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDialog> {
+class _DiagnosticReportFilterDialogState
+    extends State<DiagnosticReportFilterDialog> {
   late DiagnosticReportFilterModel _filter;
   final TextEditingController _searchQueryController = TextEditingController();
   String? _selectedStatusId;
@@ -28,7 +30,9 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
     _searchQueryController.text = _filter.searchQuery ?? '';
     _selectedStatusId = _filter.statusId;
 
-    context.read<CodeTypesCubit>().getDiagnosticReportStatusTypeCodes(context: context);
+    context.read<CodeTypesCubit>().getDiagnosticReportStatusTypeCodes(
+      context: context,
+    );
   }
 
   @override
@@ -59,14 +63,20 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
 
             List<CodeModel> codes = [];
             if (state is CodeTypesSuccess) {
-              codes = state.codes?.where((code) => code.codeTypeModel?.name == codeTypeName).toList() ?? [];
+              codes =
+                  state.codes
+                      ?.where(
+                        (code) => code.codeTypeModel?.name == codeTypeName,
+                      )
+                      .toList() ??
+                  [];
             }
 
             return DropdownButtonFormField<String>(
               value: value,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 12,
                 ),
@@ -74,14 +84,20 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
               items: [
                 DropdownMenuItem(
                   value: null,
-                  child: Text('all'),
-                ),
-                ...codes.map(
-                      (code) => DropdownMenuItem(
-                    value: code.id,
-                    child: Text(code.display),
+                  child: Text(
+                    'diagnosticFilterPage.diagnosticReportFilter_all'.tr(
+                      context,
+                    ),
                   ),
-                ).toList(),
+                ),
+                ...codes
+                    .map(
+                      (code) => DropdownMenuItem(
+                        value: code.id,
+                        child: Text(code.display),
+                      ),
+                    )
+                    .toList(),
               ],
               onChanged: onChanged,
             );
@@ -110,7 +126,9 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "title",
+                  "diagnosticFilterPage.diagnosticReportFilter_title".tr(
+                    context,
+                  ),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -130,7 +148,9 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "search",
+                      "diagnosticFilterPage.diagnosticReportFilter_search".tr(
+                        context,
+                      ),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -140,17 +160,22 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
                     TextFormField(
                       controller: _searchQueryController,
                       decoration: InputDecoration(
-                        hintText: "enterSearchTerm",
+                        hintText:
+                            "diagnosticFilterPage.diagnosticReportFilter_enterSearchTerm"
+                                .tr(context),
                         border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 20),
 
                     _buildCodeDropdown(
-                      title: "diagnosticReportFilter.status",
+                      title:
+                          "diagnosticFilterPage.diagnosticReportFilter_status"
+                              .tr(context),
                       value: _selectedStatusId,
                       codeTypeName: 'diagnostic_report_status',
-                      onChanged: (value) => setState(() => _selectedStatusId = value),
+                      onChanged:
+                          (value) => setState(() => _selectedStatusId = value),
                     ),
                   ],
                 ),
@@ -169,7 +194,8 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
                     });
                   },
                   child: Text(
-                    "clearFilters",
+                    "diagnosticFilterPage.diagnosticReportFilter_clearFilters"
+                        .tr(context),
                     style: TextStyle(
                       color: AppColors.red,
                       fontWeight: FontWeight.bold,
@@ -181,7 +207,9 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
                     TextButton(
                       onPressed: () => Navigator.pop(context),
                       child: Text(
-                        "cancel",
+                        "diagnosticFilterPage.diagnosticReportFilter_cancel".tr(
+                          context,
+                        ),
                         style: TextStyle(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
@@ -194,9 +222,10 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
                         Navigator.pop(
                           context,
                           DiagnosticReportFilterModel(
-                            searchQuery: _searchQueryController.text.isNotEmpty
-                                ? _searchQueryController.text
-                                : null,
+                            searchQuery:
+                                _searchQueryController.text.isNotEmpty
+                                    ? _searchQueryController.text
+                                    : null,
                             statusId: _selectedStatusId,
                           ),
                         );
@@ -208,7 +237,11 @@ class _DiagnosticReportFilterDialogState extends State<DiagnosticReportFilterDia
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Text("apply"),
+                      child: Text(
+                        "diagnosticFilterPage.diagnosticReportFilter_apply".tr(
+                          context,
+                        ),
+                      ),
                     ),
                   ],
                 ),
