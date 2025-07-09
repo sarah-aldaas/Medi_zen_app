@@ -203,8 +203,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return false;
       },
       onDismissed: (direction) {
-        cubit.deleteNotification(notificationId: notification.id, context: context);
-        _loadInitialNotifications();
+        cubit.deleteNotification(notificationId: notification.id, context: context,isRead: !_showUnreadOnly);
+
       },
       child:cubit.state is NotificationOperationLoading? Center(child: LoadingButton(),):Card(
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -354,11 +354,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case NotificationType.medicationRequestCreated:
       case NotificationType.medicationRequestUpdated:
       case NotificationType.medicationRequestCanceled:
-      case NotificationType.reminderMedication:
+      // case NotificationType.reminderMedication:
         return Icons.medication_outlined;
       case NotificationType.medicationCreated:
       case NotificationType.medicationUpdated:
       case NotificationType.medicationCanceled:
+      case NotificationType.reminderMedication:
         return Icons.medication_liquid_outlined;
       case NotificationType.diagnosticReportCreated:
       case NotificationType.diagnosticReportUpdated:
@@ -440,12 +441,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case NotificationType.medicationRequestCreated:
       case NotificationType.medicationRequestUpdated:
       case NotificationType.medicationRequestCanceled:
-      case NotificationType.reminderMedication:
+      // case NotificationType.reminderMedication:
         _navigateToMedicationRequestDetails(notification.data, context);
         break;
       case NotificationType.medicationCreated:
       case NotificationType.medicationUpdated:
       case NotificationType.medicationCanceled:
+      case NotificationType.reminderMedication:
         _navigateToMedicationDetails(notification.data, context);
         break;
       case NotificationType.diagnosticReportCreated:

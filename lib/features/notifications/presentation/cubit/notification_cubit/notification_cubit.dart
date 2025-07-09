@@ -25,9 +25,9 @@ class NotificationCubit extends Cubit<NotificationState> {
   bool _hasMore = true;
   List<NotificationModel> _allNotifications = [];
 
-  Future<void> getMyNotifications({bool isRead = false, bool loadMore = false, required BuildContext context, int perPage = 10}) async {
+  Future<void> getMyNotifications({bool isRead = false, bool loadMore = false, required BuildContext context, int perPage = 10,int currentPage=1}) async {
     if (!loadMore) {
-      _currentPage = 1;
+      _currentPage = currentPage;
       _hasMore = true;
       _allNotifications = [];
       emit(NotificationLoading());
@@ -144,7 +144,7 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
   }
 
-  Future<void> deleteNotification({required String notificationId, required BuildContext context}) async {
+  Future<void> deleteNotification({required String notificationId, required BuildContext context,required bool isRead}) async {
     emit(NotificationOperationLoading());
 
     final isConnected = await networkInfo.isConnected;
@@ -161,8 +161,8 @@ class NotificationCubit extends Cubit<NotificationState> {
       if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
+getMyNotifications(context: context,currentPage: 1,isRead: isRead);
       emit(FCMOperationSuccess(response: result.data));
-      getMyNotifications(context: context);
     } else if (result is ResponseError<PublicResponseModel>) {
       emit(NotificationError(error: result.message ?? 'Failed to delete notification'));
     }
