@@ -80,7 +80,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      // backgroundColor: colorScheme.background,
+
       body: BlocBuilder<ServiceRequestCubit, ServiceRequestState>(
         builder: (context, state) {
           if (state is ServiceRequestLoading && !state.isLoadMore) {

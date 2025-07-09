@@ -25,28 +25,30 @@ class SeriesModel {
       id: json['id']?.toString(),
       title: json['title']?.toString(),
       description: json['description']?.toString(),
-      images: json['images'] is List
-          ? List<String>.from(
-          json['images'].where((x) => x != null).map((x) => x.toString()))
-          : const [],
-      bodySite: json['body_site'] != null
-          ? CodeModel.fromJson(json['body_site'])
-          : null,
-      imagingStudy: json['imaging_study'] != null
-          ? ImagingStudyModel.fromJson(json['imaging_study'])
-          : null,
+      images:
+          json['images'] is List
+              ? List<String>.from(
+                json['images'].where((x) => x != null).map((x) => x.toString()),
+              )
+              : const [],
+      bodySite:
+          json['body_site'] != null
+              ? CodeModel.fromJson(json['body_site'])
+              : null,
+      imagingStudy:
+          json['imaging_study'] != null
+              ? ImagingStudyModel.fromJson(json['imaging_study'])
+              : null,
     );
   }
 
-  // Optional: Add validation method
   bool get isValid =>
       id != null &&
-          title != null &&
-          description != null &&
-          bodySite != null &&
-          imagingStudy != null;
+      title != null &&
+      description != null &&
+      bodySite != null &&
+      imagingStudy != null;
 
-  // Optional: Add copyWith method
   SeriesModel copyWith({
     String? id,
     String? title,
@@ -64,6 +66,4 @@ class SeriesModel {
       imagingStudy: imagingStudy ?? this.imagingStudy,
     );
   }
-
-
 }
