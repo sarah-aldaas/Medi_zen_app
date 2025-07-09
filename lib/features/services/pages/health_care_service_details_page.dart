@@ -7,6 +7,7 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
+import '../../../../base/widgets/flexible_image.dart';
 import '../data/model/health_care_services_model.dart';
 import 'cubits/service_cubit/service_cubit.dart';
 
@@ -27,7 +28,7 @@ class _HealthCareServiceDetailsPageState
     super.initState();
     context.read<ServiceCubit>().getSpecificServiceHealthCare(
       id: widget.serviceId,
-      context: context
+      context: context,
     );
   }
 
@@ -53,10 +54,10 @@ class _HealthCareServiceDetailsPageState
         title: Text(
           'healthCareServicesPage.serviceDetails'.tr(context),
           style:
-          theme.appBarTheme.titleTextStyle?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ) ??
+              theme.appBarTheme.titleTextStyle?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ) ??
               TextStyle(
                 color: primaryColor,
                 fontWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class _HealthCareServiceDetailsPageState
                     onPressed: () {
                       context.read<ServiceCubit>().getSpecificServiceHealthCare(
                         id: widget.serviceId,
-                        context: context
+                        context: context,
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -132,9 +133,9 @@ class _HealthCareServiceDetailsPageState
   }
 
   Widget _buildServiceDetails(
-      BuildContext context,
-      HealthCareServiceModel service,
-      ) {
+    BuildContext context,
+    HealthCareServiceModel service,
+  ) {
     final ThemeData theme = Theme.of(context);
     final Color primaryColor = theme.primaryColor;
     final Color textColor = theme.textTheme.bodyLarge?.color ?? Colors.black87;
@@ -147,23 +148,45 @@ class _HealthCareServiceDetailsPageState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (service.photo != null)
+          if (service.photo != null && service.photo!.isNotEmpty)
             Center(
               child: Card(
                 elevation: 5,
-
                 color: cardColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: Image.network(
-                  service.photo!,
+                child: FlexibleImage(
+                  imageUrl: service.photo!,
                   height: 250,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder:
-                      (context, error, stackTrace) => Icon(
+                  placeholder: Center(
+                    child: CircularProgressIndicator(color: primaryColor),
+                  ),
+                  errorWidget: Icon(
+                    Icons.medical_services_outlined,
+                    size: 120,
+                    color: theme.iconTheme.color?.withOpacity(0.5),
+                  ),
+                ),
+              ),
+            )
+          else
+            Center(
+              child: Card(
+                elevation: 5,
+                color: cardColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Container(
+                  height: 250,
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: Icon(
                     Icons.medical_services_outlined,
                     size: 120,
                     color: theme.iconTheme.color?.withOpacity(0.5),
@@ -211,7 +234,7 @@ class _HealthCareServiceDetailsPageState
               Icon(Icons.local_offer_outlined, color: primaryColor, size: 26),
               const Gap(10),
               Text(
-                '${'healthCareServicesPage.price'.tr(context)}: \$${service.price ?? 'healthCareServicesPage.free'.tr(context)}', // Translated
+                '${'healthCareServicesPage.price'.tr(context)}: \$${service.price ?? 'healthCareServicesPage.free'.tr(context)}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -319,25 +342,51 @@ class _HealthCareServiceDetailsPageState
                   "healthCareServicesPage.noClinicDescription".tr(context),
               style: TextStyle(fontSize: 17, color: textColor, height: 1.5),
             ),
-            if (service.clinic!.photo != null)
+            if (service.clinic!.photo != null &&
+                service.clinic!.photo!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Center(
                   child: Card(
                     elevation: 3,
-
                     color: cardColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: Image.network(
-                      service.clinic!.photo!,
+                    child: FlexibleImage(
+                      imageUrl: service.clinic!.photo!,
                       height: 150,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder:
-                          (context, error, stackTrace) => Icon(
+                      placeholder: Center(
+                        child: CircularProgressIndicator(color: primaryColor),
+                      ),
+                      errorWidget: Icon(
+                        Icons.local_hospital_outlined,
+                        size: 80,
+                        color: theme.iconTheme.color?.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Center(
+                  child: Card(
+                    elevation: 3,
+                    color: cardColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Container(
+                      height: 150,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Icon(
                         Icons.local_hospital_outlined,
                         size: 80,
                         color: theme.iconTheme.color?.withOpacity(0.5),
@@ -362,10 +411,9 @@ class _HealthCareServiceDetailsPageState
             ),
             const Gap(10),
             ...service.eligibilities!.map(
-                  (e) => Card(
+              (e) => Card(
                 elevation: 2,
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
-
                 color: cardColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

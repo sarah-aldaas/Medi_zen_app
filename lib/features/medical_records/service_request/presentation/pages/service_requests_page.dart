@@ -80,7 +80,6 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      // backgroundColor: colorScheme.background,
       body: BlocBuilder<ServiceRequestCubit, ServiceRequestState>(
         builder: (context, state) {
           if (state is ServiceRequestLoading && !state.isLoadMore) {
@@ -178,9 +177,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                 } else {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: LoadingButton()
-                    ),
+                    child: Center(child: LoadingButton()),
                   );
                 }
               },
@@ -232,7 +229,10 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                     child: Text(
                       request.healthCareService?.name ??
                           'serviceRequestsPage.unknownService'.tr(context),
-                      style:TextStyle(fontWeight: FontWeight.bold,fontSize: 20 ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
@@ -261,7 +261,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                   request.orderDetails!,
                   icon: Icons.description_outlined,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 10),
               ],
 
               if (request.reason != null) ...[
@@ -271,7 +271,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                   request.reason!,
                   icon: Icons.info_outline,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 10),
               ],
 
               Wrap(
@@ -279,27 +279,31 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                 runSpacing: 8.0,
                 children: [
                   if (request.serviceRequestCategory != null)
-                    _buildInfoRowSome(context,
+                    _buildInfoRowSome(
+                      context,
                       'serviceRequestsPage.category'.tr(context),
                       request.serviceRequestCategory!.display,
                       icon: Icons.category,
                     ),
-
+                  const SizedBox(height: 10),
                   if (request.serviceRequestPriority != null)
-                    _buildInfoRowSome(context,
+                    _buildInfoRowSome(
+                      context,
                       'serviceRequestsPage.priority'.tr(context),
                       request.serviceRequestPriority!.display,
                       icon: Icons.paste,
                     ),
+                  const SizedBox(height: 10),
                   if (request.serviceRequestBodySite != null)
-                    _buildInfoRowSome(context,
+                    _buildInfoRowSome(
+                      context,
                       'serviceRequestsPage.bodySite'.tr(context),
                       request.serviceRequestBodySite!.display,
                       icon: Icons.emoji_people,
                     ),
                 ],
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 20),
               if (request.encounter?.appointment?.doctor != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
@@ -343,7 +347,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (icon != null) ...[
-          Icon(icon, size: 22, color: AppColors.primaryColor),
+          Icon(icon, size: 22, color: AppColors.primaryColor.withOpacity(0.7)),
           const SizedBox(width: 12),
         ],
         Expanded(
@@ -353,7 +357,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
               Text(
                 '$title:',
                 style: textTheme.labelLarge?.copyWith(
-                  color: AppColors.primaryColor,
+                  color: AppColors.cyan1,
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                 ),
@@ -372,6 +376,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
       ],
     );
   }
+
   Widget _buildInfoRowSome(
     BuildContext context,
     String title,
@@ -385,7 +390,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (icon != null) ...[
-          Icon(icon, size: 22, color: AppColors.primaryColor),
+          Icon(icon, size: 22, color: AppColors.primaryColor.withOpacity(0.7)),
           const SizedBox(width: 12),
         ],
         Expanded(
@@ -396,7 +401,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
               Text(
                 '$title:',
                 style: textTheme.labelLarge?.copyWith(
-                  color: AppColors.primaryColor,
+                  color: AppColors.cyan1,
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                 ),
@@ -467,7 +472,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     BuildContext context,
     String title,
     String value,
-    // Color baseColor,
+
   ) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
@@ -478,19 +483,17 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
         size: 18,
       ),
       label: Text('$title: $value'),
-      // backgroundColor: baseColor.withOpacity(0.15),
+
       labelStyle: textTheme.bodySmall?.copyWith(
-        // color:
-        //     baseColor.computeLuminance() > 0.5
-        //         ? AppColors.blackColor
-        //         : baseColor.withOpacity(0.9),
+
         fontWeight: FontWeight.w600,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       side: BorderSide(
-          // color: baseColor.withOpacity(0.6),
-          width: 1.2),
+
+        width: 1.2,
+      ),
     );
   }
 

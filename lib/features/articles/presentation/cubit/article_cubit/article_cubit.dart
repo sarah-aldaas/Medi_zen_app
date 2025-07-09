@@ -173,12 +173,15 @@ class ArticleCubit extends Cubit<ArticleState> {
     }
   }
 
+
   Future<void> addArticleFavorite({required String articleId, required BuildContext context}) async {
-    emit(FavoriteOperationLoading());
+    if (state is! ArticleDetailsSuccess) return;
+
+    final currentState = state as ArticleDetailsSuccess;
+    emit(FavoriteOperationLoading(previousState: currentState));
 
     final isConnected = await networkInfo.isConnected;
     if (!isConnected) {
-      context.pushNamed('noInternet');
       emit(ArticleError(error: 'No internet connection'));
       ShowToast.showToastError(message: 'No internet connection. Please check your network.');
       return;
@@ -189,7 +192,10 @@ class ArticleCubit extends Cubit<ArticleState> {
       if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
-      emit(FavoriteOperationSuccess(isFavorite: true));
+      emit(FavoriteOperationSuccess(
+        isFavorite: true,
+        previousState: currentState,
+      ));
       ShowToast.showToastSuccess(message: result.data.msg ?? 'Added to favorites');
     } else if (result is ResponseError<PublicResponseModel>) {
       emit(ArticleError(error: result.message ?? 'Failed to add favorite'));
@@ -197,11 +203,13 @@ class ArticleCubit extends Cubit<ArticleState> {
   }
 
   Future<void> removeArticleFavorite({required String articleId, required BuildContext context}) async {
-    emit(FavoriteOperationLoading());
+    if (state is! ArticleDetailsSuccess) return;
+
+    final currentState = state as ArticleDetailsSuccess;
+    emit(FavoriteOperationLoading(previousState: currentState));
 
     final isConnected = await networkInfo.isConnected;
     if (!isConnected) {
-      context.pushNamed('noInternet');
       emit(ArticleError(error: 'No internet connection'));
       ShowToast.showToastError(message: 'No internet connection. Please check your network.');
       return;
@@ -212,37 +220,62 @@ class ArticleCubit extends Cubit<ArticleState> {
       if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
-      emit(FavoriteOperationSuccess(isFavorite: false));
+      emit(FavoriteOperationSuccess(
+        isFavorite: false,
+        previousState: currentState,
+      ));
       ShowToast.showToastSuccess(message: result.data.msg ?? 'Removed from favorites');
     } else if (result is ResponseError<PublicResponseModel>) {
       emit(ArticleError(error: result.message ?? 'Failed to remove favorite'));
     }
   }
 
-  //   Future<void> generateAiArticle({required String conditionId, required String apiModel, required String language, required BuildContext context}) async {
-  //     emit(ArticleGenerateLoading());
+  // Future<void> addArticleFavorite({required String articleId, required BuildContext context}) async {
+  //   emit(FavoriteOperationLoading());
   //
-  //     final isConnected = await networkInfo.isConnected;
-  //     if (!isConnected) {
-  //       context.pushNamed('noInternet');
-  //       emit(ArticleError(error: 'No internet connection'));
-  //       ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-  //       return;
+  //   final isConnected = await networkInfo.isConnected;
+  //   if (!isConnected) {
+  //     context.pushNamed('noInternet');
+  //     emit(ArticleError(error: 'No internet connection'));
+  //     ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+  //     return;
+  //   }
+  //
+  //   final result = await remoteDataSource.addArticleFavorite(articleId: articleId);
+  //   if (result is Success<PublicResponseModel>) {
+  //     if (result.data.msg == "Unauthorized. Please login first.") {
+  //       context.pushReplacementNamed(AppRouter.welcomeScreen.name);
   //     }
-  //
-  //     final result = await remoteDataSource.generateAiArticle(conditionId: conditionId, apiModel: apiModel, language: language);
-  //
-  //     if (result is Success<PublicResponseModel>) {
-  //       if (result.data.msg == "Unauthorized. Please login first.") {
-  //         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-  //       }
-  //       emit(ArticleGenerateSuccess(response: result.data));
-  //       ShowToast.showToastSuccess(message: result.data.msg ?? 'Article generated successfully');
-  //     } else if (result is ResponseError<PublicResponseModel>) {
-  //       emit(ArticleError(error: result.message ?? 'Failed to generate article'));
-  //     }
+  //     emit(FavoriteOperationSuccess(isFavorite: true));
+  //     ShowToast.showToastSuccess(message: result.data.msg ?? 'Added to favorites');
+  //   } else if (result is ResponseError<PublicResponseModel>) {
+  //     emit(ArticleError(error: result.message ?? 'Failed to add favorite'));
   //   }
   // }
+  //
+  // Future<void> removeArticleFavorite({required String articleId, required BuildContext context}) async {
+  //   emit(FavoriteOperationLoading());
+  //
+  //   final isConnected = await networkInfo.isConnected;
+  //   if (!isConnected) {
+  //     context.pushNamed('noInternet');
+  //     emit(ArticleError(error: 'No internet connection'));
+  //     ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+  //     return;
+  //   }
+  //
+  //   final result = await remoteDataSource.removeArticleFavorite(articleId: articleId);
+  //   if (result is Success<PublicResponseModel>) {
+  //     if (result.data.msg == "Unauthorized. Please login first.") {
+  //       context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+  //     }
+  //     emit(FavoriteOperationSuccess(isFavorite: false));
+  //     ShowToast.showToastSuccess(message: result.data.msg ?? 'Removed from favorites');
+  //   } else if (result is ResponseError<PublicResponseModel>) {
+  //     emit(ArticleError(error: result.message ?? 'Failed to remove favorite'));
+  //   }
+  // }
+
 
   DateTime? lastGenerationTime;
   int generationCount = 0;
@@ -341,35 +374,4 @@ class ArticleCubit extends Cubit<ArticleState> {
     );
   }
 
-  // void _showGeneratedArticleDialog(BuildContext context, PublicResponseModel response) {
-  //   showDialog(
-  //     context: context,
-  //     builder:
-  //         (context) => AlertDialog(
-  //           title: Text(response.title ?? "Generated Article"),
-  //           content: SingleChildScrollView(child: Text(response.content ?? "No content generated")),
-  //           actions: [TextButton(child: Text("close".tr(context)), onPressed: () => Navigator.pop(context))],
-  //         ),
-  //   );
-  // }
-
-
-
-  // String _getCooldownMessage() {
-  //   if (lastGenerationTime == null) return "";
-  //
-  //   final now = DateTime.now();
-  //   final difference = now.difference(lastGenerationTime!);
-  //
-  //   if (generationCount <= 3) {
-  //     final remaining = 30 - difference.inMinutes;
-  //     return "cooldown_message_minutes".tr(context);
-  //   } else if (generationCount <= 5) {
-  //     final remaining = 2 - difference.inHours;
-  //     return "cooldown_message_hours".tr(args: [remaining.toString()]);
-  //   } else {
-  //     final remaining = 4 - difference.inHours;
-  //     return "cooldown_message_hours".tr(args: [remaining.toString()]);
-  //   }
-  // }
 }

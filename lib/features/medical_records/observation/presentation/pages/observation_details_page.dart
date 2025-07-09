@@ -1,10 +1,18 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/observation/data/models/observation_model.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../../base/services/di/injection_container_common.dart';
+import '../../../../../base/services/network/network_client.dart';
 import '../../../../../base/theme/app_color.dart';
 import '../cubit/observation_cubit/observation_cubit.dart';
 
@@ -23,6 +31,10 @@ class ObservationDetailsPage extends StatefulWidget {
 }
 
 class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
+  final Map<String, double> _downloadProgress = {};
+  final Map<String, bool> _downloadComplete = {};
+  final Dio _dio = serviceLocator<NetworkClient>().dio;
+
   @override
   void initState() {
     super.initState();
@@ -61,7 +73,7 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColors.primaryColor],
+              colors: [AppColors.primaryColor, AppColors.primaryColor],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -200,6 +212,41 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
           ),
           const SizedBox(height: 24),
 
+          // if (observation.pdf != null)
+          //   _buildSectionCard(
+          //     context,
+          //     title: 'observationDetailsPage.testReportSectionTitle'.tr(
+          //       context,
+          //     ),
+          //     icon: Icons.picture_as_pdf_outlined,
+          //     children: [
+          //       Center(
+          //         child: ElevatedButton.icon(
+          //           onPressed: () => _viewPdfReport(context, observation.pdf!),
+          //           icon: const Icon(Icons.open_in_new, color: Colors.white),
+          //           label: Text(
+          //             'observationDetailsPage.viewFullReportPDFButton'.tr(
+          //               context,
+          //             ),
+          //             style: Theme.of(
+          //               context,
+          //             ).textTheme.labelLarge?.copyWith(color: Colors.white),
+          //           ),
+          //           style: ElevatedButton.styleFrom(
+          //             backgroundColor: AppColors.secondaryColor,
+          //             shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(12),
+          //             ),
+          //             padding: const EdgeInsets.symmetric(
+          //               horizontal: 24,
+          //               vertical: 12,
+          //             ),
+          //             elevation: 4,
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
           if (observation.pdf != null)
             _buildSectionCard(
               context,
@@ -209,28 +256,54 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
               icon: Icons.picture_as_pdf_outlined,
               children: [
                 Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () => _viewPdfReport(context, observation.pdf!),
-                    icon: const Icon(Icons.open_in_new, color: Colors.white),
-                    label: Text(
-                      'observationDetailsPage.viewFullReportPDFButton'.tr(
-                        context,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (_downloadProgress.containsKey('observation'))
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: CircularProgressIndicator(
+                            value: _downloadProgress['observation'],
+                            strokeWidth: 3,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ElevatedButton.icon(
+                        onPressed:
+                            _downloadProgress.containsKey('observation')
+                                ? null
+                                : () =>
+                                    _viewPdfReport(context, observation.pdf!),
+                        icon: Icon(
+                          _downloadComplete['observation'] == true
+                              ? Icons.check_circle
+                              : Icons.picture_as_pdf,
+                          color: Colors.white,
+                        ),
+                        label: Text(
+                          'observationDetailsPage.viewFullReportPDFButton'.tr(
+                            context,
+                          ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelLarge?.copyWith(color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.secondaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          elevation: 4,
+                        ),
                       ),
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelLarge?.copyWith(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.secondaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      elevation: 4,
-                    ),
+                    ],
                   ),
                 ),
               ],
@@ -544,52 +617,52 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
     );
   }
 
-  void _viewPdfReport(BuildContext context, String pdfUrl) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(
-              'observationDetailsPage.pdfReportDialogTitle'.tr(context),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.blackColor,
-              ),
-            ),
-            content: Text(
-              'observationDetailsPage.pdfReportDialogContent'.tr(context),
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'observationDetailsPage.pdfReportDialogCancel'.tr(context),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'observationDetailsPage.pdfReportDialogView'.tr(context),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-    );
-  }
+  // void  _viewPdfReport(BuildContext context, String pdfUrl) {
+  //   showDialog(
+  //     context: context,
+  //     builder:
+  //         (context) => AlertDialog(
+  //           title: Text(
+  //             'observationDetailsPage.pdfReportDialogTitle'.tr(context),
+  //             style: TextStyle(
+  //               fontSize: 20,
+  //               fontWeight: FontWeight.bold,
+  //               color: AppColors.blackColor,
+  //             ),
+  //           ),
+  //           content: Text(
+  //             'observationDetailsPage.pdfReportDialogContent'.tr(context),
+  //             style: Theme.of(context).textTheme.bodyLarge,
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context),
+  //               child: Text(
+  //                 'observationDetailsPage.pdfReportDialogCancel'.tr(context),
+  //                 style: TextStyle(
+  //                   fontSize: 18,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: AppColors.secondaryColor,
+  //                 ),
+  //               ),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text(
+  //                 'observationDetailsPage.pdfReportDialogView'.tr(context),
+  //                 style: TextStyle(
+  //                   fontSize: 18,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: AppColors.secondaryColor,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //   );
+  // }
 
   Widget _buildStatusChip(
     BuildContext context,
@@ -656,5 +729,82 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
 
   Color _getImagingStatusColor(String? statusCode) {
     return _getStatusColor(statusCode);
+  }
+
+  Future<void> _viewPdfReport(BuildContext context, String pdfUrl) async {
+    try {
+      if (!Uri.parse(pdfUrl).isAbsolute) {
+        throw Exception('Invalid PDF URL');
+      }
+
+      setState(() {
+        _downloadProgress['observation'] = 0.0;
+        _downloadComplete['observation'] = false;
+      });
+
+      if (Platform.isAndroid) {
+        final status = await Permission.storage.request();
+        if (!status.isGranted) {
+          throw Exception(
+            'Storage permission denied. Please allow storage access.',
+          );
+        }
+      }
+
+      Directory directory;
+      if (Platform.isAndroid) {
+        directory =
+            await getExternalStorageDirectory() ??
+            await getTemporaryDirectory();
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+
+      final filePath = '${directory.path}/observation_report.pdf';
+      final file = File(filePath);
+
+      if (await file.exists()) {
+        await file.delete();
+      }
+
+      await _dio.download(
+        pdfUrl,
+        filePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            setState(() {
+              _downloadProgress['observation'] = received / total;
+            });
+          }
+        },
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: true,
+          validateStatus: (status) => status! < 500,
+        ),
+      );
+
+      if (!await file.exists() || (await file.length()) == 0) {
+        throw Exception('Downloaded file is invalid or empty');
+      }
+
+      setState(() {
+        _downloadComplete['observation'] = true;
+      });
+
+      final result = await OpenFilex.open(filePath, type: 'application/pdf');
+      if (result.type != ResultType.done) {
+        throw Exception('Failed to open PDF: ${result.message}');
+      }
+    } catch (e, stackTrace) {
+      print('Error downloading/opening PDF: $e\n$stackTrace');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+    } finally {
+      setState(() {
+        _downloadProgress.remove('observation');
+      });
+    }
   }
 }

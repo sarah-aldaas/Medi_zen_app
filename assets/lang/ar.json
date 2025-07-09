@@ -1164,6 +1164,7 @@
     "imagingStatusEnteredInError": "خطأ في الإدخال",
     "orderDetailsLabel": "تفاصيل الطلب",
     "reasonLabel": "السبب",
+    "cancellationReasonLabel": "سبب الإلغاء",
     "notesLabel": "ملاحظات",
     "priorityLabel": "الأولوية",
     "categoryLabel": "الفئة",
@@ -1722,4 +1723,59 @@
   "diagnosticReportFilter_clearFilters": "مسح عوامل التصفية",
   "diagnosticReportFilter_cancel": "إلغاء",
   "diagnosticReportFilter_apply": "تطبيق"
-}}
+},
+"organizationDetailsPage": {
+  "organization": "معلومات المركز",
+  "title":"تفاصيل المركز",
+  "fetchingDetails": "جاري طلب تفاصيل المركز...",
+  "alias": "الإسم المستعار :",
+  "type": "النوع",
+  "address": "العنوان",
+  "phone": "هاتف",
+"workingHours": "ساعات العمل",
+  "status":"الحالة"
+
+},"invoicesPage":
+{
+  "invoice": "الفواتير",
+  "title": "فواتيري",
+  "paidAppointmentsTab": "المواعيد المدفوعة",
+  "unpaidAppointmentsTab": "المواعيد غير المدفوعة",
+  "noPaidAppointments": "لم يتم العثور على مواعيد مدفوعة.",
+  "noUnpaidAppointments": "لم يتم العثور على مواعيد غير مدفوعة.",
+  "notPaidMessage": "تفاصيل الفاتورة متاحة فقط للمواعيد المدفوعة."
+},
+  "invoiceDetailsPage":
+{
+
+  "title": "تفاصيل الفاتورة",
+  "invoiceHeader": "الفاتورة",
+  "invoiceNum": "رقم الفاتورة",
+  "issuedDate": "تاريخ الإصدار",
+  "paidStatus": "مدفوعة",
+  "billedBy": "الفواتير بواسطة",
+  "descriptionHeader": "الوصف",
+  "amountHeader": "المبلغ",
+  "medicalConsultation": "استشارة طبية",
+  "adjustmentFactor": "عامل التعديل",
+  "totalHeader": "الإجمالي",
+  "notesHeader": "ملاحظات",
+  "cancellationReasonHeader": "سبب الإلغاء",
+  "statusPaid": "مدفوعة",
+  "statusCancelled": "ملغاة",
+  "statusPending": "قيد الانتظار",
+  "statusIssued": "صادرة",
+  "statusUnknown": "غير معروف"
+},
+  "invoiceFilterDialog":
+{
+  "title": "تصفية الفواتير",
+  "startDate": "تاريخ البدء",
+  "endDate": "تاريخ الانتهاء",
+  "notSelected": "لم يتم الاختيار",
+  "endDateRequiredError": "تاريخ الانتهاء مطلوب إذا تم تحديد تاريخ البدء.",
+  "clearDates": "مسح التواريخ",
+  "cancelButton": "إلغاء",
+  "applyButton": "تطبيق"
+}
+}

@@ -1122,6 +1122,7 @@
     "statusLabel": "Status",
     "statusMeaningLabel": "Status Meaning",
     "studyDateLabel": "Study Date",
+    "cancellationReasonLabel": "Cancellation reason",
     "cancellationReasonPrefix": "Cancellation Reason:",
     "statusCompleted": "Completed",
     "statusCancelled": "Cancelled",
@@ -1693,7 +1694,62 @@
     "diagnosticReportFilter_clearFilters": "Clear Filters",
     "diagnosticReportFilter_cancel": "Cancel",
     "diagnosticReportFilter_apply": "Apply"
-  }
+  },
+  "organizationDetailsPage": {
+    "organization": "Organization",
+    "title":"Organization Details",
+    "fetchingDetails": "Fetching organization details...",
+    "alias": "Alias :",
+    "type": "Type",
+    "address": "Address",
+    "phone": "Phone",
+    "workingHours": "Working Hours",
+    "status":"Status"
+
+  },"invoicesPage":
+{
+  "invoice": "Invoice",
+  "title": "My Invoices",
+  "paidAppointmentsTab": "Paid Appointments",
+  "unpaidAppointmentsTab": "Unpaid Appointments",
+  "noPaidAppointments": "No paid appointments found.",
+  "noUnpaidAppointments": "No unpaid appointments found.",
+  "notPaidMessage": "Invoice details are only available for paid appointments."
+},
+
+"invoiceDetailsPage":{
+  "title": "Invoice Details",
+  "invoiceHeader": "Invoice",
+  "invoiceNum": "Invoice No.",
+  "issuedDate": "Issued Date",
+  "paidStatus": "Paid",
+  "billedBy": "Billed By",
+  "descriptionHeader": "Description",
+  "amountHeader": "Amount",
+  "medicalConsultation": "Medical Consultation",
+  "adjustmentFactor": "Adjustment Factor",
+  "totalHeader": "Total",
+  "notesHeader": "Notes",
+  "cancellationReasonHeader": "Cancellation Reason",
+  "statusPaid": "Paid",
+  "statusCancelled": "Cancelled",
+  "statusPending": "Pending",
+  "statusIssued": "Issued",
+  "statusUnknown": "Unknown"
+},
+  "invoiceFilterDialog": {
+
+  "title": "Filter Invoices",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "notSelected": "Not Selected",
+  "endDateRequiredError": "End Date is required if Start Date is selected.",
+  "clearDates": "Clear Dates",
+  "cancelButton": "Cancel",
+  "applyButton": "Apply"
 }
+  }
+
+
 
 

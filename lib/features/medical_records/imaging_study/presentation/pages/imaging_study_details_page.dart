@@ -6,7 +6,9 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/imaging_study/presentation/cubit/imaging_study_cubit/imaging_study_cubit.dart';
 import 'package:medizen_app/features/medical_records/observation/data/models/laboratory_model.dart';
 
+import '../../../../../base/constant/app_images.dart';
 import '../../../../../base/theme/app_color.dart';
+import '../../../../../base/widgets/flexible_image.dart';
 import '../../../series/data/models/series_model.dart';
 import '../../../series/presentation/pages/full_screen_image_viewer.dart';
 import '../../../series/presentation/pages/series_details_page.dart';
@@ -200,29 +202,15 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
                 'imagingStudyDetailsPage.studyDateLabel'.tr(context),
                 DateFormat('MMM d, y - hh:mm a').format(study.started!),
               ),
-            if (study.cancelledReason != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.redAccent.withOpacity(0.5),
-                    ),
-                  ),
-                  child: Text(
-                    'imagingStudyDetailsPage.cancellationReasonPrefix'.tr(
-                      context,
-                    ),
-                    style: TextStyle(
-                      color: Colors.red[800],
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+            if (study.cancelledReason != null &&
+                study.cancelledReason!.isNotEmpty)
+              _buildDetailRow(
+                context,
+                'imagingStudyDetailsPage.cancellationReasonLabel'.tr(context),
+                study.cancelledReason!,
+                valueColor: Colors.red[800],
               ),
+            // MODIFICATION END HERE
           ],
         ),
       ),
@@ -511,7 +499,7 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
               _buildDetailRow(
                 context,
                 'imagingStudyDetailsPage.imagesCountLabel'.tr(context),
-                'imagingStudyDetailsPage.imagesCountFormat'.tr(context),
+                '${series.images.length}',
               ),
               if (series.images.isNotEmpty)
                 Padding(
@@ -520,49 +508,28 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
                     height: 120,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: series.images.length,
+                      itemCount: series.images!.length,
                       itemBuilder: (context, index) {
-                        final imageUrl = series.images[index];
+                        final imageUrl = series.images![index];
                         return Padding(
                           padding: const EdgeInsets.only(right: 12.0),
                           child: GestureDetector(
                             onTap:
                                 () => _viewImageFullScreen(context, imageUrl),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                imageUrl,
-                                width: 120,
-                                fit: BoxFit.cover,
-                                loadingBuilder: (
-                                  BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress,
-                                ) {
-                                  if (loadingProgress == null) return child;
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                    ),
-                                  );
-                                },
-                                errorBuilder:
-                                    (context, error, stackTrace) => Container(
-                                      width: 120,
-                                      color: Colors.grey[200],
-                                      child: Icon(
-                                        Icons.broken_image,
-                                        color: Colors.grey[400],
-                                        size: 40,
-                                      ),
-                                    ),
+                            child: FlexibleImage(
+                              imageUrl: imageUrl,
+                              assetPath: AppAssetImages.article6,
+                              height: 100,
+                              width: 100,
+                              placeholder: Center(
+                                child: CircularProgressIndicator(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              errorWidget: const Icon(
+                                Icons.broken_image,
+                                size: 50,
+                                color: Colors.grey,
                               ),
                             ),
                           ),
@@ -584,8 +551,9 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
     String? value, {
     Color? valueColor,
   }) {
-    if (value == null || value.isEmpty || value.trim().isEmpty)
+    if (value == null || value.isEmpty || value.trim().isEmpty) {
       return const SizedBox.shrink();
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),

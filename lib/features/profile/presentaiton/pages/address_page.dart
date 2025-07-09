@@ -41,7 +41,10 @@ class _AddressListPageState extends State<AddressListPage> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.9) {
-      context.read<AddressCubit>().fetchAddresses(loadMore: true,context: context);
+      context.read<AddressCubit>().fetchAddresses(
+        loadMore: true,
+        context: context,
+      );
     }
   }
 
@@ -75,7 +78,7 @@ class _AddressListPageState extends State<AddressListPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
           onPressed: () => Navigator.of(context).pop(),
           color: AppColors.primaryColor,
         ),
@@ -97,9 +100,13 @@ class _AddressListPageState extends State<AddressListPage> {
             icon: Icon(Icons.add, color: AppColors.primaryColor),
             onPressed:
                 () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
-            ).then((_) => context.read<AddressCubit>().fetchAddresses(context: context)),
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
+                ).then(
+                  (_) => context.read<AddressCubit>().fetchAddresses(
+                    context: context,
+                  ),
+                ),
             iconSize: 30,
           ),
         ],
@@ -117,7 +124,10 @@ class _AddressListPageState extends State<AddressListPage> {
           } else if (state is AddressError) {
             return ErrorState(
               message: state.error,
-              onRetry: () => context.read<AddressCubit>().fetchAddresses(context: context),
+              onRetry:
+                  () => context.read<AddressCubit>().fetchAddresses(
+                    context: context,
+                  ),
             );
           } else if (state is AddressSuccess) {
             final addresses =
@@ -131,19 +141,23 @@ class _AddressListPageState extends State<AddressListPage> {
                 actionText: 'addressList.addAddress'.tr(context),
                 onAction:
                     () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const AddEditAddressPage(),
-                  ),
-                ).then(
-                      (_) => context.read<AddressCubit>().fetchAddresses(context: context),
-                ),
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AddEditAddressPage(),
+                      ),
+                    ).then(
+                      (_) => context.read<AddressCubit>().fetchAddresses(
+                        context: context,
+                      ),
+                    ),
               );
             }
 
             return RefreshIndicator(
               onRefresh:
-                  () async => context.read<AddressCubit>().fetchAddresses(context: context,),
+                  () async => context.read<AddressCubit>().fetchAddresses(
+                    context: context,
+                  ),
               child: ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.all(16),
@@ -163,15 +177,16 @@ class _AddressListPageState extends State<AddressListPage> {
                       address: address,
                       onEdit:
                           () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) => AddEditAddressPage(address: address),
-                        ),
-                      ).then(
-                            (_) =>
-                            context.read<AddressCubit>().fetchAddresses(context: context),
-                      ),
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => AddEditAddressPage(address: address),
+                            ),
+                          ).then(
+                            (_) => context.read<AddressCubit>().fetchAddresses(
+                              context: context,
+                            ),
+                          ),
                       onDelete: () => _showDeleteDialog(context, address.id!),
                     ),
                   );
@@ -190,58 +205,61 @@ class _AddressListPageState extends State<AddressListPage> {
       context: context,
       builder:
           (context) => AlertDialog(
-        title: Text(
-          'addressList.deleteAddress'.tr(context),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: AppColors.primaryColor,
-          ),
-        ),
-        content: Text(
-          'addressList.confirmDeleteAddress'.tr(context),
-          style: const TextStyle(fontSize: 18),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'addressList.cancel'.tr(context),
+            title: Text(
+              'addressList.deleteAddress'.tr(context),
               style: const TextStyle(
-                fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: AppColors.gallery,
+                fontSize: 20,
+                color: AppColors.primaryColor,
               ),
             ),
+            content: Text(
+              'addressList.confirmDeleteAddress'.tr(context),
+              style: const TextStyle(fontSize: 18),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'addressList.cancel'.tr(context),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.gallery,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<AddressCubit>().deleteAddress(
+                    id: addressId,
+                    context: context,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor.withOpacity(0.7),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 15,
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  elevation: 3,
+                ),
+                child: Text(
+                  'addressList.delete'.tr(context),
+                  style: TextStyle(color: AppColors.whiteColor),
+                ),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              context.read<AddressCubit>().deleteAddress(id: addressId,context: context,);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor.withOpacity(0.7),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-                vertical: 15,
-              ),
-              textStyle: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-              elevation: 3,
-            ),
-            child: Text(
-              'addressList.delete'.tr(context),
-              style: TextStyle(color: AppColors.whiteColor),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -336,16 +354,16 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                code.codeTypeModel?.name ==
-                                    'address_use',
-                              )
+                                        code.codeTypeModel?.name ==
+                                        'address_use',
+                                  )
                                   .fold<Map<String, CodeModel>>(
-                                {},
+                                    {},
                                     (map, code) => map..[code.id] = code,
-                              )
+                                  )
                                   .values
                                   .toList() ??
-                                  [];
+                              [];
                         }
                         if (state is CodeTypesLoading) {
                           return Center(child: LoadingButton());
@@ -406,16 +424,16 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                               state.codes
                                   ?.where(
                                     (code) =>
-                                code.codeTypeModel?.name ==
-                                    'address_type',
-                              )
+                                        code.codeTypeModel?.name ==
+                                        'address_type',
+                                  )
                                   .fold<Map<String, CodeModel>>(
-                                {},
+                                    {},
                                     (map, code) => map..[code.id] = code,
-                              )
+                                  )
                                   .values
                                   .toList() ??
-                                  [];
+                              [];
                         }
                         if (state is CodeTypesLoading) {
                           return Center(child: LoadingButton());

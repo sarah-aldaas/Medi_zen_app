@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
@@ -13,6 +12,9 @@ import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
 import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
+
+import '../../../base/constant/app_images.dart';
+import '../../../base/widgets/flexible_image.dart';
 
 class ClinicsPage extends StatefulWidget {
   const ClinicsPage({Key? key}) : super(key: key);
@@ -27,7 +29,9 @@ class _ClinicsPageState extends State<ClinicsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => serviceLocator<ClinicCubit>()..fetchClinics(context: context),
+      create:
+          (context) =>
+              serviceLocator<ClinicCubit>()..fetchClinics(context: context),
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -45,7 +49,6 @@ class _ClinicsPageState extends State<ClinicsPage> {
           title: Text(
             "clinicsPage.appBarTitle".tr(context),
             style: TextStyle(
-
               color: Theme.of(context).appBarTheme.titleTextStyle?.color,
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -68,7 +71,6 @@ class _ClinicsPageState extends State<ClinicsPage> {
           ],
         ),
         body: _ClinicsGridView(isVisible: isVisible),
-
       ),
     );
   }
@@ -98,12 +100,15 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent &&
+            _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       _isLoadingMore = true;
-      context.read<ClinicCubit>().fetchClinics(loadMore: true,context: context).then((_) {
-        _isLoadingMore = false;
-      });
+      context
+          .read<ClinicCubit>()
+          .fetchClinics(loadMore: true, context: context)
+          .then((_) {
+            _isLoadingMore = false;
+          });
     }
   }
 
@@ -165,8 +170,8 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
               _searchController.text.isEmpty
                   ? state.message
                   : 'No results found for "${_searchController.text}"'.tr(
-                context,
-              ),
+                    context,
+                  ),
               style: TextStyle(
                 fontSize: 16,
                 color: Theme.of(context).textTheme.bodyMedium?.color,
@@ -180,7 +185,10 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
         onNotification: (scrollNotification) {
           if (scrollNotification is ScrollEndNotification &&
               _scrollController.position.extentAfter == 0) {
-            context.read<ClinicCubit>().fetchClinics(loadMore: true,context: context);
+            context.read<ClinicCubit>().fetchClinics(
+              loadMore: true,
+              context: context,
+            );
           }
           return false;
         },
@@ -215,7 +223,10 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
               ),
             ),
             ElevatedButton(
-              onPressed: () => context.read<ClinicCubit>().fetchClinics(context: context),
+              onPressed:
+                  () => context.read<ClinicCubit>().fetchClinics(
+                    context: context,
+                  ),
               child: const Text('Retry'),
             ),
           ],
@@ -233,9 +244,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
       child: InkWell(
         onTap:
             () => context.pushNamed(
-          AppRouter.clinicDetails.name,
-          extra: {"clinicId": clinic.id},
-        ),
+              AppRouter.clinicDetails.name,
+              extra: {"clinicId": clinic.id},
+            ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -245,14 +256,21 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      image: const DecorationImage(
-                        image: AssetImage(
-                          AppAssetImages.clinic1,
-                        ),
-                        fit: BoxFit.cover,
+                  child: FlexibleImage(
+                    imageUrl:
+                        clinic.photo!,
+                     assetPath: AppAssetImages.clinic1,
+                    fit: BoxFit.cover,
+                    placeholder: Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    errorWidget: Center(
+                      child: Icon(
+                        Icons.broken_image,
+                        color: Theme.of(context).iconTheme.color,
+                        size: 40,
                       ),
                     ),
                   ),
@@ -266,10 +284,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color:
-                  Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.color,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -309,36 +324,27 @@ class SearchFieldClinics extends StatelessWidget {
             decoration: InputDecoration(
               filled: true,
               fillColor:
-              theme.brightness == Brightness.dark
-                  ? AppColors.powderLight.withOpacity(
-                0.1,
-              )
-                  : Colors.grey.shade50,
+                  theme.brightness == Brightness.dark
+                      ? AppColors.powderLight.withOpacity(0.1)
+                      : Colors.grey.shade50,
               hintText: 'searchField.title'.tr(context),
               hintStyle: TextStyle(
-
                 color:
-                theme.brightness == Brightness.dark
-                    ? Colors.white.withOpacity(_opacityLevel)
-                    : Colors.grey.withOpacity(_opacityLevel),
+                    theme.brightness == Brightness.dark
+                        ? Colors.white.withOpacity(_opacityLevel)
+                        : Colors.grey.withOpacity(_opacityLevel),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
-                borderSide: const BorderSide(
-                  color: Colors.transparent,
-                ),
+                borderSide: const BorderSide(color: Colors.transparent),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
-                borderSide: const BorderSide(
-                  color: Colors.transparent,
-                ),
+                borderSide: const BorderSide(color: Colors.transparent),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                ),
+                borderSide: BorderSide(color: Theme.of(context).primaryColor),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 12.0,
@@ -348,9 +354,9 @@ class SearchFieldClinics extends StatelessWidget {
                 Icons.search,
 
                 color:
-                theme.brightness == Brightness.dark
-                    ? Colors.white.withOpacity(_opacityLevel)
-                    : Colors.grey.withOpacity(_opacityLevel),
+                    theme.brightness == Brightness.dark
+                        ? Colors.white.withOpacity(_opacityLevel)
+                        : Colors.grey.withOpacity(_opacityLevel),
               ),
             ),
           );

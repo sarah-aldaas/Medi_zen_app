@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meta/meta.dart';
 
 import '../../../../../../base/data/models/pagination_model.dart';
 import '../../../../../../base/go_router/go_router.dart';
@@ -22,7 +21,10 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
   List<ServiceRequestModel> _allRequests = [];
   Map<String, dynamic> _currentFilters = {};
 
-  ServiceRequestCubit({required this.remoteDataSource,required this.networkInfo}) : super(ServiceRequestInitial());
+  ServiceRequestCubit({
+    required this.remoteDataSource,
+    required this.networkInfo,
+  }) : super(ServiceRequestInitial());
 
   Future<void> getServiceRequests({
     required BuildContext context,
@@ -42,8 +44,6 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
       _currentFilters = filters;
     }
 
-
-    // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
@@ -61,33 +61,47 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
       if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
-      if(result.data.status!){
+      if (result.data.status!) {
+        _allRequests.addAll(result.data.paginatedData!.items);
+        _hasMore =
+            result.data.paginatedData!.items.isNotEmpty &&
+            result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _currentPage++;
 
-      _allRequests.addAll(result.data.paginatedData!.items);
-      _hasMore = result.data.paginatedData!.items.isNotEmpty &&
-          result.data.meta!.currentPage < result.data.meta!.lastPage;
-      _currentPage++;
-
-      emit(ServiceRequestLoaded(
-        paginatedResponse: PaginatedResponse<ServiceRequestModel>(
-          paginatedData: PaginatedData<ServiceRequestModel>(items: _allRequests),
-          meta: result.data.meta,
-          links: result.data.links,
-        ),
-        hasMore: _hasMore,
-      ));}else{
-        emit(ServiceRequestError(result.data.msg?? 'Failed to load service requests'));
-
+        emit(
+          ServiceRequestLoaded(
+            paginatedResponse: PaginatedResponse<ServiceRequestModel>(
+              paginatedData: PaginatedData<ServiceRequestModel>(
+                items: _allRequests,
+              ),
+              meta: result.data.meta,
+              links: result.data.links,
+            ),
+            hasMore: _hasMore,
+          ),
+        );
+      } else {
+        emit(
+          ServiceRequestError(
+            result.data.msg ?? 'Failed to load service requests',
+          ),
+        );
       }
-    } else if (result is ResponseError<PaginatedResponse<ServiceRequestModel>>) {
-      emit(ServiceRequestError(result.message ?? 'Failed to load service requests'));
+    } else if (result
+        is ResponseError<PaginatedResponse<ServiceRequestModel>>) {
+      emit(
+        ServiceRequestError(
+          result.message ?? 'Failed to load service requests',
+        ),
+      );
     }
   }
-Future<void> getServiceRequestsOfAppointment({
+
+  Future<void> getServiceRequestsOfAppointment({
     required BuildContext context,
     Map<String, dynamic>? filters,
     bool loadMore = false,
-  required String appointmentId
+    required String appointmentId,
   }) async {
     if (!loadMore) {
       _currentPage = 1;
@@ -102,8 +116,6 @@ Future<void> getServiceRequestsOfAppointment({
       _currentFilters = filters;
     }
 
-
-    // Check internet connectivity
     final isConnected = await networkInfo.isConnected;
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
@@ -122,36 +134,52 @@ Future<void> getServiceRequestsOfAppointment({
       if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
-      if(result.data.status!){
+      if (result.data.status!) {
+        _allRequests.addAll(result.data.paginatedData!.items);
+        _hasMore =
+            result.data.paginatedData!.items.isNotEmpty &&
+            result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _currentPage++;
 
-      _allRequests.addAll(result.data.paginatedData!.items);
-      _hasMore = result.data.paginatedData!.items.isNotEmpty &&
-          result.data.meta!.currentPage < result.data.meta!.lastPage;
-      _currentPage++;
-
-      emit(ServiceRequestLoaded(
-        paginatedResponse: PaginatedResponse<ServiceRequestModel>(
-          paginatedData: PaginatedData<ServiceRequestModel>(items: _allRequests),
-          meta: result.data.meta,
-          links: result.data.links,
-        ),
-        hasMore: _hasMore,
-      ));}else{
-        emit(ServiceRequestError(result.data.msg?? 'Failed to load service requests'));
-
+        emit(
+          ServiceRequestLoaded(
+            paginatedResponse: PaginatedResponse<ServiceRequestModel>(
+              paginatedData: PaginatedData<ServiceRequestModel>(
+                items: _allRequests,
+              ),
+              meta: result.data.meta,
+              links: result.data.links,
+            ),
+            hasMore: _hasMore,
+          ),
+        );
+      } else {
+        emit(
+          ServiceRequestError(
+            result.data.msg ?? 'Failed to load service requests',
+          ),
+        );
       }
-    } else if (result is ResponseError<PaginatedResponse<ServiceRequestModel>>) {
-      emit(ServiceRequestError(result.message ?? 'Failed to load service requests'));
+    } else if (result
+        is ResponseError<PaginatedResponse<ServiceRequestModel>>) {
+      emit(
+        ServiceRequestError(
+          result.message ?? 'Failed to load service requests',
+        ),
+      );
     }
   }
 
-  Future<void> getServiceRequestDetails(String serviceId,BuildContext context) async {
+  Future<void> getServiceRequestDetails(
+    String serviceId,
+    BuildContext context,
+  ) async {
     emit(ServiceRequestLoading(isDetailsLoading: true));
-    // Check internet connectivity
+
     final isConnected = await networkInfo.isConnected;
     if (!isConnected) {
       context.pushNamed(AppRouter.noInternet.name);
-      emit(ServiceRequestError( 'No internet connection'));
+      emit(ServiceRequestError('No internet connection'));
       return;
     }
     final result = await remoteDataSource.getDetailsServiceRequest(
@@ -159,13 +187,16 @@ Future<void> getServiceRequestsOfAppointment({
     );
 
     if (result is Success<ServiceRequestModel>) {
-      emit(ServiceRequestLoaded(
-        serviceRequestDetails: result.data,
-        hasMore: _hasMore,
-        paginatedResponse: state is ServiceRequestLoaded
-            ? (state as ServiceRequestLoaded).paginatedResponse
-            : null,
-      ));
+      emit(
+        ServiceRequestLoaded(
+          serviceRequestDetails: result.data,
+          hasMore: _hasMore,
+          paginatedResponse:
+              state is ServiceRequestLoaded
+                  ? (state as ServiceRequestLoaded).paginatedResponse
+                  : null,
+        ),
+      );
     } else {
       emit(ServiceRequestError('Failed to load service request details'));
     }
@@ -173,10 +204,12 @@ Future<void> getServiceRequestsOfAppointment({
 
   void clearDetails() {
     if (state is ServiceRequestLoaded) {
-      emit(ServiceRequestLoaded(
-        paginatedResponse: (state as ServiceRequestLoaded).paginatedResponse,
-        hasMore: _hasMore,
-      ));
+      emit(
+        ServiceRequestLoaded(
+          paginatedResponse: (state as ServiceRequestLoaded).paginatedResponse,
+          hasMore: _hasMore,
+        ),
+      );
     }
   }
 }

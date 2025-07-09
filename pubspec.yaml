@@ -61,7 +61,6 @@ dependencies:
   firebase_core:
   firebase_auth:
   flutter_local_notifications: ^19.3.0
-  cloud_firestore:
   firebase_messaging:
   http:
   firebase_storage:
@@ -74,6 +73,9 @@ dependencies:
   pin_code_fields:
   path_provider: ^2.1.5
   photo_view:
+  cached_network_image:
+  sqflite_common_ffi:
+  sqlite3_flutter_libs:
 
 dev_dependencies:
   flutter_test:
