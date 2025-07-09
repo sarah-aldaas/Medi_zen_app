@@ -6,6 +6,7 @@ import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/services/network/resource.dart';
 import 'package:medizen_app/base/services/storage/storage_service.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
+import '../../../../../FCM_manager.dart';
 import '../../../../../base/constant/storage_key.dart';
 import '../../../../../base/data/models/respons_model.dart';
 import '../../../../../base/error/exception.dart';
@@ -44,6 +45,7 @@ class LoginCubit extends Cubit<LoginState> {
 
       if (result is Success<AuthResponseModel>) {
         if (result.data.status) {
+          // After successful login
           final loginData = result.data.loginData;
           if (loginData != null) {
             token = loginData.token;
@@ -55,6 +57,8 @@ class LoginCubit extends Cubit<LoginState> {
               StorageKey.patientModel,
               loginData.patient,
             );
+            await serviceLocator<FCMManager>().setupFCMToken(context);
+
             emit(LoginSuccess(message: result.data.msg));
           } else {
             emit(LoginError(error: _parseErrorMessage(result.data.msg)));

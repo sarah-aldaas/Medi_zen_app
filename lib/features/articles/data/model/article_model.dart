@@ -6,7 +6,7 @@ class ArticleModel {
   final String? title;
   final String? content;
   final String? source;
-  final bool? isFavorite;
+   bool? isFavorite;
   final String? image;
   final DateTime? createdAt;
   final DateTime? updatedAt;

@@ -8,6 +8,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/theme.dart';
 import 'package:medizen_app/features/authentication/presentation/logout/cubit/logout_cubit.dart';
+import 'package:medizen_app/features/invoice/presentation/pages/my_appointment_finished_invoice_page.dart';
 import 'package:medizen_app/main.dart';
 
 import '../../../../base/blocs/localization_bloc/localization_bloc.dart';
@@ -18,6 +19,7 @@ import '../../../../base/services/storage/storage_service.dart';
 import '../../../../base/widgets/flexible_image.dart';
 import '../../../authentication/data/models/patient_model.dart';
 import '../../../complains/presentation/pages/complain_list_page.dart';
+import '../../../organization/presentation/pages/organization_details_page.dart';
 import '../widgets/avatar_image_widget.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -135,6 +137,29 @@ class _ProfilePageState extends State<ProfilePage> {
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ComplainListPage()));
+                  },
+                ),
+
+                ListTile(
+                  leading: Icon(
+                    Icons.maps_home_work_sharp,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text('Organization'),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => OrganizationDetailsPage()));
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.monetization_on,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text('Invoice'),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppointmentFinishedInvoicePage()));
                   },
                 ),
                 ExpansionTile(

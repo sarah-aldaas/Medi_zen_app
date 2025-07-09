@@ -61,7 +61,6 @@ dependencies:
   firebase_core:
   firebase_auth:
   flutter_local_notifications: ^19.3.0
-  cloud_firestore:
   firebase_messaging:
   http:
   firebase_storage:
