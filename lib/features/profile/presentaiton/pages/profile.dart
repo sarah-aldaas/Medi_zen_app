@@ -17,6 +17,7 @@ import '../../../../base/constant/storage_key.dart';
 import '../../../../base/services/di/injection_container_common.dart';
 import '../../../../base/services/storage/storage_service.dart';
 import '../../../../base/theme/app_color.dart';
+import '../../../../base/theme/some classes/theme_cubit.dart';
 import '../../../../base/widgets/flexible_image.dart';
 import '../../../authentication/data/models/patient_model.dart';
 import '../../../complains/presentation/pages/complain_list_page.dart';
@@ -193,8 +194,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                 ),
+
                 ThemeSwitcher.withTheme(
-                  builder: (_, switcher, theme) {
+                  builder: (context, switcher, theme) {
                     return ListTile(
                       leading: Icon(
                         theme.brightness == Brightness.light
@@ -208,16 +210,46 @@ class _ProfilePageState extends State<ProfilePage> {
                             ? 'profilePage.darkMode'.tr(context)
                             : 'profilePage.lightMode'.tr(context),
                       ),
-                      onTap:
-                          () => switcher.changeTheme(
-                            theme:
-                                theme.brightness == Brightness.light
-                                    ? darkTheme
-                                    : lightTheme,
-                          ),
+                      onTap: () {
+                        final newTheme = theme.brightness == Brightness.light
+                            ? darkTheme
+                            : lightTheme;
+
+                        // Change the theme immediately
+                        switcher.changeTheme(theme: newTheme);
+
+                        // Persist the theme preference
+                        final isDark = newTheme.brightness == Brightness.dark;
+                        context.read<ThemeCubit>().toggleTheme(isDark);
+                      },
                     );
                   },
                 ),
+                // ThemeSwitcher.withTheme(
+                //   builder: (_, switcher, theme) {
+                //     return ListTile(
+                //       leading: Icon(
+                //         theme.brightness == Brightness.light
+                //             ? Icons.brightness_3
+                //             : Icons.brightness_5,
+                //         size: 25,
+                //         color: Theme.of(context).primaryColor,
+                //       ),
+                //       title: Text(
+                //         theme.brightness == Brightness.light
+                //             ? 'profilePage.darkMode'.tr(context)
+                //             : 'profilePage.lightMode'.tr(context),
+                //       ),
+                //       onTap:
+                //           () => switcher.changeTheme(
+                //             theme:
+                //                 theme.brightness == Brightness.light
+                //                     ? darkTheme
+                //                     : lightTheme,
+                //           ),
+                //     );
+                //   },
+                // ),
                 // ListTile(
                 //   leading: Icon(
                 //     Icons.info_outline,
