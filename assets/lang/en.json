@@ -87,6 +87,35 @@
     "viewAppointmentButton": "View Appointment",
     "cancelButton": "Cancel"
   },
+
+  "allergyFilter": {
+    "filterAllergies": "Filter Allergies",
+    "search": "Search",
+    "discoveredDuringEncounter": "Discovered During Encounter",
+    "any": "Any",
+    "yes": "Yes",
+    "no": "No",
+    "allergyType": "Allergy Type",
+    "noAllergyTypesAvailable": "No allergy types available",
+    "allTypes": "All Types",
+    "unknown": "Unknown",
+    "category": "Category",
+    "noCategoriesAvailable": "No categories available",
+    "allCategories": "All Categories",
+    "clinicalStatus": "Clinical Status",
+    "noClinicalStatusesAvailable": "No clinical statuses available",
+    "allStatuses": "All Statuses",
+    "criticality": "Criticality",
+    "noCriticalitiesAvailable": "No criticalities available",
+    "allCriticalities": "All Criticalities",
+    "sortOrder": "Sort Order",
+    "default": "Default",
+    "oldestFirst": "Oldest First",
+    "newestFirst": "Newest First",
+    "clearFilters": "Clear Filters",
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
   "appointmentDetails": {
     "title": "Appointment details",
     "submitComplaint": "Submit complaint",
@@ -764,7 +793,7 @@
     "encounter": "Encounter",
     "planned": "Planned",
     "inProgress": "In Progress",
-    "completed": "Completed",
+    "final": "Final",
     "unknownStatus": "Unknown Status",
     "cancelled": "Cancelled",
     "filterEncounters": "Filter Encounters",
@@ -797,9 +826,9 @@
     "appointmentId": "Appointment",
     "GoAppointmentDetails": "Go to Appointment Details",
     "reason": "Reason",
-    " scheduled": "Scheduled",
+    "scheduled": "Scheduled",
     "doctor": "Doctor",
-    " servicesProvided": "Services Provided",
+    "servicesProvided": "Services Provided",
     " unknown": "Unknown"
   },
   "reactionsPage": {
@@ -997,10 +1026,14 @@
     "category": "Category",
     "priority": "Priority",
     "bodySite": "Body site",
+    "statusActive": "Active",
     "statusCompleted": "Completed",
     "statusInProgress": "In Progress",
-    "statusCancelled": "Cancelled",
-    "statusOnHold": "On Hold"
+    "statusOnHold": "On Hold",
+    "statusRevoked": "Revoked",
+    "statusEnteredInError": "Entered in Error",
+    "statusRejected": "Rejected",
+    "statusCancelled": "Cancelled"
   },
   "serviceRequestDetailsPage": {
     "appBarTitle": "Service Request Details",
@@ -1468,7 +1501,7 @@
     "summary": "Summary",
     "notesLabel": "Notes",
     "additionalNotes": "Additional Notes",
-    "yearsAge": "({age} years)",
+    "yearsAge": "(years)",
     "articles": "Articles",
     "loading_articles": "Loading articles...",
     "fetching_articles": "Fetching articles....",
@@ -1635,6 +1668,7 @@
     "diagnosticReport_reportStatus": "Report Status"
   },
   "diagnosticDetailsPage": {
+    "diagnosticReport_stage": "Stage",
     "diagnosticReportDetails_pageTitle": "Diagnostic Report Details",
     "diagnosticReportDetails_failedToLoadReport": "Failed to load report",
     "diagnosticReportDetails_retry": "Retry",
@@ -1686,7 +1720,7 @@
     "diagnosticReportListAppointment_reportStatus": "Report status"
   },
   "diagnosticFilterPage": {
-    "diagnosticReportFilter_title": "Filter Diagnostic Reports",
+    "diagnosticReportFilter_title": "Diagnostic Reports",
     "diagnosticReportFilter_search": "Search",
     "diagnosticReportFilter_enterSearchTerm": "Enter search term",
     "diagnosticReportFilter_all": "All",

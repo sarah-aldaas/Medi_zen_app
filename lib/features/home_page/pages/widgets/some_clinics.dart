@@ -1,16 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../../../base/constant/app_images.dart';
 import '../../../../base/go_router/go_router.dart';
 import '../../../../base/services/di/injection_container_common.dart';
-import '../../../../base/widgets/loading_page.dart';
 import '../../../clinics/data/models/clinic_model.dart';
 import '../../../clinics/pages/clinics_page.dart';
 import '../../../clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
@@ -172,7 +170,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.asset(AppAssetImages.clinic2),
+              child:FlexibleImage(imageUrl:clinic.photo ,errorWidget: Center(child: SizedBox(
+                  height: 60,
+                  child: Icon(Icons.local_hospital)),),height: 60,) //Image.asset(AppAssetImages.clinic2),
             ),
             const SizedBox(height: 4.0),
             Text(

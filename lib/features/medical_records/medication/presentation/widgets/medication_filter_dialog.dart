@@ -235,30 +235,30 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                     const SizedBox(height: 20),
 
                     // As Needed
-                    Text("filterMedications.asNeeded".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    CheckboxListTile(
-                      title: Text("filterMedications.asNeededLabel".tr(context)),
-                      value: _asNeeded ?? false,
-                      activeColor: Theme.of(context).primaryColor,
-                      onChanged: (value) => setState(() => _asNeeded = value),
-                    ),
-                    const SizedBox(height: 20),
+                    // Text("filterMedications.asNeeded".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    // const SizedBox(height: 8),
+                    // CheckboxListTile(
+                    //   title: Text("filterMedications.asNeededLabel".tr(context)),
+                    //   value: _asNeeded ?? false,
+                    //   activeColor: Theme.of(context).primaryColor,
+                    //   onChanged: (value) => setState(() => _asNeeded = value),
+                    // ),
+                    // const SizedBox(height: 20),
 
                     // Medication Request ID
-                    Text("filterMedications.medicationRequestId".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _medicationRequestIdController,
-                      decoration: InputDecoration(
-                        hintText: "filterMedications.enterMedicationRequestId".tr(context),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        prefixIcon: Icon(Icons.medication, color: Theme.of(context).primaryColor),
-                      ),
-                      keyboardType: TextInputType.text,
-                      onChanged: (value) => _medicationRequestId = value,
-                    ),
-                    const SizedBox(height: 20),
+                    // Text("filterMedications.medicationRequestId".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    // const SizedBox(height: 8),
+                    // TextField(
+                    //   controller: _medicationRequestIdController,
+                    //   decoration: InputDecoration(
+                    //     hintText: "filterMedications.enterMedicationRequestId".tr(context),
+                    //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    //     prefixIcon: Icon(Icons.medication, color: Theme.of(context).primaryColor),
+                    //   ),
+                    //   keyboardType: TextInputType.text,
+                    //   onChanged: (value) => _medicationRequestId = value,
+                    // ),
+                    // const SizedBox(height: 20),
 
                     // Date Range
                     Text("filterMedications.dateRange".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),

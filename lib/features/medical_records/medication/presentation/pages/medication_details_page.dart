@@ -170,14 +170,13 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
                 ),
               ),
               const SizedBox(height: 6),
               Text(
                 medication.definition ??
                     'medicationDetails.noDescriptionAvailable'.tr(context),
-                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ],
           ),
@@ -231,15 +230,15 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
           child: Text(
             "$label:",
             style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppColors.label,
+              fontWeight: FontWeight.bold,
+              color: Colors.cyan,
             ),
           ),
         ),
         Expanded(
           child: Text(
             value,
-            style: const TextStyle(fontSize: 15, color: AppColors.blackColor),
+            style: const TextStyle(fontSize: 15),
           ),
         ),
       ],

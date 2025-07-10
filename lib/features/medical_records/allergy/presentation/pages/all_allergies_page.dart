@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import '../../../../../base/theme/app_color.dart';
 import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/allergy_filter_model.dart';
 import '../../data/models/allergy_model.dart';
 import '../cubit/allergy_cubit/allergy_cubit.dart';
-import '../widgets/allergy_list_item.dart';
 import 'allergy_details_page.dart';
 
 class AllAllergiesPage extends StatefulWidget {
@@ -93,59 +93,37 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
         final hasMore = state is AllergiesSuccess ? state.hasMore : false;
 
         if (allergies == null || allergies.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.sentiment_dissatisfied_outlined,
-                  size: 64,
-                  color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'allergiesPage.noAllergiesFound'.tr(context),
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: theme.textTheme.bodyMedium?.color,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                TextButton.icon(
-                  onPressed: _loadInitialAllergies,
-                  icon: Icon(Icons.refresh, color: theme.primaryColor),
-                  label: Text(
-                    'allergiesPage.refreshList'.tr(context),
-                    style: TextStyle(fontSize: 16, color: theme.primaryColor),
-                  ),
-                ),
-              ],
-            ),
-          );
+          return NotFoundDataPage();
         }
 
-        return ListView.builder(
-          controller: _scrollController,
-          padding: const EdgeInsets.all(10),
-          itemCount: allergies.length + (hasMore ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index < allergies.length) {
-              final AllergyModel allergy = allergies[index];
-              return _buildAllergyItem(
-                allergy,Theme.of(context)
-              );
-              //   AllergyListItem(
-              //   allergy: allergy,
-              //   onTap: () => _navigateToAllergyDetails(allergy.id!),
-              // );
-            } else {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(child: LoadingPage()),
-              );
-            }
+        return RefreshIndicator(
+          onRefresh: () async {
+            _loadInitialAllergies();
           },
+          color: Theme.of(context).primaryColor,
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: _scrollController,
+            padding: const EdgeInsets.all(10),
+            itemCount: allergies.length + (hasMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index < allergies.length) {
+                final AllergyModel allergy = allergies[index];
+                return _buildAllergyItem(
+                  allergy,Theme.of(context)
+                );
+                //   AllergyListItem(
+                //   allergy: allergy,
+                //   onTap: () => _navigateToAllergyDetails(allergy.id!),
+                // );
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(child: LoadingPage()),
+                );
+              }
+            },
+          ),
         );
       },
     );
@@ -206,6 +184,7 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
                   icon: Icons.calendar_today,
                   label: 'allergyPage.last_occurrence_label'.tr(context),
                   value: allergy.lastOccurrence!,
+                  isDate: true,
                   theme: theme,
                 ),
               const SizedBox(height: 10),
@@ -229,6 +208,7 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
     required IconData icon,
     required String label,
     required String value,
+     bool isDate=false,
     required ThemeData theme,
   }) {
     return Padding(
@@ -242,13 +222,13 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
             label,
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurface.withOpacity(0.8),
+              color: Colors.cyan,
             ),
           ),
           const SizedBox(width: 4),
           Expanded(
             child: Text(
-              value,
+             isDate? "${DateFormat('yyyy-MM-dd').format(DateTime.parse(value))}":value,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withOpacity(0.9),
               ),

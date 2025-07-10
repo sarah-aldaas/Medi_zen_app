@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_model.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_request_details_page.dart';
@@ -12,22 +14,16 @@ import '../../data/data_source/service_request_remote_data_source.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
 class ServiceRequestsOfAppointmentPage extends StatefulWidget {
-  final String appointmentId;
   final ServiceRequestFilter filter;
+  final String appointmentId;
 
-  const ServiceRequestsOfAppointmentPage({
-    super.key,
-    required this.filter,
-    required this.appointmentId,
-  });
+  const ServiceRequestsOfAppointmentPage({super.key, required this.filter, required this.appointmentId});
 
   @override
-  State<ServiceRequestsOfAppointmentPage> createState() =>
-      _ServiceRequestsOfAppointmentPageState();
+  State<ServiceRequestsOfAppointmentPage> createState() => _ServiceRequestsOfAppointmentPageState();
 }
 
-class _ServiceRequestsOfAppointmentPageState
-    extends State<ServiceRequestsOfAppointmentPage> {
+class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppointmentPage> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
 
@@ -46,11 +42,7 @@ class _ServiceRequestsOfAppointmentPageState
 
   void _loadInitialRequests() {
     setState(() => _isLoadingMore = false);
-    context.read<ServiceRequestCubit>().getServiceRequestsOfAppointment(
-      appointmentId: widget.appointmentId,
-      filters: widget.filter.toJson(),
-      context: context,
-    );
+    context.read<ServiceRequestCubit>().getServiceRequestsOfAppointment(appointmentId: widget.appointmentId, filters: widget.filter.toJson(), context: context);
   }
 
   @override
@@ -59,23 +51,16 @@ class _ServiceRequestsOfAppointmentPageState
 
     if (widget.filter != oldWidget.filter) {
       _loadInitialRequests();
-      _scrollController.jumpTo(0.0);
+      // _scrollController.jumpTo(0.0);
     }
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        !_isLoadingMore) {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<ServiceRequestCubit>()
-          .getServiceRequestsOfAppointment(
-            appointmentId: widget.appointmentId,
-            context: context,
-            filters: widget.filter.toJson(),
-            loadMore: true,
-          )
+          .getServiceRequestsOfAppointment(appointmentId: widget.appointmentId, context: context, filters: widget.filter.toJson(), loadMore: true)
           .then((_) {
             setState(() => _isLoadingMore = false);
           });
@@ -92,55 +77,7 @@ class _ServiceRequestsOfAppointmentPageState
           }
 
           if (state is ServiceRequestError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 60,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'serviceRequestsOfAppointmentPage.errorMessage'.tr(
-                        context,
-                      ),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      onPressed: _loadInitialRequests,
-                      icon: const Icon(Icons.refresh),
-                      label: Text(
-                        'serviceRequestsOfAppointmentPage.retryButton'.tr(
-                          context,
-                        ),
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return NotFoundDataPage();
           }
 
           if (state is ServiceRequestLoaded) {
@@ -148,36 +85,25 @@ class _ServiceRequestsOfAppointmentPageState
             final hasMore = state.hasMore;
 
             if (requests.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.assignment, size: 64, color: Colors.grey),
-                    const SizedBox(height: 16),
-                    Text(
-                      'serviceRequestsOfAppointmentPage.noRequestsFound'.tr(
-                        context,
-                      ),
-                      style: const TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              );
+              return NotFoundDataPage();
             }
 
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: requests.length + (hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index < requests.length) {
-                  return _buildRequestItem(context, requests[index]);
-                } else {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: LoadingPage()),
-                  );
-                }
+            return RefreshIndicator(
+              onRefresh: () async {
+                _loadInitialRequests();
               },
+              color: Theme.of(context).primaryColor,
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: requests.length + (hasMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < requests.length) {
+                    return _buildRequestItem(context, requests[index]);
+                  } else {
+                    return Padding(padding: const EdgeInsets.all(16.0), child: Center(child: LoadingButton()));
+                  }
+                },
+              ),
             );
           }
 
@@ -188,8 +114,11 @@ class _ServiceRequestsOfAppointmentPageState
   }
 
   Widget _buildRequestItem(BuildContext context, ServiceRequestModel request) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -198,179 +127,85 @@ class _ServiceRequestsOfAppointmentPageState
               builder:
                   (context) => BlocProvider(
                     create:
-                        (context) => ServiceRequestCubit(
-                          networkInfo: serviceLocator(),
-                          remoteDataSource:
-                              serviceLocator<ServiceRequestRemoteDataSource>(),
-                        )..getServiceRequestDetails(request.id!, context),
+                        (context) =>
+                            ServiceRequestCubit(networkInfo: serviceLocator(), remoteDataSource: serviceLocator<ServiceRequestRemoteDataSource>())
+                              ..getServiceRequestDetails(request.id!, context),
                     child: ServiceRequestDetailsPage(serviceId: request.id!),
                   ),
             ),
           );
         },
+        borderRadius: BorderRadius.circular(20.0),
+        splashFactory: InkRipple.splashFactory,
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(25.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    request.healthCareService?.name ??
-                        'serviceRequestsOfAppointmentPage.unknownService'.tr(
-                          context,
-                        ),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 4.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(
-                        request.serviceRequestStatus?.code,
-                      ),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
+                  Flexible(
                     child: Text(
-                      _getLocalizedStatusDisplay(
-                            context,
-                            request.serviceRequestStatus?.code,
-                          ) ??
-                          'serviceRequestsOfAppointmentPage.unknownStatus'.tr(
-                            context,
-                          ),
-                      style: const TextStyle(color: Colors.white),
+                      request.healthCareService?.name ?? 'serviceRequestsPage.unknownService'.tr(context),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
+                  const SizedBox(width: 18),
+                  _buildStatusChip(context, request.serviceRequestStatus?.code, request.serviceRequestStatus?.display),
                 ],
               ),
-              const SizedBox(height: 8.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 18.0),
+                child: Divider(height: 1, thickness: 1.8, color: colorScheme.onSurface.withOpacity(0.1)),
+              ),
 
-              if (request.orderDetails != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'serviceRequestsOfAppointmentPage.orderDetailsLabel'.tr(
-                        context,
-                      ),
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(request.orderDetails!),
-                    const SizedBox(height: 8.0),
-                  ],
-                ),
+              if (request.orderDetails != null) ...[
+                _buildInfoRow(context, 'serviceRequestsPage.orderDetails'.tr(context), request.orderDetails!, icon: Icons.description_outlined),
+                const SizedBox(height: 10),
+              ],
 
-              if (request.reason != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'serviceRequestsOfAppointmentPage.reasonLabel'.tr(
-                        context,
-                      ),
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(request.reason!),
-                    const SizedBox(height: 8.0),
-                  ],
-                ),
+              if (request.reason != null) ...[
+                _buildInfoRow(context, 'serviceRequestsPage.reason'.tr(context), request.reason!, icon: Icons.info_outline),
+                const SizedBox(height: 10),
+              ],
 
-              Row(
+              Wrap(
+                spacing: 12.0,
+                runSpacing: 8.0,
                 children: [
                   if (request.serviceRequestCategory != null)
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'serviceRequestsOfAppointmentPage.categoryLabel'.tr(
-                              context,
-                            ),
-                            style: Theme.of(context).textTheme.labelMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            request.serviceRequestCategory!.display,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildInfoRowSome(context, 'serviceRequestsPage.category'.tr(context), request.serviceRequestCategory!.display, icon: Icons.category),
+                  const SizedBox(height: 10),
                   if (request.serviceRequestPriority != null)
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'serviceRequestsOfAppointmentPage.priorityLabel'.tr(
-                              context,
-                            ),
-                            style: Theme.of(context).textTheme.labelMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            request.serviceRequestPriority!.display,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildInfoRowSome(context, 'serviceRequestsPage.priority'.tr(context), request.serviceRequestPriority!.display, icon: Icons.paste),
+                  const SizedBox(height: 10),
                   if (request.serviceRequestBodySite != null)
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'serviceRequestsOfAppointmentPage.bodySiteLabel'.tr(
-                              context,
-                            ),
-                            style: Theme.of(context).textTheme.labelMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            request.serviceRequestBodySite!.display,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildInfoRowSome(context, 'serviceRequestsPage.bodySite'.tr(context), request.serviceRequestBodySite!.display, icon: Icons.emoji_people),
                 ],
               ),
-              const SizedBox(height: 8.0),
-
+              const SizedBox(height: 20),
               if (request.encounter?.appointment?.doctor != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'serviceRequestsOfAppointmentPage.doctorLabel'.tr(
-                        context,
-                      ),
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '${request.encounter!.appointment!.doctor!.prefix} ${request.encounter!.appointment!.doctor!.given} ${request.encounter!.appointment!.doctor!.family}',
-                    ),
-                    const SizedBox(height: 8.0),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: _buildInfoRow(
+                    context,
+                    'serviceRequestsPage.doctor'.tr(context),
+                    '${request.encounter!.appointment!.doctor!.prefix} ${request.encounter!.appointment!.doctor!.given} ${request.encounter!.appointment!.doctor!.family}',
+                    icon: Icons.person_outline,
+                  ),
                 ),
 
               if (request.encounter?.actualStartDate != null)
-                Text(
-                  '${'serviceRequestsOfAppointmentPage.dateLabel'.tr(context)}: ${_formatDate(DateTime.parse(request.encounter!.actualStartDate!))}',
-                  style: Theme.of(context).textTheme.bodySmall,
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    'serviceRequestsPage.date'.tr(context) + ': ${_formatDate(DateTime.parse(request.encounter!.actualStartDate!))}',
+                    style: textTheme.bodyMedium?.copyWith(color: colorScheme.onBackground.withOpacity(0.7), fontStyle: FontStyle.italic),
+                  ),
                 ),
             ],
           ),
@@ -379,31 +214,95 @@ class _ServiceRequestsOfAppointmentPageState
     );
   }
 
-  String? _getLocalizedStatusDisplay(BuildContext context, String? statusCode) {
-    switch (statusCode) {
-      case 'completed':
-        return 'serviceRequestsOfAppointmentPage.statusCompleted'.tr(context);
-      case 'in-progress':
-        return 'serviceRequestsOfAppointmentPage.statusInProgress'.tr(context);
-      case 'cancelled':
-        return 'serviceRequestsOfAppointmentPage.statusCancelled'.tr(context);
-      case 'on-hold':
-        return 'serviceRequestsOfAppointmentPage.statusOnHold'.tr(context);
-      default:
-        return null;
-    }
+  Widget _buildInfoRow(BuildContext context, String title, String value, {IconData? icon}) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (icon != null) ...[Icon(icon, size: 22, color: AppColors.primaryColor.withOpacity(0.7)), const SizedBox(width: 12)],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('$title:', style: textTheme.labelLarge?.copyWith(color: AppColors.cyan, fontWeight: FontWeight.bold, fontSize: 15)),
+
+              const SizedBox(height: 6),
+              Text(value, style: textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface.withOpacity(0.95))),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRowSome(BuildContext context, String title, String value, {IconData? icon}) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (icon != null) ...[Icon(icon, size: 22, color: AppColors.primaryColor.withOpacity(0.7)), const SizedBox(width: 12)],
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 5,
+            children: [
+              Text('$title:', style: textTheme.labelLarge?.copyWith(color: AppColors.cyan1, fontWeight: FontWeight.bold, fontSize: 15)),
+
+              const SizedBox(height: 6),
+              Text(value, style: textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface.withOpacity(0.95))),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatusChip(
+      BuildContext context,
+      String? statusCode,
+      String? statusDisplay,
+      ) {
+    final statusColor = _getStatusColor(statusCode);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        color: statusColor.withOpacity(0.15), // More subtle background
+        borderRadius: BorderRadius.circular(16.0), // Less rounded corners
+        border: Border.all(
+          color: statusColor.withOpacity(0.3), // Subtle border
+          width: 1.0,
+        ),
+      ),
+      child: Text(
+        statusDisplay ??
+            'serviceRequestDetailsPage.unknownStatus'.tr(context),
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: statusColor.withAlpha(130), // Dynamic text color for contrast
+          fontWeight: FontWeight.bold, // Slightly less bold
+        ),
+      ),
+    );
   }
 
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
-      case 'completed':
-        return Colors.green;
-      case 'in-progress':
-        return Colors.blue;
-      case 'cancelled':
-        return Colors.red;
+      case 'active':
+        return Colors.blue; // Less intense than lightBlue.shade600
       case 'on-hold':
         return Colors.orange;
+      case 'revoked':
+        return Colors.red;
+      case 'entered-in-error':
+        return Colors.purple;
+      case 'rejected':
+        return Colors.red.shade800;
+      case 'completed':
+        return Colors.green;
       default:
         return Colors.grey;
     }

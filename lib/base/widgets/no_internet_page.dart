@@ -32,7 +32,7 @@ class _NoInternetPageState extends State<NoInternetPage> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _handleRefresh,
-        color: Colors.blue, // Customize refresh indicator color
+        color:Theme.of(context).primaryColor, // Customize refresh indicator color
         backgroundColor: Colors.white, // Customize background
         child: SingleChildScrollView(
           // Enable scrolling to allow pull-to-refresh even when content fits

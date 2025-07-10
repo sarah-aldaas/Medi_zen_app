@@ -235,7 +235,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingPage());
+                          return Center(child: LoadingButton());
                         }
                         if (allergyTypes.isEmpty) {
                           return Text(
@@ -318,7 +318,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingPage());
+                          return Center(child: LoadingButton());
                         }
                         if (categories.isEmpty) {
                           return Text(
@@ -401,7 +401,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingPage());
+                          return Center(child: LoadingButton());
                         }
                         if (clinicalStatuses.isEmpty) {
                           return Text(
@@ -486,7 +486,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                                   [];
                         }
                         if (state is CodesLoading) {
-                          return Center(child: LoadingPage());
+                          return Center(child: LoadingButton());
                         }
                         if (criticalities.isEmpty) {
                           return Text(

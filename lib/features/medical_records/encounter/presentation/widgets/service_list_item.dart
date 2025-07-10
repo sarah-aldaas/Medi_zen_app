@@ -11,32 +11,31 @@ class ServiceListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  service.name ?? 'Service',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+    return GestureDetector(
+      onTap: (){
+        context.pushNamed(
+          AppRouter.healthServiceDetails.name,
+          extra: {"serviceId": service.id},
+        );
+      },
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    service.name ?? 'Service',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-
-                IconButton(
-                  onPressed: () {
-                    context.pushNamed(
-                      AppRouter.healthServiceDetails.name,
-                      extra: {"serviceId": service.id},
-                    );
-                  },
-                  icon: Container(
+                  Container(
                     width: 25,
                     height: 25,
                     decoration: BoxDecoration(
@@ -58,19 +57,19 @@ class ServiceListItem extends StatelessWidget {
                       size: 15,
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            if (service.category?.display != null)
-              Text(
-                service.category!.display!,
-                style: TextStyle(color: Colors.grey[600]),
+                ],
               ),
-            const SizedBox(height: 4),
-            if (service.comment != null)
-              Text(service.comment!, style: TextStyle(color: Colors.grey[600])),
-          ],
+              const SizedBox(height: 4),
+              if (service.category?.display != null)
+                Text(
+                  service.category!.display!,
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+              const SizedBox(height: 4),
+              if (service.comment != null)
+                Text(service.comment!, style: TextStyle(color: Colors.grey[600])),
+            ],
+          ),
         ),
       ),
     );

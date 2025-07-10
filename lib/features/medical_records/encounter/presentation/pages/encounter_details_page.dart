@@ -26,10 +26,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<EncounterCubit>().getSpecificEncounter(
-      encounterId: widget.encounterId,
-      context: context,
-    );
+    context.read<EncounterCubit>().getSpecificEncounter(encounterId: widget.encounterId, context: context);
   }
 
   @override
@@ -40,23 +37,12 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: IconButton(icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryColor), onPressed: () => Navigator.pop(context)),
         title: Text(
           'encountersPge.encounterDetails'.tr(context),
           style:
-              theme.appBarTheme.titleTextStyle?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: AppColors.primaryColor,
-              ) ??
-              TextStyle(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
+              theme.appBarTheme.titleTextStyle?.copyWith(fontWeight: FontWeight.bold, fontSize: 22, color: AppColors.primaryColor) ??
+              TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold, fontSize: 22),
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -67,38 +53,22 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
       body: BlocConsumer<EncounterCubit, EncounterState>(
         listener: (context, state) {
           if (state is EncounterError) {
-            ShowToast.showToastError(
-              message: '${'encountersPge.Error'.tr(context)}: ${state.error}',
-            );
+            ShowToast.showToastError(message: '${'encountersPge.Error'.tr(context)}: ${state.error}');
           }
         },
         builder: (context, state) {
           if (state is EncounterLoading) {
             return const Center(child: LoadingPage());
           } else if (state is EncounterDetailsSuccess) {
-            return _buildEncounterDetails(
-              context,
-              state.encounterModel,
-              cardElevationColor,
-            );
+            return _buildEncounterDetails(context, state.encounterModel, cardElevationColor);
           } else {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 70,
-                    color: theme.colorScheme.error,
-                  ),
+                  Icon(Icons.error_outline, size: 70, color: theme.colorScheme.error),
                   const SizedBox(height: 16),
-                  Text(
-                    'encountersPge.failedToLoad'.tr(context),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: theme.textTheme.bodyMedium?.color,
-                    ),
-                  ),
+                  Text('encountersPge.failedToLoad'.tr(context), style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color)),
                 ],
               ),
             );
@@ -108,16 +78,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
     );
   }
 
-  Widget _buildEncounterDetails(
-    BuildContext context,
-    EncounterModel encounter,
-    Color cardElevationColor,
-  ) {
+  Widget _buildEncounterDetails(BuildContext context, EncounterModel encounter, Color cardElevationColor) {
     final ThemeData theme = Theme.of(context);
-    final Color primaryTextColor =
-        theme.textTheme.titleLarge?.color ?? Colors.black87;
-    final Color secondaryTextColor =
-        theme.textTheme.bodyMedium?.color ?? Colors.grey.shade700;
+    final Color primaryTextColor = theme.textTheme.titleLarge?.color ?? Colors.black87;
+    final Color secondaryTextColor = theme.textTheme.bodyMedium?.color ?? Colors.grey.shade700;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -129,18 +93,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
             children: [
               Expanded(
                 child: Text(
-                  encounter.reason ??
-                      'encountersPge.generalEncounter'.tr(context),
+                  encounter.reason ?? 'encountersPge.generalEncounter'.tr(context),
                   style:
-                      theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: primaryTextColor,
-                      ) ??
-                      TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        color: primaryTextColor,
-                      ),
+                      theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: primaryTextColor) ??
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: primaryTextColor),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -176,9 +132,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                 _buildDetailRow(
                   context,
                   label: 'encountersPge.startDate'.tr(context),
-                  value: DateFormat(
-                    'MMM d, y - h:mm a',
-                  ).format(DateTime.parse(encounter.actualStartDate!)),
+                  value: DateFormat('MMM d, y - h:mm a').format(DateTime.parse(encounter.actualStartDate!)),
                   icon: Icons.calendar_today_outlined,
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
@@ -187,9 +141,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                 _buildDetailRow(
                   context,
                   label: 'encountersPge.endDate'.tr(context),
-                  value: DateFormat(
-                    'MMM d, y - h:mm a',
-                  ).format(DateTime.parse(encounter.actualEndDate!)),
+                  value: DateFormat('MMM d, y - h:mm a').format(DateTime.parse(encounter.actualEndDate!)),
                   icon: Icons.calendar_today_outlined,
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
@@ -207,72 +159,54 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
           ),
           const SizedBox(height: 24),
           if (encounter.appointment != null) ...[
-            _buildInfoCard(
-              context,
-              title: 'encountersPge.appointmentDetails'.tr(context),
-              icon: Icons.schedule_outlined,
-              cardElevationColor: cardElevationColor,
-              actionWidget: IconButton(
-                onPressed: () {
-                  context
-                      .pushNamed(
-                        AppRouter.appointmentDetails.name,
-                        extra: {"appointmentId": encounter.appointment!.id},
-                      )
-                      .then((value) {
-                        context.read<EncounterCubit>().getSpecificEncounter(
-                          encounterId: widget.encounterId,
-                          context: context,
-                        );
-                      });
-                },
-                icon: Container(
+            GestureDetector(
+              onTap: () {
+                context.pushNamed(AppRouter.appointmentDetails.name, extra: {"appointmentId": encounter.appointment!.id}).then((value) {
+                  context.read<EncounterCubit>().getSpecificEncounter(encounterId: widget.encounterId, context: context);
+                });
+              },
+              child: _buildInfoCard(
+                context,
+                title: 'encountersPge.appointmentDetails'.tr(context),
+                icon: Icons.schedule_outlined,
+                cardElevationColor: cardElevationColor,
+                actionWidget: Container(
                   width: 32,
                   height: 32,
-                  decoration: BoxDecoration(
-                    color: theme.primaryColor.withOpacity(0.08),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: theme.primaryColor.withOpacity(0.8),
-                    size: 18,
-                  ),
+                  decoration: BoxDecoration(color: theme.primaryColor.withOpacity(0.08), shape: BoxShape.circle),
+                  child: Icon(Icons.arrow_forward_ios_rounded, color: theme.primaryColor.withOpacity(0.8), size: 18),
                 ),
-                tooltip: 'encountersPge.GoAppointmentDetails'.tr(context),
+                children: [
+                  _buildDetailRow(
+                    context,
+                    label: 'encountersPge.reason'.tr(context),
+                    value: encounter.appointment?.reason,
+                    icon: Icons.description_outlined,
+                    primaryTextColor: primaryTextColor,
+                    secondaryTextColor: secondaryTextColor,
+                  ),
+                  if (encounter.appointment?.startDate != null)
+                    _buildDetailRow(
+                      context,
+                      label: 'encountersPge.scheduled'.tr(context),
+                      value: DateFormat('MMM d, y - h:mm a').format(DateTime.parse(encounter.appointment!.startDate!)),
+                      icon: Icons.access_time_outlined,
+                      primaryTextColor: primaryTextColor,
+                      secondaryTextColor: secondaryTextColor,
+                    ),
+                  if (encounter.appointment?.doctor != null)
+                    _buildDetailRow(
+                      context,
+                      label: 'encountersPge.doctor'.tr(context),
+                      value:
+                          '${encounter.appointment?.doctor?.prefix ?? ''} ${encounter.appointment?.doctor?.fName ?? ''} ${encounter.appointment?.doctor?.lName ?? ''}'
+                              .trim(),
+                      icon: Icons.person_outline,
+                      primaryTextColor: primaryTextColor,
+                      secondaryTextColor: secondaryTextColor,
+                    ),
+                ],
               ),
-              children: [
-                _buildDetailRow(
-                  context,
-                  label: 'encountersPge.reason'.tr(context),
-                  value: encounter.appointment?.reason,
-                  icon: Icons.description_outlined,
-                  primaryTextColor: primaryTextColor,
-                  secondaryTextColor: secondaryTextColor,
-                ),
-                if (encounter.appointment?.startDate != null)
-                  _buildDetailRow(
-                    context,
-                    label: 'encountersPge.scheduled'.tr(context),
-                    value: DateFormat(
-                      'MMM d, y - h:mm a',
-                    ).format(DateTime.parse(encounter.appointment!.startDate!)),
-                    icon: Icons.access_time_outlined,
-                    primaryTextColor: primaryTextColor,
-                    secondaryTextColor: secondaryTextColor,
-                  ),
-                if (encounter.appointment?.doctor != null)
-                  _buildDetailRow(
-                    context,
-                    label: 'encountersPge.doctor'.tr(context),
-                    value:
-                        '${encounter.appointment?.doctor?.prefix ?? ''} ${encounter.appointment?.doctor?.fName ?? ''} ${encounter.appointment?.doctor?.lName ?? ''}'
-                            .trim(),
-                    icon: Icons.person_outline,
-                    primaryTextColor: primaryTextColor,
-                    secondaryTextColor: secondaryTextColor,
-                  ),
-              ],
             ),
             const SizedBox(height: 24),
           ],
@@ -289,10 +223,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                   itemCount: encounter.healthCareServices?.length ?? 0,
                   itemBuilder: (context, index) {
                     final service = encounter.healthCareServices![index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: ServiceListItem(service: service),
-                    );
+                    return Padding(padding: const EdgeInsets.only(bottom: 10), child: ServiceListItem(service: service));
                   },
                 ),
               ],
@@ -312,9 +243,6 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   }) {
     final ThemeData theme = Theme.of(context);
     final Color headerIconColor = theme.primaryColor;
-    final Color headerTextColor =
-        theme.textTheme.titleLarge?.color ?? Colors.black87;
-
     return Card(
       elevation: 6,
       shadowColor: cardElevationColor,
@@ -329,23 +257,11 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
               children: [
                 Icon(icon, color: headerIconColor, size: 24),
                 const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.titel,
-                    ),
-                  ),
-                ),
+                Expanded(child: Text(title, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold))),
                 if (actionWidget != null) actionWidget,
               ],
             ),
-            Divider(
-              height: 28,
-              thickness: 0.8,
-              color: theme.dividerColor.withOpacity(0.6),
-            ),
+            Divider(height: 28, thickness: 0.8, color: theme.dividerColor.withOpacity(0.6)),
             ...children,
           ],
         ),
@@ -367,97 +283,50 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: theme.primaryColor.withOpacity(0.7), size: 18),
+          Icon(icon, color: theme.primaryColor, size: 18),
           const SizedBox(width: 10),
-          SizedBox(
-            width: 100,
-            child: Text(
-              '$label:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: AppColors.secondaryColor,
-                fontSize: 15,
-              ),
-            ),
-          ),
+          SizedBox(width: 100, child: Text('$label:', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.cyan, fontSize: 15))),
           const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              value ?? 'N/A',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 15,
-                color: primaryTextColor,
-              ),
-            ),
-          ),
+          Expanded(child: Text(value ?? 'N/A', style: TextStyle(fontWeight: FontWeight.w500))),
         ],
       ),
     );
   }
 
   Widget _buildStatusChip(CodeModel? status, BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     Color chipColor;
     Color textColor;
 
-    String getTranslatedStatus(String? statusCode) {
-      switch (statusCode) {
-        case 'planned':
-          return 'encountersPge.planned'.tr(context);
-        case 'in-progress':
-          return 'encountersPge.inProgress'.tr(context);
-        case 'completed':
-          return 'encountersPge.completed'.tr(context);
-        case 'cancelled':
-          return 'encountersPge.cancelled'.tr(context);
-        default:
-          return 'encountersPge.unknownStatus'.tr(context);
-      }
-    }
-
-    switch (status?.code) {
-      case 'planned':
-        chipColor = Colors.blue.shade700;
-        textColor = Colors.white;
-        break;
+    switch (status?.code?.toLowerCase()) {
       case 'in-progress':
-        chipColor = Colors.orange.shade700;
-        textColor = Colors.white;
+        chipColor = Colors.orange.withAlpha(40);  // Very light orange
+        textColor = Colors.orange.shade800;      // Dark orange text
         break;
-      case 'completed':
-        chipColor = Colors.green.shade700;
-        textColor = Colors.white;
-        break;
-      case 'cancelled':
-        chipColor = Colors.red.shade700;
-        textColor = Colors.white;
+      case 'final':
+        chipColor = Colors.green.withAlpha(40);   // Very light green
+        textColor = Colors.green.shade800;       // Dark green text
         break;
       default:
-        chipColor = Colors.grey.shade600;
-        textColor = Colors.white;
+        chipColor = Colors.grey.withAlpha(20);   // Very subtle grey
+        textColor = Colors.grey.shade800;       // Dark grey text
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
         color: chipColor,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: chipColor.withOpacity(0.4),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(16),  // Slightly less rounded
+        border: Border.all(
+          color: chipColor.withAlpha(100),       // Subtle border
+          width: 0.8,
+        ),
       ),
       child: Text(
-        getTranslatedStatus(status?.code),
+        status?.display ?? 'Unknown',
         style: TextStyle(
-          color: textColor,
-          fontSize: 13,
-          fontWeight: FontWeight.bold,
+          color: chipColor.withAlpha(128),
+          fontSize: 12,
+          fontWeight: FontWeight.w600,          // Semi-bold instead of bold
         ),
       ),
     );

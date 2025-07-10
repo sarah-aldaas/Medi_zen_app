@@ -42,8 +42,6 @@ import 'package:medizen_app/features/profile/presentaiton/cubit/telecom_cubit/te
 import 'package:medizen_app/features/profile/presentaiton/pages/edit_profile_screen.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
 import 'FCM_manager.dart';
 import 'base/blocs/localization_bloc/localization_bloc.dart';
 import 'base/constant/storage_key.dart';
@@ -60,9 +58,6 @@ import 'features/services/pages/cubits/service_cubit/service_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
 
   await Firebase.initializeApp();
 

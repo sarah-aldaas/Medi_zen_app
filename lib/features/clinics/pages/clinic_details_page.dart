@@ -7,6 +7,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
+import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
 import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
 
@@ -135,8 +136,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if(clinic.photo!=null)...[
             _buildClinicImage(clinic),
-            const Gap(20),
+            const Gap(20),],
             Text(
               clinic.description,
               style: TextStyle(
@@ -159,24 +161,22 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
   }
 
   Widget _buildClinicImage(ClinicModel clinic) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Card(
-        elevation: 2,
+    return Card(
+      elevation: 2,
 
-        color: Theme.of(context).cardTheme.color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        clipBehavior: Clip.antiAlias,
-        child: AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Image.network(
-            clinic.photo,
-            fit: BoxFit.cover,
-            errorBuilder:
-                (context, error, stackTrace) =>
-                Image.asset(AppAssetImages.clinic6, fit: BoxFit.cover),
-          ),
-        ),
+      color: Theme.of(context).cardTheme.color,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.antiAlias,
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child:FlexibleImage(imageUrl:clinic.photo,errorWidget: Center(child: Icon(Icons.local_hospital),),)
+        // Image.network(
+        //   clinic.photo,
+        //   fit: BoxFit.cover,
+        //   errorBuilder:
+        //       (context, error, stackTrace) =>
+        //       Image.asset(AppAssetImages.clinic6, fit: BoxFit.cover),
+        // ),
       ),
     );
   }

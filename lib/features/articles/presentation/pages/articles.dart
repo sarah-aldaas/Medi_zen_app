@@ -11,6 +11,7 @@ import 'package:medizen_app/features/articles/presentation/pages/my_favorite_art
 
 import '../../../../base/data/models/code_type_model.dart';
 import '../../../../base/theme/app_color.dart';
+import '../../../../base/widgets/flexible_image.dart';
 import '../cubit/article_cubit/article_cubit.dart';
 
 class ArticlesPage extends StatefulWidget {
@@ -328,6 +329,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
     required ArticleModel article,
     required BuildContext context,
   }) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
@@ -343,15 +346,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
                 child: Container(
                   width: 80,
                   height: 80,
-                  color: Colors.grey[200],
-                  child:
-                      article.image != null && article.image!.isNotEmpty
-                          ? Image.network(
-                            article.image!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Icon(Icons.article),
-                          )
-                          : Icon(Icons.article, size: 40),
+                  color: isDark ? Colors.grey[800] : Colors.grey[200],
+                  child: FlexibleImage(imageUrl: article.image, width: 80, height: 80, errorWidget: Center(child: Icon(Icons.article, size: 40))),
                 ),
               ),
               const SizedBox(width: 12),

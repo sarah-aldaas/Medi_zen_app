@@ -423,7 +423,6 @@ class _MedicationRequestDetailsPageState
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -471,7 +470,6 @@ class _MedicationRequestDetailsPageState
     return Container(
       padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
@@ -529,7 +527,7 @@ class _MedicationRequestDetailsPageState
                 ),
                 Text(
                   value,
-                  style: TextStyle(color: AppColors.blackColor, fontSize: 15),
+                  style: TextStyle(fontSize: 15),
                 ),
               ],
             ),

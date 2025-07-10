@@ -769,7 +769,7 @@
     "encounter": "الزيارة",
     "planned": "مخطط له",
     "inProgress": "قيد التقدم",
-    "completed": "مكتمل",
+    "final": "مكتمل",
     "unknownStatus": "حالة غير معروفة",
     "cancelled": "ملغى",
     "filterEncounters": "تصفية الزيارات",
@@ -1015,6 +1015,10 @@
     "viewDetails": "عرض التفاصيل"
   },
   "serviceRequestsPage": {
+    "statusActive": "نشط",
+    "statusRevoked": "ملغى",
+    "statusEnteredInError": "تم إدخاله بالخطأ",
+    "statusRejected": "مرفوض",
     "errorOccurred": "حدث خطأ",
     "tryAgain": "حاول مرة أخرى",
     "noRequestsFound": "لم يتم العثور على طلبات خدمة.",
@@ -1274,13 +1278,7 @@
       "invalidDateRange": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية"
     }
   },
-  "medicationRequestDetails": {
-    "title": "تفاصيل طلب الدواء",
-    "failedToLoad": "فشل تحميل تفاصيل طلب الدواء",
-    "requestInfo": "معلومات الطلب",
-    "conditionInfo": "معلومات الحالة",
-    "additionalInfo": "معلومات إضافية"
-  },
+
   "myMedicationRequests": {
     "title": "طلبات الأدوية الخاصة بي",
     "noRequests": "لا توجد طلبات أدوية",
@@ -1313,12 +1311,7 @@
       "apply": "تطبيق"
     }
   },
-  "filterMedications": {
-    "title": "تصفية الأدوية",
-    "search": "بحث",
-    "searchHint": "ابحث باسم الدواء",
-    "status": "الحالة",
-    "allStatuses": "جميع الحالات",
+  "filterMedicationRequests": {
     "doseForm": "شكل الجرعة",
     "selectDoseForm": "اختر شكل الجرعة",
     "allDoseForms": "جميع أشكال الجرعات",
@@ -1336,12 +1329,7 @@
     "startFrom": "بداية من",
     "endUntil": "نهاية حتى",
     "selectDate": "اختر تاريخ",
-    "clearFilters": "مسح الفلاتر",
-    "cancel": "إلغاء",
-    "apply": "تطبيق",
-    "invalidDateRange": "نطاق تاريخ غير صالح - يجب أن يكون تاريخ البداية قبل تاريخ النهاية"
-  },
-  "filterMedicationRequests": {
+    "invalidDateRange": "نطاق تاريخ غير صالح - يجب أن يكون تاريخ البداية قبل تاريخ النهاية",
     "title": "تصفية طلبات الأدوية",
     "search": "بحث",
     "searchHint": "ابحث باسم الدواء",
@@ -1370,9 +1358,6 @@
     "apply": "تطبيق"
   },
 
-  "myMedicationRequests": {
-    "noRequests": "لا توجد طلبات أدوية."
-  },
   "medicationRequestCard": {
     "defaultReason": "طلب دواء",
     "noNotes": "لا توجد ملاحظات إضافية"
@@ -1428,36 +1413,6 @@
     "defaultMedicationRequest": "طلب دواء",
     "unknownStatus": "حالة غير معروفة"
   },
-  "filterMedicationRequests": {
-    "title": "تصفية طلبات الدواء",
-    "search": "بحث",
-    "searchHint": "البحث حسب السبب أو الملاحظة",
-    "doNotPerform": "عدم الأداء",
-    "doNotPerformLabel": "إظهار طلبات 'عدم الأداء' فقط",
-    "status": "الحالة",
-    "allStatuses": "جميع الحالات",
-    "intent": "النية",
-    "selectIntent": "اختر النية",
-    "allIntents": "جميع النوايا",
-    "priority": "الأولوية",
-    "selectPriority": "اختر الأولوية",
-    "allPriorities": "جميع الأولويات",
-    "courseOfTherapy": "نوع مسار العلاج",
-    "selectCourseOfTherapy": "اختر نوع مسار العلاج",
-    "allCourses": "جميع المسارات",
-    "condition": "الحالة",
-    "selectCondition": "اختر الحالة",
-    "allConditions": "جميع الحالات",
-    "unknownCondition": "حالة غير معروفة",
-    "startDate": "تاريخ البدء",
-    "selectStartDate": "اختر تاريخ البدء",
-    "endDate": "تاريخ الانتهاء",
-    "selectEndDate": "اختر تاريخ الانتهاء",
-    "clearFilters": "مسح الفلاتر",
-    "cancel": "إلغاء",
-    "apply": "تطبيق"
-  },
-
   "conditionsList": {
     "noConditionsFound": "لم يتم العثور على حالات صحية",
     "tapToRefresh": "انقر للتحديث أو جرب فلاتر مختلفة.",
@@ -1501,7 +1456,7 @@
     "summary": "ملخص",
     "notesLabel": "ملاحظات",
     "additionalNotes": "ملاحظات إضافية",
-    "yearsAge": "({age} سنة)",
+    "yearsAge": "(سنة)",
     "articles": "المقالات",
     "loading_articles": "تحميل المقالات ...",
     "fetching_articles": "جلب المقالات ...",
@@ -1542,10 +1497,7 @@
   },
   "myMedications": {
     "noMedicationsFound": "لا توجد أدوية.",
-    "unknownMedication": "دواء غير معروف",
-    "noInstructions": "لا توجد تعليمات"
-  },
-  "medicationDetails": {
+    "noInstructions": "لا توجد تعليمات",
     "title": "تفاصيل الدواء",
     "failedToLoad": "فشل تحميل تفاصيل الدواء. يرجى المحاولة مرة أخرى.",
     "dosageInfo": "معلومات الجرعات",
@@ -1566,6 +1518,7 @@
     "unknownMedication": "دواء غير معروف",
     "noDescriptionAvailable": "لا يوجد وصف متاح"
   },
+
   "filterMedications": {
     "title": "تصفية الأدوية",
     "search": "بحث",
@@ -1673,8 +1626,8 @@
   "diagnosticReportDetails_unknownCondition": "حالة غير معروفة",
   "diagnosticReportDetails_results": "النتائج",
   "diagnosticReportDetails_conclusion": "الخلاصة",
-    "diagnosticReport_verificationStatus": "حالة التحقق",
-    "diagnosticReport_stage": "المرحلة",
+  "diagnosticReport_verificationStatus": "حالة التحقق",
+  "diagnosticReport_stage": "المرحلة",
   "diagnosticReportDetails_notes": "ملاحظات",
   "diagnosticReportDetails_relatedConditionSection": "الحالة المرتبطة",
   "diagnosticReportDetails_status": "الحالة",
@@ -1715,7 +1668,7 @@
   "diagnosticReportListAppointment_reportStatus": "حالة التقرير"
 },
   "diagnosticFilterPage":{
-  "diagnosticReportFilter_title": "تصفية التقارير التشخيصية",
+  "diagnosticReportFilter_title": "التقارير التشخيصية",
   "diagnosticReportFilter_search": "بحث",
   "diagnosticReportFilter_enterSearchTerm": "أدخل مصطلح البحث",
   "diagnosticReportFilter_all": "الكل",

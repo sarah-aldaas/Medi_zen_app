@@ -385,7 +385,7 @@ class _ServiceRequestFilterDialogState
     ServiceState state,
   ) {
     return state is ServiceHealthCareLoading
-        ? const LoadingPage()
+        ?  LoadingButton()
         : DropdownButtonFormField<String>(
           value: _selectedHealthCareServiceId,
           decoration: InputDecoration(

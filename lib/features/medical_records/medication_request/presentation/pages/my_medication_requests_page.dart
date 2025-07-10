@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/medication_request/presentation/pages/medication_request_details_page.dart';
 
@@ -75,9 +76,9 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
     return Scaffold(
       body: BlocConsumer<MedicationRequestCubit, MedicationRequestState>(
         listener: (context, state) {
-          if (state is MedicationRequestError) {
-            ShowToast.showToastError(message: state.error);
-          }
+          // if (state is MedicationRequestError) {
+          //   ShowToast.showToastError(message: state.error);
+          // }
         },
         builder: (context, state) {
           if (state is MedicationRequestLoading && !state.isLoadMore) {
@@ -92,37 +93,27 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
               state is MedicationRequestSuccess ? state.hasMore : false;
 
           if (medicationRequests.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.medical_services,
-                    size: 64,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "myMedicationRequests.noRequests".tr(context),
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-            );
+            return NotFoundDataPage();
           }
 
-          return ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16.0),
-            itemCount: medicationRequests.length + (hasMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < medicationRequests.length) {
-                return _buildMedicationRequestCard(medicationRequests[index]);
-              } else if (hasMore && state is! MedicationRequestError) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return const SizedBox.shrink();
+          return RefreshIndicator(
+            onRefresh: () async {
+              _loadInitialMedicationRequests();
             },
+            color: Theme.of(context).primaryColor,
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.all(16.0),
+              itemCount: medicationRequests.length + (hasMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < medicationRequests.length) {
+                  return _buildMedicationRequestCard(medicationRequests[index]);
+                } else if (hasMore && state is! MedicationRequestError) {
+                  return Center(child: LoadingButton());
+                }
+                return const SizedBox.shrink();
+              },
+            ),
           );
         },
       ),

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 
 final ThemeData lightTheme = ThemeData(
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor:AppColors.primaryColor , // لون المؤشر العام
+  ),
+
   brightness: Brightness.light,
   secondaryHeaderColor: Colors.black87,
   primaryColor: AppColors.primaryColor,
@@ -64,6 +68,9 @@ final ThemeData lightTheme = ThemeData(
 );
 
 final ThemeData darkTheme = ThemeData(
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor:AppColors.primaryColor ,
+  ),
   brightness: Brightness.dark,
   secondaryHeaderColor: Colors.white,
   primaryColor: AppColors.primaryColor,

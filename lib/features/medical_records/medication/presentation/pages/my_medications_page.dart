@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/medication/presentation/pages/medication_details_page.dart';
-
 import '../../../../../base/theme/app_color.dart';
 import '../../data/models/medication_filter_model.dart';
 import '../../data/models/medication_model.dart';
@@ -75,9 +75,9 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
     return Scaffold(
       body: BlocConsumer<MedicationCubit, MedicationState>(
         listener: (context, state) {
-          if (state is MedicationError) {
-            ShowToast.showToastError(message: state.error);
-          }
+          // if (state is MedicationError) {
+          //   ShowToast.showToastError(message: state.error);
+          // }
         },
         builder: (context, state) {
           if (state is MedicationLoading && !state.isLoadMore) {
@@ -91,37 +91,27 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
           final hasMore = state is MedicationSuccess ? state.hasMore : false;
 
           if (medications.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.medical_services,
-                    size: 64,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "myMedications.noMedicationsFound".tr(context),
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-            );
+            return NotFoundDataPage();
           }
 
-          return ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16.0),
-            itemCount: medications.length + (hasMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < medications.length) {
-                return _buildMedicationCard(medications[index]);
-              } else if (hasMore && state is! MedicationError) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return const SizedBox.shrink();
+          return RefreshIndicator(
+            onRefresh: () async {
+              _loadInitialMedications();
             },
+            color: Theme.of(context).primaryColor,
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.all(16.0),
+              itemCount: medications.length + (hasMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < medications.length) {
+                  return _buildMedicationCard(medications[index]);
+                } else if (hasMore && state is! MedicationError) {
+                  return  Center(child: LoadingButton());
+                }
+                return const SizedBox.shrink();
+              },
+            ),
           );
         },
       ),
@@ -167,7 +157,6 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.green,
                           ),
                         ),
                         const SizedBox(height: 4),
