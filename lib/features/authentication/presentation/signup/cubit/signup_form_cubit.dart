@@ -104,14 +104,14 @@ class SignupFormCubit extends Cubit<SignupFormState> {
       );
     }
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(state.copyWith(isLoadingCodes: false));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(state.copyWith(isLoadingCodes: false));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
   }
 
   void updateFormData(String key, String value) {

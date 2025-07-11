@@ -30,13 +30,13 @@ class TelecomCubit extends Cubit<TelecomState> {
     emit(TelecomLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(TelecomError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(TelecomError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getListAllTelecom(
       rank: rank,
@@ -59,12 +59,12 @@ class TelecomCubit extends Cubit<TelecomState> {
       if (nextPage <= currentState.paginatedResponse.meta!.lastPage) {
         emit(TelecomLoading());
         // Check internet connectivity
-        final isConnected = await networkInfo.isConnected;
-        if (!isConnected) {
-          emit(TelecomError(error: 'No internet connection'));
-          ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-          return;
-        }
+        // final isConnected = await networkInfo.isConnected;
+        // if (!isConnected) {
+        //   emit(TelecomError(error: 'No internet connection'));
+        //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+        //   return;
+        // }
 
 
         final result = await remoteDataSource.getListAllTelecom(
@@ -95,12 +95,12 @@ class TelecomCubit extends Cubit<TelecomState> {
         emit(TelecomLoading());
 
         // Check internet connectivity
-        final isConnected = await networkInfo.isConnected;
-        if (!isConnected) {
-          emit(TelecomError(error: 'No internet connection'));
-          ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-          return;
-        }
+        // final isConnected = await networkInfo.isConnected;
+        // if (!isConnected) {
+        //   emit(TelecomError(error: 'No internet connection'));
+        //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+        //   return;
+        // }
 
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
@@ -129,15 +129,15 @@ class TelecomCubit extends Cubit<TelecomState> {
   }) async {
     emit(TelecomLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      if (context.mounted) {
-        context.pushNamed(AppRouter.noInternet.name);
-      }
-      emit(TelecomError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   if (context.mounted) {
+    //     context.pushNamed(AppRouter.noInternet.name);
+    //   }
+    //   emit(TelecomError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.createTelecom(telecomModel: telecomModel);
     await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
@@ -164,13 +164,13 @@ class TelecomCubit extends Cubit<TelecomState> {
     emit(TelecomLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(TelecomError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(TelecomError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.updateTelecom(
       id: id,
@@ -206,13 +206,13 @@ class TelecomCubit extends Cubit<TelecomState> {
   }) async {
     emit(TelecomLoading());
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(TelecomError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(TelecomError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.deleteTelecom(id: id);
     if (result is Success<PublicResponseModel>) {
@@ -244,13 +244,13 @@ class TelecomCubit extends Cubit<TelecomState> {
     emit(TelecomLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(TelecomError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return null;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(TelecomError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return null;
+    // }
 
     final result = await remoteDataSource.showTelecom(id: id);
     if (result is Success<TelecomModel>) {

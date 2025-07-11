@@ -44,13 +44,13 @@ class ComplainCubit extends Cubit<ComplainState> {
       _currentFilters = filters;
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(ComplainError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(ComplainError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getAllComplain(
       filters: _currentFilters,
@@ -103,13 +103,13 @@ class ComplainCubit extends Cubit<ComplainState> {
       _currentFilters = filters;
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(ComplainError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(ComplainError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getAllComplainOfAppointment(
       appointmentId: appointmentId,
@@ -150,13 +150,13 @@ class ComplainCubit extends Cubit<ComplainState> {
   }) async {
     emit(ComplainLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(ComplainError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(ComplainError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getDetailsComplain(complainId: complainId);
     if (result is Success<ComplainModel>) {
@@ -173,13 +173,13 @@ class ComplainCubit extends Cubit<ComplainState> {
   }) async {
     emit(ComplainLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(ComplainError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(ComplainError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.createComplain(
       appointmentId: appointmentId,
@@ -209,13 +209,13 @@ class ComplainCubit extends Cubit<ComplainState> {
   }) async {
     emit(ComplainLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(ComplainError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(ComplainError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.responseOnComplain(
       complainId: complainId,
@@ -244,13 +244,13 @@ class ComplainCubit extends Cubit<ComplainState> {
   }) async {
     emit(ComplainLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(ComplainError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(ComplainError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getResponseOfComplain(complainId: complainId);
     if (result is Success<List<ComplainResponseModel>>) {
@@ -267,13 +267,13 @@ class ComplainCubit extends Cubit<ComplainState> {
   }) async {
     emit(ComplainLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(ComplainError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(ComplainError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.closeComplain(complainId: complainId);
     if (result is Success<PublicResponseModel>) {
@@ -294,13 +294,13 @@ class ComplainCubit extends Cubit<ComplainState> {
   }) async {
     emit(ComplainLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(ComplainError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(ComplainError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.deleteComplain(complainId: complainId);
     if (result is Success<PublicResponseModel>) {

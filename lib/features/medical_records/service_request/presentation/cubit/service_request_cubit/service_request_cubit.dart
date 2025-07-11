@@ -44,12 +44,12 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
       _currentFilters = filters;
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ServiceRequestError("No internet connection"));
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ServiceRequestError("No internet connection"));
+    //   return;
+    // }
 
     final result = await remoteDataSource.getAllServiceRequest(
       filters: _currentFilters,
@@ -116,12 +116,12 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
       _currentFilters = filters;
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ServiceRequestError("No internet connection"));
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ServiceRequestError("No internet connection"));
+    //   return;
+    // }
 
     final result = await remoteDataSource.getAllServiceRequestForAppointment(
       appointmentId: appointmentId,
@@ -176,12 +176,12 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
   ) async {
     emit(ServiceRequestLoading(isDetailsLoading: true));
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ServiceRequestError('No internet connection'));
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ServiceRequestError('No internet connection'));
+    //   return;
+    // }
     final result = await remoteDataSource.getDetailsServiceRequest(
       serviceId: serviceId,
     );

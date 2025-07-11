@@ -32,13 +32,13 @@ class LogoutCubit extends Cubit<LogoutState> {
     } else {
       emit(LogoutLoadingOnlyThisDevice());
     }
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(LogoutError(error: 'No internet connection'));
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(LogoutError(error: 'No internet connection'));
+    //   return;
+    // }
 
 
     try {

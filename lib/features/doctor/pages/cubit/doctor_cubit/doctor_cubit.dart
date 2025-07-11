@@ -33,14 +33,14 @@ class DoctorCubit extends Cubit<DoctorState> {
     isLoading = true;
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(DoctorError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      isLoading = false;
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(DoctorError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   isLoading = false;
+    //   return;
+    // }
 
     try {
       final result = await remoteDataSource.getDoctorsOfClinic(

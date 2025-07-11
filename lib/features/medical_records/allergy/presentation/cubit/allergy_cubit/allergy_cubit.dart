@@ -46,13 +46,13 @@ class AllergyCubit extends Cubit<AllergyState> {
     }
     // Check internet connectivity for initial load
     if (!loadMore) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(AllergyError(error: 'No internet connection'));
-        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        return;
-      }
+      // final isConnected = await networkInfo.isConnected;
+      // if (!isConnected) {
+      //   context.pushNamed(AppRouter.noInternet.name);
+      //   emit(AllergyError(error: 'No internet connection'));
+      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      //   return;
+      // }
     }
 
 
@@ -118,13 +118,13 @@ class AllergyCubit extends Cubit<AllergyState> {
 
     // Check internet connectivity for initial load
     if (!loadMore) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(AllergyError(error: 'No internet connection'));
-        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        return;
-      }
+      // final isConnected = await networkInfo.isConnected;
+      // if (!isConnected) {
+      //   context.pushNamed(AppRouter.noInternet.name);
+      //   emit(AllergyError(error: 'No internet connection'));
+      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      //   return;
+      // }
     }
     final result = await remoteDataSource.getAllMyAllergiesOfAppointment(
       filters: _currentFiltersOfAppointment,
@@ -168,14 +168,14 @@ class AllergyCubit extends Cubit<AllergyState> {
     emit(AllergyLoading(isLoadMore: false));
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(AllergyError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(AllergyError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getSpecificAllergy(allergyId: allergyId);
     if (result is Success<AllergyModel>) {

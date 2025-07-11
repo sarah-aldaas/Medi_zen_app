@@ -71,18 +71,12 @@ class ArticleError extends ArticleState {
   const ArticleError({required this.error});
 }
 
-class FavoriteOperationLoading extends ArticleState {
-  final ArticleState previousState;
-
-  const FavoriteOperationLoading({required this.previousState});
-}
+class FavoriteOperationLoading extends ArticleState {}
 
 class FavoriteOperationSuccess extends ArticleState {
   final bool isFavorite;
-  final ArticleState previousState;
 
   const FavoriteOperationSuccess({
     required this.isFavorite,
-    required this.previousState,
   });
 }

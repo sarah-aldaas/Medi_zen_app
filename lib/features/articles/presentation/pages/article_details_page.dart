@@ -89,7 +89,7 @@ class ArticleDetailsPage extends StatelessWidget {
                 child: FlexibleImage(
                    imageUrl:article.doctor!.avatar,assetPath: "assets/images/person.jpg",
                 ),
-              ),  
+              ),
               // backgroundImage: NetworkImage(article.doctor!.avatar ?? ''),
                 radius: 30),
             const Gap(12),
@@ -113,8 +113,10 @@ class ArticleDetailsPage extends StatelessWidget {
   void _handleBookmark(BuildContext context) {
     if (article.isFavorite!) {
       _showRemoveFromFavoritesDialog(context);
+      article.copyWith(isFavorite:false );
     } else {
       context.read<ArticleCubit>().addArticleFavorite(articleId: article.id!, context: context);
+    article.copyWith(isFavorite: true);
     }
   }
 

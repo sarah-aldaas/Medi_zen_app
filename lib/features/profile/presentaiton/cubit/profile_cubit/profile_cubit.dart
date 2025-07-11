@@ -30,13 +30,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileState.loading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ProfileState.error('No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ProfileState.error('No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       final result = await remoteDataSource.getMyProfile();
@@ -64,13 +64,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileState.loadingUpdate());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ProfileState.error('No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ProfileState.error('No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       final result = await remoteDataSource.updateMyProfile(

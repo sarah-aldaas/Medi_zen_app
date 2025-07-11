@@ -66,7 +66,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
         ),
         centerTitle: true,
         elevation: 4,
-
         // flexibleSpace: Container(
         //   decoration:  BoxDecoration(
         //     gradient: LinearGradient(

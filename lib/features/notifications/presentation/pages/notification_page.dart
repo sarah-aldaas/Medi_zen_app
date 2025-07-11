@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/articles/presentation/pages/article_details_notification_page.dart';
 
@@ -140,9 +141,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final hasMore = state?.hasMore ?? false;
 
     if (notifications.isEmpty) {
-      return Center(
-        child: Text("There are not any notification."),
-      );
+      return NotFoundDataPage();
     }
 
     return RefreshIndicator(

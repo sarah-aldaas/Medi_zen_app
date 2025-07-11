@@ -11,6 +11,7 @@ import 'package:medizen_app/features/profile/data/models/update_profile_request_
 import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 
 import '../../../../base/theme/app_color.dart';
+import '../../../medical_records/series/presentation/pages/full_screen_image_viewer.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});

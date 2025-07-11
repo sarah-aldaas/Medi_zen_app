@@ -57,14 +57,14 @@ class SignupCubit extends Cubit<SignupState> {
     emit(SignupState.loading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(SignupState.error('No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(SignupState.error('No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       final result = await authRemoteDataSource.signup(

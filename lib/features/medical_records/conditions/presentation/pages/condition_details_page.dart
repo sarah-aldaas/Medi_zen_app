@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_model.dart';
+import 'package:medizen_app/features/medical_records/encounter/presentation/pages/encounter_details_page.dart';
 
 import '../../../../../base/widgets/loading_page.dart';
 import '../../../../../base/widgets/show_toast.dart';
@@ -617,25 +619,30 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
           children: [
             ...condition.encounters!
                 .map(
-                  (encounter) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(Icons.event_note, color: Theme.of(context).primaryColor, size: 28),
-                      title: Text(
-                        encounter.reason ?? 'conditionDetails.unknownReason'.tr(context),
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                  (encounter) => GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>EncounterDetailsPage(encounterId: encounter.id!)));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(Icons.event_note, color: Theme.of(context).primaryColor, size: 28),
+                        title: Text(
+                          encounter.reason ?? 'conditionDetails.unknownReason'.tr(context),
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          encounter.actualStartDate != null
+                              ? DateFormat('MMM d, y, hh:mm a').format(DateTime.parse(encounter.actualStartDate!))
+                              : 'conditionDetails.noDateProvided'.tr(context),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+                        // onTap: () {
+                        //   ShowToast.showToastInfo(message: "conditionDetails.encounterDetailsToast".tr(context));
+                        // },
                       ),
-                      subtitle: Text(
-                        encounter.actualStartDate != null
-                            ? DateFormat('MMM d, y, hh:mm a').format(DateTime.parse(encounter.actualStartDate!))
-                            : 'conditionDetails.noDateProvided'.tr(context),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
-                      onTap: () {
-                        ShowToast.showToastInfo(message: "conditionDetails.encounterDetailsToast".tr(context));
-                      },
                     ),
                   ),
                 )

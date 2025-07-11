@@ -69,7 +69,7 @@ class AddressCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 18),
                 child: Text(
                   '${address.startDate != null ? 'addressCard.from'.tr(context) + ': ${address.startDate}' : ''}'
-                      '${address.endDate != null ? ' ' + 'addressCard.to'.tr(context) + ': ${address.endDate}' : ' ' + 'addressCard.toContinue'.tr(context)}',
+                      '${(address.endDate != null && address.endDate!.isNotEmpty&& address.endDate!="null") ? ' ' + 'addressCard.to'.tr(context) + ': ${address.endDate}' : ' ' + 'addressCard.toContinue'.tr(context)}',
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: Colors.grey),

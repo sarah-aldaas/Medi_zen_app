@@ -31,14 +31,14 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   }) async {
     emit(SlotsAppointmentLoading());
 
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(AppointmentError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(AppointmentError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getAllSlots(practitionerId: practitionerId, date: date);
     if (result is Success<AllSlotModel>) {
@@ -51,14 +51,14 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   Future<void> getDaysWorkDoctor({required String doctorId, required BuildContext context}) async {
     emit(DaysWorkDoctorLoading());
 
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(AppointmentError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(AppointmentError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getDaysWorkDoctor(doctorId: doctorId);
     if (result is Success<DaysWorkDoctorModel>) {
@@ -92,13 +92,13 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
     // Check internet connectivity
     if (!loadMore) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed('noInternet');
-        emit(AppointmentError(error: 'No internet connection'));
-        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        return;
-      }
+      // final isConnected = await networkInfo.isConnected;
+      // if (!isConnected) {
+      //   context.pushNamed('noInternet');
+      //   emit(AppointmentError(error: 'No internet connection'));
+      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      //   return;
+      // }
     }
 
     final result = await remoteDataSource.getMyAppointment(filters: _currentFilters, page: _currentPage, perPage: 5);
@@ -134,14 +134,14 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     emit(AppointmentLoading(isLoadMore: false));
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(AppointmentError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(AppointmentError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.createAppointment(appointmentModel: appointmentModel);
     if (result is Success<PublicResponseModel>) {
@@ -163,14 +163,14 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     emit(AppointmentLoading(isLoadMore: false));
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(AppointmentError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(AppointmentError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.updateAppointment(id: id, appointmentModel: appointmentModel);
     if (result is Success<PublicResponseModel>) {
@@ -193,14 +193,14 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     emit(AppointmentLoading(isLoadMore: false));
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(AppointmentError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(AppointmentError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.cancelAppointment(id: id, cancellationReason: cancellationReason);
     if (result is Success<PublicResponseModel>) {
@@ -224,14 +224,14 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     required BuildContext context, // Add context parameter
   }) async {
     emit(AppointmentLoading(isLoadMore: false));
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(AppointmentError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(AppointmentError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getDetailsAppointment(id: id);
     if (result is Success<AppointmentModel>) {

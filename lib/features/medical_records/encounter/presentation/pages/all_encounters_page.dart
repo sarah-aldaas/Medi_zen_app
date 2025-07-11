@@ -122,7 +122,7 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
                 );
               } else {
                 return Center(
-                  child: CircularProgressIndicator(color: accentColor),
+                  child: LoadingButton(),
                 );
               }
             },

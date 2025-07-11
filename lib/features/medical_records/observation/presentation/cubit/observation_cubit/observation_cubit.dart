@@ -22,12 +22,12 @@ class ObservationCubit extends Cubit<ObservationState> {
   }) async {
     emit(ObservationLoading());
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ObservationError('No internet connection'));
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ObservationError('No internet connection'));
+    //   return;
+    // }
     final result = await remoteDataSource.getDetailsObservation(
       serviceId: serviceId,
       observationId: observationId,

@@ -6,6 +6,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/articles/data/model/article_filter_model.dart';
 import 'package:medizen_app/features/articles/data/model/article_model.dart';
+import 'package:medizen_app/features/articles/presentation/pages/article_details_notification_page.dart';
 import 'package:medizen_app/features/articles/presentation/pages/article_details_page.dart';
 import 'package:medizen_app/features/articles/presentation/pages/my_favorite_articles.dart';
 
@@ -526,7 +527,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ArticleDetailsPage(article: article),
+        builder: (context) => ArticleDetailsNotificationPage(articleId: article.id!),
       ),
     ).then((value) {
       _loadInitialArticles();

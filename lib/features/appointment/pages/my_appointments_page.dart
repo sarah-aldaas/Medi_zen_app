@@ -9,6 +9,7 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_model.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/cancel_appointment_dialog.dart';
@@ -132,26 +133,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                   : [];
           final hasMore = state is AppointmentSuccess ? state.hasMore : false;
           if (appointments.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.calendar_today, size: 64, color: Colors.grey[400]),
-                  SizedBox(height: 16),
-                  Text(
-                    "There are not any appointments.",
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  ),
-                  SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.pushNamed(AppRouter.clinics.name);
-                    },
-                    child: Text("book appointment"),
-                  ),
-                ],
-              ),
-            );
+            return NotFoundDataPage();
           }
 
           return ListView.builder(

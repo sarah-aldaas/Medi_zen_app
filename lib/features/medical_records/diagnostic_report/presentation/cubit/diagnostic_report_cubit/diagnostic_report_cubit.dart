@@ -41,13 +41,13 @@ class DiagnosticReportCubit extends Cubit<DiagnosticReportState> {
       _currentFilters = filters;
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(DiagnosticReportError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(DiagnosticReportError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getAllDiagnosticReport(
       filters: _currentFilters,
@@ -100,13 +100,13 @@ class DiagnosticReportCubit extends Cubit<DiagnosticReportState> {
       _currentFilters = filters;
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(DiagnosticReportError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(DiagnosticReportError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getAllDiagnosticReportOfAppointment(
       appointmentId: appointmentId,
@@ -147,13 +147,13 @@ class DiagnosticReportCubit extends Cubit<DiagnosticReportState> {
   }) async {
     emit(DiagnosticReportLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(DiagnosticReportError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(DiagnosticReportError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getDetailsDiagnosticReport(diagnosticReportId: diagnosticReportId);
     if (result is Success<DiagnosticReportModel>) {
@@ -172,13 +172,13 @@ class DiagnosticReportCubit extends Cubit<DiagnosticReportState> {
   }) async {
     emit(DiagnosticReportLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(DiagnosticReportError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(DiagnosticReportError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getDiagnosticReportOfCondition(conditionId: conditionId);
     if (result is Success<DiagnosticReportModel>) {

@@ -8,6 +8,7 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/flexible_image.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
 import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
 
@@ -478,25 +479,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         ),
         const Gap(16),
         if (services.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
-                ),
-                const Gap(8),
-                Text(
-                  'clinicDetails.noServicesAvailable'.tr(context),
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodySmall?.color,
-                  ),
-                ),
-              ],
-            ),
-          )
+          NotFoundDataPage()
         else
           Card(
             elevation: 2,
@@ -571,17 +554,7 @@ class ClinicServicesPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child:
         services.isEmpty
-            ? Center(
-          child: Text(
-            'clinicDetails.noServicesAvailable'.tr(
-              context,
-            ), // Localized
-            style: TextStyle(
-              fontSize: 16,
-              color: Theme.of(context).textTheme.bodySmall?.color,
-            ),
-          ),
-        )
+            ? NotFoundDataPage()
             : ListView.separated(
           itemCount: services.length,
           separatorBuilder:

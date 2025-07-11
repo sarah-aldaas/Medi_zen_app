@@ -21,6 +21,7 @@ import '../../../../base/theme/some classes/theme_cubit.dart';
 import '../../../../base/widgets/flexible_image.dart';
 import '../../../authentication/data/models/patient_model.dart';
 import '../../../complains/presentation/pages/complain_list_page.dart';
+import '../../../medical_records/series/presentation/pages/full_screen_image_viewer.dart';
 import '../../../organization/presentation/pages/organization_details_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -70,13 +71,23 @@ class _ProfilePageState extends State<ProfilePage> {
                 Center(
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.transparent,
-                        child: ClipOval(
-                          child: FlexibleImage(
-                            imageUrl: myPatientModel.avatar,
-                            assetPath: "assets/images/person.jpg",
+                      GestureDetector(
+                        onTap:(){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullScreenImageViewer(imageUrl: myPatientModel.avatar.toString(),),
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.transparent,
+                          child: ClipOval(
+                            child: FlexibleImage(
+                              imageUrl: myPatientModel.avatar,
+                              assetPath: "assets/images/person.jpg",
+                            ),
                           ),
                         ),
                       ),

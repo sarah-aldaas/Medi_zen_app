@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/services/di/injection_container_common.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 
 import '../../../../base/services/network/network_info.dart';
 import '../../../../base/theme/app_color.dart';
@@ -21,11 +23,12 @@ class ArticleDetailsNotificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ArticleCubit(
-        remoteDataSource: context.read<ArticlesRemoteDataSource>(),
-        networkInfo: context.read<NetworkInfo>(),
+        remoteDataSource: serviceLocator(),
+        networkInfo: serviceLocator(),
       )..getDetailsArticle(articleId: articleId, context: context),
       child: BlocConsumer<ArticleCubit, ArticleState>(
         listener: (context, state) {
+
           if (state is ArticleError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.error)),
@@ -33,15 +36,16 @@ class ArticleDetailsNotificationPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
+          if(state is ArticleLoading)
+          {
+return LoadingPage();
+          }
           final cubit = context.read<ArticleCubit>();
           ArticleModel? article;
 
           if (state is ArticleDetailsSuccess) {
             article = state.article;
           } else if (state is FavoriteOperationSuccess) {
-            // Handle favorite state changes
-            article = (state.previousState as ArticleDetailsSuccess).article;
-            article.isFavorite = state.isFavorite;
           }
 
           return _buildScaffold(context, cubit, article, state);
@@ -97,7 +101,7 @@ class ArticleDetailsNotificationPage extends StatelessWidget {
     }
 
     if (article == null) {
-      return Center(child: Text('articles.article_not_found'.tr(context)));
+      return NotFoundDataPage();
     }
 
     return SingleChildScrollView(

@@ -3,7 +3,7 @@ import 'package:medizen_app/base/theme/app_color.dart';
 
 final ThemeData lightTheme = ThemeData(
   textSelectionTheme: TextSelectionThemeData(
-    cursorColor:AppColors.primaryColor , // لون المؤشر العام
+    cursorColor:AppColors.primaryColor ,
   ),
 
   brightness: Brightness.light,

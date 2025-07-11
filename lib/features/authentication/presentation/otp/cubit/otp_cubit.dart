@@ -27,14 +27,14 @@ class OtpCubit extends Cubit<OtpState> {
   }) async {
     emit(OtpLoadingVerify());
 
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(OtpError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(OtpError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await authRemoteDataSource.verifyOtp(email: email, otp: otp);
     result.fold(
@@ -59,15 +59,15 @@ class OtpCubit extends Cubit<OtpState> {
   }) async {
     emit(OtpLoadingResend());
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(OtpError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(OtpError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await authRemoteDataSource.resendOtp(email: email);
     result.fold(
