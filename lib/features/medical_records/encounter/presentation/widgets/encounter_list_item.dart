@@ -21,7 +21,6 @@ class EncounterListItem extends StatelessWidget {
 
     final Color primaryColor = theme.primaryColor;
     final Color accentColor = theme.colorScheme.secondary;
-    final Color cardBackgroundColor = theme.cardColor;
     final Color titleColor =
         theme.textTheme.titleLarge?.color ?? Colors.black87;
     final Color subtitleColor =
@@ -45,7 +44,6 @@ class EncounterListItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Card(
         elevation: 4,
-        color: cardBackgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

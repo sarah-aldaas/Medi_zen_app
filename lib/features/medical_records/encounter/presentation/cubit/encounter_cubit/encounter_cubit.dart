@@ -48,13 +48,13 @@ class EncounterCubit extends Cubit<EncounterState> {
 
     // Check internet connectivity for initial load
     if (!loadMore) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(EncounterError(error: 'No internet connection'));
-        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        return;
-      }
+      // final isConnected = await networkInfo.isConnected;
+      // if (!isConnected) {
+      //   context.pushNamed(AppRouter.noInternet.name);
+      //   emit(EncounterError(error: 'No internet connection'));
+      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      //   return;
+      // }
     }
     final result = await remoteDataSource.getAllMyEncounter(
       filters: _currentFilters,
@@ -97,13 +97,13 @@ class EncounterCubit extends Cubit<EncounterState> {
     emit(EncounterLoading(isLoadMore: false));
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(EncounterError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(EncounterError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getAllMyEncounterOfAppointment(appointmentId: appointmentId);
     if (result is Success<EncounterModel>) {
@@ -121,13 +121,13 @@ class EncounterCubit extends Cubit<EncounterState> {
     emit(EncounterLoading(isLoadMore: false));
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(EncounterError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(EncounterError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getSpecificEncounter(encounterId: encounterId);
     if (result is Success<EncounterModel>) {

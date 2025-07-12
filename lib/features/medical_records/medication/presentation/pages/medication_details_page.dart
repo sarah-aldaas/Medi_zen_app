@@ -43,7 +43,7 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
           onPressed: () => context.pop(),
         ),
       ),
@@ -170,14 +170,13 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
                 ),
               ),
               const SizedBox(height: 6),
               Text(
                 medication.definition ??
                     'medicationDetails.noDescriptionAvailable'.tr(context),
-                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ],
           ),
@@ -227,21 +226,13 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 120,
+          width: 140,
           child: Text(
             "$label:",
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppColors.label,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.cyan),
           ),
         ),
-        Expanded(
-          child: Text(
-            value,
-            style: const TextStyle(fontSize: 15, color: AppColors.blackColor),
-          ),
-        ),
+        Expanded(child: Text(value, style: const TextStyle(fontSize: 15))),
       ],
     );
   }

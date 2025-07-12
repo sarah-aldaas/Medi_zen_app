@@ -10,6 +10,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/services/network/network_client.dart';
+import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_create_model.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
@@ -189,7 +190,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             children: [
               Row(
                 children: [
-                  const CircleAvatar(radius: 40, backgroundImage: AssetImage(AppAssetImages.photoDoctor1)),
+                   CircleAvatar(radius: 40, child: ClipOval(
+                    child: FlexibleImage(imageUrl: widget.doctorModel.avatar,assetPath: AppAssetImages.photoDoctor1,),
+                  ),),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

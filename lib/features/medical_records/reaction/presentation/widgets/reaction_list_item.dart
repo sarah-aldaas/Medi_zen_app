@@ -27,29 +27,27 @@ class ReactionListItem extends StatelessWidget {
       return 'reactionsPage.invalidDate'.tr(context);
     }
   }
-
   Widget _buildSeverityChip(BuildContext context, CodeModel? severity) {
+    final ThemeData theme = Theme.of(context);
     Color chipColor;
     String displayText;
-    final ThemeData theme = Theme.of(context);
 
     switch (severity?.code?.toLowerCase()) {
       case 'mild':
-        chipColor = Colors.green.shade500;
-        displayText = 'reactionsPage.mild'.tr(context);
+        chipColor = Colors.green.withAlpha(40); // Very light green
+        displayText = severity?.display ?? 'reactionsPage.mild'.tr(context);
         break;
       case 'moderate':
-        chipColor = Colors.orange.shade500;
-        displayText = 'reactionsPage.moderate'.tr(context);
+        chipColor = Colors.orange.withAlpha(40); // Very light orange
+        displayText = severity?.display ?? 'reactionsPage.moderate'.tr(context);
         break;
       case 'severe':
-        chipColor = Colors.red.shade500;
-        displayText = 'reactionsPage.severe'.tr(context);
+        chipColor = Colors.red.withAlpha(40); // Very light red
+        displayText = severity?.display ?? 'reactionsPage.severe'.tr(context);
         break;
       default:
-        chipColor =
-            theme.textTheme.bodySmall?.color?.withOpacity(0.5) ??
-            Colors.grey.shade500;
+        chipColor = (theme.textTheme.bodySmall?.color?.withAlpha(20)) ?? // Very subtle
+            Colors.grey.withAlpha(20);
         displayText = 'reactionsPage.notApplicable'.tr(context);
     }
 
@@ -57,15 +55,22 @@ class ReactionListItem extends StatelessWidget {
       label: Text(
         displayText,
         style: TextStyle(
-          color: theme.colorScheme.onPrimary,
+          color: chipColor.withAlpha(128), // Automatically picks readable text
           fontSize: 12,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600, // Slightly less bold than before
         ),
       ),
       backgroundColor: chipColor,
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12), // Slightly less rounded
+        side: BorderSide(
+          color: chipColor.withAlpha(100), // Subtle border
+          width: 0.5, // Thinner border
+        ),
+      ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      visualDensity: VisualDensity.compact, // Makes chip more compact
     );
   }
 

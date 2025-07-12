@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +9,6 @@ import 'package:medizen_app/features/medical_records/observation/data/models/obs
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../../../../../base/services/di/injection_container_common.dart';
 import '../../../../../base/services/network/network_client.dart';
 import '../../../../../base/theme/app_color.dart';
@@ -68,17 +66,15 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
         ),
         centerTitle: true,
         elevation: 4,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.primaryColor, AppColors.primaryColor],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
+        // flexibleSpace: Container(
+        //   decoration:  BoxDecoration(
+        //     gradient: LinearGradient(
+        //       colors: [AppColors.backGroundLogo, Colors.black87],
+        //       begin: Alignment.topLeft,
+        //       end: Alignment.bottomRight,
+        //     ),
+        //   ),
+        // ),
       ),
       body: BlocBuilder<ObservationCubit, ObservationState>(
         builder: (context, state) {
@@ -154,7 +150,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
     BuildContext context,
     ObservationModel observation,
   ) {
-    const Color greenColor = Colors.green;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
@@ -370,10 +365,10 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
                       child: Container(
                         padding: const EdgeInsets.all(12.0),
                         decoration: BoxDecoration(
-                          color: greenColor.withOpacity(0.05),
+                          color: Colors.green.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(12.0),
                           border: Border.all(
-                            color: greenColor.withOpacity(0.2),
+                            color: Colors.green.withOpacity(0.2),
                           ),
                         ),
                         child: Column(
@@ -570,14 +565,13 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
   }
 
   Widget _buildSubSectionTitle(BuildContext context, String title) {
-    const Color greenColor = Colors.green;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: greenColor,
+          color: Theme.of(context).primaryColor,
           fontWeight: FontWeight.bold,
           fontSize: 20,
         ),
@@ -599,7 +593,7 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
               '$label:',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppColors.cyan1,
+                color: AppColors.cyan,
                 fontSize: 17,
               ),
             ),

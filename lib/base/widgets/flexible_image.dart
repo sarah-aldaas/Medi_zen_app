@@ -18,8 +18,8 @@ class FlexibleImage extends StatelessWidget {
     this.fit = BoxFit.fill,
     this.placeholder,
     this.errorWidget,
-  }) : assert(imageUrl != null || assetPath != null,
-  'Either imageUrl or assetPath must be provided');
+  }); //: assert(imageUrl != null || assetPath != null,
+  // 'Either imageUrl or assetPath must be provided');
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class FlexibleImage extends StatelessWidget {
           }
         },
       );
-    } else {
+    } else if(assetPath!=null){
       return Image.asset(
         assetPath!,
         width: width,
@@ -67,6 +67,8 @@ class FlexibleImage extends StatelessWidget {
           return errorWidget ?? const Icon(Icons.error);
         },
       );
+    }else{
+       return errorWidget ?? const Icon(Icons.error);
     }
   }
 }

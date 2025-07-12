@@ -47,13 +47,13 @@ class ServiceCubit extends Cubit<ServiceState> {
     }
     // Check internet connectivity for initial load
     if (!loadMore) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(ServiceHealthCareError(error: 'No internet connection'));
-        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        return;
-      }
+      // final isConnected = await networkInfo.isConnected;
+      // if (!isConnected) {
+      //   context.pushNamed(AppRouter.noInternet.name);
+      //   emit(ServiceHealthCareError(error: 'No internet connection'));
+      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      //   return;
+      // }
     }
 
     final result = await remoteDataSource.getAllHealthCareServices(
@@ -103,13 +103,13 @@ class ServiceCubit extends Cubit<ServiceState> {
     emit(ServiceHealthCareLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ServiceHealthCareError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ServiceHealthCareError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       final result = await remoteDataSource.getSpecificHealthCareServices(id: id);

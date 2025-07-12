@@ -14,6 +14,8 @@ class AppTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final bool showClearIcon;
+  final VoidCallback? onClear;
 
   const AppTextField({
     super.key,
@@ -30,6 +32,8 @@ class AppTextField extends StatelessWidget {
     this.onTap,
     this.validator,
     this.onChanged,
+    this.showClearIcon = false,
+    this.onClear,
   });
 
   @override
@@ -50,14 +54,36 @@ class AppTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        suffixIcon: suffixIcon != null
-            ? IconButton(
-          icon: Icon(suffixIcon ),
-          onPressed: onTap,
-        )
-            : null,
+        suffixIcon: _buildSuffixIcon(),
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
       ),
     );
+  }
+  Widget? _buildSuffixIcon() {
+    if (showClearIcon && controller.text.isNotEmpty) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              controller.clear();
+              onClear?.call();
+            },
+          ),
+          if (suffixIcon != null)
+            IconButton(
+              icon: Icon(suffixIcon),
+              onPressed: onTap,
+            ),
+        ],
+      );
+    }
+    return suffixIcon != null
+        ? IconButton(
+      icon: Icon(suffixIcon),
+      onPressed: onTap,
+    )
+        : null;
   }
 }

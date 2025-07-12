@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
+import '../../../../../base/widgets/not_found_data_page.dart';
 import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/encounter_filter_model.dart';
 import '../../data/models/encounter_model.dart';
@@ -75,9 +76,6 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Define your primary and accent colors here for better readability and maintainability
-    final Color primaryColor =
-        Theme.of(context).primaryColor; // Or a specific color like Colors.teal
     final Color accentColor =
         Theme.of(context)
             .colorScheme
@@ -105,53 +103,30 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
         final bool hasMore = state is EncountersSuccess ? state.hasMore : false;
 
         if (encounters.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.event_note,
-                  size: 70,
-                  color: primaryColor,
-                ), // Changed color
-                const SizedBox(height: 20),
-                Text(
-                  'encountersPge.noFound'.tr(context),
-                  style: TextStyle(
-                    // Changed color
-                    fontSize: 20,
-                    color: primaryColor.withOpacity(0.8),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'encountersPge.checkFilters'.tr(context),
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: primaryColor.withOpacity(0.6),
-                  ),
-                ),
-              ],
-            ),
-          );
+          return NotFoundDataPage();
         }
 
-        return ListView.builder(
-          controller: _scrollController,
-          itemCount: encounters.length + (hasMore ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index < encounters.length) {
-              return EncounterListItem(
-                encounter: encounters[index],
-                onTap: () => _navigateToEncounterDetails(encounters[index].id!),
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(color: accentColor),
-              );
-            }
+        return RefreshIndicator(
+          onRefresh: () async {
+            _loadInitialEncounters();
           },
+          color: Theme.of(context).primaryColor,
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: encounters.length + (hasMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index < encounters.length) {
+                return EncounterListItem(
+                  encounter: encounters[index],
+                  onTap: () => _navigateToEncounterDetails(encounters[index].id!),
+                );
+              } else {
+                return Center(
+                  child: LoadingButton(),
+                );
+              }
+            },
+          ),
         );
       },
     );

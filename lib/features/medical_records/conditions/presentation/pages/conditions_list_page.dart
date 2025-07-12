@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_model.dart';
 import 'package:medizen_app/features/medical_records/conditions/presentation/pages/condition_details_page.dart';
 
@@ -76,9 +76,9 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
     return Scaffold(
       body: BlocConsumer<ConditionsCubit, ConditionsState>(
         listener: (context, state) {
-          if (state is ConditionsError) {
-            ShowToast.showToastError(message: state.error);
-          }
+          // if (state is ConditionsError) {
+          //   ShowToast.showToastError(message: state.error);
+          // }
         },
         builder: (context, state) {
           if (state is ConditionsLoading && !state.isLoadMore) {
@@ -92,50 +92,7 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
           final hasMore = state is ConditionsSuccess ? state.hasMore : false;
 
           if (conditions.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.medical_services_outlined,
-                    size: 80,
-                    color: Colors.blueGrey[300],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "conditionsList.noConditionsFound".tr(context),
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.blueGrey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "conditionsList.tapToRefresh".tr(context),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: Colors.blueGrey[400]),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => _loadInitialConditions(),
-                    icon: const Icon(Icons.refresh),
-                    label: Text("conditionsList.refresh".tr(context)),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
+            return NotFoundDataPage();
           }
 
           return RefreshIndicator(
@@ -150,9 +107,9 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                 if (index < conditions.length) {
                   return _buildConditionItem(conditions[index]);
                 } else {
-                  return const Padding(
+                  return Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(child: LoadingButton()),
                   );
                 }
               },
@@ -188,19 +145,15 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.medical_information,
-                    color: AppColors.primaryColor,
-                    size: 28,
-                  ),
-                  const SizedBox(width: 12),
+                  // Icon(Icons.medical_information, color: AppColors.primaryColor, size: 28),
+                  // const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       condition.healthIssue ??
                           'conditionsList.unknownCondition'.tr(context),
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: AppColors.green,
+                        fontSize: 20,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -220,28 +173,28 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                           'MMM d, y',
                         ).format(DateTime.parse(condition.onSetDate!))
                         : 'conditionsList.notAvailable'.tr(context),
-                color: Colors.teal,
+                color: Theme.of(context).primaryColor,
               ),
               if (condition.clinicalStatus != null)
                 _buildInfoRow(
                   icon: Icons.monitor_heart,
                   label: 'conditionsList.clinicalStatus'.tr(context),
                   value: condition.clinicalStatus!.display,
-                  color: Colors.indigo,
+                  color: Theme.of(context).primaryColor,
                 ),
               if (condition.verificationStatus != null)
                 _buildInfoRow(
                   icon: Icons.verified,
                   label: 'conditionsList.verification'.tr(context),
                   value: condition.verificationStatus!.display,
-                  color: Colors.green,
+                  color: Theme.of(context).primaryColor,
                 ),
               if (condition.stage != null)
                 _buildInfoRow(
-                  icon: Icons.stairs,
+                  icon: Icons.meeting_room_rounded,
                   label: 'conditionsList.stage'.tr(context),
                   value: condition.stage!.display,
-                  color: Colors.orange,
+                  color: Theme.of(context).primaryColor,
                 ),
             ],
           ),
@@ -255,27 +208,39 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
     required String label,
     required String value,
     required Color color,
+    int maxLines = 2,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, size: 18, color: color),
           const SizedBox(width: 10),
-          Text(
-            '$label: ',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppColors.label,
-            ),
-          ),
           Expanded(
-            child: Text(
-              value,
-              style: TextStyle(color: Colors.blueGrey[600]),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '$label:',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.label,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    value,
+                    maxLines: maxLines,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.black87),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
 import 'package:medizen_app/features/services/pages/widgets/health_care_service_filter_dialog.dart';
 
@@ -115,29 +116,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
           final hasMore =
           state is ServiceHealthCareSuccess ? state.hasMore : false;
           if (services.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.health_and_safety,
-                    size: 64,
-
-                    color: Theme.of(context).iconTheme.color?.withOpacity(0.4),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "healthCareServicesPage.noServicesAvailable".tr(context),
-                    style: TextStyle(
-                      fontSize: 18,
-
-                      color: Theme.of(context).textTheme.bodySmall?.color,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
-              ),
-            );
+            return NotFoundDataPage();
           }
 
           return ListView.builder(

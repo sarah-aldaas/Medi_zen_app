@@ -42,15 +42,15 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     if (isClosed) return;
 
     emit(CodeTypesLoading());
-    final isConnected = await networkInfo.isConnected;
-
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(CodeTypesError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(CodeTypesError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
     try {
       final result = await remoteDataSource.getCodeTypes();
       if (result is Success<CodeTypesResponseModel>) {
@@ -99,15 +99,15 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     if (isClosed) return;
     emit(CodesLoading());
 
-    final isConnected = await networkInfo.isConnected;
-
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(CodesError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(CodesError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
     try {
       final result = await remoteDataSource.getCodes(codeTypeId: codeTypeId);
       if (result is Success<CodesResponseModel>) {

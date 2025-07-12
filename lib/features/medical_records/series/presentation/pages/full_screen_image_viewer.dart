@@ -5,11 +5,15 @@ import 'package:photo_view/photo_view.dart';
 class FullScreenImageViewer extends StatefulWidget {
   final String imageUrl;
   final String? heroTag;
+  final String? assetsPath;
+  final Widget? errorWidget;
 
   const FullScreenImageViewer({
     super.key,
     required this.imageUrl,
     this.heroTag,
+    this.assetsPath,
+    this.errorWidget,
   });
 
   @override
@@ -76,10 +80,10 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                   initialScale: PhotoViewComputedScale.contained,
                   backgroundDecoration: const BoxDecoration(color: Colors.black),
                   loadingBuilder: (_, __) =>  Center(
-                    child: LoadingButton(isWhite: true),
+                    child: LoadingButton(),
                   ),
-                  errorBuilder: (_, __, ___) => const Center(
-                    child: Icon(Icons.broken_image, color: Colors.white, size: 50),
+                  errorBuilder: (_, __, ___) => widget.errorWidget?? const Center(
+                    child: Icon(Icons.broken_image, size: 50),
                   ),
                 ),
               ),

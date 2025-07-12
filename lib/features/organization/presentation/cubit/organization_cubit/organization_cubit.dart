@@ -18,13 +18,13 @@ class OrganizationCubit extends Cubit<OrganizationState> {
   Future<void> getOrganizationDetails({required BuildContext context}) async {
     emit(OrganizationLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(OrganizationError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(OrganizationError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getDetailsOrganization();
     if (result is Success<OrganizationModel>) {

@@ -284,7 +284,6 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
               controller: _startDateController,
               label: 'address.startDate'.tr(context),
               suffixIcon: Icons.calendar_today,
-              readOnly: true,
               onTap: () => _selectDate(context, _startDateController),
               validator:
                   (value) =>
@@ -297,7 +296,10 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
               controller: _endDateController,
               label: 'address.endDateOptional'.tr(context),
               suffixIcon: Icons.calendar_today,
-              readOnly: true,
+                showClearIcon: true,
+                onClear: () {
+                  setState(() {});
+                },
               onTap: () => _selectDate(context, _endDateController),
             ),
             const SizedBox(height: 50),
@@ -341,8 +343,9 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
       lastDate: DateTime(2100),
     );
     if (picked != null) {
-
-      controller.text = picked.toIso8601String().split('T')[0];
+      setState(() {
+        controller.text = picked.toIso8601String().split('T')[0];
+      });
     }
   }
 

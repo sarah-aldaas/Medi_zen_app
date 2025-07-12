@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/imaging_study/presentation/pages/imaging_study_details_page.dart';
 import 'package:medizen_app/features/medical_records/observation/presentation/pages/observation_details_page.dart';
@@ -118,7 +119,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
             title: 'serviceRequestDetailsPage.serviceDetailsSectionTitle'.tr(
               context,
             ),
-            icon: Icons.assignment_outlined,
             children: [
               _buildDetailRow(
                 context,
@@ -160,23 +160,22 @@ class ServiceRequestDetailsPage extends StatelessWidget {
 
           if (request.observation != null)
             _buildSectionCard(
-              context,
-              title: 'serviceRequestDetailsPage.observationsSectionTitle'.tr(
-                context,
-              ),
-              icon: Icons.medical_information_outlined,
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder:
                         (context) => ObservationDetailsPage(
-                          serviceId: serviceId,
-                          observationId: request.observation!.id!,
-                        ),
+                      serviceId: serviceId,
+                      observationId: request.observation!.id!,
+                    ),
                   ),
                 );
               },
+              context,
+              title: 'serviceRequestDetailsPage.observationsSectionTitle'.tr(
+                context,
+              ),
               children: [
                 _buildDetailRow(
                   context,
@@ -207,39 +206,39 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                       ).format(request.observation!.effectiveDateTime!)
                       : null,
                 ),
-                if (request.observation!.pdf != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Center(
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.picture_as_pdf_outlined,
-                          color: Theme.of(context).colorScheme.onSecondary,
-                        ),
-                        label: Text(
-                          'serviceRequestDetailsPage.viewTestReportPDFButton'
-                              .tr(context),
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.secondaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          elevation: 4,
-                        ),
-                      ),
-                    ),
-                  ),
+                // if (request.observation!.pdf != null)
+                //   Padding(
+                //     padding: const EdgeInsets.only(top: 16.0),
+                //     child: Center(
+                //       child: ElevatedButton.icon(
+                //         onPressed: () {},
+                //         icon: Icon(
+                //           Icons.picture_as_pdf_outlined,
+                //           color: Theme.of(context).colorScheme.onSecondary,
+                //         ),
+                //         label: Text(
+                //           'serviceRequestDetailsPage.viewTestReportPDFButton'
+                //               .tr(context),
+                //           style: Theme.of(
+                //             context,
+                //           ).textTheme.labelLarge?.copyWith(
+                //             color: Theme.of(context).colorScheme.onSecondary,
+                //           ),
+                //         ),
+                //         style: ElevatedButton.styleFrom(
+                //           backgroundColor: AppColors.secondaryColor,
+                //           shape: RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.circular(12),
+                //           ),
+                //           padding: const EdgeInsets.symmetric(
+                //             horizontal: 24,
+                //             vertical: 12,
+                //           ),
+                //           elevation: 4,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
               ],
             ),
           if (request.observation != null) const SizedBox(height: 24),
@@ -250,7 +249,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
               title: 'serviceRequestDetailsPage.imagingStudySectionTitle'.tr(
                 context,
               ),
-              icon: Icons.camera_alt_outlined,
               onTap: () {
                 Navigator.push(
                   context,
@@ -338,7 +336,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
               context,
               title: 'serviceRequestDetailsPage.encounterDetailsSectionTitle'
                   .tr(context),
-              icon: Icons.meeting_room_outlined,
               children: [
                 _buildDetailRow(
                   context,
@@ -518,7 +515,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
               context,
               title: 'serviceRequestDetailsPage.serviceInformationSectionTitle'
                   .tr(context),
-              icon: Icons.local_hospital_outlined,
               children: [
                 _buildDetailRow(
                   context,
@@ -555,26 +551,44 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   Center(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12.0),
-                      child: Image.network(
-                        request.healthCareService!.photo!,
+                      child:FlexibleImage(
                         height: 180,
-                        fit: BoxFit.cover,
-                        errorBuilder:
-                            (context, error, stackTrace) => Container(
-                              height: 180,
-                              color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
-                              child: Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  size: 50,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withOpacity(0.5),
-                                ),
-                              ),
+                        imageUrl: request.healthCareService!.photo,
+                        errorWidget: Container(
+                          height: 180,
+                          color:
+                          Theme.of(context).colorScheme.surfaceVariant,
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              size: 50,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withOpacity(0.5),
                             ),
-                      ),
+                          ),
+                        ),
+                      )
+                      // Image.network(
+                      //   request.healthCareService!.photo!,
+                      //   height: 180,
+                      //   fit: BoxFit.cover,
+                      //   errorBuilder:
+                      //       (context, error, stackTrace) => Container(
+                      //         height: 180,
+                      //         color:
+                      //             Theme.of(context).colorScheme.surfaceVariant,
+                      //         child: Center(
+                      //           child: Icon(
+                      //             Icons.broken_image,
+                      //             size: 50,
+                      //             color: Theme.of(
+                      //               context,
+                      //             ).colorScheme.onSurface.withOpacity(0.5),
+                      //           ),
+                      //         ),
+                      //       ),
+                      // ),
                     ),
                   ),
                 ],
@@ -648,7 +662,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
     BuildContext context, {
     required String title,
     required List<Widget> children,
-    IconData? icon,
     VoidCallback? onTap,
   }) {
     return Card(
@@ -663,11 +676,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  if (icon != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(icon, size: 28, color: AppColors.green300),
-                    ),
                   Expanded(
                     child: Text(
                       title,
@@ -678,10 +686,11 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                     ),
                   ),
                   if (onTap != null)
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 18,
-                      color: AppColors.primaryColor,
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.08), shape: BoxShape.circle),
+                      child: Icon(Icons.arrow_forward_ios_rounded, color: Theme.of(context).primaryColor.withOpacity(0.8), size: 18),
                     ),
                 ],
               ),
@@ -728,7 +737,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
               '$label:',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.cyan1,
+                color: AppColors.cyan,
                 fontSize: 15,
               ),
             ),
@@ -747,99 +756,50 @@ class ServiceRequestDetailsPage extends StatelessWidget {
   }
 
   Widget _buildStatusChip(
-    BuildContext context,
-    String? statusCode,
-    String? statusDisplay,
-  ) {
+      BuildContext context,
+      String? statusCode,
+      String? statusDisplay,
+      ) {
+    final statusColor = _getStatusColor(statusCode);
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       decoration: BoxDecoration(
-        color: _getStatusColor(statusCode),
-        borderRadius: BorderRadius.circular(25.0),
-        boxShadow: [
-          BoxShadow(
-            color: _getStatusColor(statusCode).withOpacity(0.3),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: statusColor.withOpacity(0.15), // More subtle background
+        borderRadius: BorderRadius.circular(16.0), // Less rounded corners
+        border: Border.all(
+          color: statusColor.withOpacity(0.3), // Subtle border
+          width: 1.0,
+        ),
       ),
       child: Text(
-        _getLocalizedStatusDisplay(context, statusCode) ??
+        statusDisplay ??
             'serviceRequestDetailsPage.unknownStatus'.tr(context),
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: statusColor.withAlpha(130), // Dynamic text color for contrast
+          fontWeight: FontWeight.bold, // Slightly less bold
         ),
       ),
     );
   }
 
-  String? _getLocalizedStatusDisplay(BuildContext context, String? statusCode) {
+ Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
       case 'active':
-        return 'serviceRequestDetailsPage.statusActive'.tr(context);
+        return Colors.blue; // Less intense than lightBlue.shade600
       case 'on-hold':
-        return 'serviceRequestDetailsPage.statusOnHold'.tr(context);
+        return Colors.orange;
       case 'revoked':
-        return 'serviceRequestDetailsPage.statusRevoked'.tr(context);
+        return Colors.red;
       case 'entered-in-error':
-        return 'serviceRequestDetailsPage.statusEnteredInError'.tr(context);
+        return Colors.purple;
       case 'rejected':
-        return 'serviceRequestDetailsPage.statusRejected'.tr(context);
-      case 'completed':
-        return 'serviceRequestDetailsPage.statusCompleted'.tr(context);
-      case 'in-progress':
-        return 'serviceRequestDetailsPage.statusInProgress'.tr(context);
-      case 'cancelled':
-        return 'serviceRequestDetailsPage.statusCancelled'.tr(context);
-      case 'registered':
-        return 'serviceRequestDetailsPage.imagingStatusRegistered'.tr(context);
-      case 'preliminary':
-        return 'serviceRequestDetailsPage.imagingStatusPreliminary'.tr(context);
-      case 'final':
-        return 'serviceRequestDetailsPage.imagingStatusFinal'.tr(context);
-      case 'amended':
-        return 'serviceRequestDetailsPage.imagingStatusAmended'.tr(context);
-      case 'unknown':
-        return 'serviceRequestDetailsPage.unknownStatus'.tr(context);
-      default:
-        return null;
-    }
-  }
-
-  Color _getStatusColor(String? statusCode) {
-    switch (statusCode) {
-      case 'active':
-        return Colors.lightBlue.shade600;
-      case 'on-hold':
-        return Colors.orange.shade600;
-      case 'revoked':
-        return Colors.red.shade600;
-      case 'entered-in-error':
-        return Colors.purple.shade600;
-      case 'rejected':
-        return Colors.red.shade700;
-      case 'completed':
-        return Colors.green.shade600;
-      case 'in-progress':
-        return Colors.blue.shade600;
-      case 'cancelled':
         return Colors.red.shade800;
-      case 'registered':
-        return Colors.blue.shade600;
-      case 'preliminary':
-        return Colors.orange.shade600;
-      case 'final':
-        return Colors.green.shade600;
-      case 'amended':
-        return Colors.purple.shade600;
+      case 'completed':
+        return Colors.green;
       default:
-        return Colors.grey.shade600;
+        return Colors.grey;
     }
   }
-
-  Color _getImagingStatusColor(String? statusCode) {
-    return _getStatusColor(statusCode);
-  }
+  
 }

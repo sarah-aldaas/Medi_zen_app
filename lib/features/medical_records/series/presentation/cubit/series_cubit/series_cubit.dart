@@ -19,12 +19,12 @@ class SeriesCubit extends Cubit<SeriesState> {
   Future<void> getSeriesDetails({required String serviceId, required String imagingStudyId, required String seriesId, required BuildContext context}) async {
     emit(SeriesLoading());
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(SeriesError('No internet connection'));
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(SeriesError('No internet connection'));
+    //   return;
+    // }
     final result = await remoteDataSource.getDetailsSeries(serviceId: serviceId, imagingStudyId: imagingStudyId, seriesId: seriesId);
 
     if (result is Success<SeriesModel>) {

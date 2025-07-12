@@ -9,6 +9,7 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_model.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/cancel_appointment_dialog.dart';
@@ -86,12 +87,6 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            context.pushReplacementNamed(AppRouter.homePage.name);
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           "myAppointments.title".tr(context),
@@ -132,26 +127,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                   : [];
           final hasMore = state is AppointmentSuccess ? state.hasMore : false;
           if (appointments.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.calendar_today, size: 64, color: Colors.grey[400]),
-                  SizedBox(height: 16),
-                  Text(
-                    "There are not any appointments.",
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                  ),
-                  SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.pushNamed(AppRouter.clinics.name);
-                    },
-                    child: Text("book appointment"),
-                  ),
-                ],
-              ),
-            );
+            return NotFoundDataPage();
           }
 
           return ListView.builder(
@@ -415,12 +391,11 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        // Doctor details column
+
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Doctor name
                               Container(
                                 width: 150,
                                 height: 20,
@@ -430,7 +405,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              // Date row
+
                               Row(
                                 children: [
                                   Container(
@@ -447,7 +422,6 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              // Time row
                               Row(
                                 children: [
                                   Container(
@@ -478,7 +452,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                         ),
                       ],
                     ),
-                    // Buttons (only for some items)
+
                     if (index % 2 == 0) ...[
                       const SizedBox(height: 16),
                       Row(

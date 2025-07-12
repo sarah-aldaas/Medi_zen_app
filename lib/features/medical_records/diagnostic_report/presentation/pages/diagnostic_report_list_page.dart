@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Make sure this is imported
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/data/models/diagnostic_report_filter_model.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/data/models/diagnostic_report_model.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/presentation/pages/diagnostic_report_details_page.dart';
@@ -77,9 +77,9 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
     return Scaffold(
       body: BlocConsumer<DiagnosticReportCubit, DiagnosticReportState>(
         listener: (context, state) {
-          if (state is DiagnosticReportError) {
-            ShowToast.showToastError(message: state.error);
-          }
+          // if (state is DiagnosticReportError) {
+          //   ShowToast.showToastError(message: state.error);
+          // }
         },
         builder: (context, state) {
           if (state is DiagnosticReportLoading && !state.isLoadMore) {
@@ -94,58 +94,7 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
               state is DiagnosticReportSuccess ? state.hasMore : false;
 
           if (reports.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.assignment_outlined,
-                    size: 80,
-                    color: Colors.blueGrey[300],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "diagnosticReportList.diagnosticReport_noReportsFound".tr(
-                      context,
-                    ),
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.blueGrey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "diagnosticReportList.diagnosticReport_tapToRefresh".tr(
-                      context,
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: Colors.blueGrey[400]),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => _loadInitialReports(),
-                    icon: const Icon(Icons.refresh),
-                    label: Text(
-                      "diagnosticReportList.diagnosticReport_refresh".tr(
-                        context,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
+            return NotFoundDataPage();
           }
 
           return RefreshIndicator(
@@ -154,15 +103,16 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
             },
             color: Theme.of(context).primaryColor,
             child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
               controller: _scrollController,
               itemCount: reports.length + (hasMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index < reports.length) {
                   return _buildReportItem(reports[index]);
                 } else {
-                  return const Padding(
+                  return Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(child: LoadingButton()),
                   );
                 }
               },
@@ -199,12 +149,12 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.assignment,
-                    color: AppColors.primaryColor,
-                    size: 28,
-                  ),
-                  const SizedBox(width: 12),
+                  // Icon(
+                  //   Icons.assignment,
+                  //   color: AppColors.primaryColor,
+                  //   size: 28,
+                  // ),
+                  // const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       report.name ??
@@ -212,7 +162,6 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                               .tr(context),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppColors.green,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -221,91 +170,106 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                   const Icon(Icons.chevron_right, color: AppColors.green),
                 ],
               ),
-              Divider(height: 20, thickness: 1, color: Colors.grey[200]),
+              Divider(),
               const Gap(10),
 
               if (report.note != null && report.note!.isNotEmpty)
                 _buildInfoRow(
                   icon: Icons.note,
-                  label: 'diagnosticReportList.diagnosticReport_note'.tr(
-                    context,
-                  ),
+                  label:
+                      'diagnosticListAppointmentPage.diagnosticReportListAppointment_note'
+                          .tr(context),
                   value: report.note!,
+                  color: Theme.of(context).primaryColor,
                 ),
 
               if (report.condition != null) ...[
                 _buildInfoRow(
                   icon: Icons.medical_services,
-                  label: 'diagnosticReportList.diagnosticReport_condition'.tr(
-                    context,
-                  ),
+                  label:
+                      'diagnosticListAppointmentPage.diagnosticReportListAppointment_condition'
+                          .tr(context),
                   value:
                       report.condition!.healthIssue ??
-                      'diagnosticReportList.diagnosticReport_unknownCondition'
+                      'diagnosticListAppointmentPage.diagnosticReportListAppointment_unknownCondition'
                           .tr(context),
+                  color: Theme.of(context).primaryColor,
                 ),
 
                 if (report.condition!.clinicalStatus != null)
                   _buildInfoRow(
                     icon: Icons.info_outline,
                     label:
-                        'diagnosticReportList.diagnosticReport_clinicalStatus'
+                        'diagnosticListAppointmentPage.diagnosticReportListAppointment_clinicalStatus'
                             .tr(context),
                     value: report.condition!.clinicalStatus!.display,
+                    color: _getStatusColor(
+                      report.condition!.clinicalStatus!.code,
+                    ),
                   ),
 
                 if (report.condition!.verificationStatus != null)
                   _buildInfoRow(
                     icon: Icons.verified,
                     label:
-                        'diagnosticReportList.diagnosticReport_verificationStatus'
+                        'diagnosticListAppointmentPage.diagnosticReportListAppointment_verificationStatus'
                             .tr(context),
                     value: report.condition!.verificationStatus!.display,
+                    color: _getStatusColor(
+                      report.condition!.verificationStatus!.code,
+                    ),
                   ),
 
                 if (report.condition!.bodySite != null)
                   _buildInfoRow(
                     icon: Icons.location_on,
-                    label: 'diagnosticReportList.diagnosticReport_bodySite'.tr(
-                      context,
-                    ),
+                    label:
+                        'diagnosticListAppointmentPage.diagnosticReportListAppointment_bodySite'
+                            .tr(context),
                     value: report.condition!.bodySite!.display,
+                    color: Theme.of(context).primaryColor,
                   ),
 
                 if (report.condition!.stage != null)
                   _buildInfoRow(
-                    icon: Icons.stacked_line_chart,
-                    label: 'diagnosticReportList.diagnosticReport_stage'.tr(
-                      context,
-                    ),
+                    icon: Icons.meeting_room_rounded,
+                    label:
+                        'diagnosticListAppointmentPage.diagnosticReportListAppointment_stage'
+                            .tr(context),
                     value: report.condition!.stage!.display,
+                    color: Theme.of(context).primaryColor,
                   ),
 
                 if (report.condition!.onSetDate != null)
                   _buildInfoRow(
                     icon: Icons.calendar_today,
-                    label: 'diagnosticReportList.diagnosticReport_onset_date'
-                        .tr(context),
+                    label:
+                        'diagnosticListAppointmentPage.diagnosticReportListAppointment_onset_date'
+                            .tr(context),
                     value: _formatDate(report.condition!.onSetDate!),
+                    color: Theme.of(context).primaryColor,
                   ),
               ],
 
               if (report.conclusion != null && report.conclusion!.isNotEmpty)
                 _buildInfoRow(
                   icon: Icons.assignment_turned_in,
-                  label: 'diagnosticReportList.diagnosticReport_conclusion'.tr(
-                    context,
-                  ),
+                  label:
+                      'diagnosticListAppointmentPage.diagnosticReportListAppointment_conclusion'
+                          .tr(context),
                   value: report.conclusion!,
+                  color: Theme.of(context).primaryColor,
                   maxLines: 3,
                 ),
 
               if (report.status != null)
                 _buildInfoRow(
                   icon: Icons.star,
-                  label: 'diagnosticReportList.diagnosticReport_reportStatus'
-                      .tr(context),
+                  label:
+                      'diagnosticListAppointmentPage.diagnosticReportListAppointment_reportStatus'
+                          .tr(context),
                   value: report.status!.display,
+                  color: _getStatusColor(report.status!.code),
                 ),
             ],
           ),
@@ -318,32 +282,40 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
     required IconData icon,
     required String label,
     required String value,
-    int maxLines = 1,
+    required Color color,
+    int maxLines = 2,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 18,
-            color: AppColors.secondaryColor.withOpacity(0.7),
-          ),
+          Icon(icon, size: 18, color: color),
           const SizedBox(width: 10),
-          Text(
-            '$label: ',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppColors.label,
-            ),
-          ),
           Expanded(
-            child: Text(
-              value,
-              style: TextStyle(color: Colors.blueGrey[600]),
-              maxLines: maxLines,
-              overflow: TextOverflow.ellipsis,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '$label:',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.label,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    value,
+                    maxLines: maxLines,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.black87),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -362,28 +334,15 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
 
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
-      case 'final':
-      case 'completed':
-      case 'condition_confirmed':
+      case 'diagnostic_report_final':
         return Colors.green;
-      case 'partial':
-        return Colors.orange;
-      case 'preliminary':
+
+      case 'diagnostic_report_registered':
         return Colors.blue;
-      case 'amended':
-        return Colors.purple;
-      case 'corrected':
-        return Colors.teal;
-      case 'appended':
-        return Colors.indigo;
-      case 'cancelled':
+
+      case 'diagnostic_report_cancelled':
         return Colors.red;
-      case 'entered-in-error':
-        return Colors.redAccent;
       case 'unknown':
-        return Colors.grey;
-      case 'condition_active':
-        return Colors.green.shade700;
       default:
         return Colors.grey;
     }

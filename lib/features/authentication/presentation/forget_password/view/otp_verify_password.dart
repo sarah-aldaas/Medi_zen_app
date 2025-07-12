@@ -35,7 +35,13 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("otp_verification_page.title".tr(context), style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold)),
+          title: Text(
+            "otp_verification_page.title".tr(context),
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         body: Padding(
@@ -44,7 +50,10 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
             listener: (context, state) {
               if (state is OtpSuccess) {
                 // ShowToast.showToastSuccess(message: state.message);
-                context.goNamed(AppRouter.resetPassword.name, extra: {'email': widget.email});
+                context.goNamed(
+                  AppRouter.resetPassword.name,
+                  extra: {'email': widget.email},
+                );
               } else if (state is OtpResendSuccess) {
                 ShowToast.showToastSuccess(message: state.message);
               } else if (state is OtpError) {
@@ -58,10 +67,27 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(width: context.width, height: context.height / 3, child: Image.asset("assets/images/locks/1212.png", fit: BoxFit.fill)),
-                    Text("otp_verification_page.enter_otp".tr(context), style: const TextStyle(fontSize: 16)),
+                    SizedBox(
+                      width: context.width,
+                      height: context.height / 3,
+                      child: Image.asset(
+                        "assets/images/locks/111.png",
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Text(
+                      "otp_verification_page.enter_otp".tr(context),
+                      style: const TextStyle(fontSize: 16),
+                    ),
                     const SizedBox(height: 10),
-                    Text("otp_verification_page.sent_to".tr(context) + widget.email, style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor)),
+                    Text(
+                      "otp_verification_page.sent_to".tr(context) +
+                          widget.email,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     PinCodeTextField(
                       appContext: context,
@@ -74,9 +100,12 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
                         borderRadius: BorderRadius.circular(8),
                         fieldHeight: 50,
                         fieldWidth: 40,
-                        activeFillColor: Theme.of(context).scaffoldBackgroundColor,
-                        inactiveFillColor: Theme.of(context).scaffoldBackgroundColor,
-                        selectedFillColor: Theme.of(context).scaffoldBackgroundColor,
+                        activeFillColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                        inactiveFillColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                        selectedFillColor:
+                            Theme.of(context).scaffoldBackgroundColor,
                         activeColor: Theme.of(context).primaryColor,
                         inactiveColor: Colors.grey,
                         selectedColor: Theme.of(context).primaryColor,
@@ -93,16 +122,33 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
                               ? null
                               : () {
                                 if (_otpController.text.length == 6) {
-                                  context.read<OtpVerifyPasswordCubit>().verifyOtp(email: widget.email, otp: _otpController.text, context: context);
+                                  context
+                                      .read<OtpVerifyPasswordCubit>()
+                                      .verifyOtp(
+                                        email: widget.email,
+                                        otp: _otpController.text,
+                                        context: context,
+                                      );
                                 } else {
-                                  ShowToast.showToastError(message: 'Please enter a valid -digit OTP');
+                                  ShowToast.showToastError(
+                                    message: 'Please enter a valid -digit OTP',
+                                  );
                                 }
                               },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
-                        padding: EdgeInsets.symmetric(horizontal: context.width / 3, vertical: 12),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.width / 3,
+                          vertical: 12,
+                        ),
                       ),
-                      child: isLoadingVerify ? LoadingButton() : Text("otp_verification_page.verify".tr(context), style: const TextStyle(color: Colors.white)),
+                      child:
+                          isLoadingVerify
+                              ? LoadingButton()
+                              : Text(
+                                "otp_verification_page.verify".tr(context),
+                                style: const TextStyle(color: Colors.white),
+                              ),
                     ),
                     const SizedBox(height: 20),
                   ],

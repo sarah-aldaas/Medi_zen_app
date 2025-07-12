@@ -74,8 +74,6 @@ dependencies:
   path_provider: ^2.1.5
   photo_view:
   cached_network_image:
-  sqflite_common_ffi:
-  sqlite3_flutter_libs:
 
 dev_dependencies:
   flutter_test:

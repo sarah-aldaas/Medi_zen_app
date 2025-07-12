@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 
 import '../../../../../base/widgets/show_toast.dart';
-import '../../data/models/encounter_filter_model.dart';
 import '../../data/models/encounter_model.dart';
 import '../cubit/encounter_cubit/encounter_cubit.dart';
 import '../widgets/encounter_list_item.dart';
@@ -52,42 +52,27 @@ class _AllEncountersOfAppointmentPageState extends State<AllEncountersOfAppointm
             ? state.encounterModel!=null?[state.encounterModel]:[]:[];
 
         if (encounters.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.event_note, size: 70, color: Colors.grey[400]),
-                const SizedBox(height: 20),
-                Text(
-                  'encountersPge.noFound'.tr(context),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'encountersPge.checkFilters'.tr(context),
-                  style: const TextStyle(fontSize: 15, color: Colors.grey),
-                ),
-              ],
-            ),
-          );
+          return NotFoundDataPage();
         }
 
-        return ListView.builder(
-          itemCount: encounters.length,
-          itemBuilder: (context, index) {
-            if (index < encounters.length) {
-              return EncounterListItem(
-                encounter: encounters[index],
-                onTap: () => _navigateToEncounterDetails(encounters[index].id!),
-              );
-            } else {
-              return Center(child: LoadingButton());
-            }
+        return RefreshIndicator(
+          onRefresh: () async {
+            _loadInitialEncounters();
           },
+          color: Theme.of(context).primaryColor,
+          child: ListView.builder(
+            itemCount: encounters.length,
+            itemBuilder: (context, index) {
+              if (index < encounters.length) {
+                return EncounterListItem(
+                  encounter: encounters[index],
+                  onTap: () => _navigateToEncounterDetails(encounters[index].id!),
+                );
+              } else {
+                return Center(child: LoadingButton());
+              }
+            },
+          ),
         );
       },
     );

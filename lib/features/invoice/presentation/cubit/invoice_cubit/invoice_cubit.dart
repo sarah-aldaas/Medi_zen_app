@@ -59,13 +59,13 @@ class InvoiceCubit extends Cubit<InvoiceState> {
       }
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(InvoiceError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed('noInternet');
+    //   emit(InvoiceError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final currentFilters = isPaid ? _currentFiltersPaid : _currentFiltersUnpaid;
     final currentPage = isPaid ? _currentPagePaid : _currentPageUnpaid;

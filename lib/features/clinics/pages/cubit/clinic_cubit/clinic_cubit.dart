@@ -60,14 +60,14 @@ class ClinicCubit extends Cubit<ClinicState> {
 
     // Check internet connectivity for initial load
     if (!loadMore) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(ClinicError(error: 'No internet connection'));
-        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        isLoading = false;
-        return;
-      }
+      // final isConnected = await networkInfo.isConnected;
+      // if (!isConnected) {
+      //   context.pushNamed(AppRouter.noInternet.name);
+      //   emit(ClinicError(error: 'No internet connection'));
+      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      //   isLoading = false;
+      //   return;
+      // }
     }
     try {
       final result = await remoteDataSource.getAllClinics(
@@ -139,14 +139,14 @@ class ClinicCubit extends Cubit<ClinicState> {
     }
 // Check internet connectivity for initial load
     if (!loadMore) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(ClinicError(error: 'No internet connection'));
-        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        isLoading = false;
-        return;
-      }
+      // final isConnected = await networkInfo.isConnected;
+      // if (!isConnected) {
+      //   context.pushNamed(AppRouter.noInternet.name);
+      //   emit(ClinicError(error: 'No internet connection'));
+      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      //   isLoading = false;
+      //   return;
+      // }
     }
 
     try {
@@ -202,14 +202,14 @@ class ClinicCubit extends Cubit<ClinicState> {
     emit(ClinicLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ClinicError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ClinicError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       final result = await remoteDataSource.getSpecificClinic(id: id);

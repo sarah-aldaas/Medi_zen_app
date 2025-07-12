@@ -323,11 +323,11 @@ GoRouter goRouter() {
               return HealthCareServicesPage();
             },
           ),
-          GoRoute(
-            path: '/noInternet',
-            name: AppRouter.noInternet.name,
-            builder: (context, state) => const NoInternetPage(),
-          ),
+          // GoRoute(
+          //   path: '/noInternet',
+          //   name: AppRouter.noInternet.name,
+          //   builder: (context, state) => const NoInternetPage(),
+          // ),
           GoRoute(
             path: '/appointmentPage',
             name: AppRouter.appointmentPage.name,

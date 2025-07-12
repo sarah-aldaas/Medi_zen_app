@@ -19,15 +19,15 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
       ) async {
     emit(ChangePasswordLoading());
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-
-
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ChangePasswordFailure("No internet connection"));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    //
+    //
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ChangePasswordFailure("No internet connection"));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       if (newPassword == confirmPassword) {

@@ -192,7 +192,7 @@ class _DiagnosticReportDetailsPageState
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: AppColors.titel,
+          color: Theme.of(context).primaryColor
         ),
       ),
     );
@@ -235,7 +235,6 @@ class _DiagnosticReportDetailsPageState
                       label: Text(
                         report.status!.display,
                         style: const TextStyle(
-                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -441,7 +440,7 @@ class _DiagnosticReportDetailsPageState
 
             if (condition.stage != null)
               _buildDetailRow(
-                icon: Icons.stacked_line_chart,
+                icon: Icons.meeting_room_rounded,
                 label: 'diagnosticDetailsPage.diagnosticReport_stage'.tr(
                   context,
                 ),
@@ -754,7 +753,7 @@ class _DiagnosticReportDetailsPageState
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: small ? 20 : 24, color: iconColor),
+          Icon(icon, size: small ? 20 : 24, color: Theme.of(context).primaryColor),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -763,29 +762,17 @@ class _DiagnosticReportDetailsPageState
                 Text(
                   label,
                   style:
-                      small
-                          ? Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w500,
-                          )
-                          : Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w500,
-                          ),
+                      TextStyle(
+                        color: Colors.cyan,
+                        fontWeight: FontWeight.bold
+                      )
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style:
-                      small
-                          ? Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
-                          )
-                          : Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
-                          ),
+                  style:TextStyle(
+                    color: Colors.grey
+                  )
                 ),
               ],
             ),
@@ -808,13 +795,13 @@ class _DiagnosticReportDetailsPageState
         children: [
           Row(
             children: [
-              Icon(icon, size: 24, color: color),
+              Icon(icon, size: 24, color: Theme.of(context).primaryColor),
               const SizedBox(width: 10),
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
+                  color: Colors.cyan
                 ),
               ),
             ],
@@ -822,9 +809,7 @@ class _DiagnosticReportDetailsPageState
           const SizedBox(height: 8),
           Text(
             content,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+            style: TextStyle(color: Colors.grey),
           ),
         ],
       ),

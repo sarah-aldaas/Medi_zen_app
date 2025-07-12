@@ -49,13 +49,13 @@ class ReactionCubit extends Cubit<ReactionState> {
     }
 // Check internet connectivity for initial load
     if (!loadMore) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(ReactionError(error: 'No internet connection'));
-        ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        return;
-      }
+      // final isConnected = await networkInfo.isConnected;
+      // if (!isConnected) {
+      //   context.pushNamed(AppRouter.noInternet.name);
+      //   emit(ReactionError(error: 'No internet connection'));
+      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+      //   return;
+      // }
     }
     final result = await remoteDataSource.getAllReactionOfAppointment(
       filters: _currentFilters,
@@ -101,13 +101,13 @@ class ReactionCubit extends Cubit<ReactionState> {
     emit(ReactionLoading(isLoadMore: false));
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ReactionError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(ReactionError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     final result = await remoteDataSource.getSpecificReaction(
       allergyId: allergyId,

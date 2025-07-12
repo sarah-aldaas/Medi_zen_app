@@ -44,13 +44,13 @@ class AddressCubit extends Cubit<AddressState> {
 
       // Check internet connectivity for initial load
       if (!loadMore) {
-        final isConnected = await networkInfo.isConnected;
-        if (!isConnected) {
-          context.pushNamed(AppRouter.noInternet.name);
-          emit(AddressError(error: 'No internet connection'));
-          ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-          return;
-        }
+        // final isConnected = await networkInfo.isConnected;
+        // if (!isConnected) {
+        //   context.pushNamed(AppRouter.noInternet.name);
+        //   emit(AddressError(error: 'No internet connection'));
+        //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+        //   return;
+        // }
       }
 
       final result = await remoteDataSource.getListAllAddress(
@@ -120,13 +120,13 @@ class AddressCubit extends Cubit<AddressState> {
     emit(AddressLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(AddressError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(AddressError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       final result = await remoteDataSource.createAddress(
@@ -161,13 +161,13 @@ class AddressCubit extends Cubit<AddressState> {
     emit(AddressLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(AddressError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(AddressError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       final result = await remoteDataSource.updateAddress(
@@ -202,13 +202,13 @@ class AddressCubit extends Cubit<AddressState> {
     emit(AddressLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(AddressError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(AddressError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return;
+    // }
 
     try {
       final result = await remoteDataSource.deleteAddress(id: id);
@@ -240,13 +240,13 @@ class AddressCubit extends Cubit<AddressState> {
     emit(AddressLoading());
 
     // Check internet connectivity
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(AddressError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return null;
-    }
+    // final isConnected = await networkInfo.isConnected;
+    // if (!isConnected) {
+    //   context.pushNamed(AppRouter.noInternet.name);
+    //   emit(AddressError(error: 'No internet connection'));
+    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
+    //   return null;
+    // }
 
     try {
       final result = await remoteDataSource.showAddress(id: id);
