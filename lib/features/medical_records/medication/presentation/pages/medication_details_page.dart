@@ -43,7 +43,7 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
           onPressed: () => context.pop(),
         ),
       ),
@@ -226,21 +226,13 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 120,
+          width: 140,
           child: Text(
             "$label:",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.cyan,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.cyan),
           ),
         ),
-        Expanded(
-          child: Text(
-            value,
-            style: const TextStyle(fontSize: 15),
-          ),
-        ),
+        Expanded(child: Text(value, style: const TextStyle(fontSize: 15))),
       ],
     );
   }

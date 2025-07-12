@@ -81,7 +81,7 @@ return LoadingPage();
           else if (article != null)
             IconButton(
               icon: Icon(
-                article.isFavorite! ? Icons.bookmark : Icons.bookmark_border,
+                article.isFavorite! ? Icons.favorite: Icons.favorite_border,
                 color: AppColors.primaryColor,
               ),
               tooltip: article.isFavorite!

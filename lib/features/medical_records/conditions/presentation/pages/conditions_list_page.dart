@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/not_found_data_page.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_model.dart';
 import 'package:medizen_app/features/medical_records/conditions/presentation/pages/condition_details_page.dart';
 
@@ -50,15 +49,24 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
 
   void _loadInitialConditions() {
     _isLoadingMore = false;
-    context.read<ConditionsCubit>().getAllConditions(context: context, filters: widget.filter.toJson());
+    context.read<ConditionsCubit>().getAllConditions(
+      context: context,
+      filters: widget.filter.toJson(),
+    );
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<ConditionsCubit>()
-          .getAllConditions(loadMore: true, context: context, filters: widget.filter.toJson())
+          .getAllConditions(
+            loadMore: true,
+            context: context,
+            filters: widget.filter.toJson(),
+          )
           .then((_) => setState(() => _isLoadingMore = false));
     }
   }
@@ -77,7 +85,10 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
             return const Center(child: LoadingPage());
           }
 
-          final conditions = state is ConditionsSuccess ? state.paginatedResponse.paginatedData!.items : [];
+          final conditions =
+              state is ConditionsSuccess
+                  ? state.paginatedResponse.paginatedData!.items
+                  : [];
           final hasMore = state is ConditionsSuccess ? state.hasMore : false;
 
           if (conditions.isEmpty) {
@@ -96,7 +107,10 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                 if (index < conditions.length) {
                   return _buildConditionItem(conditions[index]);
                 } else {
-                  return Padding(padding: EdgeInsets.all(16.0), child: Center(child: LoadingButton()));
+                  return Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: LoadingButton()),
+                  );
                 }
               },
             ),
@@ -113,7 +127,14 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap:
-            () => Navigator.push(context, MaterialPageRoute(builder: (context) => ConditionDetailsPage(conditionId: condition.id!))).then((value) {
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        ConditionDetailsPage(conditionId: condition.id!),
+              ),
+            ).then((value) {
               _loadInitialConditions();
             }),
         borderRadius: BorderRadius.circular(12),
@@ -128,8 +149,12 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                   // const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      condition.healthIssue ?? 'conditionsList.unknownCondition'.tr(context),
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      condition.healthIssue ??
+                          'conditionsList.unknownCondition'.tr(context),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -144,7 +169,9 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                 label: 'conditionsList.onsetDate'.tr(context),
                 value:
                     condition.onSetDate != null
-                        ? DateFormat('MMM d, y').format(DateTime.parse(condition.onSetDate!))
+                        ? DateFormat(
+                          'MMM d, y',
+                        ).format(DateTime.parse(condition.onSetDate!))
                         : 'conditionsList.notAvailable'.tr(context),
                 color: Theme.of(context).primaryColor,
               ),
@@ -176,16 +203,46 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
     );
   }
 
-  Widget _buildInfoRow({required IconData icon, required String label, required String value, required Color color}) {
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+    int maxLines = 2,
+  }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, size: 18, color: color),
           const SizedBox(width: 10),
-          Text('$label: ', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.label)),
-          Expanded(child: Text(value, maxLines: 2, overflow: TextOverflow.ellipsis)),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '$label:',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.label,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    value,
+                    maxLines: maxLines,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.black87),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

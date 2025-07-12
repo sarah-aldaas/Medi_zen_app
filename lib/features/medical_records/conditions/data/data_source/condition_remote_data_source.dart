@@ -8,16 +8,23 @@ import '../end_points/conditions_end_points.dart';
 import '../models/conditions_model.dart';
 
 abstract class ConditionRemoteDataSource {
-  Future<Resource<PaginatedResponse<ConditionsModel>>> getAllConditions({Map<String, dynamic>? filters, int page = 1, int perPage = 10});
+  Future<Resource<PaginatedResponse<ConditionsModel>>> getAllConditions({
+    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,
+  });
 
-  Future<Resource<PaginatedResponse<ConditionsModel>>> getAllConditionForAppointment({
+  Future<Resource<PaginatedResponse<ConditionsModel>>>
+  getAllConditionForAppointment({
     Map<String, dynamic>? filters,
     int page = 1,
     int perPage = 10,
     required String appointmentId,
   });
 
-  Future<Resource<ConditionsModel>> getDetailsConditions({required String conditionId});
+  Future<Resource<ConditionsModel>> getDetailsConditions({
+    required String conditionId,
+  });
 }
 
 class ConditionRemoteDataSourceImpl implements ConditionRemoteDataSource {
@@ -26,39 +33,79 @@ class ConditionRemoteDataSourceImpl implements ConditionRemoteDataSource {
   ConditionRemoteDataSourceImpl({required this.networkClient});
 
   @override
-  Future<Resource<PaginatedResponse<ConditionsModel>>> getAllConditions({Map<String, dynamic>? filters, int page = 1, int perPage = 10}) async {
-    final params = {'page': page.toString(), 'pagination_count': perPage.toString(), if (filters != null) ...filters};
-
-    final response = await networkClient.invoke(ConditionsEndPoints.getAllConditions(), RequestType.get, queryParameters: params);
-
-    return ResponseHandler<PaginatedResponse<ConditionsModel>>(
-      response,
-    ).processResponse(fromJson: (json) => PaginatedResponse<ConditionsModel>.fromJson(json, 'conditions', (dataJson) => ConditionsModel.fromJson(dataJson)));
-  }
-
-  @override
-  Future<Resource<PaginatedResponse<ConditionsModel>>> getAllConditionForAppointment({
+  Future<Resource<PaginatedResponse<ConditionsModel>>> getAllConditions({
     Map<String, dynamic>? filters,
     int page = 1,
     int perPage = 10,
-    required String appointmentId,
   }) async {
-    final params = {'page': page.toString(), 'pagination_count': perPage.toString(), if (filters != null) ...filters};
+    final params = {
+      'page': page.toString(),
+      'pagination_count': perPage.toString(),
+      if (filters != null) ...filters,
+    };
 
     final response = await networkClient.invoke(
-      ConditionsEndPoints.getAllConditionsForAppointment(appointmentId: appointmentId),
+      ConditionsEndPoints.getAllConditions(),
       RequestType.get,
       queryParameters: params,
     );
 
     return ResponseHandler<PaginatedResponse<ConditionsModel>>(
       response,
-    ).processResponse(fromJson: (json) => PaginatedResponse<ConditionsModel>.fromJson(json, 'conditions', (dataJson) => ConditionsModel.fromJson(dataJson)));
+    ).processResponse(
+      fromJson:
+          (json) => PaginatedResponse<ConditionsModel>.fromJson(
+            json,
+            'conditions',
+            (dataJson) => ConditionsModel.fromJson(dataJson),
+          ),
+    );
   }
 
   @override
-  Future<Resource<ConditionsModel>> getDetailsConditions({required String conditionId}) async {
-    final response = await networkClient.invoke(ConditionsEndPoints.getDetailsCondition(conditionId: conditionId), RequestType.get);
-    return ResponseHandler<ConditionsModel>(response).processResponse(fromJson: (json) => ConditionsModel.fromJson(json['condition']));
+  Future<Resource<PaginatedResponse<ConditionsModel>>>
+  getAllConditionForAppointment({
+    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,
+    required String appointmentId,
+  }) async {
+    final params = {
+      'page': page.toString(),
+      'pagination_count': perPage.toString(),
+      if (filters != null) ...filters,
+    };
+
+    final response = await networkClient.invoke(
+      ConditionsEndPoints.getAllConditionsForAppointment(
+        appointmentId: appointmentId,
+      ),
+      RequestType.get,
+      queryParameters: params,
+    );
+
+    return ResponseHandler<PaginatedResponse<ConditionsModel>>(
+      response,
+    ).processResponse(
+      fromJson:
+          (json) => PaginatedResponse<ConditionsModel>.fromJson(
+            json,
+            'conditions',
+            (dataJson) => ConditionsModel.fromJson(dataJson),
+          ),
+    );
+  }
+
+  @override
+  Future<Resource<ConditionsModel>> getDetailsConditions({
+    required String conditionId,
+  }) async {
+    final response = await networkClient.invoke(
+      ConditionsEndPoints.getDetailsCondition(conditionId: conditionId),
+      RequestType.get,
+    );
+    return ResponseHandler<ConditionsModel>(response).processResponse(
+      fromJson: (json) => ConditionsModel.fromJson(json['condition']),
+    );
   }
 }

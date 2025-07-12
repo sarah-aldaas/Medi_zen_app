@@ -946,6 +946,7 @@
     "allCategories": "جميع الفئات",
     "noCategoriesAvailable": "لا توجد فئات متاحة",
     "errorLoadingCategories": "خطأ في تحميل الفئات:",
+    "bothMinMaxRequired": "يرجى إدخال الحد الأدنى والحد الأقصى معاً",
     "clear": "مسح",
     "cancel": "إلغاء",
     "apply": "تطبيق"
@@ -1240,11 +1241,27 @@
     "statusOnHold": "معلق"
   },
   "medicationDetails": {
-    "title": "تفاصيل الدواء",
-    "failedToLoad": "فشل تحميل تفاصيل الدواء",
-    "dosageInfo": "معلومات الجرعة",
-    "instructions": "التعليمات",
-    "statusAndDates": "الحالة والتواريخ"
+
+  "title": "تفاصيل الدواء",
+  "failedToLoad": "فشل في تحميل تفاصيل الدواء.",
+  "dosageInfo": "معلومات الجرعة",
+  "dose": "الجرعة",
+  "maxDose": "الحد الأقصى للجرعة",
+  "per": "لكل",
+  "instructions": "التعليمات",
+  "patientAndAdditionalInstructions": "تعليمات المريض والإرشادات الإضافية",
+  "patientInstructions": "تعليمات المريض",
+  "additionalInstructions": "إرشادات إضافية",
+  "asNeeded": "عند الحاجة",
+  "yes": "نعم",
+  "no": "لا",
+  "statusAndDates": "الحالة والتواريخ",
+  "status": "الحالة",
+  "startDate": "تاريخ البدء",
+  "endDate": "تاريخ الانتهاء",
+  "unknownMedication": "دواء غير معروف",
+  "noDescriptionAvailable": "لا توجد وصف متاح"
+
   },
   "myMedications": {
     "title": "أدويتي",
