@@ -262,6 +262,7 @@
     "seeAll": "See All",
     "retry": "Retry",
     "apply": "Apply",
+    "select_model": "Select model",
     "cancel": "Cancel",
     "my_favorite": "My favorite articles",
     "article_details": "Article Details",
@@ -942,9 +943,10 @@
     "allCategories": "All Categories",
     "noCategoriesAvailable": "No categories available",
     "errorLoadingCategories": "Error loading categories:",
-    "clear": "CLEAR",
-    "cancel": "CANCEL",
-    "apply": "APPLY"
+    "bothMinMaxRequired": "Please enter the minimum and maximum together.",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "apply": "Apply"
   },
   "medicalRecordPage": {
     "title": "Medical Record",
@@ -1239,11 +1241,27 @@
   },
   "medicationDetails": {
     "title": "Medication Details",
-    "failedToLoad": "Failed to load medication details",
+    "failedToLoad": "Failed to load medication details.",
     "dosageInfo": "Dosage Information",
+    "dose": "Dose",
+    "maxDose": "Max Dose",
+    "per": "per",
     "instructions": "Instructions",
-    "statusAndDates": "Status & Dates"
+    "patientAndAdditionalInstructions": "Patient & Additional Instructions",
+    "patientInstructions": "Patient Instructions",
+    "additionalInstructions": "Additional Instructions",
+    "asNeeded": "As Needed",
+    "yes": "Yes",
+    "no": "No",
+    "statusAndDates": "Status and Dates",
+    "status": "Status",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "unknownMedication": "Unknown Medication",
+    "noDescriptionAvailable": "No description available"
   },
+
+
   "myMedications": {
     "title": "My Medications",
     "noMedications": "No medications found",
@@ -1781,8 +1799,7 @@
   "clearDates": "Clear Dates",
   "cancelButton": "Cancel",
   "applyButton": "Apply"
-}
-  }
+}}
 
 
 

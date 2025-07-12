@@ -24,8 +24,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<ForgotPasswordCubit>(
       create:
-          (context) =>
-              ForgotPasswordCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()),
+          (context) => ForgotPasswordCubit(
+            authRemoteDataSource: serviceLocator(),
+            networkInfo: serviceLocator(),
+          ),
       child: _ForgotPasswordContent(),
     );
   }
@@ -50,7 +52,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
             AppRouter.verifyPasswordOtp.name,
             extra: {'email': _emailController.text},
           );
-        } else if (state is ForgotPasswordError){
+        } else if (state is ForgotPasswordError) {
           ShowToast.showToastError(message: state.error);
         }
       },
@@ -61,10 +63,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
             appBar: AppBar(
               backgroundColor: AppColors.whiteColor,
               leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: AppColors.primaryColor,
-                ),
+                icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
                 onPressed: () {
                   context.pop();
                 },
@@ -79,9 +78,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
                     const SizedBox(height: 20),
                     SizedBox(
                       height: context.height / 3,
-                      child: Image.asset(
-                        "assets/images/locks/password-forgot.png",
-                      ),
+                      child: Image.asset("assets/images/locks/f.jpg"),
                     ),
                     const SizedBox(height: 20),
                     Text(
@@ -132,7 +129,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
                         if (_formKey.currentState!.validate()) {
                           context.read<ForgotPasswordCubit>().sendResetLink(
                             _emailController.text.trim(),
-                            context
+                            context,
                           );
                         }
                       },

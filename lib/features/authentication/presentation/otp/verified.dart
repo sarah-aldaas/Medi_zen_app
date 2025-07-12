@@ -15,7 +15,7 @@ class Verified extends StatelessWidget {
           SizedBox(
             width: context.width,
             height: context.height,
-            child: Image.asset("assets/images/locks/verified.gif",fit: BoxFit.fill,),
+            child: Image.asset("assets/images/locks/v.jpg", fit: BoxFit.fill),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -23,14 +23,20 @@ class Verified extends StatelessWidget {
             children: [
               Center(
                 child: ElevatedButton(
-                  onPressed:(){
+                  onPressed: () {
                     context.goNamed(AppRouter.login.name);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
-                    padding: EdgeInsets.symmetric(horizontal:context.width/3, vertical: 12),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.width / 3,
+                      vertical: 12,
+                    ),
                   ),
-                  child:  Text("Next", style: const TextStyle(color: Colors.white)),
+                  child: Text(
+                    "Next",
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
               Gap(30),

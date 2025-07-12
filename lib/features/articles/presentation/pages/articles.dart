@@ -7,7 +7,6 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/articles/data/model/article_filter_model.dart';
 import 'package:medizen_app/features/articles/data/model/article_model.dart';
 import 'package:medizen_app/features/articles/presentation/pages/article_details_notification_page.dart';
-import 'package:medizen_app/features/articles/presentation/pages/article_details_page.dart';
 import 'package:medizen_app/features/articles/presentation/pages/my_favorite_articles.dart';
 
 import '../../../../base/data/models/code_type_model.dart';
@@ -101,10 +100,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
     final filter = ArticleFilter(
       searchQuery:
           _searchController.text.isNotEmpty ? _searchController.text : null,
-      sort:
-          _selectedSort != null
-              ? _getSortField()
-              : null, // Only include sort if selected
+      sort: _selectedSort != null ? _getSortField() : null,
       categoryId: _selectedCategoryId,
     );
     return filter.toJson();
@@ -192,7 +188,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
         },
       ),
       IconButton(
-        icon: const Icon(Icons.bookmark_border),
+        icon: const Icon(Icons.favorite_border),
         onPressed: () => _navigateToBookmarks(context),
       ),
       IconButton(
@@ -348,7 +344,12 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   width: 80,
                   height: 80,
                   color: isDark ? Colors.grey[800] : Colors.grey[200],
-                  child: FlexibleImage(imageUrl: article.image, width: 80, height: 80, errorWidget: Center(child: Icon(Icons.article, size: 40))),
+                  child: FlexibleImage(
+                    imageUrl: article.image,
+                    width: 80,
+                    height: 80,
+                    errorWidget: Center(child: Icon(Icons.article, size: 40)),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -527,7 +528,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ArticleDetailsNotificationPage(articleId: article.id!),
+        builder:
+            (context) => ArticleDetailsNotificationPage(articleId: article.id!),
       ),
     ).then((value) {
       _loadInitialArticles();

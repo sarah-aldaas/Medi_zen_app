@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/not_found_data_page.dart';
+
 import '../../../../../base/theme/app_color.dart';
 import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/allergy_filter_model.dart';
@@ -59,15 +60,19 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent &&
+            _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
       context
           .read<AllergyCubit>()
-          .getAllMyAllergies(filters: widget.filter.toJson(), loadMore: true,context: context)
+          .getAllMyAllergies(
+            filters: widget.filter.toJson(),
+            loadMore: true,
+            context: context,
+          )
           .then((_) {
-        setState(() => _isLoadingMore = false);
-      });
+            setState(() => _isLoadingMore = false);
+          });
     }
   }
 
@@ -87,9 +92,9 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
         }
 
         final allergies =
-        state is AllergiesSuccess
-            ? state.paginatedResponse.paginatedData?.items
-            : [];
+            state is AllergiesSuccess
+                ? state.paginatedResponse.paginatedData?.items
+                : [];
         final hasMore = state is AllergiesSuccess ? state.hasMore : false;
 
         if (allergies == null || allergies.isEmpty) {
@@ -109,9 +114,7 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
             itemBuilder: (context, index) {
               if (index < allergies.length) {
                 final AllergyModel allergy = allergies[index];
-                return _buildAllergyItem(
-                  allergy,Theme.of(context)
-                );
+                return _buildAllergyItem(allergy, Theme.of(context));
                 //   AllergyListItem(
                 //   allergy: allergy,
                 //   onTap: () => _navigateToAllergyDetails(allergy.id!),
@@ -129,10 +132,9 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
     );
   }
 
-
   Widget _buildAllergyItem(AllergyModel allergy, ThemeData theme) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8,),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
@@ -141,10 +143,7 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (context) => AllergyDetailsPage(
-                allergyId: allergy.id!,
-              ),
+              builder: (context) => AllergyDetailsPage(allergyId: allergy.id!),
             ),
           );
           _loadInitialAllergies();
@@ -202,41 +201,54 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
       ),
     );
   }
+}
 
-
-  Widget _buildInfoRow({
-    required IconData icon,
-    required String label,
-    required String value,
-     bool isDate=false,
-    required ThemeData theme,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 18, color: AppColors.primaryColor),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: Colors.cyan,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Text(
-             isDate? "${DateFormat('yyyy-MM-dd').format(DateTime.parse(value))}":value,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.9),
+Widget _buildInfoRow({
+  required IconData icon,
+  required String label,
+  required String value,
+  bool isDate = false,
+  required ThemeData theme,
+  int maxLines = 2,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: AppColors.primaryColor),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 100,
+                child: Text(
+                  label,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.label,
+                  ),
+                ),
               ),
-              overflow: TextOverflow.ellipsis,
-            ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  isDate
+                      ? "${DateFormat('yyyy-MM-dd').format(DateTime.parse(value))}"
+                      : value,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.9),
+                  ),
+                  maxLines: maxLines,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }

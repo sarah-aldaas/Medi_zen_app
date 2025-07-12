@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
-import 'package:meta/meta.dart';
 
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/data/models/public_response_model.dart';
@@ -20,14 +19,20 @@ class ArticleCubit extends Cubit<ArticleState> {
   final ArticlesRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
 
-  ArticleCubit({required this.remoteDataSource, required this.networkInfo}) : super(ArticleInitial());
+  ArticleCubit({required this.remoteDataSource, required this.networkInfo})
+    : super(ArticleInitial());
 
   int _currentPage = 1;
   bool _hasMore = true;
   Map<String, dynamic> _currentFilters = {};
   List<ArticleModel> _allArticles = [];
 
-  Future<void> getAllArticles({Map<String, dynamic>? filters, bool loadMore = false, required BuildContext context,int perPage=6}) async {
+  Future<void> getAllArticles({
+    Map<String, dynamic>? filters,
+    bool loadMore = false,
+    required BuildContext context,
+    int perPage = 6,
+  }) async {
     if (!loadMore) {
       _currentPage = 1;
       _hasMore = true;
@@ -41,23 +46,32 @@ class ArticleCubit extends Cubit<ArticleState> {
       _currentFilters = filters;
     }
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(ArticleError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
+      ShowToast.showToastError(
+        message: 'no_internet_check_network'.tr(context),
+      );
+      return;
+    }
 
-    final result = await remoteDataSource.getAllArticles(filters: _currentFilters, page: _currentPage, perPage: perPage);
+    final result = await remoteDataSource.getAllArticles(
+      filters: _currentFilters,
+      page: _currentPage,
+      perPage: perPage,
+    );
 
     if (result is Success<PaginatedResponse<ArticleModel>>) {
       if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        return;
       }
       try {
         _allArticles.addAll(result.data.paginatedData!.items);
-        _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage!;
+        _hasMore =
+            result.data.paginatedData!.items.isNotEmpty &&
+            result.data.meta!.currentPage < result.data.meta!.lastPage!;
         _currentPage++;
 
         emit(
@@ -71,14 +85,26 @@ class ArticleCubit extends Cubit<ArticleState> {
           ),
         );
       } catch (e) {
-        emit(ArticleError(error: result.data.msg ?? 'Failed to fetch articles'));
+        emit(
+          ArticleError(
+            error: result.data.msg ?? 'failed_to_fetch_articles'.tr(context),
+          ),
+        );
       }
     } else if (result is ResponseError<PaginatedResponse<ArticleModel>>) {
-      emit(ArticleError(error: result.message ?? 'Failed to fetch articles'));
+      emit(
+        ArticleError(
+          error: result.message ?? 'failed_to_fetch_articles'.tr(context),
+        ),
+      );
     }
   }
 
-  Future<void> getMyFavoriteArticles({Map<String, dynamic>? filters, bool loadMore = false, required BuildContext context}) async {
+  Future<void> getMyFavoriteArticles({
+    Map<String, dynamic>? filters,
+    bool loadMore = false,
+    required BuildContext context,
+  }) async {
     if (!loadMore) {
       _currentPage = 1;
       _hasMore = true;
@@ -92,23 +118,32 @@ class ArticleCubit extends Cubit<ArticleState> {
       _currentFilters = filters;
     }
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(ArticleError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
+      ShowToast.showToastError(
+        message: 'no_internet_check_network'.tr(context),
+      );
+      return;
+    }
 
-    final result = await remoteDataSource.getMyFavoriteArticles(filters: _currentFilters, page: _currentPage, perPage: 10);
+    final result = await remoteDataSource.getMyFavoriteArticles(
+      filters: _currentFilters,
+      page: _currentPage,
+      perPage: 10,
+    );
 
     if (result is Success<PaginatedResponse<ArticleModel>>) {
       if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        return;
       }
       try {
         _allArticles.addAll(result.data.paginatedData!.items);
-        _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _hasMore =
+            result.data.paginatedData!.items.isNotEmpty &&
+            result.data.meta!.currentPage < result.data.meta!.lastPage;
         _currentPage++;
 
         emit(
@@ -122,195 +157,218 @@ class ArticleCubit extends Cubit<ArticleState> {
           ),
         );
       } catch (e) {
-        emit(ArticleError(error: result.data.msg ?? 'Failed to fetch favorite articles'));
+        emit(
+          ArticleError(
+            error:
+                result.data.msg ??
+                'failed_to_fetch_favorite_articles'.tr(context),
+          ),
+        );
       }
     } else if (result is ResponseError<PaginatedResponse<ArticleModel>>) {
-      emit(ArticleError(error: result.message ?? 'Failed to fetch favorite articles'));
+      emit(
+        ArticleError(
+          error:
+              result.message ?? 'failed_to_fetch_favorite_articles'.tr(context),
+        ),
+      );
     }
   }
 
-  Future<void> getDetailsArticle({required String articleId, required BuildContext context}) async {
+  Future<void> getDetailsArticle({
+    required String articleId,
+    required BuildContext context,
+  }) async {
     emit(ArticleLoading());
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(ArticleError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
+      ShowToast.showToastError(
+        message: 'no_internet_check_network'.tr(context),
+      );
+      return;
+    }
 
-    final result = await remoteDataSource.getDetailsArticle(articleId: articleId);
+    final result = await remoteDataSource.getDetailsArticle(
+      articleId: articleId,
+    );
     if (result is Success<ArticleModel>) {
       if (result.data.toString().contains("Unauthorized")) {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        return;
       }
       emit(ArticleDetailsSuccess(article: result.data));
     } else if (result is ResponseError<ArticleModel>) {
-      emit(ArticleError(error: result.message ?? 'Failed to fetch article details'));
+      emit(
+        ArticleError(
+          error:
+              result.message ?? 'failed_to_fetch_article_details'.tr(context),
+        ),
+      );
     }
   }
 
-  Future<void> getArticleOfCondition({required String conditionId, required BuildContext context}) async {
+  Future<void> getArticleOfCondition({
+    required String conditionId,
+    required BuildContext context,
+  }) async {
     emit(ArticleLoading());
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(ArticleError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      context.pushNamed(AppRouter.noInternet.name);
+      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
+      ShowToast.showToastError(
+        message: 'no_internet_check_network'.tr(context),
+      );
+      return;
+    }
 
-    final result = await remoteDataSource.getArticleOfCondition(conditionId: conditionId);
+    final result = await remoteDataSource.getArticleOfCondition(
+      conditionId: conditionId,
+    );
     if (result is Success<ArticleResponseModel>) {
       if (result.data.toString().contains("Unauthorized")) {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        return;
       }
       emit(ArticleConditionSuccess(article: result.data.articleModel));
     } else if (result is ResponseError<ArticleResponseModel>) {
-      emit(ArticleError(error: result.message ?? 'Failed to fetch condition article'));
+      emit(
+        ArticleError(
+          error:
+              result.message ?? 'failed_to_fetch_condition_article'.tr(context),
+        ),
+      );
     }
   }
 
-
-  Future<void> addArticleFavorite({required String articleId, required BuildContext context}) async {
+  Future<void> addArticleFavorite({
+    required String articleId,
+    required BuildContext context,
+  }) async {
     emit(FavoriteOperationLoading());
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   emit(ArticleError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.addArticleFavorite(articleId: articleId);
-    if (result is Success<PublicResponseModel>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-      }
-      emit(FavoriteOperationSuccess(
-        isFavorite: true,
-      ));
-getDetailsArticle(articleId: articleId, context: context);
-    } else if (result is ResponseError<PublicResponseModel>) {
-      emit(ArticleError(error: result.message ?? 'Failed to add favorite'));
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
+      ShowToast.showToastError(
+        message: 'no_internet_check_network'.tr(context),
+      );
+      return;
     }
-  }
 
-  Future<void> removeArticleFavorite({required String articleId, required BuildContext context}) async {
-    // if (state is! ArticleDetailsSuccess) return;
-    //
-    // final currentState = state as ArticleDetailsSuccess;
-    emit(FavoriteOperationLoading());
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   emit(ArticleError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.removeArticleFavorite(articleId: articleId);
+    final result = await remoteDataSource.addArticleFavorite(
+      articleId: articleId,
+    );
     if (result is Success<PublicResponseModel>) {
       if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        return;
       }
-      emit(FavoriteOperationSuccess(
-        isFavorite: false,
-        // previousState: currentState,
-      ));
+      emit(FavoriteOperationSuccess(isFavorite: true));
 
       getDetailsArticle(articleId: articleId, context: context);
+      ShowToast.showToastSuccess(
+        message: result.data.msg ?? 'added_to_favorites'.tr(context),
+      );
     } else if (result is ResponseError<PublicResponseModel>) {
-      emit(ArticleError(error: result.message ?? 'Failed to remove favorite'));
+      emit(
+        ArticleError(
+          error: result.message ?? 'failed_to_add_favorite'.tr(context),
+        ),
+      );
     }
   }
 
-  // Future<void> addArticleFavorite({required String articleId, required BuildContext context}) async {
-  //   emit(FavoriteOperationLoading());
-  //
-  //   final isConnected = await networkInfo.isConnected;
-  //   if (!isConnected) {
-  //     context.pushNamed('noInternet');
-  //     emit(ArticleError(error: 'No internet connection'));
-  //     ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-  //     return;
-  //   }
-  //
-  //   final result = await remoteDataSource.addArticleFavorite(articleId: articleId);
-  //   if (result is Success<PublicResponseModel>) {
-  //     if (result.data.msg == "Unauthorized. Please login first.") {
-  //       context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-  //     }
-  //     emit(FavoriteOperationSuccess(isFavorite: true));
-  //     ShowToast.showToastSuccess(message: result.data.msg ?? 'Added to favorites');
-  //   } else if (result is ResponseError<PublicResponseModel>) {
-  //     emit(ArticleError(error: result.message ?? 'Failed to add favorite'));
-  //   }
-  // }
-  //
-  // Future<void> removeArticleFavorite({required String articleId, required BuildContext context}) async {
-  //   emit(FavoriteOperationLoading());
-  //
-  //   final isConnected = await networkInfo.isConnected;
-  //   if (!isConnected) {
-  //     context.pushNamed('noInternet');
-  //     emit(ArticleError(error: 'No internet connection'));
-  //     ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-  //     return;
-  //   }
-  //
-  //   final result = await remoteDataSource.removeArticleFavorite(articleId: articleId);
-  //   if (result is Success<PublicResponseModel>) {
-  //     if (result.data.msg == "Unauthorized. Please login first.") {
-  //       context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-  //     }
-  //     emit(FavoriteOperationSuccess(isFavorite: false));
-  //     ShowToast.showToastSuccess(message: result.data.msg ?? 'Removed from favorites');
-  //   } else if (result is ResponseError<PublicResponseModel>) {
-  //     emit(ArticleError(error: result.message ?? 'Failed to remove favorite'));
-  //   }
-  // }
+  Future<void> removeArticleFavorite({
+    required String articleId,
+    required BuildContext context,
+  }) async {
+    emit(FavoriteOperationLoading());
 
+    final isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
+      ShowToast.showToastError(
+        message: 'no_internet_check_network'.tr(context),
+      );
+      return;
+    }
+
+    final result = await remoteDataSource.removeArticleFavorite(
+      articleId: articleId,
+    );
+    if (result is Success<PublicResponseModel>) {
+      if (result.data.msg == "Unauthorized. Please login first.") {
+        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        return;
+      }
+      emit(FavoriteOperationSuccess(isFavorite: false));
+
+      getDetailsArticle(articleId: articleId, context: context);
+      ShowToast.showToastSuccess(
+        message: result.data.msg ?? 'removed_from_favorites'.tr(context),
+      );
+    } else if (result is ResponseError<PublicResponseModel>) {
+      emit(
+        ArticleError(
+          error: result.message ?? 'failed_to_remove_favorite'.tr(context),
+        ),
+      );
+    }
+  }
 
   DateTime? lastGenerationTime;
   int generationCount = 0;
 
-  Future<void> generateAiArticle({required String conditionId, required String? apiModel, required String language, required BuildContext context}) async {
+  Future<void> generateAiArticle({
+    required String conditionId,
+    required String? apiModel,
+    required String language,
+    required BuildContext context,
+  }) async {
     emit(ArticleGenerateLoading());
 
     try {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed('noInternet');
-      //   emit(ArticleError(error: 'No internet connection'));
-      //   return;
-      // }
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        context.pushNamed(AppRouter.noInternet.name);
+        emit(ArticleError(error: 'no_internet_connection'.tr(context)));
+        return;
+      }
 
-      // Show language selection dialog if not specified
       if (language.isEmpty) {
         language = await _showLanguageSelectionDialog(context);
-        if (language.isEmpty) return; // User cancelled
+        if (language.isEmpty) {
+          emit(ArticleError(error: 'language_selection_cancelled'.tr(context)));
+          return;
+        }
       }
 
-      // Show model selection dialog if not specified
       if (apiModel == null) {
         apiModel = await _showModelSelectionDialog(context);
-        if (apiModel == null) return; // User cancelled
+        if (apiModel == null) {
+          emit(ArticleError(error: 'model_selection_cancelled'.tr(context)));
+          return;
+        }
       }
 
-      final params = {'language': language, if (apiModel != null) 'model': apiModel};
-
-      // Start the generation process
-      final response = await remoteDataSource.generateAiArticle(conditionId: conditionId, apiModel: apiModel, language: language);
+      // final params = {'language': language, if (apiModel != null) 'model': apiModel};
+      final response = await remoteDataSource.generateAiArticle(
+        conditionId: conditionId,
+        apiModel: apiModel,
+        language: language,
+      );
 
       if (response is Success<PublicResponseModel>) {
         if (response.data.msg == "Unauthorized. Please login first.") {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          return;
         }
         if (response.data.status) {
-          // Update generation tracking
           lastGenerationTime = DateTime.now();
           generationCount++;
 
@@ -321,14 +379,18 @@ getDetailsArticle(articleId: articleId, context: context);
           ShowToast.showToastError(message: response.data.msg);
         }
       } else if (response is ResponseError<PublicResponseModel>) {
-        emit(ArticleError(error: response.message ?? 'Failed to generate article'));
-        ShowToast.showToastError(message:response.message ?? 'Failed to generate article');
-
+        emit(
+          ArticleError(
+            error: response.message ?? 'failed_to_generate_article'.tr(context),
+          ),
+        );
+        ShowToast.showToastError(
+          message: response.message ?? 'failed_to_generate_article'.tr(context),
+        );
       }
     } catch (e) {
       emit(ArticleError(error: e.toString()));
-      ShowToast.showToastError(message:e.toString());
-
+      ShowToast.showToastError(message: e.toString());
     }
   }
 
@@ -341,8 +403,14 @@ getDetailsArticle(articleId: articleId, context: context);
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ListTile(title: Text("English"), onTap: () => Navigator.pop(context, "en")),
-                    ListTile(title: Text("العربية"), onTap: () => Navigator.pop(context, "ar")),
+                    ListTile(
+                      title: Text("English"),
+                      onTap: () => Navigator.pop(context, "en"),
+                    ),
+                    ListTile(
+                      title: Text("العربية"),
+                      onTap: () => Navigator.pop(context, "ar"),
+                    ),
                   ],
                 ),
               ),
@@ -355,7 +423,7 @@ getDetailsArticle(articleId: articleId, context: context);
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text("select_model".tr(context)),
+            title: Text("articles.select_model".tr(context)),
             content: SizedBox(
               width: double.maxFinite,
               child: ListView.builder(
@@ -363,12 +431,14 @@ getDetailsArticle(articleId: articleId, context: context);
                 itemCount: listModels.length,
                 itemBuilder: (context, index) {
                   final model = listModels[index];
-                  return ListTile(title: Text(model.nameModel), onTap: () => Navigator.pop(context, model.apiModel));
+                  return ListTile(
+                    title: Text(model.nameModel),
+                    onTap: () => Navigator.pop(context, model.apiModel),
+                  );
                 },
               ),
             ),
           ),
     );
   }
-
 }
