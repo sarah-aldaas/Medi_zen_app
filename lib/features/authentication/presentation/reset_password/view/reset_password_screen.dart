@@ -20,8 +20,10 @@ class ResetPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ResetPasswordCubit>(
       create:
-          (context) =>
-              ResetPasswordCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()),
+          (context) => ResetPasswordCubit(
+            authRemoteDataSource: serviceLocator(),
+            networkInfo: serviceLocator(),
+          ),
       child: _ResetPasswordContent(email: email),
     );
   }
@@ -64,7 +66,7 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                 onPressed: () {
                   context.pop();
                 },
-                icon: Icon(Icons.arrow_back, color: Colors.grey),
+                icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
               ),
             ),
             body: Padding(
@@ -79,7 +81,7 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: 18,
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -172,7 +174,8 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          context.read<ResetPasswordCubit>().resetPassword(context: context,
+                          context.read<ResetPasswordCubit>().resetPassword(
+                            context: context,
                             email: widget.email,
                             newPassword: _passwordController.text.trim(),
                           );

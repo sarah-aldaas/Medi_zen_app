@@ -193,6 +193,7 @@
     "author": "المؤلف",
     "removeFavoriteTitle": "إزالة العنوان المفضل",
     "removeFavoriteMessage": "إزالة الرسالة المفضلة",
+
     "cancel": "إلغاء",
     "remove": "حذف",
     "actions": {
@@ -234,6 +235,7 @@
     "retry": "إعادة المحاولة",
     "apply": "حفظ",
     "cancel": "إلغاء",
+    "select_model": "حدد نموذج",
     "no_title": "لا يوجد عنوان",
     "my_favorite": "مقالاتي المفضلة",
     "article_details": "تفاصيل المقالة",

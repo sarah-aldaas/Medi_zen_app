@@ -262,6 +262,7 @@
     "seeAll": "See All",
     "retry": "Retry",
     "apply": "Apply",
+    "select_model": "Select model",
     "cancel": "Cancel",
     "my_favorite": "My favorite articles",
     "article_details": "Article Details",
@@ -1798,8 +1799,7 @@
   "clearDates": "Clear Dates",
   "cancelButton": "Cancel",
   "applyButton": "Apply"
-}
-  }
+}}
 
 
 
