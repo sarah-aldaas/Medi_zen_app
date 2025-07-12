@@ -5,7 +5,6 @@ import 'package:medizen_app/base/services/network/network_info.dart';
 import '../../../../../../base/data/models/pagination_model.dart';
 import '../../../../../../base/go_router/go_router.dart';
 import '../../../../../../base/services/network/resource.dart';
-import '../../../../../../base/widgets/show_toast.dart';
 import '../../../data/data_source/diagnostic_report_remote_datasource.dart';
 import '../../../data/models/diagnostic_report_model.dart';
 
