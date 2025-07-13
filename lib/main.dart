@@ -57,7 +57,6 @@ import 'features/complains/presentation/cubit/complain_cubit/complain_cubit.dart
 import 'features/medical_records/medication/presentation/cubit/medication_cubit/medication_cubit.dart';
 import 'features/services/pages/cubits/service_cubit/service_cubit.dart';
 
-
 late ThemeCubit _themeCubit;
 
 void main() async {
@@ -70,11 +69,8 @@ void main() async {
   GoRouter.optionURLReflectsImperativeAPIs = true;
   await bootstrapApplication();
 
-
   _themeCubit = ThemeCubit(ThemePreferenceService());
-  await _themeCubit.stream.firstWhere(
-    (element) => true,
-  );
+  await _themeCubit.stream.firstWhere((element) => true);
 
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
@@ -113,22 +109,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       serviceLocator<FCMManager>().initialize(context);
     });
     return BlocProvider<ThemeCubit>(
-
       create: (context) => _themeCubit,
       child: BlocBuilder<ThemeCubit, bool>(
         builder: (context, isDark) {
@@ -189,8 +180,6 @@ class _MyAppState extends State<MyApp> {
                         lazy: false,
                       ),
 
-                      // These BlocProviders are duplicated, remove the duplicates
-                      /*
                       BlocProvider<LocalizationBloc>(
                         create: (context) => serviceLocator<LocalizationBloc>(),
                         lazy: false,
@@ -199,13 +188,11 @@ class _MyAppState extends State<MyApp> {
                         create: (context) => serviceLocator<ProfileCubit>(),
                         lazy: false,
                       ),
-                      */
                       BlocProvider<LogoutCubit>(
                         create: (context) => serviceLocator<LogoutCubit>(),
                         lazy: false,
                       ),
 
-                      /*
                       BlocProvider<CodeTypesCubit>(
                         create: (context) => serviceLocator<CodeTypesCubit>(),
                         lazy: false,
@@ -237,7 +224,6 @@ class _MyAppState extends State<MyApp> {
                             ),
                         lazy: false,
                       ),
-                      */
                       BlocProvider<AllergyCubit>(
                         create:
                             (context) => AllergyCubit(
