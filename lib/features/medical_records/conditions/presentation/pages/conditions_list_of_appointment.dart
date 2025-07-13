@@ -67,30 +67,30 @@ class _ConditionsListOfAppointmentState extends State<ConditionsListOfAppointmen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<ConditionsCubit, ConditionsState>(
-        listener: (context, state) {
-          // if (state is ConditionsError) {
-          //   ShowToast.showToastError(message: state.error);
-          // }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _loadInitialConditions();
         },
-        builder: (context, state) {
-          if (state is ConditionsLoading && !state.isLoadMore) {
-            return const Center(child: LoadingPage());
-          }
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<ConditionsCubit, ConditionsState>(
+          listener: (context, state) {
+            // if (state is ConditionsError) {
+            //   ShowToast.showToastError(message: state.error);
+            // }
+          },
+          builder: (context, state) {
+            if (state is ConditionsLoading && !state.isLoadMore) {
+              return const Center(child: LoadingPage());
+            }
 
-          final conditions = state is ConditionsSuccess ? state.paginatedResponse.paginatedData!.items : [];
-          final hasMore = state is ConditionsSuccess ? state.hasMore : false;
+            final conditions = state is ConditionsSuccess ? state.paginatedResponse.paginatedData!.items : [];
+            final hasMore = state is ConditionsSuccess ? state.hasMore : false;
 
-          if (conditions.isEmpty) {
-            return NotFoundDataPage();
-          }
+            if (conditions.isEmpty) {
+              return NotFoundDataPage();
+            }
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              _loadInitialConditions();
-            },
-            color: Theme.of(context).primaryColor,
-            child: ListView.builder(
+            return ListView.builder(
               controller: _scrollController,
               itemCount: conditions.length + (hasMore ? 1 : 0),
               itemBuilder: (context, index) {
@@ -100,9 +100,9 @@ class _ConditionsListOfAppointmentState extends State<ConditionsListOfAppointmen
                   return Padding(padding: EdgeInsets.all(16.0), child: Center(child: LoadingButton()));
                 }
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

@@ -110,39 +110,45 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           ),
         ],
       ),
-      body: BlocConsumer<AppointmentCubit, AppointmentState>(
-        listener: (context, state) {
-          if (state is AppointmentError) {
-            ShowToast.showToastError(message: state.error);
-          }
+      body:  RefreshIndicator(
+        onRefresh: () async {
+          _loadInitialAppointments();
         },
-        builder: (context, state) {
-          if (state is AppointmentLoading && !state.isLoadMore) {
-            return _buildShimmerLoader();
-          }
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<AppointmentCubit, AppointmentState>(
+          listener: (context, state) {
+            if (state is AppointmentError) {
+              ShowToast.showToastError(message: state.error);
+            }
+          },
+          builder: (context, state) {
+            if (state is AppointmentLoading && !state.isLoadMore) {
+              return _buildShimmerLoader();
+            }
 
-          final appointments =
-              state is AppointmentSuccess
-                  ? state.paginatedResponse.paginatedData!.items
-                  : [];
-          final hasMore = state is AppointmentSuccess ? state.hasMore : false;
-          if (appointments.isEmpty) {
-            return NotFoundDataPage();
-          }
+            final appointments =
+                state is AppointmentSuccess
+                    ? state.paginatedResponse.paginatedData!.items
+                    : [];
+            final hasMore = state is AppointmentSuccess ? state.hasMore : false;
+            if (appointments.isEmpty) {
+              return NotFoundDataPage();
+            }
 
-          return ListView.builder(
-            controller: _scrollController,
-            itemCount: appointments.length + (hasMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < appointments.length) {
-                return _buildAppointmentItem(appointments[index]);
-              } else if (hasMore && state is! AppointmentError) {
-                return Center(child: LoadingButton());
-              }
-              return SizedBox.shrink();
-            },
-          );
-        },
+            return ListView.builder(
+              controller: _scrollController,
+              itemCount: appointments.length + (hasMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < appointments.length) {
+                  return _buildAppointmentItem(appointments[index]);
+                } else if (hasMore && state is! AppointmentError) {
+                  return Center(child: LoadingButton());
+                }
+                return SizedBox.shrink();
+              },
+            );
+          },
+        ),
       ),
     );
   }

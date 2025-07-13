@@ -26,9 +26,12 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<EncounterCubit>().getSpecificEncounter(encounterId: widget.encounterId, context: context);
+    _loadEncounterDetails();
   }
+void _loadEncounterDetails(){
+  context.read<EncounterCubit>().getSpecificEncounter(encounterId: widget.encounterId, context: context);
 
+}
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -50,30 +53,36 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
         iconTheme: IconThemeData(color: onPrimaryAppColor),
       ),
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: BlocConsumer<EncounterCubit, EncounterState>(
-        listener: (context, state) {
-          if (state is EncounterError) {
-            ShowToast.showToastError(message: '${'encountersPge.Error'.tr(context)}: ${state.error}');
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _loadEncounterDetails();
         },
-        builder: (context, state) {
-          if (state is EncounterLoading) {
-            return const Center(child: LoadingPage());
-          } else if (state is EncounterDetailsSuccess) {
-            return _buildEncounterDetails(context, state.encounterModel, cardElevationColor);
-          } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 70, color: theme.colorScheme.error),
-                  const SizedBox(height: 16),
-                  Text('encountersPge.failedToLoad'.tr(context), style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color)),
-                ],
-              ),
-            );
-          }
-        },
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<EncounterCubit, EncounterState>(
+          listener: (context, state) {
+            if (state is EncounterError) {
+              ShowToast.showToastError(message: '${'encountersPge.Error'.tr(context)}: ${state.error}');
+            }
+          },
+          builder: (context, state) {
+            if (state is EncounterLoading) {
+              return const Center(child: LoadingPage());
+            } else if (state is EncounterDetailsSuccess) {
+              return _buildEncounterDetails(context, state.encounterModel, cardElevationColor);
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 70, color: theme.colorScheme.error),
+                    const SizedBox(height: 16),
+                    Text('encountersPge.failedToLoad'.tr(context), style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color)),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

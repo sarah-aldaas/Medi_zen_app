@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_model.dart';
 import 'package:medizen_app/features/medical_records/encounter/presentation/pages/encounter_details_page.dart';
@@ -13,6 +12,8 @@ import '../../../../../base/widgets/show_toast.dart';
 import '../../../../articles/data/model/ai_model.dart';
 import '../../../../articles/data/model/article_model.dart';
 import '../../../../articles/presentation/cubit/article_cubit/article_cubit.dart';
+import '../../../diagnostic_report/presentation/pages/diagnostic_report_list_page.dart';
+import '../../../medication_request/presentation/pages/my_medication_requests_page.dart';
 import '../cubit/condition_cubit/conditions_cubit.dart';
 
 class ConditionDetailsPage extends StatefulWidget {
@@ -24,11 +25,23 @@ class ConditionDetailsPage extends StatefulWidget {
   State<ConditionDetailsPage> createState() => _ConditionDetailsPageState();
 }
 
-class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
+class _ConditionDetailsPageState extends State<ConditionDetailsPage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
-    context.read<ConditionsCubit>().getConditionDetails(conditionId: widget.conditionId, context: context);
+    _tabController = TabController(length: 3, vsync: this);
+    _loadConditionDetails();
+  }
+void _loadConditionDetails(){
+  context.read<ConditionsCubit>().getConditionDetails(conditionId: widget.conditionId, context: context);
+
+}
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Stream<String> _getCooldownStream(DateTime? lastGenerationTime, int generationCount) async* {
@@ -76,48 +89,84 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("conditionDetails.title".tr(context), style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryColor, fontSize: 22)),
+        title: Text("conditionDetails.title".tr(context),
+            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryColor, fontSize: 22)),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        leading: IconButton(icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor), onPressed: () => context.pop()),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+            onPressed: () => context.pop()
+        ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(icon: Icon(Icons.info_outline), text: "conditionDetails.details".tr(context)),
+            Tab(icon: Icon(Icons.medication), text: "conditionDetails.medicationRequest".tr(context)),
+            Tab(icon: Icon(Icons.assignment), text: "conditionDetails.diagnosticReports".tr(context)),
+          ],
+          labelColor: AppColors.primaryColor,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: AppColors.primaryColor,
+        ),
       ),
-      body: BlocConsumer<ConditionsCubit, ConditionsState>(
-        listener: (context, state) {
-          if (state is ConditionsError) {
-            ShowToast.showToastError(message: state.error);
-          }
+      body:RefreshIndicator(
+        onRefresh: () async {
+          _loadConditionDetails();
         },
-        builder: (context, state) {
-          if (state is ConditionDetailsSuccess) {
-            return _buildConditionDetails(state.condition);
-          } else if (state is ConditionsLoading) {
-            return const Center(child: LoadingPage());
-          } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<ConditionsCubit, ConditionsState>(
+          listener: (context, state) {
+            if (state is ConditionsError) {
+              ShowToast.showToastError(message: state.error);
+            }
+          },
+          builder: (context, state) {
+            if (state is ConditionDetailsSuccess) {
+              return TabBarView(
+                controller: _tabController,
                 children: [
-                  Icon(Icons.error_outline, size: 80, color: Colors.red[300]),
-                  const SizedBox(height: 20),
-                  Text('conditionDetails.failedToLoad'.tr(context), textAlign: TextAlign.center, style: TextStyle(fontSize: 18, color: Colors.grey[700])),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => context.read<ConditionsCubit>().getConditionDetails(conditionId: widget.conditionId, context: context),
-                    icon: const Icon(Icons.refresh),
-                    label: Text("conditionDetails.retry".tr(context)),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: AppColors.primaryColor,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                  ),
+                  // First tab - Condition Details
+                  _buildConditionDetails(state.condition),
+
+                  // Second tab - Medication Requests
+                  MyMedicationRequestsPage(conditionId:state.condition.id!),
+
+                  // Third tab - Diagnostic Reports
+                  DiagnosticReportListPage(conditionId:state.condition.id!)
                 ],
-              ),
-            );
-          }
-        },
+              );
+            } else if (state is ConditionsLoading) {
+              return const Center(child: LoadingPage());
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 80, color: Colors.red[300]),
+                    const SizedBox(height: 20),
+                    Text('conditionDetails.failedToLoad'.tr(context),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18, color: Colors.grey[700])),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: () => context.read<ConditionsCubit>()
+                          .getConditionDetails(conditionId: widget.conditionId, context: context),
+                      icon: const Icon(Icons.refresh),
+                      label: Text("conditionDetails.retry".tr(context)),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -174,6 +223,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
     );
   }
 
+
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
@@ -199,7 +249,8 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
                 children: [
                   Text(
                     condition.healthIssue ?? 'conditionDetails.unknownCondition'.tr(context),
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: AppColors.green),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold, color: AppColors.green),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -207,7 +258,8 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
                   if (condition.clinicalStatus != null)
                     Chip(
                       backgroundColor: _getStatusColor(condition.clinicalStatus!.code),
-                      label: Text(condition.clinicalStatus!.display, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      label: Text(condition.clinicalStatus!.display,
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     ),
                 ],
@@ -253,22 +305,23 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
 
                         return canGenerate
                             ? IconButton(
-                              onPressed: () => _showAiModelSelection(context, condition.id!),
-                              icon: const Icon(Icons.note_add),
-                              tooltip: 'Generate AI article',
-                            )
+                          onPressed: () => _showAiModelSelection(context, condition.id!),
+                          icon: const Icon(Icons.note_add),
+                          tooltip: 'Generate AI article',
+                        )
                             : StreamBuilder<String>(
-                              stream: _getCooldownStream(lastGenerationTime, generationCount),
-                              builder: (context, snapshot) {
-                                return Row(
-                                  children: [
-                                    const Icon(Icons.timer, color: Colors.grey),
-                                    const SizedBox(width: 8),
-                                    Text(snapshot.data ?? 'Calculating...', style: const TextStyle(fontSize: 14, color: Colors.grey)),
-                                  ],
-                                );
-                              },
+                          stream: _getCooldownStream(lastGenerationTime, generationCount),
+                          builder: (context, snapshot) {
+                            return Row(
+                              children: [
+                                const Icon(Icons.timer, color: Colors.grey),
+                                const SizedBox(width: 8),
+                                Text(snapshot.data ?? 'Calculating...',
+                                    style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                              ],
                             );
+                          },
+                        );
                       },
                     ),
                   ],
@@ -319,7 +372,8 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('conditionDetails.select_language'.tr(context), style: TextStyle(color: AppColors.titel, fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text('conditionDetails.select_language'.tr(context),
+                          style: TextStyle(color: AppColors.titel, fontWeight: FontWeight.bold, fontSize: 16)),
                       const SizedBox(height: 8),
                       Row(
                         children: [
@@ -337,13 +391,16 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Text('conditionDetails.select_model'.tr(context), style: TextStyle(color: AppColors.titel, fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text('conditionDetails.select_model'.tr(context),
+                          style: TextStyle(color: AppColors.titel, fontWeight: FontWeight.bold, fontSize: 16)),
                       const SizedBox(height: 10),
                       ...listModels.map((model) {
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                           color: selectedModel == model ? Theme.of(context).primaryColor.withOpacity(0.1) : null,
-                          child: ListTile(title: Text(model.nameModel), onTap: () => setState(() => selectedModel = model)),
+                          child: ListTile(
+                              title: Text(model.nameModel),
+                              onTap: () => setState(() => selectedModel = model)),
                         );
                       }).toList(),
                     ],
@@ -353,16 +410,16 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('conditionDetails.close'.tr(context), style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold, fontSize: 15)),
+                  child: Text('conditionDetails.close'.tr(context),
+                      style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold, fontSize: 15)),
                 ),
                 ElevatedButton(
-                  onPressed:
-                      selectedModel != null
-                          ? () {
-                            Navigator.pop(context);
-                            _generateAiArticle(context, conditionId, selectedModel!.apiModel, selectedLanguage);
-                          }
-                          : null,
+                  onPressed: selectedModel != null
+                      ? () {
+                    Navigator.pop(context);
+                    _generateAiArticle(context, conditionId, selectedModel!.apiModel, selectedLanguage);
+                  }
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
@@ -413,7 +470,12 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
 
   void _generateAiArticle(BuildContext context, String conditionId, String? apiModel, String language) {
     final cubit = context.read<ArticleCubit>();
-    cubit.generateAiArticle(conditionId: conditionId, apiModel: apiModel ?? '', language: language, context: context).then((_) {
+    cubit.generateAiArticle(
+        conditionId: conditionId,
+        apiModel: apiModel ?? '',
+        language: language,
+        context: context
+    ).then((_) {
       if (mounted) {
         if (cubit.state is ArticleGenerateSuccess) {
           ShowToast.showToastSuccess(message: 'article generated successfully');
@@ -431,27 +493,30 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder:
-          (context) => AlertDialog(
-            title: Text('conditionDetails.loading_articles'.tr(context)),
-            content: BlocConsumer<ArticleCubit, ArticleState>(
-              listener: (context, state) {
-                if (state is ArticleConditionSuccess) {
-                  Navigator.pop(context);
-                  _showArticleDialog(context, state.article);
-                } else if (state is ArticleError) {
-                  Navigator.pop(context);
-                  ShowToast.showToastError(message: state.error);
-                }
-              },
-              builder: (context, state) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [LoadingButton(), SizedBox(height: 16), Text('conditionDetails.fetching_articles'.tr(context))],
-                );
-              },
-            ),
-          ),
+      builder: (context) => AlertDialog(
+        title: Text('conditionDetails.loading_articles'.tr(context)),
+        content: BlocConsumer<ArticleCubit, ArticleState>(
+          listener: (context, state) {
+            if (state is ArticleConditionSuccess) {
+              Navigator.pop(context);
+              _showArticleDialog(context, state.article);
+            } else if (state is ArticleError) {
+              Navigator.pop(context);
+              ShowToast.showToastError(message: state.error);
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LoadingButton(),
+                SizedBox(height: 16),
+                Text('conditionDetails.fetching_articles'.tr(context))
+              ],
+            );
+          },
+        ),
+      ),
     );
 
     cubit.getArticleOfCondition(conditionId: conditionId, context: context);
@@ -460,32 +525,31 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
   void _showArticleDialog(BuildContext context, ArticleModel? article) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: article != null ? Text(article.title ?? 'conditionDetails.articles'.tr(context)) : SizedBox.shrink(),
-            content:
-                article == null
-                    ? Text(
-                      'conditionDetails.can_not_generate'.tr(context),
-                      // textDirection: article.language == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-                    )
-                    : SizedBox(
-                      width: double.maxFinite,
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      child: SingleChildScrollView(
-                        child: Text(
-                          article.content ?? 'conditionDetails.No_content'.tr(context),
-                          // textDirection: article.language == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-                        ),
-                      ),
-                    ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('conditionDetails.close'.tr(context), style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: article != null
+            ? Text(article.title ?? 'conditionDetails.articles'.tr(context))
+            : SizedBox.shrink(),
+        content: article == null
+            ? Text(
+          'conditionDetails.can_not_generate'.tr(context),
+        )
+            : SizedBox(
+          width: double.maxFinite,
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: SingleChildScrollView(
+            child: Text(
+              article.content ?? 'conditionDetails.No_content'.tr(context),
+            ),
           ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('conditionDetails.close'.tr(context),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -505,16 +569,26 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
             _buildDetailRow(
               icon: Icons.calendar_month,
               label: 'conditionDetails.type'.tr(context),
-              value:
-                  condition.isChronic != null
-                      ? (condition.isChronic! ? 'conditionDetails.chronic'.tr(context) : 'conditionDetails.acute'.tr(context))
-                      : 'conditionDetails.notSpecified'.tr(context),
+              value: condition.isChronic != null
+                  ? (condition.isChronic!
+                  ? 'conditionDetails.chronic'.tr(context)
+                  : 'conditionDetails.acute'.tr(context))
+                  : 'conditionDetails.notSpecified'.tr(context),
             ),
 
             if (condition.verificationStatus != null)
-              _buildDetailRow(icon: Icons.verified_user, label: 'conditionDetails.verification'.tr(context), value: condition.verificationStatus!.display),
+              _buildDetailRow(
+                  icon: Icons.verified_user,
+                  label: 'conditionDetails.verification'.tr(context),
+                  value: condition.verificationStatus!.display
+              ),
 
-            if (condition.stage != null) _buildDetailRow(icon: Icons.insights, label: 'conditionDetails.stage'.tr(context), value: condition.stage!.display),
+            if (condition.stage != null)
+              _buildDetailRow(
+                  icon: Icons.insights,
+                  label: 'conditionDetails.stage'.tr(context),
+                  value: condition.stage!.display
+              ),
           ],
         ),
       ),
@@ -570,11 +644,15 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Icon(Icons.emoji_people, color: Theme.of(context).primaryColor, size: 28),
-              title: Text(condition.bodySite!.display, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-              subtitle:
-                  condition.bodySite!.description != null
-                      ? Text(condition.bodySite!.description!, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey))
-                      : null,
+              title: Text(
+                  condition.bodySite!.display,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)
+              ),
+              subtitle: condition.bodySite!.description != null
+                  ? Text(
+                  condition.bodySite!.description!,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey))
+                  : null,
             ),
           ],
         ),
@@ -592,7 +670,11 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (condition.clinicalStatus != null)
-              _buildDetailRow(icon: Icons.local_hospital, label: 'conditionDetails.clinicalStatus'.tr(context), value: condition.clinicalStatus!.display),
+              _buildDetailRow(
+                  icon: Icons.local_hospital,
+                  label: 'conditionDetails.clinicalStatus'.tr(context),
+                  value: condition.clinicalStatus!.display
+              ),
 
             if (condition.verificationStatus != null)
               _buildDetailRow(
@@ -601,7 +683,12 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
                 value: condition.verificationStatus!.display,
               ),
 
-            if (condition.stage != null) _buildDetailRow(icon: Icons.bar_chart, label: 'conditionDetails.stage'.tr(context), value: condition.stage!.display),
+            if (condition.stage != null)
+              _buildDetailRow(
+                  icon: Icons.bar_chart,
+                  label: 'conditionDetails.stage'.tr(context),
+                  value: condition.stage!.display
+              ),
           ],
         ),
       ),
@@ -620,32 +707,34 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
             ...condition.encounters!
                 .map(
                   (encounter) => GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>EncounterDetailsPage(encounterId: encounter.id!)));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.event_note, color: Theme.of(context).primaryColor, size: 28),
-                        title: Text(
-                          encounter.reason ?? 'conditionDetails.unknownReason'.tr(context),
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          encounter.actualStartDate != null
-                              ? DateFormat('MMM d, y, hh:mm a').format(DateTime.parse(encounter.actualStartDate!))
-                              : 'conditionDetails.noDateProvided'.tr(context),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                        ),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
-                        // onTap: () {
-                        //   ShowToast.showToastInfo(message: "conditionDetails.encounterDetailsToast".tr(context));
-                        // },
-                      ),
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EncounterDetailsPage(encounterId: encounter.id!)
+                      )
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.event_note, color: Theme.of(context).primaryColor, size: 28),
+                    title: Text(
+                      encounter.reason ?? 'conditionDetails.unknownReason'.tr(context),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                     ),
+                    subtitle: Text(
+                      encounter.actualStartDate != null
+                          ? DateFormat('MMM d, y, hh:mm a').format(DateTime.parse(encounter.actualStartDate!))
+                          : 'conditionDetails.noDateProvided'.tr(context),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
                   ),
-                )
+                ),
+              ),
+            )
                 .toList(),
           ],
         ),
@@ -665,25 +754,29 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
             ...condition.serviceRequests!
                 .map(
                   (request) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(Icons.medical_services, color: AppColors.primaryColor, size: 28),
-                      title: Text(
-                        request.healthCareService?.name ?? 'conditionDetails.unknownService'.tr(context),
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        request.serviceRequestStatus?.display ?? 'conditionDetails.unknownStatus'.tr(context),
-                        style: TextStyle(color: _getStatusColor(request.serviceRequestStatus?.code), fontWeight: FontWeight.bold, fontSize: 13),
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
-                      onTap: () {
-                        ShowToast.showToastInfo(message: "conditionDetails.serviceRequestDetailsToast".tr(context));
-                      },
-                    ),
+                padding: const EdgeInsets.only(bottom: 12),
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.medical_services, color: AppColors.primaryColor, size: 28),
+                  title: Text(
+                    request.healthCareService?.name ?? 'conditionDetails.unknownService'.tr(context),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                )
+                  subtitle: Text(
+                    request.serviceRequestStatus?.display ?? 'conditionDetails.unknownStatus'.tr(context),
+                    style: TextStyle(
+                        color: _getStatusColor(request.serviceRequestStatus?.code),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+                  onTap: () {
+                    ShowToast.showToastInfo(
+                        message: "conditionDetails.serviceRequestDetailsToast".tr(context));
+                  },
+                ),
+              ),
+            )
                 .toList(),
           ],
         ),
@@ -700,12 +793,26 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (condition.summary != null) _buildNoteItem(icon: Icons.summarize, title: 'conditionDetails.summary'.tr(context), content: condition.summary!),
+            if (condition.summary != null)
+              _buildNoteItem(
+                  icon: Icons.summarize,
+                  title: 'conditionDetails.summary'.tr(context),
+                  content: condition.summary!
+              ),
 
-            if (condition.note != null) _buildNoteItem(icon: Icons.note_alt, title: 'conditionDetails.notesLabel'.tr(context), content: condition.note!),
+            if (condition.note != null)
+              _buildNoteItem(
+                  icon: Icons.note_alt,
+                  title: 'conditionDetails.notesLabel'.tr(context),
+                  content: condition.note!
+              ),
 
             if (condition.extraNote != null)
-              _buildNoteItem(icon: Icons.bookmark_add, title: 'conditionDetails.additionalNotes'.tr(context), content: condition.extraNote!),
+              _buildNoteItem(
+                  icon: Icons.bookmark_add,
+                  title: 'conditionDetails.additionalNotes'.tr(context),
+                  content: condition.extraNote!
+              ),
           ],
         ),
       ),
@@ -751,10 +858,14 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(date, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.grey)),
+                    Text(date,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.grey)),
                     if (age != null) ...[
                       const SizedBox(width: 8),
-                      Text('conditionDetails.yearsAge'.tr(context), style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500])),
+                      Text('conditionDetails.yearsAge'.tr(context),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[500])),
                     ],
                   ],
                 ),
@@ -782,7 +893,9 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> {
                   children: [
                     Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    Text(content, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey)),
+                    Text(content,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.grey)),
                   ],
                 ),
               ),

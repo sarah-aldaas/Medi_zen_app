@@ -21,14 +21,18 @@ abstract class DiagnosticReportRemoteDataSource {
     int page = 1,
     int perPage = 10,
     required String appointmentId,
+    required String conditionId,
   });
 
   Future<Resource<DiagnosticReportModel>> getDetailsDiagnosticReport({
     required String diagnosticReportId,
   });
 
-  Future<Resource<DiagnosticReportModel>> getDiagnosticReportOfCondition({
-    required String conditionId,
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>> getDiagnosticReportOfCondition({
+    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,
+    required String conditionId
   });
 }
 
@@ -76,6 +80,7 @@ class DiagnosticReportRemoteDataSourceImpl
     int page = 1,
     int perPage = 10,
     required String appointmentId,
+    required String conditionId,
   }) async {
     final params = {
       'page': page.toString(),
@@ -85,7 +90,7 @@ class DiagnosticReportRemoteDataSourceImpl
 
     final response = await networkClient.invoke(
       DiagnosticReportEndPoints.getAllDiagnosticReportOfAppointment(
-        appointmentId: appointmentId,
+        appointmentId: appointmentId, conditionId: conditionId,
       ),
       RequestType.get,
       queryParameters: params,
@@ -120,18 +125,33 @@ class DiagnosticReportRemoteDataSourceImpl
   }
 
   @override
-  Future<Resource<DiagnosticReportModel>> getDiagnosticReportOfCondition({
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>> getDiagnosticReportOfCondition({
     required String conditionId,
+    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,
   }) async {
+    final params = {
+      'page': page.toString(),
+      'pagination_count': perPage.toString(),
+      if (filters != null) ...filters,
+    };
+
     final response = await networkClient.invoke(
-      DiagnosticReportEndPoints.getAllDiagnosticReportOfCondition(
-        conditionId: conditionId,
-      ),
+      DiagnosticReportEndPoints.getAllDiagnosticReportOfCondition(conditionId: conditionId),
       RequestType.get,
+      queryParameters: params,
     );
-    return ResponseHandler<DiagnosticReportModel>(response).processResponse(
+
+    return ResponseHandler<PaginatedResponse<DiagnosticReportModel>>(
+      response,
+    ).processResponse(
       fromJson:
-          (json) => DiagnosticReportModel.fromJson(json['diagnostic_report']),
+          (json) => PaginatedResponse<DiagnosticReportModel>.fromJson(
+        json,
+        'diagnostic_reports',
+            (dataJson) => DiagnosticReportModel.fromJson(dataJson),
+      ),
     );
   }
 }

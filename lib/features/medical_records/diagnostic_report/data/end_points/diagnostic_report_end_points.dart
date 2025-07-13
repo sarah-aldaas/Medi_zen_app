@@ -7,9 +7,10 @@ class DiagnosticReportEndPoints {
 
   static String getAllDiagnosticReportOfAppointment({
     required String appointmentId,
-  }) => "/patient/appointments/$appointmentId/diagnostic-reports";
+    required String conditionId,
+  }) => "/patient/appointments/$appointmentId/conditions/$conditionId/diagnostic-reports";
 
   static String getAllDiagnosticReportOfCondition({
     required String conditionId,
-  }) => "/patient/conditions/$conditionId/diagnostic-report";
+  }) => "/patient/conditions/$conditionId/my-diagnostic-reports";
 }

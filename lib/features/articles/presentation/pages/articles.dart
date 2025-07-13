@@ -124,47 +124,53 @@ class _ArticlesPageState extends State<ArticlesPage> {
         title: Text("articles.title".tr(context)),
         actions: _buildAppBarActions(),
       ),
-      body: Column(
-        children: [
-          if (_showSearchField) _buildSearchField(),
-          Expanded(
-            child: BlocConsumer<ArticleCubit, ArticleState>(
-              listener: (context, state) {
-                if (state is ArticleError) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.error)));
-                }
-              },
-              builder: (context, state) {
-                if (state is ArticleLoading) {
-                  return const Center(child: LoadingPage());
-                }
+      body:  RefreshIndicator(
+        onRefresh: () async {
+          _loadInitialArticles();
+        },
+        color: Theme.of(context).primaryColor,
+        child: Column(
+          children: [
+            if (_showSearchField) _buildSearchField(),
+            Expanded(
+              child: BlocConsumer<ArticleCubit, ArticleState>(
+                listener: (context, state) {
+                  if (state is ArticleError) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.error)));
+                  }
+                },
+                builder: (context, state) {
+                  if (state is ArticleLoading) {
+                    return const Center(child: LoadingPage());
+                  }
 
-                if (state is ArticleError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(state.error),
-                        ElevatedButton(
-                          onPressed: _loadArticles,
-                          child: Text('articles.retry'.tr(context)),
-                        ),
-                      ],
-                    ),
-                  );
-                }
+                  if (state is ArticleError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(state.error),
+                          ElevatedButton(
+                            onPressed: _loadArticles,
+                            child: Text('articles.retry'.tr(context)),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
 
-                if (state is ArticleSuccess || state is ArticleLoading) {
-                  return _buildContent(state is ArticleSuccess ? state : null);
-                }
+                  if (state is ArticleSuccess || state is ArticleLoading) {
+                    return _buildContent(state is ArticleSuccess ? state : null);
+                  }
 
-                return const SizedBox.shrink();
-              },
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -228,43 +234,35 @@ class _ArticlesPageState extends State<ArticlesPage> {
     final articles = state?.paginatedResponse.paginatedData?.items ?? [];
     final hasMore = state?.hasMore ?? false;
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        await context.read<ArticleCubit>().getAllArticles(
-          context: context,
-          filters: _buildFilters(),
-        );
-      },
-      child: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            sliver: _buildActiveFilters(),
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          sliver: _buildActiveFilters(),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              if (index < articles.length) {
+                return _buildArticleItem(
+                  article: articles[index],
+                  context: context,
+                );
+              } else if (hasMore) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: LoadingButton(),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }, childCount: articles.length + (hasMore ? 1 : 0)),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                if (index < articles.length) {
-                  return _buildArticleItem(
-                    article: articles[index],
-                    context: context,
-                  );
-                } else if (hasMore) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: LoadingButton(),
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              }, childCount: articles.length + (hasMore ? 1 : 0)),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

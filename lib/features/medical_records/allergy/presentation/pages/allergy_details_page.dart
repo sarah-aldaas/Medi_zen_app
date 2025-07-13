@@ -53,39 +53,45 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
         backgroundColor: theme.appBarTheme.backgroundColor,
       ),
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: BlocConsumer<AllergyCubit, AllergyState>(
-        listener: (context, state) {
-          if (state is AllergyError) {
-            ShowToast.showToastError(message: state.error);
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _loadAllergyDetails();
         },
-        builder: (context, state) {
-          if (state is AllergyLoading) {
-            return Center(child: LoadingPage());
-          } else if (state is AllergyDetailsSuccess) {
-            return _buildAllergyDetails(context, state.allergyModel);
-          } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: theme.textTheme.bodySmall?.color?.withOpacity(0.5)),
-                  const SizedBox(height: 16),
-                  Text(
-                    'allergiesPage.failedToLoadAllergyDetails'.tr(context), // Translated
-                    style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: _loadAllergyDetails,
-                    child: Text('allergiesPage.tapToRetry'.tr(context), style: TextStyle(fontSize: 16, color: theme.primaryColor)),
-                  ),
-                ],
-              ),
-            );
-          }
-        },
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<AllergyCubit, AllergyState>(
+          listener: (context, state) {
+            if (state is AllergyError) {
+              ShowToast.showToastError(message: state.error);
+            }
+          },
+          builder: (context, state) {
+            if (state is AllergyLoading) {
+              return Center(child: LoadingPage());
+            } else if (state is AllergyDetailsSuccess) {
+              return _buildAllergyDetails(context, state.allergyModel);
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 64, color: theme.textTheme.bodySmall?.color?.withOpacity(0.5)),
+                    const SizedBox(height: 16),
+                    Text(
+                      'allergiesPage.failedToLoadAllergyDetails'.tr(context), // Translated
+                      style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton(
+                      onPressed: _loadAllergyDetails,
+                      child: Text('allergiesPage.tapToRetry'.tr(context), style: TextStyle(fontSize: 16, color: theme.primaryColor)),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

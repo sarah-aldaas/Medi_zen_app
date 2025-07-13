@@ -959,6 +959,7 @@
     "filterAllergyTooltip": "تصفية الحساسية",
     "filterServiceRequest": "تصفية طلب الخدمة",
     "tabs": {
+      "appointmentDetails": "تفاصيل الموعد",
       "encounters": "الزيارات",
       "allergies": "الحساسية",
       "serviceRequest": "طلب خدمة",
@@ -1382,6 +1383,8 @@
     "noNotes": "لا توجد ملاحظات إضافية"
   },
   "medicationRequestDetails": {
+    "medication": "الادوية",
+    "details": "التفاصيل",
     "title": "تفاصيل طلب الدواء",
     "failedToLoad": "فشل تحميل تفاصيل طلب الدواء. يرجى المحاولة مرة أخرى.",
     "requestInfo": "معلومات الطلب",
@@ -1444,6 +1447,9 @@
     "stage": "المرحلة"
   },
   "conditionDetails": {
+    "details": "التفاصيل",
+    "diagnosticReports": "التقارير الطبية",
+    "medicationRequest": "طلبات الادوية",
     "title": "تفاصيل الحالة",
     "failedToLoad": "فشل تحميل تفاصيل الحالة",
     "retry": "إعادة المحاولة",

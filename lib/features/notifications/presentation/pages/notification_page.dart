@@ -13,6 +13,7 @@ import '../../../medical_records/conditions/presentation/pages/condition_details
 import '../../../medical_records/diagnostic_report/presentation/pages/diagnostic_report_details_page.dart';
 import '../../../medical_records/encounter/presentation/pages/encounter_details_page.dart';
 import '../../../medical_records/imaging_study/presentation/pages/imaging_study_details_page.dart';
+import '../../../medical_records/medical_record_of_appointment_page.dart';
 import '../../../medical_records/medication/presentation/pages/medication_details_page.dart';
 import '../../../medical_records/medication_request/presentation/pages/medication_request_details_page.dart';
 import '../../../medical_records/observation/presentation/pages/observation_details_page.dart';
@@ -691,7 +692,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       context,
       MaterialPageRoute(
         builder:
-            (context) => AppointmentDetailsPage(
+            (context) => MedicalRecordOfAppointmentPage(
               appointmentId: data.appointmentId!,
               // doctorId: data.doctorId,
             ),

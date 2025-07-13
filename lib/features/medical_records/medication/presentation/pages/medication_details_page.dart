@@ -23,11 +23,14 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<MedicationCubit>().getMedicationDetails(
-      context: context,
-      medicationId: widget.medicationId,
-    );
+    _loadMedicationDetails();
   }
+void _loadMedicationDetails(){
+  context.read<MedicationCubit>().getMedicationDetails(
+    context: context,
+    medicationId: widget.medicationId,
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -47,23 +50,29 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
           onPressed: () => context.pop(),
         ),
       ),
-      body: BlocConsumer<MedicationCubit, MedicationState>(
-        listener: (context, state) {
-          if (state is MedicationError) {
-            ShowToast.showToastError(message: state.error);
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _loadMedicationDetails();
         },
-        builder: (context, state) {
-          if (state is MedicationDetailsSuccess) {
-            return _buildMedicationDetails(state.medication);
-          } else if (state is MedicationLoading) {
-            return const Center(child: LoadingPage());
-          } else {
-            return Center(
-              child: Text("medicationDetails.failedToLoad".tr(context)),
-            );
-          }
-        },
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<MedicationCubit, MedicationState>(
+          listener: (context, state) {
+            if (state is MedicationError) {
+              ShowToast.showToastError(message: state.error);
+            }
+          },
+          builder: (context, state) {
+            if (state is MedicationDetailsSuccess) {
+              return _buildMedicationDetails(state.medication);
+            } else if (state is MedicationLoading) {
+              return const Center(child: LoadingPage());
+            } else {
+              return Center(
+                child: Text("medicationDetails.failedToLoad".tr(context)),
+              );
+            }
+          },
+        ),
       ),
     );
   }

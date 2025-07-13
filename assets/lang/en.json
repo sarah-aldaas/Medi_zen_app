@@ -954,6 +954,7 @@
     "filterAllergyTooltip": "Filter Allergy",
     "filterServiceRequest": "Filter service request",
     "tabs": {
+      "appointmentDetails":"Appointment details",
       "encounters": "Encounters",
       "allergies": "Allergies",
       "conditions": "Conditions",
@@ -1397,6 +1398,8 @@
     "noNotes": "No additional notes"
   },
   "medicationRequestDetails": {
+    "medication": "Medication",
+    "details": "Details",
     "title": "Medication Request Details",
     "failedToLoad": "Failed to load medication request details. Please try again.",
     "requestInfo": "Request Information",
@@ -1488,6 +1491,9 @@
     "stage": "Stage"
   },
   "conditionDetails": {
+    "details": "Details",
+    "medicationRequest": "Medication request",
+    "diagnosticReports": "Diagnostic reports",
     "title": "Condition Details",
     "failedToLoad": "Failed to load condition details",
     "retry": "Retry",
