@@ -391,11 +391,12 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                           ),
                         ),
                         const SizedBox(width: 12),
-
+                        // Doctor details column
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Doctor name
                               Container(
                                 width: 150,
                                 height: 20,
@@ -405,7 +406,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 ),
                               ),
                               const SizedBox(height: 10),
-
+                              // Date row
                               Row(
                                 children: [
                                   Container(
@@ -422,6 +423,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 ],
                               ),
                               const SizedBox(height: 8),
+                              // Time row
                               Row(
                                 children: [
                                   Container(
@@ -452,7 +454,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                         ),
                       ],
                     ),
-
+                    // Buttons (only for some items)
                     if (index % 2 == 0) ...[
                       const SizedBox(height: 16),
                       Row(
