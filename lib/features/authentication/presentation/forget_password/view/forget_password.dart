@@ -63,7 +63,7 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
             appBar: AppBar(
               backgroundColor: AppColors.whiteColor,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+                icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
                 onPressed: () {
                   context.pop();
                 },
