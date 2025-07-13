@@ -36,31 +36,31 @@ class _AllEncountersOfAppointmentPageState extends State<AllEncountersOfAppointm
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<EncounterCubit, EncounterState>(
-      listener: (context, state) {
-        if (state is EncounterError) {
-          ShowToast.showToastError(message: 'encountersPge.errorLoading'.tr(context));
-        }
+    return RefreshIndicator(
+      onRefresh: () async {
+        _loadInitialEncounters();
       },
-      builder: (context, state) {
-        if (state is EncounterLoading) {
-          return const Center(child: LoadingPage());
-        }
+      color: Theme.of(context).primaryColor,
+      child: BlocConsumer<EncounterCubit, EncounterState>(
+        listener: (context, state) {
+          if (state is EncounterError) {
+            ShowToast.showToastError(message: 'encountersPge.errorLoading'.tr(context));
+          }
+        },
+        builder: (context, state) {
+          if (state is EncounterLoading) {
+            return const Center(child: LoadingPage());
+          }
 
-        final List<EncounterModel> encounters =
-        state is EncounterOfAppointmentSuccess
-            ? state.encounterModel!=null?[state.encounterModel]:[]:[];
+          final List<EncounterModel> encounters =
+          state is EncounterOfAppointmentSuccess
+              ? state.encounterModel!=null?[state.encounterModel]:[]:[];
 
-        if (encounters.isEmpty) {
-          return NotFoundDataPage();
-        }
+          if (encounters.isEmpty) {
+            return NotFoundDataPage();
+          }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            _loadInitialEncounters();
-          },
-          color: Theme.of(context).primaryColor,
-          child: ListView.builder(
+          return ListView.builder(
             itemCount: encounters.length,
             itemBuilder: (context, index) {
               if (index < encounters.length) {
@@ -72,9 +72,9 @@ class _AllEncountersOfAppointmentPageState extends State<AllEncountersOfAppointm
                 return Center(child: LoadingButton());
               }
             },
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

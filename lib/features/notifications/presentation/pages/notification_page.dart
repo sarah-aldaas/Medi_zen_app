@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/articles/presentation/pages/article_details_notification_page.dart';
 
-import '../../../appointment/pages/appointment_details.dart';
-import '../../../articles/presentation/pages/article_details_page.dart';
+import '../../../../base/theme/app_color.dart';
 import '../../../complains/presentation/pages/complain_details_page.dart';
 import '../../../invoice/presentation/pages/invoice_details_page.dart';
 import '../../../medical_records/allergy/presentation/pages/allergy_details_page.dart';
@@ -16,6 +14,7 @@ import '../../../medical_records/conditions/presentation/pages/condition_details
 import '../../../medical_records/diagnostic_report/presentation/pages/diagnostic_report_details_page.dart';
 import '../../../medical_records/encounter/presentation/pages/encounter_details_page.dart';
 import '../../../medical_records/imaging_study/presentation/pages/imaging_study_details_page.dart';
+import '../../../medical_records/medical_record_of_appointment_page.dart';
 import '../../../medical_records/medication/presentation/pages/medication_details_page.dart';
 import '../../../medical_records/medication_request/presentation/pages/medication_request_details_page.dart';
 import '../../../medical_records/observation/presentation/pages/observation_details_page.dart';
@@ -61,17 +60,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent &&
+            _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context
-          .read<NotificationCubit>()
-          .getMyNotifications(
+      context.read<NotificationCubit>().getMyNotifications(
         loadMore: true,
         context: context,
         isRead: !_showUnreadOnly,
       );
-
     }
   }
 
@@ -79,19 +75,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notifications"),
+        title: Text('notifications.title'.tr(context)),
         actions: [
           IconButton(
-            icon: Icon(_showUnreadOnly ?  Icons.mark_email_unread:Icons.mark_email_read ),
+            icon: Icon(
+              _showUnreadOnly ? Icons.mark_email_unread : Icons.mark_email_read,
+            ),
             onPressed: () {
               setState(() {
                 _showUnreadOnly = !_showUnreadOnly;
                 _loadInitialNotifications();
               });
             },
-            tooltip: _showUnreadOnly
-                ? "show_all"
-                : "show_unread",
+            tooltip: _showUnreadOnly ? "show_all" : "show_unread",
           ),
         ],
       ),
@@ -102,7 +98,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
             if (state is NotificationError) {
               ShowToast.showToastError(message: state.error);
             } else if (state is FCMOperationSuccess) {
-              ShowToast.showToastSuccess(message: state.response.msg ?? 'Operation successful');
+              ShowToast.showToastSuccess(
+                message: state.response.msg ?? 'Operation successful',
+              );
             }
           },
           builder: (context, state) {
@@ -118,7 +116,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     Text(state.error),
                     ElevatedButton(
                       onPressed: _loadInitialNotifications,
-                      child: Text('retry'),
+                      child: Text('notifications.retry'.tr(context)),
                     ),
                   ],
                 ),
@@ -141,7 +139,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final hasMore = state?.hasMore ?? false;
 
     if (notifications.isEmpty) {
-      return NotFoundDataPage();
+      return Center(child: Text('notifications.notNotification'));
     }
 
     return RefreshIndicator(
@@ -161,7 +159,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               context: context,
             );
           } else if (hasMore) {
-            return  Center(
+            return Center(
               child: Padding(
                 padding: EdgeInsets.all(16),
                 child: LoadingButton(),
@@ -183,9 +181,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final isDarkMode = theme.brightness == Brightness.dark;
 
     final icon = _getNotificationIcon(notification);
-    final color = notification.isRead ?
-    (isDarkMode ? Colors.grey[600] : Colors.grey[300]) :
-    theme.primaryColor;
+    // Use theme.primaryColor for all icons, regardless of read status
+    final iconColor = theme.primaryColor;
 
     return Dismissible(
       key: Key(notification.id),
@@ -202,70 +199,89 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return false;
       },
       onDismissed: (direction) {
-        cubit.deleteNotification(notificationId: notification.id, context: context,isRead: !_showUnreadOnly);
-
+        cubit.deleteNotification(
+          notificationId: notification.id,
+          context: context,
+          isRead: !_showUnreadOnly,
+        );
       },
-      child:cubit.state is NotificationOperationLoading? Center(child: LoadingButton(),):Card(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        color: notification.isRead ?
-        (isDarkMode ? Colors.grey[800] : Colors.grey[100]) :
-        (isDarkMode ? Colors.grey[900] : null),
-        child: InkWell(
-          onTap: () {
-            if (!notification.isRead) {
-              cubit.markNotificationAsRead(
-                  notificationId: notification.id,
-                  context: context
-              );
-              _loadInitialNotifications();
-            }
-            _handleNotificationTap(notification, context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon, color: color, size: 30),
-                const Gap(12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        notification.title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: color,
+      child:
+          cubit.state is NotificationOperationLoading
+              ? Center(child: LoadingButton())
+              : Card(
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                // Keep the background color conditional based on read status
+                color:
+                    notification.isRead
+                        ? (isDarkMode ? Colors.grey[800] : Colors.grey[100])
+                        : (isDarkMode ? Colors.grey[900] : null),
+                child: InkWell(
+                  onTap: () {
+                    if (!notification.isRead) {
+                      cubit.markNotificationAsRead(
+                        notificationId: notification.id,
+                        context: context,
+                      );
+                      // This will reload all notifications, including the one just marked as read
+                      _loadInitialNotifications();
+                    }
+                    _handleNotificationTap(notification, context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(icon, color: iconColor, size: 30), // Use iconColor
+                        const Gap(12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                notification.title,
+                                style: TextStyle(
+                                  // Apply bold only if not read
+                                  fontWeight:
+                                      notification.isRead
+                                          ? FontWeight.normal
+                                          : FontWeight.bold,
+                                  color:
+                                      theme
+                                          .textTheme
+                                          .titleMedium
+                                          ?.color, // Keep text color consistent
+                                ),
+                              ),
+                              const Gap(4),
+                              Text(
+                                notification.body,
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                              const Gap(4),
+                              Text(
+                                _formatDate(notification.sentAt),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.textTheme.bodySmall?.color
+                                      ?.withOpacity(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const Gap(4),
-                      Text(
-                        notification.body,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      const Gap(4),
-                      Text(
-                        _formatDate(notification.sentAt),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color?.withOpacity(0.6),
-                        ),
-                      ),
-                    ],
+                        if (!notification.isRead)
+                          Icon(
+                            Icons.brightness_1,
+                            color: theme.colorScheme.error,
+                            size: 12,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-                if (!notification.isRead)
-                  Icon(Icons.brightness_1,
-                      color: theme.colorScheme.error,
-                      size: 12),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
     );
   }
-
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
@@ -283,24 +299,50 @@ class _NotificationsPageState extends State<NotificationsPage> {
     return 'Just now';
   }
 
-  Future<bool> _showDeleteConfirmation(BuildContext context, String notificationId) async {
+  Future<bool> _showDeleteConfirmation(
+    BuildContext context,
+    String notificationId,
+  ) async {
     return await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Delete notification"),
-        content: Text("Do you want to delete this notification?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text("cancel"),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text("delete"),
-          ),
-        ],
-      ),
-    ) ?? false;
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: Text(
+                  'notifications.deleteNotification'.tr(context),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                content: Text('notifications.Do_you_delete'.tr(context)),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: Text(
+                      'notifications.cancel'.tr(context),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Text(
+                      'notifications.delete'.tr(context),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+
+                        color: AppColors.red,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
   }
 
   IconData _getNotificationIcon(NotificationModel notification) {
@@ -353,7 +395,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case NotificationType.medicationRequestCreated:
       case NotificationType.medicationRequestUpdated:
       case NotificationType.medicationRequestCanceled:
-      // case NotificationType.reminderMedication:
+        // case NotificationType.reminderMedication:
         return Icons.medication_outlined;
       case NotificationType.medicationCreated:
       case NotificationType.medicationUpdated:
@@ -378,7 +420,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
   }
 
-  void _handleNotificationTap(NotificationModel notification, BuildContext context) {
+  void _handleNotificationTap(
+    NotificationModel notification,
+    BuildContext context,
+  ) {
     switch (notification.typeNotification) {
       case NotificationType.articleCreated:
         _navigateToArticleDetails(notification.data, context);
@@ -440,7 +485,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case NotificationType.medicationRequestCreated:
       case NotificationType.medicationRequestUpdated:
       case NotificationType.medicationRequestCanceled:
-      // case NotificationType.reminderMedication:
+        // case NotificationType.reminderMedication:
         _navigateToMedicationRequestDetails(notification.data, context);
         break;
       case NotificationType.medicationCreated:
@@ -479,9 +524,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ArticleDetailsNotificationPage(articleId: data.articleId!),
+        builder:
+            (context) =>
+                ArticleDetailsNotificationPage(articleId: data.articleId!),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
@@ -497,18 +544,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
       MaterialPageRoute(
         builder: (context) => AllergyDetailsPage(allergyId: data.allergyId!),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToOrganizationDetails(NotificationData data, BuildContext context) {
+  void _navigateToOrganizationDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => OrganizationDetailsPage(),
-      ),
-    ).then((_){
+      MaterialPageRoute(builder: (context) => OrganizationDetailsPage()),
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
@@ -522,12 +570,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ReactionDetailsPage(
-          allergyId: data.allergyId!,
-          reactionId: data.reactionId!,
-        ),
+        builder:
+            (context) => ReactionDetailsPage(
+              allergyId: data.allergyId!,
+              reactionId: data.reactionId!,
+            ),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
@@ -541,14 +590,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => InvoiceDetailsPage(appointmentId: data.appointmentId!,invoiceId: data.invoiceId!,),
+        builder:
+            (context) => InvoiceDetailsPage(
+              appointmentId: data.appointmentId!,
+              invoiceId: data.invoiceId!,
+            ),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToServiceRequestDetails(NotificationData data, BuildContext context) {
+  void _navigateToServiceRequestDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.serviceRequestId == null) {
       _showErrorDialog(context, 'Service Request ID is missing');
       return;
@@ -557,14 +613,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ServiceRequestDetailsPage(serviceId: data.serviceRequestId!),
+        builder:
+            (context) =>
+                ServiceRequestDetailsPage(serviceId: data.serviceRequestId!),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToObservationDetails(NotificationData data, BuildContext context) {
+  void _navigateToObservationDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.observationId == null) {
       _showErrorDialog(context, 'Observation ID is missing');
       return;
@@ -573,14 +634,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ObservationDetailsPage(observationId: data.observationId!,serviceId: data.serviceRequestId!,),
+        builder:
+            (context) => ObservationDetailsPage(
+              observationId: data.observationId!,
+              serviceId: data.serviceRequestId!,
+            ),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToImagingStudyDetails(NotificationData data, BuildContext context) {
+  void _navigateToImagingStudyDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.imagingStudyId == null) {
       _showErrorDialog(context, 'Imaging Study ID is missing');
       return;
@@ -589,9 +657,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ImagingStudyDetailsPage(imagingStudyId: data.imagingStudyId!,serviceId: data.serviceRequestId!,),
+        builder:
+            (context) => ImagingStudyDetailsPage(
+              imagingStudyId: data.imagingStudyId!,
+              serviceId: data.serviceRequestId!,
+            ),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
@@ -605,18 +677,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SeriesDetailsPage(
-          seriesId: data.seriesId!,
-          imagingStudyId: data.imagingStudyId!,
-          serviceId: data.serviceRequestId!,
-        ),
+        builder:
+            (context) => SeriesDetailsPage(
+              seriesId: data.seriesId!,
+              imagingStudyId: data.imagingStudyId!,
+              serviceId: data.serviceRequestId!,
+            ),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToEncounterDetails(NotificationData data, BuildContext context) {
+  void _navigateToEncounterDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.encounterId == null) {
       _showErrorDialog(context, 'Encounter ID is missing');
       return;
@@ -625,16 +701,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EncounterDetailsPage(
-          encounterId: data.encounterId!,
-        ),
+        builder:
+            (context) => EncounterDetailsPage(encounterId: data.encounterId!),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToAppointmentDetails(NotificationData data, BuildContext context) {
+  void _navigateToAppointmentDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.appointmentId == null) {
       _showErrorDialog(context, 'Appointment ID is missing');
       return;
@@ -643,17 +721,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AppointmentDetailsPage(
-          appointmentId: data.appointmentId!,
-          // doctorId: data.doctorId,
-        ),
+        builder:
+            (context) => MedicalRecordOfAppointmentPage(
+              appointmentId: data.appointmentId!,
+              // doctorId: data.doctorId,
+            ),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToConditionDetails(NotificationData data, BuildContext context) {
+  void _navigateToConditionDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.conditionId == null) {
       _showErrorDialog(context, 'Condition ID is missing');
       return;
@@ -662,14 +744,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ConditionDetailsPage(conditionId: data.conditionId!),
+        builder:
+            (context) => ConditionDetailsPage(conditionId: data.conditionId!),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToMedicationRequestDetails(NotificationData data, BuildContext context) {
+  void _navigateToMedicationRequestDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.medicationRequestId == null) {
       _showErrorDialog(context, 'Medication Request ID is missing');
       return;
@@ -678,17 +764,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MedicationRequestDetailsPage(
-          medicationRequestId: data.medicationRequestId!,
-          // medicationId: data.medicationId,
-        ),
+        builder:
+            (context) => MedicationRequestDetailsPage(
+              medicationRequestId: data.medicationRequestId!,
+              // medicationId: data.medicationId,
+            ),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToMedicationDetails(NotificationData data, BuildContext context) {
+  void _navigateToMedicationDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.medicationId == null) {
       _showErrorDialog(context, 'Medication ID is missing');
       return;
@@ -697,14 +787,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MedicationDetailsPage(medicationId: data.medicationId!),
+        builder:
+            (context) =>
+                MedicationDetailsPage(medicationId: data.medicationId!),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToDiagnosticReportDetails(NotificationData data, BuildContext context) {
+  void _navigateToDiagnosticReportDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.diagnosticReportId == null) {
       _showErrorDialog(context, 'Diagnostic Report ID is missing');
       return;
@@ -713,14 +808,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DiagnosticReportDetailsPage(diagnosticReportId: data.diagnosticReportId!),
+        builder:
+            (context) => DiagnosticReportDetailsPage(
+              diagnosticReportId: data.diagnosticReportId!,
+            ),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _navigateToComplaintDetails(NotificationData data, BuildContext context) {
+  void _navigateToComplaintDetails(
+    NotificationData data,
+    BuildContext context,
+  ) {
     if (data.complaintId == null) {
       _showErrorDialog(context, 'Complaint ID is missing');
       return;
@@ -729,78 +830,86 @@ class _NotificationsPageState extends State<NotificationsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ComplainDetailsPage(complainId: data.complaintId!),
+        builder:
+            (context) => ComplainDetailsPage(complainId: data.complaintId!),
       ),
-    ).then((_){
+    ).then((_) {
       _loadInitialNotifications();
     });
   }
 
-  void _showHealthTipDialog(NotificationModel notification, BuildContext context) {
+  void _showHealthTipDialog(
+    NotificationModel notification,
+    BuildContext context,
+  ) {
     if (notification.data.tip == null || notification.data.tip!.isEmpty) {
-      _showErrorDialog(context, 'No health tip content available');
+      _showErrorDialog(context, 'notifications.noHealth'.tr(context));
       return;
     }
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(notification.title),
-        content: SingleChildScrollView(child: Text(notification.data.tip!)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+      builder:
+          (context) => AlertDialog(
+            title: Text(notification.title),
+            content: SingleChildScrollView(child: Text(notification.data.tip!)),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('notifications.ok'.tr(context)),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
   void _showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+      builder:
+          (context) => AlertDialog(
+            title: Text('notifications.error'.tr(context)),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('notifications.ok'.tr(context)),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
-  void _showGenericNotificationDialog(NotificationModel notification, BuildContext context) {
+  void _showGenericNotificationDialog(
+    NotificationModel notification,
+    BuildContext context,
+  ) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          notification.title,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        content: SingleChildScrollView(
-          child: Text(
-            notification.body,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'OK',
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: Theme.of(context).primaryColor,
+      builder:
+          (context) => AlertDialog(
+            title: Text(
+              notification.title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            content: SingleChildScrollView(
+              child: Text(
+                notification.body,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'notifications.ok'.tr(context),
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
-
-
 }

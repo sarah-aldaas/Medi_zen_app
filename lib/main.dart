@@ -367,13 +367,7 @@ class _MyAppState extends State<MyApp> {
                         lazy: false,
                       ),
 
-                      // Remove this ThemeCubit provider as it's already provided at the top
-                      /*
-                      BlocProvider<ThemeCubit>(
-                        create: (context) => ThemeCubit(_themePreference),
-                        lazy: false,
-                      ),
-                      */
+
                     ],
                     child: BlocBuilder<LocalizationBloc, LocalizationState>(
                       builder: (context, state) {

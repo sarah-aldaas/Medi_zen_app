@@ -46,16 +46,6 @@ class ArticleCubit extends Cubit<ArticleState> {
       _currentFilters = filters;
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-      ShowToast.showToastError(
-        message: 'no_internet_check_network'.tr(context),
-      );
-      return;
-    }
-
     final result = await remoteDataSource.getAllArticles(
       filters: _currentFilters,
       page: _currentPage,
@@ -118,16 +108,6 @@ class ArticleCubit extends Cubit<ArticleState> {
       _currentFilters = filters;
     }
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-      ShowToast.showToastError(
-        message: 'no_internet_check_network'.tr(context),
-      );
-      return;
-    }
-
     final result = await remoteDataSource.getMyFavoriteArticles(
       filters: _currentFilters,
       page: _currentPage,
@@ -181,16 +161,6 @@ class ArticleCubit extends Cubit<ArticleState> {
   }) async {
     emit(ArticleLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-      ShowToast.showToastError(
-        message: 'no_internet_check_network'.tr(context),
-      );
-      return;
-    }
-
     final result = await remoteDataSource.getDetailsArticle(
       articleId: articleId,
     );
@@ -215,16 +185,6 @@ class ArticleCubit extends Cubit<ArticleState> {
     required BuildContext context,
   }) async {
     emit(ArticleLoading());
-
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed(AppRouter.noInternet.name);
-      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-      ShowToast.showToastError(
-        message: 'no_internet_check_network'.tr(context),
-      );
-      return;
-    }
 
     final result = await remoteDataSource.getArticleOfCondition(
       conditionId: conditionId,
@@ -288,15 +248,6 @@ class ArticleCubit extends Cubit<ArticleState> {
     required BuildContext context,
   }) async {
     emit(FavoriteOperationLoading());
-
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-      ShowToast.showToastError(
-        message: 'no_internet_check_network'.tr(context),
-      );
-      return;
-    }
 
     final result = await remoteDataSource.removeArticleFavorite(
       articleId: articleId,

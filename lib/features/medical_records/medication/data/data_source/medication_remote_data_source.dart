@@ -15,11 +15,15 @@ abstract class MedicationRemoteDataSource {
     int page = 1,
     int perPage = 10,
     required String appointmentId,
+    required String medicationRequestId,
+    required String conditionId,
   });
 
   Future<Resource<MedicationModel>> getDetailsMedication({required String medicationId});
 
-  Future<Resource<List<MedicationModel>>> getAllMedicationForMedicationRequest({required String medicationRequestId});
+  Future<Resource<PaginatedResponse<MedicationModel>>> getAllMedicationForMedicationRequest({required String medicationRequestId, required String conditionId,    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,});
 }
 
 class MedicationRemoteDataSourceImpl implements MedicationRemoteDataSource {
@@ -44,11 +48,13 @@ class MedicationRemoteDataSourceImpl implements MedicationRemoteDataSource {
     int page = 1,
     int perPage = 10,
     required String appointmentId,
+    required String medicationRequestId,
+    required String conditionId,
   }) async {
     final params = {'page': page.toString(), 'pagination_count': perPage.toString(), if (filters != null) ...filters};
 
     final response = await networkClient.invoke(
-      MedicationEndPoints.getAllMedicationForAppointment(appointmentId: appointmentId),
+      MedicationEndPoints.getAllMedicationForAppointment(appointmentId: appointmentId, medicationRequestId: medicationRequestId, conditionId: conditionId),
       RequestType.get,
       queryParameters: params,
     );
@@ -65,14 +71,15 @@ class MedicationRemoteDataSourceImpl implements MedicationRemoteDataSource {
   }
 
   @override
-  Future<Resource<List<MedicationModel>>> getAllMedicationForMedicationRequest({required String medicationRequestId}) async {
-    final response = await networkClient.invoke(
-      MedicationEndPoints.getAllMedicationForMedicationRequest(medicationRequestId: medicationRequestId),
-      RequestType.get,
-    );
+  Future<Resource<PaginatedResponse<MedicationModel>>> getAllMedicationForMedicationRequest({required String medicationRequestId, required String conditionId  ,  Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,}) async {
+    final params = {'page': page.toString(), 'pagination_count': perPage.toString(), if (filters != null) ...filters};
 
-    return ResponseHandler<List<MedicationModel>>(
+    final response = await networkClient.invoke(MedicationEndPoints.getAllMedicationForMedicationRequest(medicationRequestId: medicationRequestId, conditionId: conditionId), RequestType.get, queryParameters: params);
+
+    return ResponseHandler<PaginatedResponse<MedicationModel>>(
       response,
-    ).processResponse(fromJson: (json) => List<MedicationModel>.from(json['medications'].map((x) => MedicationModel.fromJson(x))));
+    ).processResponse(fromJson: (json) => PaginatedResponse<MedicationModel>.fromJson(json, 'medications', (dataJson) => MedicationModel.fromJson(dataJson)));
   }
 }

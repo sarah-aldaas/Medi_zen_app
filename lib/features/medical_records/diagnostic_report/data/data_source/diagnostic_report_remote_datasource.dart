@@ -8,65 +8,155 @@ import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/services/network/response_handler.dart';
 
 abstract class DiagnosticReportRemoteDataSource {
-  Future<Resource<PaginatedResponse<DiagnosticReportModel>>> getAllDiagnosticReport({Map<String, dynamic>? filters, int page = 1, int perPage = 10});
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>>
+  getAllDiagnosticReport({
+    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,
+  });
 
-  Future<Resource<PaginatedResponse<DiagnosticReportModel>>> getAllDiagnosticReportOfAppointment({
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>>
+  getAllDiagnosticReportOfAppointment({
     Map<String, dynamic>? filters,
     int page = 1,
     int perPage = 10,
     required String appointmentId,
+    required String conditionId,
   });
 
-  Future<Resource<DiagnosticReportModel>> getDetailsDiagnosticReport({required String diagnosticReportId});
+  Future<Resource<DiagnosticReportModel>> getDetailsDiagnosticReport({
+    required String diagnosticReportId,
+  });
 
-  Future<Resource<DiagnosticReportModel>> getDiagnosticReportOfCondition({required String conditionId});
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>>
+  getDiagnosticReportOfCondition({
+    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,
+    required String conditionId,
+  });
 }
 
-class DiagnosticReportRemoteDataSourceImpl implements DiagnosticReportRemoteDataSource {
+class DiagnosticReportRemoteDataSourceImpl
+    implements DiagnosticReportRemoteDataSource {
   final NetworkClient networkClient;
 
   DiagnosticReportRemoteDataSourceImpl({required this.networkClient});
 
   @override
-  Future<Resource<PaginatedResponse<DiagnosticReportModel>>> getAllDiagnosticReport({Map<String, dynamic>? filters, int page = 1, int perPage = 10}) async {
-    final params = {'page': page.toString(), 'pagination_count': perPage.toString(), if (filters != null) ...filters};
-
-    final response = await networkClient.invoke(DiagnosticReportEndPoints.getAllDiagnosticReport(), RequestType.get, queryParameters: params);
-
-    return ResponseHandler<PaginatedResponse<DiagnosticReportModel>>(response).processResponse(
-      fromJson: (json) => PaginatedResponse<DiagnosticReportModel>.fromJson(json, 'diagnostic_reports', (dataJson) => DiagnosticReportModel.fromJson(dataJson)),
-    );
-  }
-
-  @override
-  Future<Resource<PaginatedResponse<DiagnosticReportModel>>> getAllDiagnosticReportOfAppointment({
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>>
+  getAllDiagnosticReport({
     Map<String, dynamic>? filters,
     int page = 1,
     int perPage = 10,
-    required String appointmentId,
   }) async {
-    final params = {'page': page.toString(), 'pagination_count': perPage.toString(), if (filters != null) ...filters};
+    final params = {
+      'page': page.toString(),
+      'pagination_count': perPage.toString(),
+      if (filters != null) ...filters,
+    };
 
     final response = await networkClient.invoke(
-      DiagnosticReportEndPoints.getAllDiagnosticReportOfAppointment(appointmentId: appointmentId),
+      DiagnosticReportEndPoints.getAllDiagnosticReport(),
       RequestType.get,
       queryParameters: params,
     );
 
-    return ResponseHandler<PaginatedResponse<DiagnosticReportModel>>(response).processResponse(
-      fromJson: (json) => PaginatedResponse<DiagnosticReportModel>.fromJson(json, 'diagnostic_reports', (dataJson) => DiagnosticReportModel.fromJson(dataJson)),
+    return ResponseHandler<PaginatedResponse<DiagnosticReportModel>>(
+      response,
+    ).processResponse(
+      fromJson:
+          (json) => PaginatedResponse<DiagnosticReportModel>.fromJson(
+            json,
+            'diagnostic_reports',
+            (dataJson) => DiagnosticReportModel.fromJson(dataJson),
+          ),
     );
   }
 
   @override
-  Future<Resource<DiagnosticReportModel>> getDetailsDiagnosticReport({required String diagnosticReportId}) async {
-    final response = await networkClient.invoke(DiagnosticReportEndPoints.getDetailsDiagnosticReport(diagnosticReportId: diagnosticReportId), RequestType.get);
-    return ResponseHandler<DiagnosticReportModel>(response).processResponse(fromJson: (json) => DiagnosticReportModel.fromJson(json['diagnostic_report']));
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>>
+  getAllDiagnosticReportOfAppointment({
+    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,
+    required String appointmentId,
+    required String conditionId,
+  }) async {
+    final params = {
+      'page': page.toString(),
+      'pagination_count': perPage.toString(),
+      if (filters != null) ...filters,
+    };
+
+    final response = await networkClient.invoke(
+      DiagnosticReportEndPoints.getAllDiagnosticReportOfAppointment(
+        appointmentId: appointmentId,
+        conditionId: conditionId,
+      ),
+      RequestType.get,
+      queryParameters: params,
+    );
+
+    return ResponseHandler<PaginatedResponse<DiagnosticReportModel>>(
+      response,
+    ).processResponse(
+      fromJson:
+          (json) => PaginatedResponse<DiagnosticReportModel>.fromJson(
+            json,
+            'diagnostic_reports',
+            (dataJson) => DiagnosticReportModel.fromJson(dataJson),
+          ),
+    );
   }
 
   @override
-  Future<Resource<DiagnosticReportModel>> getDiagnosticReportOfCondition({required String conditionId}) async {
-    final response = await networkClient.invoke(DiagnosticReportEndPoints.getAllDiagnosticReportOfCondition(conditionId: conditionId), RequestType.get);
-    return ResponseHandler<DiagnosticReportModel>(response).processResponse(fromJson: (json) => DiagnosticReportModel.fromJson(json['diagnostic_report']));
+  Future<Resource<DiagnosticReportModel>> getDetailsDiagnosticReport({
+    required String diagnosticReportId,
+  }) async {
+    final response = await networkClient.invoke(
+      DiagnosticReportEndPoints.getDetailsDiagnosticReport(
+        diagnosticReportId: diagnosticReportId,
+      ),
+      RequestType.get,
+    );
+    return ResponseHandler<DiagnosticReportModel>(response).processResponse(
+      fromJson:
+          (json) => DiagnosticReportModel.fromJson(json['diagnostic_report']),
+    );
+  }
+
+  @override
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>>
+  getDiagnosticReportOfCondition({
+    required String conditionId,
+    Map<String, dynamic>? filters,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final params = {
+      'page': page.toString(),
+      'pagination_count': perPage.toString(),
+      if (filters != null) ...filters,
+    };
+
+    final response = await networkClient.invoke(
+      DiagnosticReportEndPoints.getAllDiagnosticReportOfCondition(
+        conditionId: conditionId,
+      ),
+      RequestType.get,
+      queryParameters: params,
+    );
+
+    return ResponseHandler<PaginatedResponse<DiagnosticReportModel>>(
+      response,
+    ).processResponse(
+      fromJson:
+          (json) => PaginatedResponse<DiagnosticReportModel>.fromJson(
+            json,
+            'diagnostic_reports',
+            (dataJson) => DiagnosticReportModel.fromJson(dataJson),
+          ),
+    );
   }
 }

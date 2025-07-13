@@ -960,6 +960,7 @@
     "filterAllergyTooltip": "تصفية الحساسية",
     "filterServiceRequest": "تصفية طلب الخدمة",
     "tabs": {
+      "appointmentDetails": "تفاصيل الموعد",
       "encounters": "الزيارات",
       "allergies": "الحساسية",
       "serviceRequest": "طلب خدمة",
@@ -1383,6 +1384,8 @@
     "noNotes": "لا توجد ملاحظات إضافية"
   },
   "medicationRequestDetails": {
+    "medication": "الادوية",
+    "details": "التفاصيل",
     "title": "تفاصيل طلب الدواء",
     "failedToLoad": "فشل تحميل تفاصيل طلب الدواء. يرجى المحاولة مرة أخرى.",
     "requestInfo": "معلومات الطلب",
@@ -1445,6 +1448,9 @@
     "stage": "المرحلة"
   },
   "conditionDetails": {
+    "details": "التفاصيل",
+    "diagnosticReports": "التقارير الطبية",
+    "medicationRequest": "طلبات الادوية",
     "title": "تفاصيل الحالة",
     "failedToLoad": "فشل تحميل تفاصيل الحالة",
     "retry": "إعادة المحاولة",
@@ -1750,5 +1756,18 @@
   "clearDates": "مسح التواريخ",
   "cancelButton": "إلغاء",
   "applyButton": "تطبيق"
-}
+},
+  "notifications": {
+    "title": "الإشعارات",
+    "retry": "إعادة المحاولة",
+    "deleteNotification": "حذف الإشعار",
+    "Do_you_delete": "هل تريد حذف هذا الإشعار؟",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "error": "خطأ",
+    "ok": "حسناً",
+    "noHealth": "لا يوجد محتوى نصائح صحية متاح",
+    "notNotification": "لا يوجد أي إشعار."
+
+  }
 }

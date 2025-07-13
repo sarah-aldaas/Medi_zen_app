@@ -30,6 +30,9 @@ class _DiagnosticReportDetailsPageState
   @override
   void initState() {
     super.initState();
+    _loadDiagnosticReportsDetails();
+  }
+  void _loadDiagnosticReportsDetails(){
     context.read<DiagnosticReportCubit>().getDiagnosticReportDetails(
       diagnosticReportId: widget.diagnosticReportId,
       context: context,
@@ -56,62 +59,68 @@ class _DiagnosticReportDetailsPageState
           onPressed: () => context.pop(),
         ),
       ),
-      body: BlocConsumer<DiagnosticReportCubit, DiagnosticReportState>(
-        listener: (context, state) {
-          if (state is DiagnosticReportError) {
-            ShowToast.showToastError(message: state.error);
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _loadDiagnosticReportsDetails();
         },
-        builder: (context, state) {
-          if (state is DiagnosticReportDetailsSuccess) {
-            return _buildDiagnosticReportDetails(state.diagnosticReport);
-          } else if (state is DiagnosticReportLoading) {
-            return const Center(child: LoadingPage());
-          } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 80, color: Colors.red[300]),
-                  const SizedBox(height: 20),
-                  Text(
-                    'diagnosticDetailsPage.diagnosticReportDetails_failedToLoadReport'
-                        .tr(context),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed:
-                        () => context
-                            .read<DiagnosticReportCubit>()
-                            .getDiagnosticReportDetails(
-                              diagnosticReportId: widget.diagnosticReportId,
-                              context: context,
-                            ),
-                    icon: const Icon(Icons.refresh),
-                    label: Text(
-                      "diagnosticDetailsPage.diagnosticReportDetails_retry".tr(
-                        context,
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<DiagnosticReportCubit, DiagnosticReportState>(
+          listener: (context, state) {
+            if (state is DiagnosticReportError) {
+              ShowToast.showToastError(message: state.error);
+            }
+          },
+          builder: (context, state) {
+            if (state is DiagnosticReportDetailsSuccess) {
+              return _buildDiagnosticReportDetails(state.diagnosticReport);
+            } else if (state is DiagnosticReportLoading) {
+              return const Center(child: LoadingPage());
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 80, color: Colors.red[300]),
+                    const SizedBox(height: 20),
+                    Text(
+                      'diagnosticDetailsPage.diagnosticReportDetails_failedToLoadReport'
+                          .tr(context),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed:
+                          () => context
+                              .read<DiagnosticReportCubit>()
+                              .getDiagnosticReportDetails(
+                                diagnosticReportId: widget.diagnosticReportId,
+                                context: context,
+                              ),
+                      icon: const Icon(Icons.refresh),
+                      label: Text(
+                        "diagnosticDetailsPage.diagnosticReportDetails_retry".tr(
+                          context,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: AppColors.primaryColor,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        },
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

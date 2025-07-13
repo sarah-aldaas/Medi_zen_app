@@ -13,9 +13,10 @@ import 'package:medizen_app/features/medical_records/diagnostic_report/presentat
 import '../cubit/diagnostic_report_cubit/diagnostic_report_cubit.dart';
 
 class DiagnosticReportListPage extends StatefulWidget {
-  final DiagnosticReportFilterModel filter;
+  // final DiagnosticReportFilterModel filter;
+  final String conditionId;
 
-  const DiagnosticReportListPage({super.key, required this.filter});
+  const DiagnosticReportListPage({super.key,required this.conditionId});
 
   @override
   _DiagnosticReportListPageState createState() =>
@@ -39,20 +40,21 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
     super.dispose();
   }
 
-  @override
-  void didUpdateWidget(DiagnosticReportListPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.filter != oldWidget.filter) {
-      _loadInitialReports();
-    }
-  }
+  // @override
+  // void didUpdateWidget(DiagnosticReportListPage oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //
+  //   if (widget.filter != oldWidget.filter) {
+  //     _loadInitialReports();
+  //   }
+  // }
 
   void _loadInitialReports() {
     _isLoadingMore = false;
-    context.read<DiagnosticReportCubit>().getAllDiagnosticReports(
+    context.read<DiagnosticReportCubit>().getDiagnosticReportForCondition(
+      conditionId: widget.conditionId,
       context: context,
-      filters: widget.filter.toJson(),
+      // filters: widget.filter.toJson(),
     );
   }
 
@@ -63,10 +65,11 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
       setState(() => _isLoadingMore = true);
       context
           .read<DiagnosticReportCubit>()
-          .getAllDiagnosticReports(
+          .getDiagnosticReportForCondition(
+        conditionId: widget.conditionId,
             loadMore: true,
             context: context,
-            filters: widget.filter.toJson(),
+            // filters: widget.filter.toJson(),
           )
           .then((_) => setState(() => _isLoadingMore = false));
     }
@@ -75,34 +78,34 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<DiagnosticReportCubit, DiagnosticReportState>(
-        listener: (context, state) {
-          // if (state is DiagnosticReportError) {
-          //   ShowToast.showToastError(message: state.error);
-          // }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _loadInitialReports();
         },
-        builder: (context, state) {
-          if (state is DiagnosticReportLoading && !state.isLoadMore) {
-            return const Center(child: LoadingPage());
-          }
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<DiagnosticReportCubit, DiagnosticReportState>(
+          listener: (context, state) {
+            // if (state is DiagnosticReportError) {
+            //   ShowToast.showToastError(message: state.error);
+            // }
+          },
+          builder: (context, state) {
+            if (state is DiagnosticReportLoading && !state.isLoadMore) {
+              return const Center(child: LoadingPage());
+            }
 
-          final reports =
-              state is DiagnosticReportSuccess
-                  ? state.paginatedResponse.paginatedData!.items
-                  : [];
-          final hasMore =
-              state is DiagnosticReportSuccess ? state.hasMore : false;
+            final reports =
+                state is DiagnosticReportSuccess
+                    ? state.paginatedResponse.paginatedData!.items
+                    : [];
+            final hasMore =
+                state is DiagnosticReportSuccess ? state.hasMore : false;
 
-          if (reports.isEmpty) {
-            return NotFoundDataPage();
-          }
+            if (reports.isEmpty) {
+              return NotFoundDataPage();
+            }
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              _loadInitialReports();
-            },
-            color: Theme.of(context).primaryColor,
-            child: ListView.builder(
+            return ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
               controller: _scrollController,
               itemCount: reports.length + (hasMore ? 1 : 0),
@@ -116,9 +119,9 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                   );
                 }
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

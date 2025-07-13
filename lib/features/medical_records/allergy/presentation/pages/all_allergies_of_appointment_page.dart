@@ -73,32 +73,31 @@ class _AllAllergiesOfAppointmentPageState extends State<AllAllergiesOfAppointmen
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
 
-    return BlocConsumer<AllergyCubit, AllergyState>(
-      listener: (context, state) {
-        if (state is AllergyError) {
-          ShowToast.showToastError(message: state.error);
-        }
+    return RefreshIndicator(
+      onRefresh: () async {
+        _loadInitialAllergies();
       },
-      builder: (context, state) {
-        if (state is AllergyLoading && !state.isLoadMore) {
-          return Center(child: LoadingPage());
-        }
+      color: Theme.of(context).primaryColor,
+      child: BlocConsumer<AllergyCubit, AllergyState>(
+        listener: (context, state) {
+          if (state is AllergyError) {
+            ShowToast.showToastError(message: state.error);
+          }
+        },
+        builder: (context, state) {
+          if (state is AllergyLoading && !state.isLoadMore) {
+            return Center(child: LoadingPage());
+          }
 
-        final allergies = state is AllergiesOfAppointmentSuccess ? state.paginatedResponse.paginatedData?.items : [];
-        final hasMore = state is AllergiesOfAppointmentSuccess ? state.hasMore : false;
+          final allergies = state is AllergiesOfAppointmentSuccess ? state.paginatedResponse.paginatedData?.items : [];
+          final hasMore = state is AllergiesOfAppointmentSuccess ? state.hasMore : false;
 
-        if (allergies == null || allergies.isEmpty) {
-          return NotFoundDataPage();
-        }
+          if (allergies == null || allergies.isEmpty) {
+            return NotFoundDataPage();
+          }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            _loadInitialAllergies();
-          },
-          color: Theme.of(context).primaryColor,
-          child: ListView.builder(
+          return ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
             controller: _scrollController,
             padding: const EdgeInsets.all(10),
@@ -115,9 +114,9 @@ class _AllAllergiesOfAppointmentPageState extends State<AllAllergiesOfAppointmen
                 return Padding(padding: const EdgeInsets.all(16.0), child: Center(child: LoadingPage()));
               }
             },
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
