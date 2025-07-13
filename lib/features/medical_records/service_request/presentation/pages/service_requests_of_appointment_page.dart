@@ -70,30 +70,30 @@ class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppo
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<ServiceRequestCubit, ServiceRequestState>(
-        builder: (context, state) {
-          if (state is ServiceRequestLoading && !state.isLoadMore) {
-            return const Center(child: LoadingPage());
-          }
+      body:  RefreshIndicator(
+        onRefresh: () async {
+          _loadInitialRequests();
+        },
+        color: Theme.of(context).primaryColor,
+        child: BlocBuilder<ServiceRequestCubit, ServiceRequestState>(
+          builder: (context, state) {
+            if (state is ServiceRequestLoading && !state.isLoadMore) {
+              return const Center(child: LoadingPage());
+            }
 
-          if (state is ServiceRequestError) {
-            return NotFoundDataPage();
-          }
-
-          if (state is ServiceRequestLoaded) {
-            final requests = state.paginatedResponse!.paginatedData!.items;
-            final hasMore = state.hasMore;
-
-            if (requests.isEmpty) {
+            if (state is ServiceRequestError) {
               return NotFoundDataPage();
             }
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                _loadInitialRequests();
-              },
-              color: Theme.of(context).primaryColor,
-              child: ListView.builder(
+            if (state is ServiceRequestLoaded) {
+              final requests = state.paginatedResponse!.paginatedData!.items;
+              final hasMore = state.hasMore;
+
+              if (requests.isEmpty) {
+                return NotFoundDataPage();
+              }
+
+              return ListView.builder(
                 controller: _scrollController,
                 itemCount: requests.length + (hasMore ? 1 : 0),
                 itemBuilder: (context, index) {
@@ -103,12 +103,12 @@ class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppo
                     return Padding(padding: const EdgeInsets.all(16.0), child: Center(child: LoadingButton()));
                   }
                 },
-              ),
-            );
-          }
+              );
+            }
 
-          return const SizedBox.shrink();
-        },
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

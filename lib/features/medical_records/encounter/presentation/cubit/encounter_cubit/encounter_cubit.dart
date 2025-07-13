@@ -16,23 +16,14 @@ class EncounterCubit extends Cubit<EncounterState> {
   final EncounterRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
-  EncounterCubit({
-    required this.remoteDataSource,
-    required this.networkInfo,
-  }) : super(EncounterInitial());
+  EncounterCubit({required this.remoteDataSource, required this.networkInfo}) : super(EncounterInitial());
 
   int _currentPage = 1;
   bool _hasMore = true;
   Map<String, dynamic> _currentFilters = {};
   List<EncounterModel> _allEncounters = [];
 
-  Future<void> getAllMyEncounter({
-    Map<String, dynamic>? filters,
-    bool loadMore = false,
-    required BuildContext context,
-  }) async {
-
-
+  Future<void> getAllMyEncounter({Map<String, dynamic>? filters, bool loadMore = false, required BuildContext context}) async {
     if (!loadMore) {
       _currentPage = 1;
       _hasMore = true;
@@ -45,48 +36,36 @@ class EncounterCubit extends Cubit<EncounterState> {
     if (filters != null) {
       _currentFilters = filters;
     }
+    try {
+      final result = await remoteDataSource.getAllMyEncounter(filters: _currentFilters, page: _currentPage, perPage: 10);
 
-    // Check internet connectivity for initial load
-    if (!loadMore) {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed(AppRouter.noInternet.name);
-      //   emit(EncounterError(error: 'No internet connection'));
-      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      //   return;
-      // }
-    }
-    final result = await remoteDataSource.getAllMyEncounter(
-      filters: _currentFilters,
-      page: _currentPage,
-      perPage: 10,
-    );
+      if (result is Success<PaginatedResponse<EncounterModel>>) {
+        if (result.data.msg == "Unauthorized. Please login first.") {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        }
+        try {
+          _allEncounters.addAll(result.data.paginatedData!.items);
+          _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+          _currentPage++;
 
-    if (result is Success<PaginatedResponse<EncounterModel>>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-      }
-      try {
-        _allEncounters.addAll(result.data.paginatedData!.items);
-        _hasMore = result.data.paginatedData!.items.isNotEmpty &&
-            result.data.meta!.currentPage < result.data.meta!.lastPage;
-        _currentPage++;
-
-        emit(
-          EncountersSuccess(
-            hasMore: _hasMore,
-            paginatedResponse: PaginatedResponse<EncounterModel>(
-              paginatedData: PaginatedData<EncounterModel>(items: _allEncounters),
-              meta: result.data.meta,
-              links: result.data.links,
+          emit(
+            EncountersSuccess(
+              hasMore: _hasMore,
+              paginatedResponse: PaginatedResponse<EncounterModel>(
+                paginatedData: PaginatedData<EncounterModel>(items: _allEncounters),
+                meta: result.data.meta,
+                links: result.data.links,
+              ),
             ),
-          ),
-        );
-      } catch (e) {
-        emit(EncounterError(error: result.data.msg ?? 'Failed to fetch encounters'));
+          );
+        } catch (e) {
+          emit(EncounterError(error: result.data.msg ?? 'Failed to fetch encounters'));
+        }
+      } else if (result is ResponseError<PaginatedResponse<EncounterModel>>) {
+        emit(EncounterError(error: result.message ?? 'Failed to fetch encounters'));
       }
-    } else if (result is ResponseError<PaginatedResponse<EncounterModel>>) {
-      emit(EncounterError(error: result.message ?? 'Failed to fetch encounters'));
+    } catch (e) {
+      emit(EncounterError(error: "Please check your internet!.Or not found data"));
     }
   }
 
@@ -95,22 +74,16 @@ class EncounterCubit extends Cubit<EncounterState> {
     required BuildContext context, // Add context parameter
   }) async {
     emit(EncounterLoading(isLoadMore: false));
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(EncounterError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.getAllMyEncounterOfAppointment(appointmentId: appointmentId);
-    if (result is Success<EncounterModel>) {
-      emit(EncounterOfAppointmentSuccess(encounterModel: result.data));
-    } else if (result is ResponseError<EncounterModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to fetch encounter details');
-      emit(EncounterError(error: result.message ?? 'Failed to fetch encounter details'));
+    try {
+      final result = await remoteDataSource.getAllMyEncounterOfAppointment(appointmentId: appointmentId);
+      if (result is Success<EncounterModel>) {
+        emit(EncounterOfAppointmentSuccess(encounterModel: result.data));
+      } else if (result is ResponseError<EncounterModel>) {
+        ShowToast.showToastError(message: result.message ?? 'Failed to fetch encounter details');
+        emit(EncounterError(error: result.message ?? 'Failed to fetch encounter details'));
+      }
+    } catch (e) {
+      emit(EncounterError(error: "Please check your internet!.Or not found data"));
     }
   }
 
@@ -119,22 +92,16 @@ class EncounterCubit extends Cubit<EncounterState> {
     required BuildContext context, // Add context parameter
   }) async {
     emit(EncounterLoading(isLoadMore: false));
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(EncounterError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.getSpecificEncounter(encounterId: encounterId);
-    if (result is Success<EncounterModel>) {
-      emit(EncounterDetailsSuccess(encounterModel: result.data));
-    } else if (result is ResponseError<EncounterModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to fetch encounter details');
-      emit(EncounterError(error: result.message ?? 'Failed to fetch encounter details'));
+    try {
+      final result = await remoteDataSource.getSpecificEncounter(encounterId: encounterId);
+      if (result is Success<EncounterModel>) {
+        emit(EncounterDetailsSuccess(encounterModel: result.data));
+      } else if (result is ResponseError<EncounterModel>) {
+        ShowToast.showToastError(message: result.message ?? 'Failed to fetch encounter details');
+        emit(EncounterError(error: result.message ?? 'Failed to fetch encounter details'));
+      }
+    } catch (e) {
+      emit(EncounterError(error: "Please check your internet!.Or not found data"));
     }
   }
 }

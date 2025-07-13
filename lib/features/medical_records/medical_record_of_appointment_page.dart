@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/features/appointment/pages/appointment_details.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/models/allergy_filter_model.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/pages/all_allergies_of_appointment_page.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/widgets/allergy_filter_dialog.dart';
@@ -14,13 +15,7 @@ import 'package:medizen_app/features/medical_records/service_request/presentatio
 
 import '../../base/theme/app_color.dart';
 import 'conditions/presentation/pages/conditions_list_of_appointment.dart';
-import 'diagnostic_report/presentation/pages/diagnostic_report_list_of_appointment_page.dart';
-import 'diagnostic_report/presentation/widgets/diagnostic_report_filter_dialog.dart';
 import 'medication/data/models/medication_filter_model.dart';
-import 'medication/presentation/pages/my_medications_of_appointment_page.dart';
-import 'medication/presentation/widgets/medication_filter_dialog.dart';
-import 'medication_request/presentation/pages/my_medication_requests_of_appointment_page.dart';
-import 'medication_request/presentation/widgets/medication_request_filter_dialog.dart';
 
 class MedicalRecordOfAppointmentPage extends StatefulWidget {
   final String appointmentId;
@@ -45,7 +40,7 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 7, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _tabController.addListener(_handleTabSelection);
   }
 
@@ -82,36 +77,6 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
     }
   }
 
-  Future<void> _showMedicationRequestFilterDialog() async {
-    final result = await showDialog<MedicationRequestFilterModel>(
-      context: context,
-      builder: (context) => MedicationRequestFilterDialog(currentFilter: _medicationRequestFilter),
-    );
-
-    if (result != null) {
-      setState(() => _medicationRequestFilter = result);
-    }
-  }
-
-  Future<void> _showDiagnosticReportFilterDialog() async {
-    final result = await showDialog<DiagnosticReportFilterModel>(
-      context: context,
-      builder: (context) => DiagnosticReportFilterDialog(currentFilter: _diagnosticReportFilter),
-    );
-
-    if (result != null) {
-      setState(() => _diagnosticReportFilter = result);
-    }
-  }
-
-  Future<void> _showMedicationFilterDialog() async {
-    final result = await showDialog<MedicationFilterModel>(context: context, builder: (context) => MedicationFilterDialog(currentFilter: _medicationFilter));
-
-    if (result != null) {
-      setState(() => _medicationFilter = result);
-    }
-  }
-
   @override
   void dispose() {
     _tabController.removeListener(_handleTabSelection);
@@ -122,13 +87,11 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
   @override
   Widget build(BuildContext context) {
     final List<String> _tabs = [
+      'medicalRecordPage.tabs.appointmentDetails'.tr(context),
       'medicalRecordPage.tabs.encounters'.tr(context),
       'medicalRecordPage.tabs.allergies'.tr(context),
       'medicalRecordPage.tabs.serviceRequest'.tr(context),
       'medicalRecordPage.tabs.conditions'.tr(context),
-      'medicalRecordPage.tabs.medicationRequests'.tr(context),
-      'medicalRecordPage.tabs.medication'.tr(context),
-      'medicalRecordPage.tabs.diagnosticReports'.tr(context),
     ];
 
     return Scaffold(
@@ -137,21 +100,16 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
         title: Text('medicalRecordPage.title'.tr(context), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: AppColors.primaryColor)),
         centerTitle: true,
         actions: [
-          if (_tabController.index == 1)
-            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showAllergyFilterDialog, tooltip: 'medicalRecordPage.filterAllergyTooltip'.tr(context)),
           if (_tabController.index == 2)
+            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showAllergyFilterDialog, tooltip: 'medicalRecordPage.filterAllergyTooltip'.tr(context)),
+          if (_tabController.index == 3)
             IconButton(
               icon: const Icon(Icons.filter_list),
               onPressed: _showServiceRequestFilterDialog,
               tooltip: 'medicalRecordPage.filterServiceRequest'.tr(context),
             ),
-          if (_tabController.index == 3) IconButton(icon: const Icon(Icons.filter_list), onPressed: _showConditionFilterDialog, tooltip: 'Condition filter'),
-          if (_tabController.index == 4)
-            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showMedicationRequestFilterDialog, tooltip: 'Medication request filter'),
-          if (_tabController.index == 5) IconButton(icon: const Icon(Icons.filter_list), onPressed: _showMedicationFilterDialog, tooltip: 'Medication filter'),
-          if (_tabController.index == 6)
-            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showDiagnosticReportFilterDialog, tooltip: 'Diagnostic report filter'),
-        ],
+          if (_tabController.index == 4) IconButton(icon: const Icon(Icons.filter_list), onPressed: _showConditionFilterDialog, tooltip: 'Condition filter'),
+         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48),
           child: Container(
@@ -169,20 +127,19 @@ class _MedicalRecordOfAppointmentPageState extends State<MedicalRecordOfAppointm
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: TabBarView(
-          controller: _tabController,
-          children: [
-            AllEncountersOfAppointmentPage(appointmentId: widget.appointmentId),
-            AllAllergiesOfAppointmentPage(appointmentId: widget.appointmentId, filter: _allergyFilter),
-            ServiceRequestsOfAppointmentPage(appointmentId: widget.appointmentId, filter: _serviceRequestFilter),
-            ConditionsListOfAppointment(appointmentId: widget.appointmentId, filter: _conditionFilter),
-            MyMedicationRequestsOfAppointmentPage(appointmentId: widget.appointmentId, filter: _medicationRequestFilter),
-            MyMedicationsOfAppointmentPage(appointmentId: widget.appointmentId, filter: _medicationFilter),
-            DiagnosticReportListOfAppointmentPage(appointmentId: widget.appointmentId, filter: _diagnosticReportFilter),
-          ],
-        ),
+            controller: _tabController,
+            children: [
+              AppointmentDetailsPage(appointmentId: widget.appointmentId),
+              AllEncountersOfAppointmentPage(appointmentId: widget.appointmentId),
+              AllAllergiesOfAppointmentPage(appointmentId: widget.appointmentId, filter: _allergyFilter),
+              ServiceRequestsOfAppointmentPage(appointmentId: widget.appointmentId, filter: _serviceRequestFilter),
+              ConditionsListOfAppointment(appointmentId: widget.appointmentId, filter: _conditionFilter),
+               ],
+          ),
       ),
+
     );
   }
 }

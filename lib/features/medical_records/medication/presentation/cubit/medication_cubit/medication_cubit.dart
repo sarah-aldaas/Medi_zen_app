@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import '../../../../../../base/data/models/pagination_model.dart';
 import '../../../../../../base/go_router/go_router.dart';
 import '../../../../../../base/services/network/resource.dart';
-import '../../../../../../base/widgets/show_toast.dart';
 import '../../../data/data_source/medication_remote_data_source.dart';
 import '../../../data/models/medication_model.dart';
 
@@ -84,6 +83,8 @@ class MedicationCubit extends Cubit<MedicationState> {
 
   Future<void> getMedicationsForAppointment({
     required String appointmentId,
+    required String medicationRequestId,
+    required String conditionId,
     Map<String, dynamic>? filters,
     bool loadMore = false,
     required BuildContext context,
@@ -101,16 +102,10 @@ class MedicationCubit extends Cubit<MedicationState> {
       _currentFilters = filters;
     }
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(MedicationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     final result = await remoteDataSource.getAllMedicationForAppointment(
       appointmentId: appointmentId,
+      conditionId: conditionId,
+      medicationRequestId: medicationRequestId,
       filters: _currentFilters,
       page: _currentPage,
       perPage: 10,
@@ -148,14 +143,6 @@ class MedicationCubit extends Cubit<MedicationState> {
   }) async {
     emit(MedicationLoading());
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(MedicationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     final result = await remoteDataSource.getDetailsMedication(medicationId: medicationId);
     if (result is Success<MedicationModel>) {
       if (result.data.name == "Unauthorized. Please login first.") {
@@ -169,9 +156,23 @@ class MedicationCubit extends Cubit<MedicationState> {
 
   Future<void> getAllMedicationForMedicationRequest({
     required String medicationRequestId,
+    required String conditionId,
+    Map<String, dynamic>? filters,
+    bool loadMore = false,
     required BuildContext context,
   }) async {
-    emit(MedicationLoading());
+    if (!loadMore) {
+      _currentPage = 1;
+      _hasMore = true;
+      _allMedications = [];
+      emit(MedicationLoading());
+    } else if (!_hasMore) {
+      return;
+    }
+
+    if (filters != null) {
+      _currentFilters = filters;
+    }
 
     // final isConnected = await networkInfo.isConnected;
     // if (!isConnected) {
@@ -182,16 +183,37 @@ class MedicationCubit extends Cubit<MedicationState> {
     // }
 
     final result = await remoteDataSource.getAllMedicationForMedicationRequest(
-        medicationRequestId: medicationRequestId
+      medicationRequestId: medicationRequestId,
+      conditionId: conditionId,
+      filters: _currentFilters,
+      page: _currentPage,
+      perPage: 10,
     );
 
-    if (result is Success<List<MedicationModel>>) {
-      if (result.data.isNotEmpty && result.data.first.name == "Unauthorized. Please login first.") {
+    if (result is Success<PaginatedResponse<MedicationModel>>) {
+      if (result.data.msg == "Unauthorized. Please login first.") {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
-      emit(MedicationRequestSuccess(medications: result.data));
-    } else if (result is ResponseError<List<MedicationModel>>) {
-      emit(MedicationError(error: result.message ?? 'Failed to fetch medications for request'));
+      try {
+        _allMedications.addAll(result.data.paginatedData!.items);
+        _hasMore = result.data.paginatedData!.items.isNotEmpty &&
+            result.data.meta!.currentPage < result.data.meta!.lastPage;
+        _currentPage++;
+
+        emit(MedicationSuccess(
+          hasMore: _hasMore,
+          paginatedResponse: PaginatedResponse<MedicationModel>(
+            paginatedData: PaginatedData<MedicationModel>(items: _allMedications),
+            meta: result.data.meta,
+            links: result.data.links,
+          ),
+        ));
+      } catch (e) {
+        emit(MedicationError(error: result.data.msg ?? 'Failed to fetch medications'));
+      }
+    } else if (result is ResponseError<PaginatedResponse<MedicationModel>>) {
+      emit(MedicationError(error: result.message ?? 'Failed to fetch medications'));
     }
   }
+
 }

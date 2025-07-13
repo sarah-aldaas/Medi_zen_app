@@ -13,9 +13,11 @@ import '../cubit/medication_cubit/medication_cubit.dart';
 
 class MyMedicationsOfAppointmentPage extends StatefulWidget {
   final String appointmentId;
+  final String medicationRequestId;
+  final String conditionId;
   final MedicationFilterModel filter;
 
-  const MyMedicationsOfAppointmentPage({super.key, required this.filter, required this.appointmentId});
+  const MyMedicationsOfAppointmentPage({super.key, required this.filter, required this.appointmentId,required this.conditionId,required this.medicationRequestId});
 
   @override
   _MyMedicationsOfAppointmentPageState createState() => _MyMedicationsOfAppointmentPageState();
@@ -40,7 +42,7 @@ class _MyMedicationsOfAppointmentPageState extends State<MyMedicationsOfAppointm
 
   void _loadInitialMedications() {
     _isLoadingMore = false;
-    context.read<MedicationCubit>().getMedicationsForAppointment(context: context, filters: widget.filter.toJson(), appointmentId: widget.appointmentId);
+    context.read<MedicationCubit>().getMedicationsForAppointment(context: context, filters: widget.filter.toJson(), appointmentId: widget.appointmentId,conditionId: widget.conditionId,medicationRequestId: widget.medicationRequestId);
   }
 
   void _scrollListener() {
@@ -48,7 +50,7 @@ class _MyMedicationsOfAppointmentPageState extends State<MyMedicationsOfAppointm
       setState(() => _isLoadingMore = true);
       context
           .read<MedicationCubit>()
-          .getMedicationsForAppointment(filters: widget.filter.toJson(), loadMore: true, context: context,appointmentId: widget.appointmentId)
+          .getMedicationsForAppointment(filters: widget.filter.toJson(), loadMore: true, context: context,appointmentId: widget.appointmentId,conditionId: widget.conditionId,medicationRequestId: widget.medicationRequestId)
           .then((_) => setState(() => _isLoadingMore = false));
     }
   }
@@ -65,30 +67,30 @@ class _MyMedicationsOfAppointmentPageState extends State<MyMedicationsOfAppointm
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<MedicationCubit, MedicationState>(
-        listener: (context, state) {
-          // if (state is MedicationError) {
-          //   ShowToast.showToastError(message: state.error);
-          // }
+      body:  RefreshIndicator(
+        onRefresh: () async {
+          _loadInitialMedications();
         },
-        builder: (context, state) {
-          if (state is MedicationLoading && !state.isLoadMore) {
-            return const Center(child: LoadingPage());
-          }
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<MedicationCubit, MedicationState>(
+          listener: (context, state) {
+            // if (state is MedicationError) {
+            //   ShowToast.showToastError(message: state.error);
+            // }
+          },
+          builder: (context, state) {
+            if (state is MedicationLoading && !state.isLoadMore) {
+              return const Center(child: LoadingPage());
+            }
 
-          final medications = state is MedicationSuccess ? state.paginatedResponse.paginatedData!.items : [];
-          final hasMore = state is MedicationSuccess ? state.hasMore : false;
+            final medications = state is MedicationSuccess ? state.paginatedResponse.paginatedData!.items : [];
+            final hasMore = state is MedicationSuccess ? state.hasMore : false;
 
-          if (medications.isEmpty) {
-            return NotFoundDataPage();
-          }
+            if (medications.isEmpty) {
+              return NotFoundDataPage();
+            }
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              _loadInitialMedications();
-            },
-            color: Theme.of(context).primaryColor,
-            child: ListView.builder(
+            return ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(16.0),
               itemCount: medications.length + (hasMore ? 1 : 0),
@@ -100,9 +102,9 @@ class _MyMedicationsOfAppointmentPageState extends State<MyMedicationsOfAppointm
                 }
                 return const SizedBox.shrink();
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

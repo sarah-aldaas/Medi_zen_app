@@ -114,14 +114,6 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   }) async {
     emit(InvoiceLoading());
 
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      context.pushNamed('noInternet');
-      emit(InvoiceError(error: 'No internet connection'));
-      ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      return;
-    }
-
     final result = await remoteDataSource.getDetailsInvoice(
       appointmentId: appointmentId,
       invoiceId: invoiceId,

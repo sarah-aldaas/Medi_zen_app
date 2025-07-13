@@ -30,44 +30,32 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     required BuildContext context, // Add context parameter
   }) async {
     emit(SlotsAppointmentLoading());
-
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(AppointmentError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.getAllSlots(practitionerId: practitionerId, date: date);
-    if (result is Success<AllSlotModel>) {
-      emit(SlotsAppointmentSuccess(listSlots: result.data.listSlots!));
-    } else if (result is ResponseError<AllSlotModel>) {
-      emit(AppointmentError(error: result.message ?? 'Failed to fetch slots'));
+    try {
+      final result = await remoteDataSource.getAllSlots(practitionerId: practitionerId, date: date);
+      if (result is Success<AllSlotModel>) {
+        emit(SlotsAppointmentSuccess(listSlots: result.data.listSlots!));
+      } else if (result is ResponseError<AllSlotModel>) {
+        emit(AppointmentError(error: result.message ?? 'Failed to fetch slots'));
+      }
+    } catch (e) {
+      emit(AppointmentError(error: "Please check your internet!."));
     }
   }
 
   Future<void> getDaysWorkDoctor({required String doctorId, required BuildContext context}) async {
     emit(DaysWorkDoctorLoading());
-
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(AppointmentError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.getDaysWorkDoctor(doctorId: doctorId);
-    if (result is Success<DaysWorkDoctorModel>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+    try {
+      final result = await remoteDataSource.getDaysWorkDoctor(doctorId: doctorId);
+      if (result is Success<DaysWorkDoctorModel>) {
+        if (result.data.msg == "Unauthorized. Please login first.") {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        }
+        emit(DaysWorkDoctorSuccess(days: result.data));
+      } else if (result is ResponseError<DaysWorkDoctorModel>) {
+        emit(AppointmentError(error: result.message ?? 'Failed to fetch days'));
       }
-      emit(DaysWorkDoctorSuccess(days: result.data));
-    } else if (result is ResponseError<DaysWorkDoctorModel>) {
-      emit(AppointmentError(error: result.message ?? 'Failed to fetch days'));
+    } catch (e) {
+      emit(AppointmentError(error: "Please check your internet!."));
     }
   }
 
@@ -90,132 +78,104 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       _currentFilters = filters;
     }
 
-    // Check internet connectivity
-    if (!loadMore) {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed('noInternet');
-      //   emit(AppointmentError(error: 'No internet connection'));
-      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      //   return;
-      // }
-    }
+    try {
+      final result = await remoteDataSource.getMyAppointment(filters: _currentFilters, page: _currentPage, perPage: 5);
 
-    final result = await remoteDataSource.getMyAppointment(filters: _currentFilters, page: _currentPage, perPage: 5);
+      if (result is Success<PaginatedResponse<AppointmentModel>>) {
+        if (result.data.msg == "Unauthorized. Please login first.") {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        }
+        try {
+          _allAppointments.addAll(result.data.paginatedData!.items);
+          _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+          _currentPage++;
 
-    if (result is Success<PaginatedResponse<AppointmentModel>>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-      }
-      try {
-        _allAppointments.addAll(result.data.paginatedData!.items);
-        _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
-        _currentPage++;
-
-        emit(
-          AppointmentSuccess(
-            hasMore: _hasMore,
-            paginatedResponse: PaginatedResponse<AppointmentModel>(
-              paginatedData: PaginatedData<AppointmentModel>(items: _allAppointments),
-              meta: result.data.meta,
-              links: result.data.links,
+          emit(
+            AppointmentSuccess(
+              hasMore: _hasMore,
+              paginatedResponse: PaginatedResponse<AppointmentModel>(
+                paginatedData: PaginatedData<AppointmentModel>(items: _allAppointments),
+                meta: result.data.meta,
+                links: result.data.links,
+              ),
             ),
-          ),
-        );
-      } catch (e) {
-        emit(AppointmentError(error: result.data.msg ?? 'Failed to fetch Appointments'));
+          );
+        } catch (e) {
+          emit(AppointmentError(error: result.data.msg ?? 'Failed to fetch Appointments'));
+        }
+      } else if (result is ResponseError<PaginatedResponse<AppointmentModel>>) {
+        emit(AppointmentError(error: result.message ?? 'Failed to fetch Appointments'));
       }
-    } else if (result is ResponseError<PaginatedResponse<AppointmentModel>>) {
-      emit(AppointmentError(error: result.message ?? 'Failed to fetch Appointments'));
+    } catch (e) {
+      emit(AppointmentError(error: "Please check your internet!."));
     }
   }
 
   Future<void> createAppointment({required AppointmentCreateModel appointmentModel, required BuildContext context}) async {
     emit(AppointmentLoading(isLoadMore: false));
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(AppointmentError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.createAppointment(appointmentModel: appointmentModel);
-    if (result is Success<PublicResponseModel>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+    try {
+      final result = await remoteDataSource.createAppointment(appointmentModel: appointmentModel);
+      if (result is Success<PublicResponseModel>) {
+        if (result.data.msg == "Unauthorized. Please login first.") {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        }
+        if (result.data.status) {
+          emit(CreateAppointmentSuccess());
+        } else {
+          emit(AppointmentError(error: result.data.msg));
+        }
+      } else if (result is ResponseError<PublicResponseModel>) {
+        ShowToast.showToastError(message: result.message ?? 'Failed to create appointment');
+        emit(AppointmentError(error: result.message ?? 'Failed to create appointment'));
       }
-      if (result.data.status) {
-        emit(CreateAppointmentSuccess());
-      } else {
-        emit(AppointmentError(error: result.data.msg));
-      }
-    } else if (result is ResponseError<PublicResponseModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to create appointment');
-      emit(AppointmentError(error: result.message ?? 'Failed to create appointment'));
+    } catch (e) {
+      emit(AppointmentError(error: "Please check your internet!."));
     }
   }
 
   Future<void> updateAppointment({required String id, required AppointmentUpdateModel appointmentModel, required BuildContext context}) async {
     emit(AppointmentLoading(isLoadMore: false));
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(AppointmentError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.updateAppointment(id: id, appointmentModel: appointmentModel);
-    if (result is Success<PublicResponseModel>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+    try {
+      final result = await remoteDataSource.updateAppointment(id: id, appointmentModel: appointmentModel);
+      if (result is Success<PublicResponseModel>) {
+        if (result.data.msg == "Unauthorized. Please login first.") {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        }
+        if (result.data.status) {
+          await getMyAppointment(context: context);
+        } else {
+          ShowToast.showToastError(message: result.data.msg);
+          emit(AppointmentError(error: result.data.msg));
+        }
+      } else if (result is ResponseError<PublicResponseModel>) {
+        ShowToast.showToastError(message: result.message ?? 'Failed to update appointment');
+        emit(AppointmentError(error: result.message ?? 'Failed to update appointment'));
       }
-      if (result.data.status) {
-        await getMyAppointment(context: context);
-      } else {
-        ShowToast.showToastError(message: result.data.msg);
-        emit(AppointmentError(error: result.data.msg));
-      }
-    } else if (result is ResponseError<PublicResponseModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to update appointment');
-      emit(AppointmentError(error: result.message ?? 'Failed to update appointment'));
+    } catch (e) {
+      emit(AppointmentError(error: "Please check your internet!."));
     }
   }
 
   Future<void> cancelAppointment({required String id, required String cancellationReason, required BuildContext context}) async {
     emit(AppointmentLoading(isLoadMore: false));
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(AppointmentError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.cancelAppointment(id: id, cancellationReason: cancellationReason);
-    if (result is Success<PublicResponseModel>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+    try {
+      final result = await remoteDataSource.cancelAppointment(id: id, cancellationReason: cancellationReason);
+      if (result is Success<PublicResponseModel>) {
+        if (result.data.msg == "Unauthorized. Please login first.") {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+        }
+        if (result.data.status) {
+          await getMyAppointment(context: context);
+        } else {
+          ShowToast.showToastError(message: result.data.msg);
+          emit(AppointmentError(error: result.data.msg));
+        }
+      } else if (result is ResponseError<PublicResponseModel>) {
+        ShowToast.showToastError(message: result.message ?? 'Failed to cancel appointment');
+        emit(AppointmentError(error: result.message ?? 'Failed to cancel appointment'));
       }
-      if (result.data.status) {
-        await getMyAppointment(context: context);
-      } else {
-        ShowToast.showToastError(message: result.data.msg);
-        emit(AppointmentError(error: result.data.msg));
-      }
-    } else if (result is ResponseError<PublicResponseModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to cancel appointment');
-      emit(AppointmentError(error: result.message ?? 'Failed to cancel appointment'));
+    } catch (e) {
+      emit(AppointmentError(error: "Please check your internet!."));
     }
   }
 
@@ -224,21 +184,16 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     required BuildContext context, // Add context parameter
   }) async {
     emit(AppointmentLoading(isLoadMore: false));
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(AppointmentError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-    final result = await remoteDataSource.getDetailsAppointment(id: id);
-    if (result is Success<AppointmentModel>) {
-      emit(AppointmentDetailsSuccess(appointmentModel: result.data));
-    } else if (result is ResponseError<AppointmentModel>) {
-      ShowToast.showToastError(message: result.message ?? 'Failed to fetch appointment details');
-      emit(AppointmentError(error: result.message ?? 'Failed to fetch appointment details'));
+    try {
+      final result = await remoteDataSource.getDetailsAppointment(id: id);
+      if (result is Success<AppointmentModel>) {
+        emit(AppointmentDetailsSuccess(appointmentModel: result.data));
+      } else if (result is ResponseError<AppointmentModel>) {
+        ShowToast.showToastError(message: result.message ?? 'Failed to fetch appointment details');
+        emit(AppointmentError(error: result.message ?? 'Failed to fetch appointment details'));
+      }
+    } catch (e) {
+      emit(AppointmentError(error: "Please check your internet!."));
     }
   }
 }

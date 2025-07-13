@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
-import 'package:medizen_app/features/appointment/pages/appointment_details.dart';
 import 'package:medizen_app/features/authentication/presentation/forget_password/view/otp_verify_password.dart';
 import 'package:medizen_app/features/authentication/presentation/otp/verified.dart';
 import 'package:medizen_app/features/authentication/presentation/reset_password/view/reset_password_screen.dart';
@@ -25,6 +24,7 @@ import '../../features/home_page/pages/home_page.dart';
 import '../../features/home_page/pages/home_page_body.dart';
 import '../../features/medical_records/Medical_Record.dart';
 import '../../features/medical_records/conditions/presentation/pages/condition_details_page.dart';
+import '../../features/medical_records/medical_record_of_appointment_page.dart';
 import '../../features/medical_records/medication/presentation/pages/medication_details_page.dart';
 import '../../features/medical_records/medication_request/presentation/pages/medication_request_details_page.dart';
 import '../../features/notifications/pages/notification_settings.dart';
@@ -298,7 +298,7 @@ GoRouter goRouter() {
             builder: (context, state) {
               final extra = state.extra as Map<String, dynamic>?;
               String appointmentId = extra?['appointmentId'] ?? "1";
-              return AppointmentDetailsPage(appointmentId: appointmentId);
+              return MedicalRecordOfAppointmentPage(appointmentId: appointmentId);
             },
           ),
           GoRoute(
@@ -364,14 +364,14 @@ GoRouter goRouter() {
                   medicationId: state.pathParameters['id']!,
                 ),
           ),
-          GoRoute(
-            name: AppRouter.medicationRequestDetails.name,
-            path: '/medication-request-details',
-            builder:
-                (context, state) => MedicationRequestDetailsPage(
-                  medicationRequestId: state.pathParameters['id']!,
-                ),
-          ),
+          // GoRoute(
+          //   name: AppRouter.medicationRequestDetails.name,
+          //   path: '/medication-request-details',
+          //   builder:
+          //       (context, state) => MedicationRequestDetailsPage(
+          //         medicationRequestId: state.pathParameters['id']!,
+          //       ),
+          // ),
         ],
       ),
     ],

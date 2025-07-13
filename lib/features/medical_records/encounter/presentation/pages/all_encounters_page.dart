@@ -76,42 +76,37 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor =
-        Theme.of(context)
-            .colorScheme
-            .secondary; // Or a specific color like Colors.tealAccent[400]
-
-    return BlocConsumer<EncounterCubit, EncounterState>(
-      listener: (context, state) {
-        if (state is EncounterError) {
-          ShowToast.showToastError(
-            message: 'encountersPge.errorLoading'.tr(context),
-          );
-        }
+    return RefreshIndicator(
+      onRefresh: () async {
+        _loadInitialEncounters();
       },
-      builder: (context, state) {
-        if (state is EncounterLoading && !state.isLoadMore) {
-          return const Center(child: LoadingPage());
-        }
+      color: Theme.of(context).primaryColor,
+      child: BlocConsumer<EncounterCubit, EncounterState>(
+        listener: (context, state) {
+          if (state is EncounterError) {
+            ShowToast.showToastError(
+              message: 'encountersPge.errorLoading'.tr(context),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is EncounterLoading && !state.isLoadMore) {
+            return const Center(child: LoadingPage());
+          }
 
-        final List<EncounterModel> encounters =
-            state is EncountersSuccess
-                ? state.paginatedResponse.paginatedData?.items
-                        ?.cast<EncounterModel>() ??
-                    []
-                : [];
-        final bool hasMore = state is EncountersSuccess ? state.hasMore : false;
+          final List<EncounterModel> encounters =
+              state is EncountersSuccess
+                  ? state.paginatedResponse.paginatedData?.items
+                          ?.cast<EncounterModel>() ??
+                      []
+                  : [];
+          final bool hasMore = state is EncountersSuccess ? state.hasMore : false;
 
-        if (encounters.isEmpty) {
-          return NotFoundDataPage();
-        }
+          if (encounters.isEmpty) {
+            return NotFoundDataPage();
+          }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            _loadInitialEncounters();
-          },
-          color: Theme.of(context).primaryColor,
-          child: ListView.builder(
+          return ListView.builder(
             controller: _scrollController,
             itemCount: encounters.length + (hasMore ? 1 : 0),
             itemBuilder: (context, index) {
@@ -126,9 +121,9 @@ class _AllEncountersPageState extends State<AllEncountersPage> {
                 );
               }
             },
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

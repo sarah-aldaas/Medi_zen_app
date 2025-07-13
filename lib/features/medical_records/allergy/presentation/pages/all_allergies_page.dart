@@ -78,57 +78,61 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
-    return BlocConsumer<AllergyCubit, AllergyState>(
-      listener: (context, state) {
-        if (state is AllergyError) {
-          ShowToast.showToastError(message: state.error);
-        }
+    return RefreshIndicator(
+      onRefresh: () async {
+        _loadInitialAllergies();
       },
-      builder: (context, state) {
-        if (state is AllergyLoading && !state.isLoadMore) {
-          return Center(child: LoadingPage());
-        }
+      color: Theme.of(context).primaryColor,
+      child: BlocConsumer<AllergyCubit, AllergyState>(
+        listener: (context, state) {
+          if (state is AllergyError) {
+            ShowToast.showToastError(message: state.error);
+          }
+        },
+        builder: (context, state) {
+          if (state is AllergyLoading && !state.isLoadMore) {
+            return Center(child: LoadingPage());
+          }
 
-        final allergies =
-            state is AllergiesSuccess
-                ? state.paginatedResponse.paginatedData?.items
-                : [];
-        final hasMore = state is AllergiesSuccess ? state.hasMore : false;
+          final allergies =
+              state is AllergiesSuccess
+                  ? state.paginatedResponse.paginatedData?.items
+                  : [];
+          final hasMore = state is AllergiesSuccess ? state.hasMore : false;
 
-        if (allergies == null || allergies.isEmpty) {
-          return NotFoundDataPage();
-        }
+          if (allergies == null || allergies.isEmpty) {
+            return NotFoundDataPage();
+          }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            _loadInitialAllergies();
-          },
-          color: Theme.of(context).primaryColor,
-          child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            controller: _scrollController,
-            padding: const EdgeInsets.all(10),
-            itemCount: allergies.length + (hasMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < allergies.length) {
-                final AllergyModel allergy = allergies[index];
-                return _buildAllergyItem(allergy, Theme.of(context));
-                //   AllergyListItem(
-                //   allergy: allergy,
-                //   onTap: () => _navigateToAllergyDetails(allergy.id!),
-                // );
-              } else {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(child: LoadingPage()),
-                );
-              }
+          return RefreshIndicator(
+            onRefresh: () async {
+              _loadInitialAllergies();
             },
-          ),
-        );
-      },
+            color: Theme.of(context).primaryColor,
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: _scrollController,
+              padding: const EdgeInsets.all(10),
+              itemCount: allergies.length + (hasMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index < allergies.length) {
+                  final AllergyModel allergy = allergies[index];
+                  return _buildAllergyItem(allergy, Theme.of(context));
+                  //   AllergyListItem(
+                  //   allergy: allergy,
+                  //   onTap: () => _navigateToAllergyDetails(allergy.id!),
+                  // );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(child: LoadingPage()),
+                  );
+                }
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 

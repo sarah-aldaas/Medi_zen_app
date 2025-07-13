@@ -32,58 +32,64 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
   @override
   void initState() {
     super.initState();
-
-    context.read<AppointmentCubit>().getDetailsAppointment(
-      context: context,
-      id: widget.appointmentId,
-    );
+    _loadAppointmentDetails();
   }
-
+void _loadAppointmentDetails(){
+  context.read<AppointmentCubit>().getDetailsAppointment(
+    context: context,
+    id: widget.appointmentId,
+  );
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
-        title: Text(
-          "appointmentDetails.title".tr(context),
-          style: TextStyle(
-            color: Theme.of(context).primaryColor,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
+      // appBar: AppBar(
+      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //
+      //   title: Text(
+      //     "appointmentDetails.title".tr(context),
+      //     style: TextStyle(
+      //       color: Theme.of(context).primaryColor,
+      //       fontSize: 22,
+      //       fontWeight: FontWeight.bold,
+      //     ),
+      //   ),
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       Navigator.of(context).pop();
+      //     },
+      //     icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+      //   ),
+      // ),
+      body:  RefreshIndicator(
+        onRefresh: () async {
+          _loadAppointmentDetails();
+        },
+        color: Theme.of(context).primaryColor,
+        child: BlocConsumer<AppointmentCubit, AppointmentState>(
+          listener: (context, state) {
+            if (state is AppointmentError) {
+              ShowToast.showToastError(message: state.error);
+            }
           },
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          builder: (context, state) {
+            if (state is AppointmentDetailsSuccess) {
+              return _buildAppointmentDetails(state.appointmentModel);
+            } else if (state is AppointmentLoading) {
+              return const Center(child: LoadingPage());
+            } else {
+              return const Center(
+                child: Text('Failed to load appointment details'),
+              );
+            }
+          },
         ),
-      ),
-      body: BlocConsumer<AppointmentCubit, AppointmentState>(
-        listener: (context, state) {
-          if (state is AppointmentError) {
-            ShowToast.showToastError(message: state.error);
-          }
-        },
-        builder: (context, state) {
-          if (state is AppointmentDetailsSuccess) {
-            return _buildAppointmentDetails(state.appointmentModel);
-          } else if (state is AppointmentLoading) {
-            return const Center(child: LoadingPage());
-          } else {
-            return const Center(
-              child: Text('Failed to load appointment details'),
-            );
-          }
-        },
       ),
     );
   }
 
   Widget _buildAppointmentDetails(AppointmentModel appointment) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -97,33 +103,33 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           const SizedBox(height: 30),
           _buildPackageInfo(appointment),
           const SizedBox(height: 30),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => MedicalRecordOfAppointmentPage(
-                        appointmentId: appointment.id!,
-                      ),
-                ),
-              );
-            },
-            child: Card(
-              child: Container(
-                width: context.width,
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.all(8),
-                child: Center(
-                  child: Text(
-                    'appointmentDetails.medicalRecord'.tr(context),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
+          // GestureDetector(
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder:
+          //             (context) => MedicalRecordOfAppointmentPage(
+          //               appointmentId: appointment.id!,
+          //             ),
+          //       ),
+          //     );
+          //   },
+          //   child: Card(
+          //     child: Container(
+          //       width: context.width,
+          //       padding: EdgeInsets.all(8),
+          //       margin: EdgeInsets.all(8),
+          //       child: Center(
+          //         child: Text(
+          //           'appointmentDetails.medicalRecord'.tr(context),
+          //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(height: 16),
 
           GestureDetector(
             onTap: () {
