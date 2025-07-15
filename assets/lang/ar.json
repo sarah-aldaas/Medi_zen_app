@@ -448,6 +448,13 @@
     }
   },
   "homePage": {
+    "complaints": "الشكاوي",
+    "invoices": "الفواتير",
+    "health_services": "الخدمات الصحية",
+    "confirm_exit": "تأكيد الخروج",
+    "sure_want": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
+   "no": "لا",
+    "yes": "نعم",
     "header": {
       "greeting": "صباح الخير",
       "userName": "أندرو إينسلي"

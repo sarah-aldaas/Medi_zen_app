@@ -242,9 +242,8 @@ Widget _buildInfoRow({
                   isDate
                       ? "${DateFormat('yyyy-MM-dd').format(DateTime.parse(value))}"
                       : value,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.9),
-                  ),
+                  style: theme.textTheme.bodyMedium,
+
                   maxLines: maxLines,
                   overflow: TextOverflow.ellipsis,
                 ),

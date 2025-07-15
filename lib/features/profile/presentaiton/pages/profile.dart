@@ -44,8 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-            onPressed: () => Navigator.of(context).pop(),
-            color: AppColors.primaryColor,
+            onPressed: () => Navigator.pop(context),
           ),
           title: Row(
             spacing: 10,
@@ -72,11 +71,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: [
                       GestureDetector(
-                        onTap:(){
+                        onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FullScreenImageViewer(imageUrl: myPatientModel.avatar.toString(),),
+                              builder:
+                                  (context) => FullScreenImageViewer(
+                                    imageUrl: myPatientModel.avatar.toString(),
+                                  ),
                             ),
                           );
                         },
@@ -222,9 +224,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             : 'profilePage.lightMode'.tr(context),
                       ),
                       onTap: () {
-                        final newTheme = theme.brightness == Brightness.light
-                            ? darkTheme
-                            : lightTheme;
+                        final newTheme =
+                            theme.brightness == Brightness.light
+                                ? darkTheme
+                                : lightTheme;
 
                         // Change the theme immediately
                         switcher.changeTheme(theme: newTheme);

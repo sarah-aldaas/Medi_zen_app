@@ -7,6 +7,7 @@ import 'package:medizen_app/features/articles/presentation/cubit/article_cubit/a
 import 'package:medizen_app/features/articles/presentation/pages/article_details_page.dart';
 import 'package:shimmer/shimmer.dart';
 
+
 class SimpleArticlesPage extends StatefulWidget {
   const SimpleArticlesPage({super.key});
 
@@ -34,13 +35,20 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("articles.title".tr(context), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))],
+            children: [
+              Text(
+                "articles.title".tr(context),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+            ],
           ),
         ),
         BlocConsumer<ArticleCubit, ArticleState>(
           listener: (context, state) {
             if (state is ArticleError) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.error)));
             }
           },
           builder: (context, state) {
@@ -52,12 +60,21 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text(state.error), ElevatedButton(onPressed: _loadInitialArticles, child: Text("Retry".tr(context)))],
+                  children: [
+                    Text(state.error),
+                    ElevatedButton(
+                      onPressed: _loadInitialArticles,
+                      child: Text("Retry".tr(context)),
+                    ),
+                  ],
                 ),
               );
             }
 
-            final articles = (state is ArticleSuccess) ? state.paginatedResponse.paginatedData?.items ?? [] : [];
+            final articles =
+                (state is ArticleSuccess)
+                    ? state.paginatedResponse.paginatedData?.items ?? []
+                    : [];
 
             return ListView.separated(
               shrinkWrap: true,
@@ -66,7 +83,10 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
               padding: const EdgeInsets.all(16),
               itemCount: articles.length,
               itemBuilder: (context, index) {
-                return _buildArticleItem(article: articles[index], context: context);
+                return _buildArticleItem(
+                  article: articles[index],
+                  context: context,
+                );
               },
             );
           },
@@ -75,7 +95,10 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
     );
   }
 
-  Widget _buildArticleItem({required ArticleModel article, required BuildContext context}) {
+  Widget _buildArticleItem({
+    required ArticleModel article,
+    required BuildContext context,
+  }) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Card(
       margin: const EdgeInsets.only(bottom: 20),
@@ -93,7 +116,12 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                   width: 80,
                   height: 80,
                   color: isDark ? Colors.grey[800] : Colors.grey[200],
-                  child: FlexibleImage(imageUrl: article.image, width: 80, height: 80, errorWidget: Center(child: Icon(Icons.article, size: 40))),
+                  child: FlexibleImage(
+                    imageUrl: article.image,
+                    width: 80,
+                    height: 80,
+                    errorWidget: Center(child: Icon(Icons.article, size: 40)),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -104,7 +132,10 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                     if (article.category != null)
                       Text(
                         article.category!.display,
-                        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 13),
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 13,
+                        ),
                         // textDirection: article.language == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                       ),
                     const SizedBox(height: 4),
@@ -117,7 +148,8 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      article.createdAt?.toLocal().toString().split(' ')[0] ?? '',
+                      article.createdAt?.toLocal().toString().split(' ')[0] ??
+                          '',
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                       // textDirection: article.language == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                     ),
@@ -132,7 +164,12 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
   }
 
   void _navigateToDetails(ArticleModel article, BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleDetailsPage(article: article))).then((value) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ArticleDetailsPage(article: article),
+      ),
+    ).then((value) {
       _loadInitialArticles();
     });
   }
@@ -162,7 +199,14 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Image placeholder
-                  ClipRRect(borderRadius: BorderRadius.circular(8), child: Container(width: 80, height: 80, color: containerColor)),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      color: containerColor,
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   // Text content placeholders
                   Expanded(
@@ -173,12 +217,24 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                         Container(width: 80, height: 16, color: containerColor),
                         const SizedBox(height: 8),
                         // Title placeholder
-                        Container(width: double.infinity, height: 16, color: containerColor),
+                        Container(
+                          width: double.infinity,
+                          height: 16,
+                          color: containerColor,
+                        ),
                         const SizedBox(height: 4),
-                        Container(width: double.infinity, height: 16, color: containerColor),
+                        Container(
+                          width: double.infinity,
+                          height: 16,
+                          color: containerColor,
+                        ),
                         const SizedBox(height: 4),
                         // Date placeholder
-                        Container(width: 100, height: 12, color: containerColor),
+                        Container(
+                          width: 100,
+                          height: 12,
+                          color: containerColor,
+                        ),
                       ],
                     ),
                   ),

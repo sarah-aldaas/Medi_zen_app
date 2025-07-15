@@ -8,6 +8,7 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
 import '../../../../base/widgets/flexible_image.dart';
+import '../../../base/theme/app_color.dart';
 import '../data/model/health_care_services_model.dart';
 import 'cubits/service_cubit/service_cubit.dart';
 
@@ -65,7 +66,7 @@ class _HealthCareServiceDetailsPageState
               ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.iconTheme.color),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
           onPressed: () => context.pop(),
         ),
         elevation: 3,

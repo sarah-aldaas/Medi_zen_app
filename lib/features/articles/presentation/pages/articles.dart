@@ -124,7 +124,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
         title: Text("articles.title".tr(context)),
         actions: _buildAppBarActions(),
       ),
-      body:  RefreshIndicator(
+      body: RefreshIndicator(
         onRefresh: () async {
           _loadInitialArticles();
         },
@@ -162,7 +162,9 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   }
 
                   if (state is ArticleSuccess || state is ArticleLoading) {
-                    return _buildContent(state is ArticleSuccess ? state : null);
+                    return _buildContent(
+                      state is ArticleSuccess ? state : null,
+                    );
                   }
 
                   return const SizedBox.shrink();

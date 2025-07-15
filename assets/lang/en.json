@@ -471,6 +471,13 @@
     }
   },
   "homePage": {
+    "complaints": "Complaints",
+    "invoices": "Invoices",
+    "health_services": "Health services",
+    "confirm_exit": "Confirm Exit",
+    "sure_want": "Are you sure you want to exit the app?",
+    "no": "No",
+    "yes": "Yes",
     "header": {
       "greeting": "Good morning",
       "userName": "Andrew Ainsley"
@@ -1010,8 +1017,8 @@
     "ourServices": "Our Services",
     "noServicesAvailable": "No services available at the moment.",
     "viewOurServices": "View Our Services",
-    " noExtra": "No extra details provided.",
-    " appointment": "Appointment:",
+    "noExtra": "No extra details provided.",
+    "appointment": "Appointment:",
     "free": "Free",
     "service": "serviceId",
     "viewDetails": "View Details"

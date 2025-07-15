@@ -78,7 +78,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  RefreshIndicator(
+      body: RefreshIndicator(
         onRefresh: () async {
           _loadInitialRequests();
         },
@@ -320,38 +320,50 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (icon != null) ...[
-          Icon(icon, size: 22, color: AppColors.primaryColor.withOpacity(0.7)),
-          const SizedBox(width: 12),
-        ],
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 5,
-            children: [
-              Text(
-                '$title:',
-                style: textTheme.labelLarge?.copyWith(
-                  color: AppColors.cyan1,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (icon != null) ...[
+            Icon(
+              icon,
+              size: 22,
+              color: AppColors.primaryColor.withOpacity(0.7),
+            ),
+            const SizedBox(width: 12),
 
-              const SizedBox(height: 6),
-              Text(
-                value,
-                style: textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurface.withOpacity(0.95),
-                ),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 5,
+                children: [
+                  SizedBox(
+                    width: 80,
+                    child: Text(
+                      '$title:',
+                      style: textTheme.labelLarge?.copyWith(
+                        color: AppColors.cyan1,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      value,
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurface.withOpacity(0.95),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ],
+            ),
+          ],
+        ],
+      ),
     );
   }
 
@@ -367,10 +379,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
       decoration: BoxDecoration(
         color: statusColor.withOpacity(0.15),
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(
-          color: statusColor.withOpacity(0.3),
-          width: 1.0,
-        ),
+        border: Border.all(color: statusColor.withOpacity(0.3), width: 1.0),
       ),
       child: Text(
         statusDisplay ?? 'serviceRequestDetailsPage.unknownStatus'.tr(context),
