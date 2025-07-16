@@ -59,6 +59,6 @@ class AllergyRemoteDataSourceImpl implements AllergyRemoteDataSource {
   @override
   Future<Resource<AllergyModel>> getSpecificAllergy({required String allergyId}) async {
     final response = await networkClient.invoke(AllergyEndPoints.getSpecificAllergy(allergyId: allergyId), RequestType.get);
-    return ResponseHandler<AllergyModel>(response).processResponse(fromJson: (json) => AllergyModel.fromJson(json['allergy']));
+    return ResponseHandler<AllergyModel>(response).processResponse(fromJson: (json) => AllergyModel.fromJson(json ['allergy']));
   }
 }
