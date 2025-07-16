@@ -136,6 +136,7 @@
     "last_name": "الاسم الأخير",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
+    "newPassword": "كلمة المرور الجديدة",
     "confirm_password": "تأكيد كلمة المرور",
     "gender": "الجنس",
     "marital_status": "الحالة الاجتماعية",
@@ -546,6 +547,13 @@
     }
   },
   "homePage": {
+    "complaints": "الشكاوي",
+    "invoices": "الفواتير",
+    "health_services": "الخدمات الصحية",
+    "confirm_exit": "تأكيد الخروج",
+    "sure_want": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
+   "no": "لا",
+    "yes": "نعم",
     "header": {
       "greeting": "صباح الخير",
       "userName": "أندرو إينسلي"
@@ -1721,7 +1729,10 @@
   "createComplain_descriptionRequired": "الوصف مطلوب",
   "createComplain_typeLabel": "النوع",
   "createComplain_typeRequired": "النوع مطلوب",
-  "createComplain_submit": "إرسال"
+  "createComplain_submit": "إرسال",
+    "createComplain_addFromGallery": "المعرض",
+    "createComplain_takePhoto": "الكاميرا"
+
 },
   "diagnosticReportList": {
   "diagnosticReport_noReportsFound": "لم يتم العثور على تقارير تشخيصية",
@@ -1854,5 +1865,18 @@
   "clearDates": "مسح التواريخ",
   "cancelButton": "إلغاء",
   "applyButton": "تطبيق"
-}
+},
+  "notifications": {
+    "title": "الإشعارات",
+    "retry": "إعادة المحاولة",
+    "deleteNotification": "حذف الإشعار",
+    "Do_you_delete": "هل تريد حذف هذا الإشعار؟",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "error": "خطأ",
+    "ok": "حسناً",
+    "noHealth": "لا يوجد محتوى نصائح صحية متاح",
+    "notNotification": "لا يوجد أي إشعار."
+
+  }
 }

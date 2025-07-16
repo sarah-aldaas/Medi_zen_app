@@ -148,7 +148,13 @@ class _ComplainListPageState extends State<ComplainListPage> {
                     ElevatedButton.icon(
                       onPressed: _loadInitialComplains,
                       icon: Icon(Icons.refresh, color: AppColors.whiteColor),
-                      label: Text('complaintList.refreshList'.tr(context)),
+                      label: Text(
+                        'complaintList.refreshList'.tr(context),
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
                         padding: const EdgeInsets.symmetric(
@@ -223,9 +229,7 @@ class _ComplainListPageState extends State<ComplainListPage> {
                   complain.description!,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               const SizedBox(height: 12),
               Wrap(

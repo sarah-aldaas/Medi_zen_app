@@ -28,11 +28,12 @@ abstract class DiagnosticReportRemoteDataSource {
     required String diagnosticReportId,
   });
 
-  Future<Resource<PaginatedResponse<DiagnosticReportModel>>> getDiagnosticReportOfCondition({
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>>
+  getDiagnosticReportOfCondition({
     Map<String, dynamic>? filters,
     int page = 1,
     int perPage = 10,
-    required String conditionId
+    required String conditionId,
   });
 }
 
@@ -90,7 +91,8 @@ class DiagnosticReportRemoteDataSourceImpl
 
     final response = await networkClient.invoke(
       DiagnosticReportEndPoints.getAllDiagnosticReportOfAppointment(
-        appointmentId: appointmentId, conditionId: conditionId,
+        appointmentId: appointmentId,
+        conditionId: conditionId,
       ),
       RequestType.get,
       queryParameters: params,
@@ -125,7 +127,8 @@ class DiagnosticReportRemoteDataSourceImpl
   }
 
   @override
-  Future<Resource<PaginatedResponse<DiagnosticReportModel>>> getDiagnosticReportOfCondition({
+  Future<Resource<PaginatedResponse<DiagnosticReportModel>>>
+  getDiagnosticReportOfCondition({
     required String conditionId,
     Map<String, dynamic>? filters,
     int page = 1,
@@ -138,7 +141,9 @@ class DiagnosticReportRemoteDataSourceImpl
     };
 
     final response = await networkClient.invoke(
-      DiagnosticReportEndPoints.getAllDiagnosticReportOfCondition(conditionId: conditionId),
+      DiagnosticReportEndPoints.getAllDiagnosticReportOfCondition(
+        conditionId: conditionId,
+      ),
       RequestType.get,
       queryParameters: params,
     );
@@ -148,10 +153,10 @@ class DiagnosticReportRemoteDataSourceImpl
     ).processResponse(
       fromJson:
           (json) => PaginatedResponse<DiagnosticReportModel>.fromJson(
-        json,
-        'diagnostic_reports',
+            json,
+            'diagnostic_reports',
             (dataJson) => DiagnosticReportModel.fromJson(dataJson),
-      ),
+          ),
     );
   }
 }

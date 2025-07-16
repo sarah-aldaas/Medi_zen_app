@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 
+import '../../../../base/theme/app_color.dart';
 import '../../data/models/organization_model.dart';
 import '../cubit/organization_cubit/organization_cubit.dart';
 
@@ -167,7 +168,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                     label,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey[700],
+                      color: AppColors.green,
                     ),
                   ),
                   const SizedBox(height: 4),

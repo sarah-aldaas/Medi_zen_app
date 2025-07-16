@@ -66,7 +66,7 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                 onPressed: () {
                   context.pop();
                 },
-                icon: Icon(Icons.arrow_back_ios, color: Colors.grey),
+                icon: Icon(Icons.arrow_back, color: Colors.grey),
               ),
             ),
             body: Padding(
@@ -81,7 +81,7 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 17,
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -96,7 +96,7 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                       controller: _passwordController,
                       obscureText: _obscureText,
                       decoration: InputDecoration(
-                        hintText: "sign_up_page.password".tr(context),
+                        hintText: "sign_up_page.newPassword".tr(context),
                         prefixIcon: const Icon(
                           Icons.lock,
                           color: Color(0xFF47BD93),

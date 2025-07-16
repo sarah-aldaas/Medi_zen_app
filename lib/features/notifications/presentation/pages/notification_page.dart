@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/articles/presentation/pages/article_details_notification_page.dart';
 
-import '../../../appointment/pages/appointment_details.dart';
+import '../../../../base/theme/app_color.dart';
 import '../../../complains/presentation/pages/complain_details_page.dart';
 import '../../../invoice/presentation/pages/invoice_details_page.dart';
 import '../../../medical_records/allergy/presentation/pages/allergy_details_page.dart';
@@ -74,7 +75,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notifications"),
+        title: Text('notifications.title'.tr(context)),
         actions: [
           IconButton(
             icon: Icon(
@@ -115,7 +116,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     Text(state.error),
                     ElevatedButton(
                       onPressed: _loadInitialNotifications,
-                      child: Text('retry'),
+                      child: Text('notifications.retry'.tr(context)),
                     ),
                   ],
                 ),
@@ -138,7 +139,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final hasMore = state?.hasMore ?? false;
 
     if (notifications.isEmpty) {
-      return Center(child: Text("There are not any notification."));
+      return Center(child: Text('notifications.notNotification'));
     }
 
     return RefreshIndicator(
@@ -180,10 +181,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final isDarkMode = theme.brightness == Brightness.dark;
 
     final icon = _getNotificationIcon(notification);
-    final color =
-        notification.isRead
-            ? (isDarkMode ? Colors.grey[600] : Colors.grey[300])
-            : theme.primaryColor;
+    // Use theme.primaryColor for all icons, regardless of read status
+    final iconColor = theme.primaryColor;
 
     return Dismissible(
       key: Key(notification.id),
@@ -211,6 +210,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ? Center(child: LoadingButton())
               : Card(
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                // Keep the background color conditional based on read status
                 color:
                     notification.isRead
                         ? (isDarkMode ? Colors.grey[800] : Colors.grey[100])
@@ -222,6 +222,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         notificationId: notification.id,
                         context: context,
                       );
+                      // This will reload all notifications, including the one just marked as read
                       _loadInitialNotifications();
                     }
                     _handleNotificationTap(notification, context);
@@ -231,7 +232,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(icon, color: color, size: 30),
+                        Icon(icon, color: iconColor, size: 30), // Use iconColor
                         const Gap(12),
                         Expanded(
                           child: Column(
@@ -240,8 +241,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               Text(
                                 notification.title,
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: color,
+                                  // Apply bold only if not read
+                                  fontWeight:
+                                      notification.isRead
+                                          ? FontWeight.normal
+                                          : FontWeight.bold,
+                                  color:
+                                      theme
+                                          .textTheme
+                                          .titleMedium
+                                          ?.color, // Keep text color consistent
                                 ),
                               ),
                               const Gap(4),
@@ -298,16 +307,37 @@ class _NotificationsPageState extends State<NotificationsPage> {
           context: context,
           builder:
               (context) => AlertDialog(
-                title: Text("Delete notification"),
-                content: Text("Do you want to delete this notification?"),
+                title: Text(
+                  'notifications.deleteNotification'.tr(context),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                content: Text('notifications.Do_you_delete'.tr(context)),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, false),
-                    child: Text("cancel"),
+                    child: Text(
+                      'notifications.cancel'.tr(context),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () => Navigator.pop(context, true),
-                    child: Text("delete"),
+                    child: Text(
+                      'notifications.delete'.tr(context),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+
+                        color: AppColors.red,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -820,6 +850,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   ) {
     if (notification.data!.tip == null || notification.data!.tip!.isEmpty) {
       _showErrorDialog(context, 'No health tip content available');
+
       return;
     }
 
@@ -832,7 +863,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
+                child: Text('notifications.ok'.tr(context)),
               ),
             ],
           ),
@@ -844,12 +875,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text('Error'),
+            title: Text('notifications.error'.tr(context)),
             content: Text(message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
+                child: Text('notifications.ok'.tr(context)),
               ),
             ],
           ),
@@ -878,7 +909,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
-                  'OK',
+                  'notifications.ok'.tr(context),
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: Theme.of(context).primaryColor,
                   ),

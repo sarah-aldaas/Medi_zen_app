@@ -1,6 +1,6 @@
+import 'package:equatable/equatable.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
 import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
-import 'package:equatable/equatable.dart';
 
 class ArticleModel extends Equatable {
   final String? id;
@@ -36,10 +36,22 @@ class ArticleModel extends Equatable {
       source: json['source'] as String?,
       image: json['image'] as String?,
       isFavorite: json['is_favorite'] == true,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
-      category: json['category'] != null ? CodeModel.fromJson(json['category'] as Map<String, dynamic>) : null,
-      doctor: json['doctor'] != null ? DoctorModel.fromJson(json['doctor'] as Map<String, dynamic>) : null,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.parse(json['created_at'] as String)
+              : null,
+      updatedAt:
+          json['updated_at'] != null
+              ? DateTime.parse(json['updated_at'] as String)
+              : null,
+      category:
+          json['category'] != null
+              ? CodeModel.fromJson(json['category'] as Map<String, dynamic>)
+              : null,
+      doctor:
+          json['doctor'] != null
+              ? DoctorModel.fromJson(json['doctor'] as Map<String, dynamic>)
+              : null,
     );
   }
 
@@ -63,8 +75,8 @@ class ArticleModel extends Equatable {
     String? title,
     String? content,
     String? source,
-    String? image,
     bool? isFavorite,
+    String? image,
     DateTime? createdAt,
     DateTime? updatedAt,
     CodeModel? category,
@@ -114,15 +126,18 @@ class ArticleResponseModel {
     required this.status,
     required this.errNum,
     required this.msg,
-    this.articleModel
+    this.articleModel,
   });
 
   factory ArticleResponseModel.fromJson(Map<String, dynamic> json) {
     return ArticleResponseModel(
-        status: json['status'] as bool,
-        errNum: json['errNum'].toString(),
-        msg: json['msg'].toString(),
-        articleModel:json['article']!=null? ArticleModel.fromJson(json['article']):null
+      status: json['status'] as bool,
+      errNum: json['errNum'].toString(),
+      msg: json['msg'].toString(),
+      articleModel:
+          json['article'] != null
+              ? ArticleModel.fromJson(json['article'])
+              : null,
     );
   }
 
@@ -131,7 +146,7 @@ class ArticleResponseModel {
       'status': status,
       'errNum': errNum,
       'msg': msg,
-      if (articleModel != null) 'article': articleModel!.toJson(),
+      'article': articleModel?.toJson(),
     };
   }
 }

@@ -212,7 +212,7 @@ void _loadMedicationDetails(){
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.cyan,
+                color: AppColors.green,
               ),
             ),
             const Divider(height: 16, thickness: 1),
@@ -235,13 +235,21 @@ void _loadMedicationDetails(){
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 140,
+          width: 120,
           child: Text(
             "$label:",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.cyan),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.cyan1,
+            ),
           ),
         ),
-        Expanded(child: Text(value, style: const TextStyle(fontSize: 15))),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 15),
+          ),
+        ),
       ],
     );
   }

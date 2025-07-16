@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -58,6 +57,8 @@ import 'features/complains/presentation/cubit/complain_cubit/complain_cubit.dart
 import 'features/medical_records/medication/presentation/cubit/medication_cubit/medication_cubit.dart';
 import 'features/services/pages/cubits/service_cubit/service_cubit.dart';
 
+late ThemeCubit _themeCubit;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -67,6 +68,10 @@ void main() async {
   await messaging.requestPermission();
   GoRouter.optionURLReflectsImperativeAPIs = true;
   await bootstrapApplication();
+
+  _themeCubit = ThemeCubit(ThemePreferenceService());
+  await _themeCubit.stream.firstWhere((element) => true);
+
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
@@ -104,26 +109,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool? _savedThemeMode;
-  final _themePreference = ThemePreferenceService();
-  late final ThemeCubit _themeCubit;
-
   @override
   void initState() {
     super.initState();
-    _themeCubit = ThemeCubit(ThemePreferenceService());
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark =
-        _savedThemeMode ??
-        (PlatformDispatcher.instance.platformBrightness == Brightness.dark);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       serviceLocator<FCMManager>().initialize(context);
     });
-    return BlocProvider<ThemeCubit>.value(
-      value: _themeCubit,
+    return BlocProvider<ThemeCubit>(
+      create: (context) => _themeCubit,
       child: BlocBuilder<ThemeCubit, bool>(
         builder: (context, isDark) {
           final theme = isDark ? darkTheme : lightTheme;
@@ -195,6 +192,7 @@ class _MyAppState extends State<MyApp> {
                         create: (context) => serviceLocator<LogoutCubit>(),
                         lazy: false,
                       ),
+
                       BlocProvider<CodeTypesCubit>(
                         create: (context) => serviceLocator<CodeTypesCubit>(),
                         lazy: false,
@@ -226,7 +224,6 @@ class _MyAppState extends State<MyApp> {
                             ),
                         lazy: false,
                       ),
-
                       BlocProvider<AllergyCubit>(
                         create:
                             (context) => AllergyCubit(
@@ -370,10 +367,7 @@ class _MyAppState extends State<MyApp> {
                         lazy: false,
                       ),
 
-                      BlocProvider<ThemeCubit>(
-                        create: (context) => ThemeCubit(_themePreference),
-                        lazy: false,
-                      ),
+
                     ],
                     child: BlocBuilder<LocalizationBloc, LocalizationState>(
                       builder: (context, state) {

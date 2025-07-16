@@ -21,13 +21,13 @@ class HealthCareServiceFilterDialog extends StatefulWidget {
 
 class _HealthCareServiceFilterDialogState
     extends State<HealthCareServiceFilterDialog> {
-  late HealthCareServiceFilter _filter;
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
+
+  bool? _selectedActiveStatus;
+  bool? _selectedAppointmentRequired;
   String? _selectedCategoryId;
-  String? _selectedClinicId;
-  String? _selectedSort;
 
   List<CodeModel> categories = [];
 
@@ -36,12 +36,13 @@ class _HealthCareServiceFilterDialogState
     super.initState();
     context.read<CodeTypesCubit>().getServiceCategoryCodes(context: context);
 
-    _filter = widget.currentFilter;
-    _searchController.text = _filter.searchQuery ?? '';
-    _minPriceController.text = _filter.minPrice?.toString() ?? '';
-    _maxPriceController.text = _filter.maxPrice?.toString() ?? '';
-    _selectedCategoryId = _filter.categoryId?.toString();
-    _selectedClinicId = _filter.clinicId?.toString();
+    _searchController.text = widget.currentFilter.searchQuery ?? '';
+    _minPriceController.text = widget.currentFilter.minPrice?.toString() ?? '';
+    _maxPriceController.text = widget.currentFilter.maxPrice?.toString() ?? '';
+
+    _selectedActiveStatus = widget.currentFilter.active;
+    _selectedAppointmentRequired = widget.currentFilter.appointmentRequired;
+    _selectedCategoryId = widget.currentFilter.categoryId?.toString();
   }
 
   @override
@@ -108,21 +109,12 @@ class _HealthCareServiceFilterDialogState
                                   onPressed: () {
                                     setState(() {
                                       _searchController.clear();
-                                      _filter = _filter.copyWith(
-                                        searchQuery: null,
-                                      );
                                     });
                                   },
                                 )
                                 : null,
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          _filter = _filter.copyWith(
-                            searchQuery: value.isNotEmpty ? value : null,
-                          );
-                        });
-                      },
+                      onChanged: (value) {},
                     ),
                     Gap(8),
                     const Divider(),
@@ -147,14 +139,7 @@ class _HealthCareServiceFilterDialogState
                               border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
-                            onChanged: (value) {
-                              _filter = _filter.copyWith(
-                                minPrice:
-                                    value.isNotEmpty
-                                        ? double.tryParse(value)
-                                        : null,
-                              );
-                            },
+                            onChanged: (value) {},
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -168,14 +153,7 @@ class _HealthCareServiceFilterDialogState
                               border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
-                            onChanged: (value) {
-                              _filter = _filter.copyWith(
-                                maxPrice:
-                                    value.isNotEmpty
-                                        ? double.tryParse(value)
-                                        : null,
-                              );
-                            },
+                            onChanged: (value) {},
                           ),
                         ),
                       ],
@@ -197,8 +175,13 @@ class _HealthCareServiceFilterDialogState
                             "healthCareServicesPage.allStatuses".tr(context),
                           ),
                           value: null,
-                          groupValue: _filter.active,
-                          onChanged: (_) => _clearFilterField('status'),
+                          groupValue: _selectedActiveStatus,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedActiveStatus =
+                                  val; // Update local UI state
+                            });
+                          },
                           activeColor: Theme.of(context).primaryColor,
                         ),
                         RadioListTile<bool>(
@@ -207,11 +190,12 @@ class _HealthCareServiceFilterDialogState
                             style: const TextStyle(fontSize: 14),
                           ),
                           value: true,
-                          groupValue: _filter.active,
-                          onChanged:
-                              (val) => setState(
-                                () => _filter = _filter.copyWith(active: val),
-                              ),
+                          groupValue: _selectedActiveStatus,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedActiveStatus = val;
+                            });
+                          },
                           activeColor: Theme.of(context).primaryColor,
                         ),
                         RadioListTile<bool>(
@@ -220,11 +204,12 @@ class _HealthCareServiceFilterDialogState
                             style: const TextStyle(fontSize: 14),
                           ),
                           value: false,
-                          groupValue: _filter.active,
-                          onChanged:
-                              (val) => setState(
-                                () => _filter = _filter.copyWith(active: val),
-                              ),
+                          groupValue: _selectedActiveStatus,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedActiveStatus = val;
+                            });
+                          },
                           activeColor: Theme.of(context).primaryColor,
                         ),
                       ],
@@ -244,9 +229,12 @@ class _HealthCareServiceFilterDialogState
                         RadioListTile<bool?>(
                           title: Text("healthCareServicesPage.all".tr(context)),
                           value: null,
-                          groupValue: _filter.appointmentRequired,
-                          onChanged:
-                              (_) => _clearFilterField('appointmentRequired'),
+                          groupValue: _selectedAppointmentRequired,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedAppointmentRequired = val;
+                            });
+                          },
                           activeColor: Theme.of(context).primaryColor,
                         ),
                         RadioListTile<bool>(
@@ -255,14 +243,12 @@ class _HealthCareServiceFilterDialogState
                             style: const TextStyle(fontSize: 14),
                           ),
                           value: true,
-                          groupValue: _filter.appointmentRequired,
-                          onChanged:
-                              (val) => setState(
-                                () =>
-                                    _filter = _filter.copyWith(
-                                      appointmentRequired: val,
-                                    ),
-                              ),
+                          groupValue: _selectedAppointmentRequired,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedAppointmentRequired = val;
+                            });
+                          },
                           activeColor: Theme.of(context).primaryColor,
                         ),
                         RadioListTile<bool>(
@@ -271,14 +257,12 @@ class _HealthCareServiceFilterDialogState
                             style: const TextStyle(fontSize: 14),
                           ),
                           value: false,
-                          groupValue: _filter.appointmentRequired,
-                          onChanged:
-                              (val) => setState(
-                                () =>
-                                    _filter = _filter.copyWith(
-                                      appointmentRequired: val,
-                                    ),
-                              ),
+                          groupValue: _selectedAppointmentRequired,
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedAppointmentRequired = val;
+                            });
+                          },
                           activeColor: Theme.of(context).primaryColor,
                         ),
                       ],
@@ -339,7 +323,11 @@ class _HealthCareServiceFilterDialogState
                               ),
                               value: null,
                               groupValue: _selectedCategoryId,
-                              onChanged: (_) => _clearFilterField('category'),
+                              onChanged: (val) {
+                                setState(() {
+                                  _selectedCategoryId = val;
+                                });
+                              },
                               activeColor: Theme.of(context).primaryColor,
                             ),
                             ...categories.map((category) {
@@ -353,12 +341,6 @@ class _HealthCareServiceFilterDialogState
                                 onChanged: (val) {
                                   setState(() {
                                     _selectedCategoryId = val;
-                                    _filter = _filter.copyWith(
-                                      categoryId:
-                                          val != null
-                                              ? int.tryParse(val)
-                                              : null,
-                                    );
                                   });
                                 },
                                 activeColor: Theme.of(context).primaryColor,
@@ -379,13 +361,12 @@ class _HealthCareServiceFilterDialogState
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      _filter = HealthCareServiceFilter();
                       _searchController.clear();
                       _minPriceController.clear();
                       _maxPriceController.clear();
+                      _selectedActiveStatus = null;
+                      _selectedAppointmentRequired = null;
                       _selectedCategoryId = null;
-                      _selectedClinicId = null;
-                      _selectedSort = null;
                     });
                   },
                   child: Text(
@@ -405,8 +386,8 @@ class _HealthCareServiceFilterDialogState
                         final minText = _minPriceController.text.trim();
                         final maxText = _maxPriceController.text.trim();
 
-                        if ((minText.isEmpty && maxText.isNotEmpty) ||
-                            (minText.isNotEmpty && maxText.isEmpty)) {
+                        if ((minText.isNotEmpty && maxText.isEmpty) ||
+                            (minText.isEmpty && maxText.isNotEmpty)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -420,7 +401,29 @@ class _HealthCareServiceFilterDialogState
                           return;
                         }
 
-                        Navigator.pop(context, _filter);
+                        final HealthCareServiceFilter resultFilter =
+                            HealthCareServiceFilter(
+                              searchQuery:
+                                  _searchController.text.isNotEmpty
+                                      ? _searchController.text
+                                      : null,
+                              minPrice:
+                                  minText.isNotEmpty
+                                      ? double.tryParse(minText)
+                                      : null,
+                              maxPrice:
+                                  maxText.isNotEmpty
+                                      ? double.tryParse(maxText)
+                                      : null,
+                              active: _selectedActiveStatus,
+                              appointmentRequired: _selectedAppointmentRequired,
+                              categoryId:
+                                  _selectedCategoryId != null
+                                      ? int.tryParse(_selectedCategoryId!)
+                                      : null,
+                            );
+
+                        Navigator.pop(context, resultFilter);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
@@ -439,23 +442,6 @@ class _HealthCareServiceFilterDialogState
         ),
       ),
     );
-  }
-
-  void _clearFilterField(String field) {
-    setState(() {
-      switch (field) {
-        case 'status':
-          _filter = _filter.copyWith(active: null);
-          break;
-        case 'appointmentRequired':
-          _filter = _filter.copyWith(appointmentRequired: null);
-          break;
-        case 'category':
-          _selectedCategoryId = null;
-          _filter = _filter.copyWith(categoryId: null);
-          break;
-      }
-    });
   }
 
   @override

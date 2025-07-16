@@ -25,7 +25,8 @@ class ConditionDetailsPage extends StatefulWidget {
   State<ConditionDetailsPage> createState() => _ConditionDetailsPageState();
 }
 
-class _ConditionDetailsPageState extends State<ConditionDetailsPage> with SingleTickerProviderStateMixin {
+class _ConditionDetailsPageState extends State<ConditionDetailsPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -34,17 +35,24 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage> with Single
     _tabController = TabController(length: 3, vsync: this);
     _loadConditionDetails();
   }
-void _loadConditionDetails(){
-  context.read<ConditionsCubit>().getConditionDetails(conditionId: widget.conditionId, context: context);
 
-}
+  void _loadConditionDetails() {
+    context.read<ConditionsCubit>().getConditionDetails(
+      conditionId: widget.conditionId,
+      context: context,
+    );
+  }
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
 
-  Stream<String> _getCooldownStream(DateTime? lastGenerationTime, int generationCount) async* {
+  Stream<String> _getCooldownStream(
+    DateTime? lastGenerationTime,
+    int generationCount,
+  ) async* {
     while (true) {
       if (lastGenerationTime == null) {
         yield "Ready to generate";
@@ -89,28 +97,43 @@ void _loadConditionDetails(){
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("conditionDetails.title".tr(context),
-            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryColor, fontSize: 22)),
+        title: Text(
+          "conditionDetails.title".tr(context),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.primaryColor,
+            fontSize: 22,
+          ),
+        ),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-            onPressed: () => context.pop()
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          onPressed: () => context.pop(),
         ),
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(icon: Icon(Icons.info_outline), text: "conditionDetails.details".tr(context)),
-            Tab(icon: Icon(Icons.medication), text: "conditionDetails.medicationRequest".tr(context)),
-            Tab(icon: Icon(Icons.assignment), text: "conditionDetails.diagnosticReports".tr(context)),
+            Tab(
+              icon: Icon(Icons.info_outline),
+              text: "conditionDetails.details".tr(context),
+            ),
+            Tab(
+              icon: Icon(Icons.medication),
+              text: "conditionDetails.medicationRequest".tr(context),
+            ),
+            Tab(
+              icon: Icon(Icons.assignment),
+              text: "conditionDetails.diagnosticReports".tr(context),
+            ),
           ],
           labelColor: AppColors.primaryColor,
           unselectedLabelColor: Colors.grey,
           indicatorColor: AppColors.primaryColor,
         ),
       ),
-      body:RefreshIndicator(
+      body: RefreshIndicator(
         onRefresh: () async {
           _loadConditionDetails();
         },
@@ -130,10 +153,10 @@ void _loadConditionDetails(){
                   _buildConditionDetails(state.condition),
 
                   // Second tab - Medication Requests
-                  MyMedicationRequestsPage(conditionId:state.condition.id!),
+                  MyMedicationRequestsPage(conditionId: state.condition.id!),
 
                   // Third tab - Diagnostic Reports
-                  DiagnosticReportListPage(conditionId:state.condition.id!)
+                  DiagnosticReportListPage(conditionId: state.condition.id!),
                 ],
               );
             } else if (state is ConditionsLoading) {
@@ -145,20 +168,32 @@ void _loadConditionDetails(){
                   children: [
                     Icon(Icons.error_outline, size: 80, color: Colors.red[300]),
                     const SizedBox(height: 20),
-                    Text('conditionDetails.failedToLoad'.tr(context),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18, color: Colors.grey[700])),
+                    Text(
+                      'conditionDetails.failedToLoad'.tr(context),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: () => context.read<ConditionsCubit>()
-                          .getConditionDetails(conditionId: widget.conditionId, context: context),
+                      onPressed:
+                          () => context
+                              .read<ConditionsCubit>()
+                              .getConditionDetails(
+                                conditionId: widget.conditionId,
+                                context: context,
+                              ),
                       icon: const Icon(Icons.refresh),
                       label: Text("conditionDetails.retry".tr(context)),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: AppColors.primaryColor,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ],
@@ -185,35 +220,56 @@ void _loadConditionDetails(){
           _buildSectionHeader(context, 'conditionDetails.articles'.tr(context)),
           _buildArticlesSection(context, condition),
 
-          if (condition.onSetDate != null || condition.abatementDate != null || condition.recordDate != null) ...[
-            _buildSectionHeader(context, 'conditionDetails.timeline'.tr(context)),
+          if (condition.onSetDate != null ||
+              condition.abatementDate != null ||
+              condition.recordDate != null) ...[
+            _buildSectionHeader(
+              context,
+              'conditionDetails.timeline'.tr(context),
+            ),
             _buildTimelineSection(context, condition),
             const SizedBox(height: 16),
           ],
 
           if (condition.bodySite != null) ...[
-            _buildSectionHeader(context, 'conditionDetails.bodySite'.tr(context)),
+            _buildSectionHeader(
+              context,
+              'conditionDetails.bodySite'.tr(context),
+            ),
             _buildBodySiteSection(context, condition),
             const SizedBox(height: 16),
           ],
 
-          _buildSectionHeader(context, 'conditionDetails.clinicalInformation'.tr(context)),
+          _buildSectionHeader(
+            context,
+            'conditionDetails.clinicalInformation'.tr(context),
+          ),
           _buildClinicalInfoSection(context, condition),
           const SizedBox(height: 16),
 
-          if (condition.encounters != null && condition.encounters!.isNotEmpty) ...[
-            _buildSectionHeader(context, 'conditionDetails.relatedEncounters'.tr(context)),
+          if (condition.encounters != null &&
+              condition.encounters!.isNotEmpty) ...[
+            _buildSectionHeader(
+              context,
+              'conditionDetails.relatedEncounters'.tr(context),
+            ),
             _buildEncountersSection(context, condition),
             const SizedBox(height: 16),
           ],
 
-          if (condition.serviceRequests != null && condition.serviceRequests!.isNotEmpty) ...[
-            _buildSectionHeader(context, 'conditionDetails.relatedServiceRequests'.tr(context)),
+          if (condition.serviceRequests != null &&
+              condition.serviceRequests!.isNotEmpty) ...[
+            _buildSectionHeader(
+              context,
+              'conditionDetails.relatedServiceRequests'.tr(context),
+            ),
             _buildServiceRequestsSection(context, condition),
             const SizedBox(height: 16),
           ],
 
-          if (condition.note != null || condition.summary != null || condition.extraNote != null) ...[
+          if (condition.note != null ||
+              condition.summary != null ||
+              condition.extraNote != null) ...[
             _buildSectionHeader(context, 'conditionDetails.notes'.tr(context)),
             _buildNotesSection(context, condition),
             const SizedBox(height: 16),
@@ -223,11 +279,17 @@ void _loadConditionDetails(){
     );
   }
 
-
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
-      child: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.titel)),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: AppColors.titel,
+        ),
+      ),
     );
   }
 
@@ -241,26 +303,43 @@ void _loadConditionDetails(){
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.health_and_safety, size: 50, color: AppColors.primaryColor),
+            Icon(
+              Icons.health_and_safety,
+              size: 50,
+              color: AppColors.primaryColor,
+            ),
             const SizedBox(width: 18),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    condition.healthIssue ?? 'conditionDetails.unknownCondition'.tr(context),
+                    condition.healthIssue ??
+                        'conditionDetails.unknownCondition'.tr(context),
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold, color: AppColors.green),
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.green,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
                   if (condition.clinicalStatus != null)
                     Chip(
-                      backgroundColor: _getStatusColor(condition.clinicalStatus!.code),
-                      label: Text(condition.clinicalStatus!.display,
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      backgroundColor: _getStatusColor(
+                        condition.clinicalStatus!.code,
+                      ),
+                      label: Text(
+                        condition.clinicalStatus!.display,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
                     ),
                 ],
               ),
@@ -271,7 +350,10 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildArticlesSection(BuildContext context, ConditionsModel condition) {
+  Widget _buildArticlesSection(
+    BuildContext context,
+    ConditionsModel condition,
+  ) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -287,7 +369,8 @@ void _loadConditionDetails(){
                   children: [
                     Text("Show article"),
                     IconButton(
-                      onPressed: () => _showConditionArticles(context, condition.id!),
+                      onPressed:
+                          () => _showConditionArticles(context, condition.id!),
                       icon: const Icon(Icons.article),
                       tooltip: 'View articles about this condition',
                     ),
@@ -301,27 +384,42 @@ void _loadConditionDetails(){
                         final cubit = context.read<ArticleCubit>();
                         final lastGenerationTime = cubit.lastGenerationTime;
                         final generationCount = cubit.generationCount;
-                        final canGenerate = _checkGenerationCooldown(lastGenerationTime, generationCount);
+                        final canGenerate = _checkGenerationCooldown(
+                          lastGenerationTime,
+                          generationCount,
+                        );
 
                         return canGenerate
                             ? IconButton(
-                          onPressed: () => _showAiModelSelection(context, condition.id!),
-                          icon: const Icon(Icons.note_add),
-                          tooltip: 'Generate AI article',
-                        )
+                              onPressed:
+                                  () => _showAiModelSelection(
+                                    context,
+                                    condition.id!,
+                                  ),
+                              icon: const Icon(Icons.note_add),
+                              tooltip: 'Generate AI article',
+                            )
                             : StreamBuilder<String>(
-                          stream: _getCooldownStream(lastGenerationTime, generationCount),
-                          builder: (context, snapshot) {
-                            return Row(
-                              children: [
-                                const Icon(Icons.timer, color: Colors.grey),
-                                const SizedBox(width: 8),
-                                Text(snapshot.data ?? 'Calculating...',
-                                    style: const TextStyle(fontSize: 14, color: Colors.grey)),
-                              ],
+                              stream: _getCooldownStream(
+                                lastGenerationTime,
+                                generationCount,
+                              ),
+                              builder: (context, snapshot) {
+                                return Row(
+                                  children: [
+                                    const Icon(Icons.timer, color: Colors.grey),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      snapshot.data ?? 'Calculating...',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
-                          },
-                        );
                       },
                     ),
                   ],
@@ -363,7 +461,11 @@ void _loadConditionDetails(){
             return AlertDialog(
               title: Text(
                 'conditionDetails.select_AI_model'.tr(context),
-                style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold, fontSize: 20),
+                style: TextStyle(
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
               content: SizedBox(
                 width: double.maxFinite,
@@ -372,35 +474,58 @@ void _loadConditionDetails(){
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('conditionDetails.select_language'.tr(context),
-                          style: TextStyle(color: AppColors.titel, fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text(
+                        'conditionDetails.select_language'.tr(context),
+                        style: TextStyle(
+                          color: AppColors.titel,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
                       const SizedBox(height: 8),
                       Row(
                         children: [
                           ChoiceChip(
                             label: Text('conditionDetails.english'.tr(context)),
                             selected: selectedLanguage == 'en',
-                            onSelected: (_) => setState(() => selectedLanguage = 'en'),
+                            onSelected:
+                                (_) => setState(() => selectedLanguage = 'en'),
                           ),
                           const SizedBox(width: 8),
                           ChoiceChip(
                             label: Text('conditionDetails.arabic'.tr(context)),
                             selected: selectedLanguage == 'ar',
-                            onSelected: (_) => setState(() => selectedLanguage = 'ar'),
+                            onSelected:
+                                (_) => setState(() => selectedLanguage = 'ar'),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Text('conditionDetails.select_model'.tr(context),
-                          style: TextStyle(color: AppColors.titel, fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text(
+                        'conditionDetails.select_model'.tr(context),
+                        style: TextStyle(
+                          color: AppColors.titel,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
                       const SizedBox(height: 10),
                       ...listModels.map((model) {
                         return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-                          color: selectedModel == model ? Theme.of(context).primaryColor.withOpacity(0.1) : null,
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 6,
+                          ),
+                          color:
+                              selectedModel == model
+                                  ? Theme.of(
+                                    context,
+                                  ).primaryColor.withOpacity(0.1)
+                                  : null,
                           child: ListTile(
-                              title: Text(model.nameModel),
-                              onTap: () => setState(() => selectedModel = model)),
+                            title: Text(model.nameModel),
+                            onTap: () => setState(() => selectedModel = model),
+                          ),
                         );
                       }).toList(),
                     ],
@@ -410,20 +535,34 @@ void _loadConditionDetails(){
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('conditionDetails.close'.tr(context),
-                      style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold, fontSize: 15)),
+                  child: Text(
+                    'conditionDetails.close'.tr(context),
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
                 ),
                 ElevatedButton(
-                  onPressed: selectedModel != null
-                      ? () {
-                    Navigator.pop(context);
-                    _generateAiArticle(context, conditionId, selectedModel!.apiModel, selectedLanguage);
-                  }
-                      : null,
+                  onPressed:
+                      selectedModel != null
+                          ? () {
+                            Navigator.pop(context);
+                            _generateAiArticle(
+                              context,
+                              conditionId,
+                              selectedModel!.apiModel,
+                              selectedLanguage,
+                            );
+                          }
+                          : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                   child: Text('conditionDetails.generate'.tr(context)),
                 ),
@@ -435,7 +574,10 @@ void _loadConditionDetails(){
     );
   }
 
-  bool _checkGenerationCooldown(DateTime? lastGenerationTime, int generationCount) {
+  bool _checkGenerationCooldown(
+    DateTime? lastGenerationTime,
+    int generationCount,
+  ) {
     if (lastGenerationTime == null) return true;
     final now = DateTime.now();
     final difference = now.difference(lastGenerationTime);
@@ -449,7 +591,11 @@ void _loadConditionDetails(){
     }
   }
 
-  void _showCooldownMessage(BuildContext context, DateTime? lastGenerationTime, int generationCount) {
+  void _showCooldownMessage(
+    BuildContext context,
+    DateTime? lastGenerationTime,
+    int generationCount,
+  ) {
     String message;
     final now = DateTime.now();
     final difference = now.difference(lastGenerationTime!);
@@ -468,23 +614,32 @@ void _loadConditionDetails(){
     ShowToast.showToastError(message: message);
   }
 
-  void _generateAiArticle(BuildContext context, String conditionId, String? apiModel, String language) {
+  void _generateAiArticle(
+    BuildContext context,
+    String conditionId,
+    String? apiModel,
+    String language,
+  ) {
     final cubit = context.read<ArticleCubit>();
-    cubit.generateAiArticle(
-        conditionId: conditionId,
-        apiModel: apiModel ?? '',
-        language: language,
-        context: context
-    ).then((_) {
-      if (mounted) {
-        if (cubit.state is ArticleGenerateSuccess) {
-          ShowToast.showToastSuccess(message: 'article generated successfully');
-        }
-        if (cubit.state is ArticleError) {
-          ShowToast.showToastError(message: 'article can');
-        }
-      }
-    });
+    cubit
+        .generateAiArticle(
+          conditionId: conditionId,
+          apiModel: apiModel ?? '',
+          language: language,
+          context: context,
+        )
+        .then((_) {
+          if (mounted) {
+            if (cubit.state is ArticleGenerateSuccess) {
+              ShowToast.showToastSuccess(
+                message: 'article generated successfully',
+              );
+            }
+            if (cubit.state is ArticleError) {
+              ShowToast.showToastError(message: 'article can');
+            }
+          }
+        });
   }
 
   void _showConditionArticles(BuildContext context, String conditionId) {
@@ -493,30 +648,31 @@ void _loadConditionDetails(){
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text('conditionDetails.loading_articles'.tr(context)),
-        content: BlocConsumer<ArticleCubit, ArticleState>(
-          listener: (context, state) {
-            if (state is ArticleConditionSuccess) {
-              Navigator.pop(context);
-              _showArticleDialog(context, state.article);
-            } else if (state is ArticleError) {
-              Navigator.pop(context);
-              ShowToast.showToastError(message: state.error);
-            }
-          },
-          builder: (context, state) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                LoadingButton(),
-                SizedBox(height: 16),
-                Text('conditionDetails.fetching_articles'.tr(context))
-              ],
-            );
-          },
-        ),
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: Text('conditionDetails.loading_articles'.tr(context)),
+            content: BlocConsumer<ArticleCubit, ArticleState>(
+              listener: (context, state) {
+                if (state is ArticleConditionSuccess) {
+                  Navigator.pop(context);
+                  _showArticleDialog(context, state.article);
+                } else if (state is ArticleError) {
+                  Navigator.pop(context);
+                  ShowToast.showToastError(message: state.error);
+                }
+              },
+              builder: (context, state) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LoadingButton(),
+                    SizedBox(height: 16),
+                    Text('conditionDetails.fetching_articles'.tr(context)),
+                  ],
+                );
+              },
+            ),
+          ),
     );
 
     cubit.getArticleOfCondition(conditionId: conditionId, context: context);
@@ -525,35 +681,48 @@ void _loadConditionDetails(){
   void _showArticleDialog(BuildContext context, ArticleModel? article) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: article != null
-            ? Text(article.title ?? 'conditionDetails.articles'.tr(context))
-            : SizedBox.shrink(),
-        content: article == null
-            ? Text(
-          'conditionDetails.can_not_generate'.tr(context),
-        )
-            : SizedBox(
-          width: double.maxFinite,
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: SingleChildScrollView(
-            child: Text(
-              article.content ?? 'conditionDetails.No_content'.tr(context),
-            ),
+      builder:
+          (context) => AlertDialog(
+            title:
+                article != null
+                    ? Text(
+                      article.title ?? 'conditionDetails.articles'.tr(context),
+                    )
+                    : SizedBox.shrink(),
+            content:
+                article == null
+                    ? Text('conditionDetails.can_not_generate'.tr(context))
+                    : SizedBox(
+                      width: double.maxFinite,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: SingleChildScrollView(
+                        child: Text(
+                          article.content ??
+                              'conditionDetails.No_content'.tr(context),
+                        ),
+                      ),
+                    ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'conditionDetails.close'.tr(context),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('conditionDetails.close'.tr(context),
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
-          ),
-        ],
-      ),
     );
   }
 
-  Widget _buildMainDetailsCard(BuildContext context, ConditionsModel condition) {
+  Widget _buildMainDetailsCard(
+    BuildContext context,
+    ConditionsModel condition,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -562,32 +731,36 @@ void _loadConditionDetails(){
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(context, 'conditionDetails.overview'.tr(context)),
+            _buildSectionHeader(
+              context,
+              'conditionDetails.overview'.tr(context),
+            ),
             const Divider(height: 10, thickness: 1.5, color: Colors.grey),
             const SizedBox(height: 8),
 
             _buildDetailRow(
               icon: Icons.calendar_month,
               label: 'conditionDetails.type'.tr(context),
-              value: condition.isChronic != null
-                  ? (condition.isChronic!
-                  ? 'conditionDetails.chronic'.tr(context)
-                  : 'conditionDetails.acute'.tr(context))
-                  : 'conditionDetails.notSpecified'.tr(context),
+              value:
+                  condition.isChronic != null
+                      ? (condition.isChronic!
+                          ? 'conditionDetails.chronic'.tr(context)
+                          : 'conditionDetails.acute'.tr(context))
+                      : 'conditionDetails.notSpecified'.tr(context),
             ),
 
             if (condition.verificationStatus != null)
               _buildDetailRow(
-                  icon: Icons.verified_user,
-                  label: 'conditionDetails.verification'.tr(context),
-                  value: condition.verificationStatus!.display
+                icon: Icons.verified_user,
+                label: 'conditionDetails.verification'.tr(context),
+                value: condition.verificationStatus!.display,
               ),
 
             if (condition.stage != null)
               _buildDetailRow(
-                  icon: Icons.insights,
-                  label: 'conditionDetails.stage'.tr(context),
-                  value: condition.stage!.display
+                icon: Icons.insights,
+                label: 'conditionDetails.stage'.tr(context),
+                value: condition.stage!.display,
               ),
           ],
         ),
@@ -595,7 +768,10 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildTimelineSection(BuildContext context, ConditionsModel condition) {
+  Widget _buildTimelineSection(
+    BuildContext context,
+    ConditionsModel condition,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -608,7 +784,9 @@ void _loadConditionDetails(){
               _buildTimelineItem(
                 icon: Icons.history,
                 title: 'conditionDetails.onsetDate'.tr(context),
-                date: DateFormat('MMM d, y').format(DateTime.parse(condition.onSetDate!)),
+                date: DateFormat(
+                  'MMM d, y',
+                ).format(DateTime.parse(condition.onSetDate!)),
                 age: condition.onSetAge,
               ),
 
@@ -616,7 +794,9 @@ void _loadConditionDetails(){
               _buildTimelineItem(
                 icon: Icons.check_circle_outline,
                 title: 'conditionDetails.abatementDate'.tr(context),
-                date: DateFormat('MMM d, y').format(DateTime.parse(condition.abatementDate!)),
+                date: DateFormat(
+                  'MMM d, y',
+                ).format(DateTime.parse(condition.abatementDate!)),
                 age: condition.abatementAge,
               ),
 
@@ -624,7 +804,9 @@ void _loadConditionDetails(){
               _buildTimelineItem(
                 icon: Icons.assignment,
                 title: 'conditionDetails.recordedDate'.tr(context),
-                date: DateFormat('MMM d, y').format(DateTime.parse(condition.recordDate!)),
+                date: DateFormat(
+                  'MMM d, y',
+                ).format(DateTime.parse(condition.recordDate!)),
               ),
           ],
         ),
@@ -632,7 +814,10 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildBodySiteSection(BuildContext context, ConditionsModel condition) {
+  Widget _buildBodySiteSection(
+    BuildContext context,
+    ConditionsModel condition,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -643,16 +828,26 @@ void _loadConditionDetails(){
           children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.emoji_people, color: Theme.of(context).primaryColor, size: 28),
-              title: Text(
-                  condition.bodySite!.display,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)
+              leading: Icon(
+                Icons.emoji_people,
+                color: Theme.of(context).primaryColor,
+                size: 28,
               ),
-              subtitle: condition.bodySite!.description != null
-                  ? Text(
-                  condition.bodySite!.description!,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey))
-                  : null,
+              title: Text(
+                condition.bodySite!.display,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              subtitle:
+                  condition.bodySite!.description != null
+                      ? Text(
+                        condition.bodySite!.description!,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                      )
+                      : null,
             ),
           ],
         ),
@@ -660,7 +855,10 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildClinicalInfoSection(BuildContext context, ConditionsModel condition) {
+  Widget _buildClinicalInfoSection(
+    BuildContext context,
+    ConditionsModel condition,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -671,9 +869,9 @@ void _loadConditionDetails(){
           children: [
             if (condition.clinicalStatus != null)
               _buildDetailRow(
-                  icon: Icons.local_hospital,
-                  label: 'conditionDetails.clinicalStatus'.tr(context),
-                  value: condition.clinicalStatus!.display
+                icon: Icons.local_hospital,
+                label: 'conditionDetails.clinicalStatus'.tr(context),
+                value: condition.clinicalStatus!.display,
               ),
 
             if (condition.verificationStatus != null)
@@ -685,9 +883,9 @@ void _loadConditionDetails(){
 
             if (condition.stage != null)
               _buildDetailRow(
-                  icon: Icons.bar_chart,
-                  label: 'conditionDetails.stage'.tr(context),
-                  value: condition.stage!.display
+                icon: Icons.bar_chart,
+                label: 'conditionDetails.stage'.tr(context),
+                value: condition.stage!.display,
               ),
           ],
         ),
@@ -695,7 +893,10 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildEncountersSection(BuildContext context, ConditionsModel condition) {
+  Widget _buildEncountersSection(
+    BuildContext context,
+    ConditionsModel condition,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -707,34 +908,51 @@ void _loadConditionDetails(){
             ...condition.encounters!
                 .map(
                   (encounter) => GestureDetector(
-                onTap: (){
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EncounterDetailsPage(encounterId: encounter.id!)
-                      )
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.event_note, color: Theme.of(context).primaryColor, size: 28),
-                    title: Text(
-                      encounter.reason ?? 'conditionDetails.unknownReason'.tr(context),
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => EncounterDetailsPage(
+                                encounterId: encounter.id!,
+                              ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          Icons.event_note,
+                          color: Theme.of(context).primaryColor,
+                          size: 28,
+                        ),
+                        title: Text(
+                          encounter.reason ??
+                              'conditionDetails.unknownReason'.tr(context),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          encounter.actualStartDate != null
+                              ? DateFormat('MMM d, y, hh:mm a').format(
+                                DateTime.parse(encounter.actualStartDate!),
+                              )
+                              : 'conditionDetails.noDateProvided'.tr(context),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                        ),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 18,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ),
-                    subtitle: Text(
-                      encounter.actualStartDate != null
-                          ? DateFormat('MMM d, y, hh:mm a').format(DateTime.parse(encounter.actualStartDate!))
-                          : 'conditionDetails.noDateProvided'.tr(context),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                    ),
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
                   ),
-                ),
-              ),
-            )
+                )
                 .toList(),
           ],
         ),
@@ -742,7 +960,10 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildServiceRequestsSection(BuildContext context, ConditionsModel condition) {
+  Widget _buildServiceRequestsSection(
+    BuildContext context,
+    ConditionsModel condition,
+  ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -754,29 +975,46 @@ void _loadConditionDetails(){
             ...condition.serviceRequests!
                 .map(
                   (request) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.medical_services, color: AppColors.primaryColor, size: 28),
-                  title: Text(
-                    request.healthCareService?.name ?? 'conditionDetails.unknownService'.tr(context),
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(
+                        Icons.medical_services,
+                        color: AppColors.primaryColor,
+                        size: 28,
+                      ),
+                      title: Text(
+                        request.healthCareService?.name ??
+                            'conditionDetails.unknownService'.tr(context),
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        request.serviceRequestStatus?.display ??
+                            'conditionDetails.unknownStatus'.tr(context),
+                        style: TextStyle(
+                          color: _getStatusColor(
+                            request.serviceRequestStatus?.code,
+                          ),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18,
+                        color: Colors.grey,
+                      ),
+                      onTap: () {
+                        ShowToast.showToastInfo(
+                          message: "conditionDetails.serviceRequestDetailsToast"
+                              .tr(context),
+                        );
+                      },
+                    ),
                   ),
-                  subtitle: Text(
-                    request.serviceRequestStatus?.display ?? 'conditionDetails.unknownStatus'.tr(context),
-                    style: TextStyle(
-                        color: _getStatusColor(request.serviceRequestStatus?.code),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13),
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
-                  onTap: () {
-                    ShowToast.showToastInfo(
-                        message: "conditionDetails.serviceRequestDetailsToast".tr(context));
-                  },
-                ),
-              ),
-            )
+                )
                 .toList(),
           ],
         ),
@@ -795,23 +1033,23 @@ void _loadConditionDetails(){
           children: [
             if (condition.summary != null)
               _buildNoteItem(
-                  icon: Icons.summarize,
-                  title: 'conditionDetails.summary'.tr(context),
-                  content: condition.summary!
+                icon: Icons.summarize,
+                title: 'conditionDetails.summary'.tr(context),
+                content: condition.summary!,
               ),
 
             if (condition.note != null)
               _buildNoteItem(
-                  icon: Icons.note_alt,
-                  title: 'conditionDetails.notesLabel'.tr(context),
-                  content: condition.note!
+                icon: Icons.note_alt,
+                title: 'conditionDetails.notesLabel'.tr(context),
+                content: condition.note!,
               ),
 
             if (condition.extraNote != null)
               _buildNoteItem(
-                  icon: Icons.bookmark_add,
-                  title: 'conditionDetails.additionalNotes'.tr(context),
-                  content: condition.extraNote!
+                icon: Icons.bookmark_add,
+                title: 'conditionDetails.additionalNotes'.tr(context),
+                content: condition.extraNote!,
               ),
           ],
         ),
@@ -819,7 +1057,11 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildDetailRow({required IconData icon, required String label, required String value}) {
+  Widget _buildDetailRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -842,7 +1084,12 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildTimelineItem({required IconData icon, required String title, required String date, String? age}) {
+  Widget _buildTimelineItem({
+    required IconData icon,
+    required String title,
+    required String date,
+    String? age,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -858,14 +1105,21 @@ void _loadConditionDetails(){
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(date,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.grey)),
+                    Text(
+                      date,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
                     if (age != null) ...[
                       const SizedBox(width: 8),
-                      Text('conditionDetails.yearsAge'.tr(context),
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[500])),
+                      Text(
+                        'conditionDetails.yearsAge'.tr(context),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[500],
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -877,7 +1131,11 @@ void _loadConditionDetails(){
     );
   }
 
-  Widget _buildNoteItem({required IconData icon, required String title, required String content}) {
+  Widget _buildNoteItem({
+    required IconData icon,
+    required String title,
+    required String content,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -893,9 +1151,12 @@ void _loadConditionDetails(){
                   children: [
                     Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    Text(content,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey)),
+                    Text(
+                      content,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                    ),
                   ],
                 ),
               ),

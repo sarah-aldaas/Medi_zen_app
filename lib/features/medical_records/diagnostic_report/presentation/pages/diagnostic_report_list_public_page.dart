@@ -22,7 +22,8 @@ class DiagnosticReportListPublicPage extends StatefulWidget {
       _DiagnosticReportListPublicPageState();
 }
 
-class _DiagnosticReportListPublicPageState extends State<DiagnosticReportListPublicPage> {
+class _DiagnosticReportListPublicPageState
+    extends State<DiagnosticReportListPublicPage> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
 
@@ -302,6 +303,7 @@ class _DiagnosticReportListPublicPageState extends State<DiagnosticReportListPub
                     '$label:',
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
+                      fontSize: 14,
                       color: AppColors.label,
                     ),
                   ),
@@ -312,7 +314,7 @@ class _DiagnosticReportListPublicPageState extends State<DiagnosticReportListPub
                     value,
                     maxLines: maxLines,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.black87),
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ],

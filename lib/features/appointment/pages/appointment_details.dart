@@ -12,7 +12,6 @@ import 'package:medizen_app/features/appointment/pages/widgets/cancel_appointmen
 import 'package:medizen_app/features/appointment/pages/widgets/update_appointment_page.dart';
 import 'package:medizen_app/features/complains/presentation/widgets/create_complain_page.dart';
 import 'package:medizen_app/features/doctor/pages/details_doctor.dart';
-import 'package:medizen_app/features/medical_records/medical_record_of_appointment_page.dart';
 
 import '../../../base/theme/app_color.dart';
 import '../../../base/widgets/flexible_image.dart';
@@ -34,12 +33,14 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     super.initState();
     _loadAppointmentDetails();
   }
-void _loadAppointmentDetails(){
-  context.read<AppointmentCubit>().getDetailsAppointment(
-    context: context,
-    id: widget.appointmentId,
-  );
-}
+
+  void _loadAppointmentDetails() {
+    context.read<AppointmentCubit>().getDetailsAppointment(
+      context: context,
+      id: widget.appointmentId,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +62,7 @@ void _loadAppointmentDetails(){
       //     icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
       //   ),
       // ),
-      body:  RefreshIndicator(
+      body: RefreshIndicator(
         onRefresh: () async {
           _loadAppointmentDetails();
         },
@@ -78,8 +79,18 @@ void _loadAppointmentDetails(){
             } else if (state is AppointmentLoading) {
               return const Center(child: LoadingPage());
             } else {
-              return const Center(
-                child: Text('Failed to load appointment details'),
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Failed to load appointment details'),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _loadAppointmentDetails,
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
               );
             }
           },
@@ -90,6 +101,7 @@ void _loadAppointmentDetails(){
 
   Widget _buildAppointmentDetails(AppointmentModel appointment) {
     return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -103,65 +115,48 @@ void _loadAppointmentDetails(){
           const SizedBox(height: 30),
           _buildPackageInfo(appointment),
           const SizedBox(height: 30),
-          // GestureDetector(
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder:
-          //             (context) => MedicalRecordOfAppointmentPage(
-          //               appointmentId: appointment.id!,
-          //             ),
-          //       ),
-          //     );
-          //   },
-          //   child: Card(
-          //     child: Container(
-          //       width: context.width,
-          //       padding: EdgeInsets.all(8),
-          //       margin: EdgeInsets.all(8),
-          //       child: Center(
-          //         child: Text(
-          //           'appointmentDetails.medicalRecord'.tr(context),
-          //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // const SizedBox(height: 16),
 
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) =>
-                          CreateComplainPage(appointmentId: appointment.id!),
-                ),
-              );
-            },
-            child: Card(
-              child: Container(
-                width: context.width,
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.all(8),
-                child: Center(
-                  child: Text(
-                    'appointmentDetails.submitComplaint'.tr(context),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
+          if (appointment.status?.code == 'finished_appointment')
+            GestureDetector(
+              onTap: () {
+                if (appointment.id != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => CreateComplainPage(
+                            appointmentId: appointment.id!,
+                          ),
+                    ),
+                  );
+                } else {
+                  ShowToast.showToastInfo(
+                    message: "appointmentDetails.cannotSubmitComplaint".tr(
+                      context,
+                    ),
+                  );
+                }
+              },
+              child: Card(
+                child: Container(
+                  width: context.width,
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
+                  child: Center(
+                    child: Text(
+                      'appointmentDetails.submitComplaint'.tr(context),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
           const SizedBox(height: 20),
-          if (appointment.status!.code == 'booked_appointment')
+          if (appointment.status?.code == 'booked_appointment')
             _buildActionButtons(context, appointment),
 
           const SizedBox(height: 50),
@@ -183,22 +178,27 @@ void _loadAppointmentDetails(){
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          DateFormat(
-            'EEEE, MMMM d, y',
-          ).format(DateTime.parse(appointment.startDate!)),
-        ),
+        if (appointment.startDate != null)
+          Text(
+            DateFormat(
+              'EEEE, MMMM d, y',
+            ).format(DateTime.parse(appointment.startDate!)),
+          ),
         const SizedBox(height: 5),
-        Text(
-          '${DateFormat('HH:mm').format(DateTime.parse(appointment.startDate!))} - '
-          '${DateFormat('HH:mm').format(DateTime.parse(appointment.endDate!))} '
-          '(${appointment.minutesDuration} minutes)',
-        ),
+        if (appointment.startDate != null && appointment.endDate != null)
+          Text(
+            '${DateFormat('HH:mm').format(DateTime.parse(appointment.startDate!))} - '
+            '${DateFormat('HH:mm').format(DateTime.parse(appointment.endDate!))} '
+            '(${appointment.minutesDuration ?? 'N/A'} minutes)',
+          ),
       ],
     );
   }
 
   Widget _buildDoctorInfo(AppointmentModel appointment) {
+    if (appointment.doctor == null) {
+      return const Text('Doctor information not available.');
+    }
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -221,28 +221,32 @@ void _loadAppointmentDetails(){
             backgroundColor: Colors.transparent,
             radius: 40,
             child: FlexibleImage(
-              imageUrl: appointment.doctor!.avatar,
+              imageUrl: appointment.doctor!.avatar ?? '',
               assetPath: AppAssetImages.photoDoctor1,
             ),
           ),
-
           const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${appointment.doctor!.prefix} ${appointment.doctor!.fName} ${appointment.doctor!.lName}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${appointment.doctor!.prefix ?? ''} ${appointment.doctor!.fName ?? ''} ${appointment.doctor!.lName ?? ''}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: context.width / 1.5,
-                child: Text(appointment.doctor!.text ?? 'General Practitioner'),
-              ),
-              Text(appointment.doctor!.address),
-            ],
+                SizedBox(
+                  width: context.width / 1.5,
+                  child: Text(
+                    appointment.doctor!.text ?? 'General Practitioner',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Text(appointment.doctor!.address ?? 'N/A'),
+              ],
+            ),
           ),
         ],
       ),
@@ -250,6 +254,9 @@ void _loadAppointmentDetails(){
   }
 
   Widget _buildPatientInfo(AppointmentModel appointment) {
+    if (appointment.patient == null) {
+      return const Text('Patient information not available.');
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -266,14 +273,14 @@ void _loadAppointmentDetails(){
           children: [
             Text(
               "${"appointmentDetails.labels.fullName".tr(context)}: ",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             TextButton(
               onPressed: () {
                 context.pushNamed(AppRouter.profileDetails.name);
               },
               child: Text(
-                "${appointment.patient!.fName} ${appointment.patient!.lName}",
+                "${appointment.patient!.fName ?? ''} ${appointment.patient!.lName ?? ''}",
               ),
             ),
           ],
@@ -283,9 +290,11 @@ void _loadAppointmentDetails(){
           children: [
             Text(
               "${"appointmentDetails.labels.age".tr(context)}: ",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            Text("${_calculateAge(appointment.patient!.dateOfBirth!)}"),
+            Text(
+              "${appointment.patient!.dateOfBirth != null ? _calculateAge(appointment.patient!.dateOfBirth!) : 'N/A'}",
+            ),
           ],
         ),
       ],
@@ -308,37 +317,35 @@ void _loadAppointmentDetails(){
         Text.rich(
           TextSpan(
             children: [
-              TextSpan(
+              const TextSpan(
                 text: "Reason: ",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              TextSpan(text: "${appointment.reason}"),
+              TextSpan(text: appointment.reason ?? 'N/A'),
             ],
           ),
         ),
         const SizedBox(height: 5),
-
         Text.rich(
           TextSpan(
             children: [
-              TextSpan(
+              const TextSpan(
                 text: "Description: ",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              TextSpan(text: "${appointment.description}"),
+              TextSpan(text: appointment.description ?? 'N/A'),
             ],
           ),
         ),
         const SizedBox(height: 5),
-
         Text.rich(
           TextSpan(
             children: [
-              TextSpan(
+              const TextSpan(
                 text: "Notes: ",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              TextSpan(text: "${appointment.note}"),
+              TextSpan(text: appointment.note ?? 'N/A'),
             ],
           ),
         ),
@@ -361,8 +368,8 @@ void _loadAppointmentDetails(){
         const SizedBox(height: 8),
         ListTile(
           leading: const Icon(Icons.density_medium_rounded),
-          title: Text(appointment.type!.display),
-          subtitle: Text(appointment.description!),
+          title: Text(appointment.type?.display ?? 'N/A'),
+          subtitle: Text(appointment.description ?? 'N/A'),
         ),
       ],
     );
@@ -410,6 +417,12 @@ void _loadAppointmentDetails(){
     BuildContext context,
     AppointmentModel appointment,
   ) async {
+    if (appointment.id == null) {
+      ShowToast.showToastError(
+        message: 'appointmentDetails.invalidAppointmentId'.tr(context),
+      );
+      return;
+    }
     final reason = await showDialog<String>(
       context: context,
       builder:
@@ -455,6 +468,12 @@ void _loadAppointmentDetails(){
   }
 
   void _editAppointment(BuildContext context, AppointmentModel appointment) {
+    if (appointment.id == null) {
+      ShowToast.showToastError(
+        message: 'appointmentDetails.invalidAppointmentId'.tr(context),
+      );
+      return;
+    }
     Navigator.push(
       context,
       MaterialPageRoute(

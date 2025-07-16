@@ -72,11 +72,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: [
                       GestureDetector(
-                        onTap:(){
+                        onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FullScreenImageViewer(imageUrl: myPatientModel.avatar.toString(),),
+                              builder:
+                                  (context) => FullScreenImageViewer(
+                                    imageUrl: myPatientModel.avatar.toString(),
+                                  ),
                             ),
                           );
                         },
@@ -222,9 +225,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             : 'profilePage.lightMode'.tr(context),
                       ),
                       onTap: () {
-                        final newTheme = theme.brightness == Brightness.light
-                            ? darkTheme
-                            : lightTheme;
+                        final newTheme =
+                            theme.brightness == Brightness.light
+                                ? darkTheme
+                                : lightTheme;
 
                         // Change the theme immediately
                         switcher.changeTheme(theme: newTheme);

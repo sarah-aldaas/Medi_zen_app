@@ -17,6 +17,7 @@ import 'package:medizen_app/features/notifications/presentation/pages/notificati
 import '../../../base/constant/storage_key.dart';
 import '../../../base/services/di/injection_container_common.dart';
 import '../../../base/services/storage/storage_service.dart';
+import '../../../base/theme/app_color.dart';
 import '../../../main.dart';
 import '../../authentication/presentation/logout/cubit/logout_cubit.dart';
 import '../../complains/presentation/pages/complain_list_page.dart';
@@ -35,23 +36,74 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildHeader(context),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeClinics()),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: DefinitionWidget()),
-              Gap(12),
-              // Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SomeDoctors()),
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0), child: SimpleArticlesPage()),
-            ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
+        final bool shouldPop = await _showExitConfirmationDialog(context);
+        if (shouldPop) {
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildHeader(context),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SomeClinics(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: DefinitionWidget(),
+                ),
+                Gap(12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SimpleArticlesPage(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<bool> _showExitConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: Text(
+                  'homePage.confirm_exit'.tr(context),
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                content: Text('homePage.sure_want'.tr(context)),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text('homePage.no'.tr(context)),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text('homePage.yes'.tr(context)),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
   }
 
   Widget _buildHeader(BuildContext context) {
@@ -61,7 +113,6 @@ class _HomePageBodyState extends State<HomePageBody> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16, top: 20, left: 16, right: 8),
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: GestureDetector(
@@ -72,10 +123,15 @@ class _HomePageBodyState extends State<HomePageBody> {
                 children: [
                   CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    child: ClipOval(child: FlexibleImage(imageUrl: myPatientModel.avatar, assetPath: "assets/images/person.jpg")),
+                    child: ClipOval(
+                      child: FlexibleImage(
+                        imageUrl: myPatientModel.avatar,
+                        assetPath: "assets/images/person.jpg",
+                      ),
+                    ),
                     radius: 20,
                   ),
-                  // AvatarImage(imageUrl: myPatientModel.avatar, radius: 20),
+
                   const SizedBox(width: 8.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +139,10 @@ class _HomePageBodyState extends State<HomePageBody> {
                       GreetingWidget(),
                       Text(
                         "${myPatientModel.fName.toString()} ${myPatientModel.lName.toString()}",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: theme.textTheme.bodyLarge?.color),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
                       ),
                     ],
                   ),
@@ -92,49 +151,80 @@ class _HomePageBodyState extends State<HomePageBody> {
             ),
           ),
 
-          Stack(
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()));
-                },
-                icon: Icon(Icons.notifications_outlined, color: theme.iconTheme.color),
-              ),
-              // Notification badge
-              Positioned(
-                right: 2,
-                bottom: 8,
-                child: BlocBuilder<NotificationCubit, NotificationState>(
-                  builder: (context, state) {
-                    // Get unread count from state
-                    final unreadCount = state is NotificationSuccess ? state.paginatedResponse.paginatedData?.items.where((n) => !n.isRead).length ?? 0 : 0;
-
-                    if (unreadCount == 0) return SizedBox.shrink();
-
-                    return Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
-                      constraints: BoxConstraints(minWidth: 16, minHeight: 16),
-                      child: Text(unreadCount > 9 ? '9+' : '$unreadCount', style: TextStyle(color: Colors.white, fontSize: 12), textAlign: TextAlign.center),
-                    );
-                  },
+          GestureDetector(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsPage(),
                 ),
-              ),
-            ],
+              );
+            },
+            child: Stack(
+              children: [
+                 IconButton(onPressed: (){}, icon: Icon(
+                   Icons.notifications_outlined,
+                   color: theme.iconTheme.color,
+
+                 ),),
+                // Notification badge
+                Positioned(
+                  right: 2,
+                  bottom: 8,
+                  child: BlocBuilder<NotificationCubit, NotificationState>(
+                    builder: (context, state) {
+                      final unreadCount =
+                          state is NotificationSuccess
+                              ? state.paginatedResponse.paginatedData?.items
+                                      .where((n) => !n.isRead)
+                                      .length ??
+                                  0
+                              : 0;
+
+                      if (unreadCount == 0) return SizedBox.shrink();
+
+                      return Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: BoxConstraints(minWidth: 16, minHeight: 16),
+                        child: Text(
+                          unreadCount > 9 ? '9+' : '$unreadCount',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
           PopupMenuButton<String>(
             icon: Icon(Icons.more_vert, color: theme.iconTheme.color),
 
             color: theme.cardColor,
             elevation: 8.0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
             onSelected: (String value) {
               if (value == 'services') {
                 context.pushNamed(AppRouter.healthCareServicesPage.name);
               } else if (value == 'invoice') {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppointmentFinishedInvoicePage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyAppointmentFinishedInvoicePage(),
+                  ),
+                );
               } else if (value == 'complain') {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ComplainListPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ComplainListPage()),
+                );
               }
             },
             itemBuilder:
@@ -142,26 +232,50 @@ class _HomePageBodyState extends State<HomePageBody> {
                   PopupMenuItem<String>(
                     value: 'services',
                     child: ListTile(
-                      leading: Icon(Icons.health_and_safety, color: Theme.of(context).primaryColor),
+                      leading: Icon(
+                        Icons.health_and_safety,
+                        color: Theme.of(context).primaryColor,
+                      ),
 
-                      title: Text('Health services', style: TextStyle(color: theme.textTheme.bodyLarge?.color)),
+                      title: Text(
+                        'homePage.health_services'.tr(context),
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
                     ),
                   ),
 
                   PopupMenuItem<String>(
                     value: 'invoice',
                     child: ListTile(
-                      leading: Icon(Icons.paid, color: Theme.of(context).primaryColor),
+                      leading: Icon(
+                        Icons.paid,
+                        color: Theme.of(context).primaryColor,
+                      ),
 
-                      title: Text('Invoices', style: TextStyle(color: theme.textTheme.bodyLarge?.color)),
+                      title: Text(
+                        'homePage.invoices'.tr(context),
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
                     ),
                   ),
                   PopupMenuItem<String>(
                     value: 'complain',
                     child: ListTile(
-                      leading: Icon(Icons.feedback, color: Theme.of(context).primaryColor),
+                      leading: Icon(
+                        Icons.feedback,
+                        color: Theme.of(context).primaryColor,
+                      ),
 
-                      title: Text('Complaints', style: TextStyle(color: theme.textTheme.bodyLarge?.color)),
+                      title: Text(
+                        'homePage.complaints'.tr(context),
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
                     ),
                   ),
                   PopupMenuItem<String>(
@@ -172,14 +286,19 @@ class _HomePageBodyState extends State<HomePageBody> {
                           context.goNamed(AppRouter.welcomeScreen.name);
                         } else if (state is LogoutError) {
                           _selectedLogoutOption = null;
-                          serviceLocator<StorageService>().removeFromDisk(StorageKey.patientModel);
+                          serviceLocator<StorageService>().removeFromDisk(
+                            StorageKey.patientModel,
+                          );
                           context.goNamed(AppRouter.welcomeScreen.name);
                         }
                       },
                       builder: (context, state) {
                         return ExpansionTile(
                           leading: Icon(Icons.logout, color: Colors.red),
-                          title: Text('profilePage.logout'.tr(context), style: TextStyle(color: Colors.red)),
+                          title: Text(
+                            'profilePage.logout'.tr(context),
+                            style: TextStyle(color: Colors.red),
+                          ),
                           children: [
                             RadioListTile<int>(
                               title:
@@ -187,20 +306,36 @@ class _HomePageBodyState extends State<HomePageBody> {
                                       ? Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text('profilePage.logoutThisDevice'.tr(context)),
+                                          Text(
+                                            'profilePage.logoutThisDevice'.tr(
+                                              context,
+                                            ),
+                                          ),
                                           SizedBox(width: 10),
 
-                                          LoadingAnimationWidget.hexagonDots(color: Theme.of(context).primaryColor, size: 25),
+                                          LoadingAnimationWidget.hexagonDots(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            size: 25,
+                                          ),
                                         ],
                                       )
-                                      : Text('profilePage.logoutThisDevice'.tr(context), style: TextStyle(color: Colors.red)),
+                                      : Text(
+                                        'profilePage.logoutThisDevice'.tr(
+                                          context,
+                                        ),
+                                        style: TextStyle(color: Colors.red),
+                                      ),
                               value: 0,
                               groupValue: _selectedLogoutOption,
                               onChanged: (value) {
                                 setState(() {
                                   _selectedLogoutOption = value;
                                 });
-                                context.read<LogoutCubit>().sendResetLink(0, context);
+                                context.read<LogoutCubit>().sendResetLink(
+                                  0,
+                                  context,
+                                );
                               },
                               activeColor: Theme.of(context).primaryColor,
                             ),
@@ -210,19 +345,35 @@ class _HomePageBodyState extends State<HomePageBody> {
                                       ? Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text('profilePage.logoutAllDevices'.tr(context)),
+                                          Text(
+                                            'profilePage.logoutAllDevices'.tr(
+                                              context,
+                                            ),
+                                          ),
                                           SizedBox(width: 10),
-                                          LoadingAnimationWidget.hexagonDots(color: Theme.of(context).primaryColor, size: 25),
+                                          LoadingAnimationWidget.hexagonDots(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            size: 25,
+                                          ),
                                         ],
                                       )
-                                      : Text('profilePage.logoutAllDevices'.tr(context), style: TextStyle(color: Colors.red)),
+                                      : Text(
+                                        'profilePage.logoutAllDevices'.tr(
+                                          context,
+                                        ),
+                                        style: TextStyle(color: Colors.red),
+                                      ),
                               value: 1,
                               groupValue: _selectedLogoutOption,
                               onChanged: (value) {
                                 setState(() {
                                   _selectedLogoutOption = value;
                                 });
-                                context.read<LogoutCubit>().sendResetLink(1, context);
+                                context.read<LogoutCubit>().sendResetLink(
+                                  1,
+                                  context,
+                                );
                               },
                               activeColor: Theme.of(context).primaryColor,
                             ),

@@ -104,7 +104,6 @@ class HomePage extends StatefulWidget {
 //   }
 // }
 
-
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
@@ -113,13 +112,13 @@ class _HomePageState extends State<HomePage> {
     List<Widget> _widgetOptions = <Widget>[
       const HomePageBody(),
       const MyAppointmentPage(),
-       MedicalRecordPage(),
+      MedicalRecordPage(),
       const ArticlesPage(),
     ];
 
     return WillPopScope(
       onWillPop: () async {
-
+        // If not on the home page (index 0), switch to home page
         if (_selectedIndex != 0) {
           setState(() {
             _selectedIndex = 0;
@@ -152,7 +151,10 @@ class _HomePageState extends State<HomePage> {
                   gap: 8,
                   activeColor: Theme.of(context).primaryColor,
                   iconSize: 24,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                   duration: const Duration(milliseconds: 400),
                   color: Colors.grey,
                   tabs: [

@@ -6,7 +6,6 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Ma
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/not_found_data_page.dart';
-import 'package:medizen_app/features/medical_records/diagnostic_report/data/models/diagnostic_report_filter_model.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/data/models/diagnostic_report_model.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/presentation/pages/diagnostic_report_details_page.dart';
 
@@ -16,7 +15,7 @@ class DiagnosticReportListPage extends StatefulWidget {
   // final DiagnosticReportFilterModel filter;
   final String conditionId;
 
-  const DiagnosticReportListPage({super.key,required this.conditionId});
+  const DiagnosticReportListPage({super.key, required this.conditionId});
 
   @override
   _DiagnosticReportListPageState createState() =>
@@ -66,7 +65,7 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
       context
           .read<DiagnosticReportCubit>()
           .getDiagnosticReportForCondition(
-        conditionId: widget.conditionId,
+            conditionId: widget.conditionId,
             loadMore: true,
             context: context,
             // filters: widget.filter.toJson(),
@@ -303,9 +302,8 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                   width: 100,
                   child: Text(
                     '$label:',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.label,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -315,7 +313,7 @@ class _DiagnosticReportListPageState extends State<DiagnosticReportListPage> {
                     value,
                     maxLines: maxLines,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.black87),
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ],
