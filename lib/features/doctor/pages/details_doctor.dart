@@ -278,7 +278,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(widget.doctorModel.text),
+              Text(widget.doctorModel.text ?? 'N/A'),
               const SizedBox(height: 20),
               Text(
                 'doctorDetails.workingTime'.tr(context),
@@ -572,7 +572,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        'doctorDetails.noCommunication',
+                        'doctorDetails.noCommunication'.tr(context),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],

@@ -70,7 +70,7 @@ class SomeDoctors extends StatelessWidget with DoctorMixin {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              doctor.text,
+                              doctor.text ?? 'N/A',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,

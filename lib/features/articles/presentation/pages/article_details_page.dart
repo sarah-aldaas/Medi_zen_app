@@ -29,111 +29,111 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'articles.article_details'.tr(context),
-          style: TextStyle(
-            color: AppColors.primaryColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
+    return BlocListener<ArticleCubit, ArticleState>(
+      listener: (context, state) {
+        if (state is FavoriteOperationSuccess) {
+          setState(() {
+            _article = _article.copyWith(isFavorite: state.isFavorite);
+          });
+        }
+        if (state is ArticleError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.error)));
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+            onPressed: () => Navigator.pop(context),
           ),
-        ),
-        actions: [
-          BlocConsumer<ArticleCubit, ArticleState>(
-            listener: (context, state) {
-              if (state is FavoriteOperationSuccess) {
-                setState(() {
-                  _article = _article.copyWith(isFavorite: state.isFavorite);
-                });
-              }
-              if (state is ArticleError) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.error)));
-              }
-            },
-            builder: (context, state) {
-              if (state is FavoriteOperationLoading) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: LoadingButton(),
-                  ),
-                );
-              }
-              return IconButton(
-                icon: Icon(
-                  _article.isFavorite! ? Icons.favorite : Icons.favorite_border,
-                  color: AppColors.primaryColor,
-                ),
-                tooltip:
+          title: Text(
+            'articles.article_details'.tr(context),
+            style: TextStyle(
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+          actions: [
+            BlocBuilder<ArticleCubit, ArticleState>(
+              builder: (context, state) {
+                if (state is FavoriteOperationLoading) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: LoadingButton(),
+                    ),
+                  );
+                }
+                return IconButton(
+                  icon: Icon(
                     _article.isFavorite!
-                        ? "articleDetails.actions.removeBookmark".tr(context)
-                        : "articleDetails.actions.bookmark".tr(context),
-                onPressed: () => _handleBookmark(context),
-              );
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (_article.doctor != null) ...[
-                const Gap(10),
-                _buildDoctorInfo(context),
-                const Gap(10),
-              ],
-              if (_article.image != null) ...[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: FlexibleImage(
-                    imageUrl: _article.image!,
-                    height: 200,
-                    width: double.infinity,
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: AppColors.primaryColor,
+                  ),
+                  onPressed: () => _handleBookmark(context),
+                );
+              },
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (_article.doctor != null) ...[
+                  const Gap(10),
+                  _buildDoctorInfo(context),
+                  const Gap(10),
+                ],
+                if (_article.image != null) ...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: FlexibleImage(
+                      imageUrl: _article.image!,
+                      height: 200,
+                      width: double.infinity,
+                    ),
+                  ),
+                  const Gap(16),
+                ],
+                if (_article.category != null) ...[
+                  Text(
+                    "${"articleDetails.content.category".tr(context)}: ${_article.category!.display}",
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Gap(8),
+                ],
+                Text(
+                  _article.createdAt?.toLocal().toString().split(' ')[0] ?? '',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                const Gap(16),
+                Text(
+                  _article.title ?? '',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.cyan1,
                   ),
                 ),
                 const Gap(16),
-              ],
-              if (_article.category != null) ...[
                 Text(
-                  "${"articleDetails.content.category".tr(context)}: ${_article.category!.display}",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  _article.content ?? '',
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                const Gap(8),
+                Gap(30),
               ],
-              Text(
-                _article.createdAt?.toLocal().toString().split(' ')[0] ?? '',
-                style: const TextStyle(color: Colors.grey),
-              ),
-              const Gap(16),
-              Text(
-                _article.title ?? '',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.cyan1,
-                ),
-              ),
-              const Gap(16),
-              Text(
-                _article.content ?? '',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              Gap(30),
-            ],
+            ),
           ),
         ),
       ),

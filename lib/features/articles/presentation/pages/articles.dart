@@ -127,51 +127,38 @@ class _ArticlesPageState extends State<ArticlesPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           _loadInitialArticles();
+          return Future.delayed(Duration(seconds: 1));
         },
-        color: Theme.of(context).primaryColor,
-        child: Column(
-          children: [
-            if (_showSearchField) _buildSearchField(),
-            Expanded(
-              child: BlocConsumer<ArticleCubit, ArticleState>(
-                listener: (context, state) {
-                  if (state is ArticleError) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(state.error)));
-                  }
-                },
-                builder: (context, state) {
-                  if (state is ArticleLoading) {
-                    return const Center(child: LoadingPage());
-                  }
+        child: BlocConsumer<ArticleCubit, ArticleState>(
+          listener: (context, state) {
+            if (state is ArticleError) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.error)));
+            }
+          },
+          builder: (context, state) {
+            if (state is ArticleLoading) {
+              return Center(child: LoadingPage());
+            }
 
-                  if (state is ArticleError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(state.error),
-                          ElevatedButton(
-                            onPressed: _loadArticles,
-                            child: Text('articles.retry'.tr(context)),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
+            if (state is ArticleError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(state.error),
+                    ElevatedButton(
+                      onPressed: _loadInitialArticles,
+                      child: Text('articles.retry'.tr(context)),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-                  if (state is ArticleSuccess || state is ArticleLoading) {
-                    return _buildContent(
-                      state is ArticleSuccess ? state : null,
-                    );
-                  }
-
-                  return const SizedBox.shrink();
-                },
-              ),
-            ),
-          ],
+            return _buildContent(state is ArticleSuccess ? state : null);
+          },
         ),
       ),
     );
@@ -233,7 +220,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
   }
 
   Widget _buildContent(ArticleSuccess? state) {
-    final articles = state?.paginatedResponse.paginatedData?.items ?? [];
+    final articles = state?.paginatedResponse.paginatedData?.items;
     final hasMore = state?.hasMore ?? false;
 
     return CustomScrollView(
@@ -247,7 +234,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
           padding: const EdgeInsets.all(16),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              if (index < articles.length) {
+              if (index < articles!.length) {
                 return _buildArticleItem(
                   article: articles[index],
                   context: context,
@@ -261,7 +248,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                 );
               }
               return const SizedBox.shrink();
-            }, childCount: articles.length + (hasMore ? 1 : 0)),
+            }, childCount: articles!.length + (hasMore ? 1 : 0)),
           ),
         ),
       ],

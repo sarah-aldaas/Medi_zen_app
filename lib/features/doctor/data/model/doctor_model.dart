@@ -9,7 +9,7 @@ class DoctorModel {
   final int id;
   final String fName;
   final String lName;
-  final String text;
+  final String? text;
   final String family;
   final String given;
   final String prefix;
@@ -52,26 +52,58 @@ class DoctorModel {
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
-      id: json['id'] as int,
-      fName: json['f_name'] as String,
-      lName: json['l_name'] as String,
-      text: json['text'] as String,
-      family: json['family'] as String,
-      given: json['given'] as String,
-      prefix: json['prefix'] as String,
-      suffix: json['suffix'] as String,
-      avatar: json['avatar'] as String,
-      address: json['address'] as String,
-      dateOfBirth: json['date_of_birth'] as String,
+      id: json['id'] ?? 0,
+      fName: json['f_name'] as String? ?? '',
+      lName: json['l_name'] as String? ?? '',
+      text: json['text'] as String? ?? '',
+      family: json['family'] as String? ?? '',
+      given: json['given'] as String? ?? '',
+      prefix: json['prefix'] as String? ?? '',
+      suffix: json['suffix'] as String? ?? '',
+      avatar: json['avatar'] as String? ?? '',
+      address: json['address'] as String? ?? '',
+      dateOfBirth: json['date_of_birth'] as String? ?? '',
       deceasedDate: json['deceased_date'] as String?,
-      email: json['email'] as String,
+      email: json['email'] as String? ?? '',
       emailVerifiedAt: json['email_verified_at'] as String?,
-      active: (json['active'] as int) == 1,
-      gender:json['gender']!=null? CodeModel.fromJson(json['gender'] as Map<String, dynamic>):null,
-      telecoms:json['telecoms']!=null? (json['telecoms'] as List).map((item) => TelecomModel.fromJson(item as Map<String, dynamic>)).toList():null,
-      communications:json['communications']!=null? (json['communications'] as List).map((item) => CommunicationModel.fromJson(item as Map<String, dynamic>)).toList():null,
-      qualifications:json['qualifications']!=null? (json['qualifications'] as List).map((item) => QualificationModel.fromJson(item as Map<String, dynamic>)).toList():null,
-      clinic:json['clinic']!=null?  ClinicModel.fromJson(json['clinic'] as Map<String, dynamic>):null,
+      active: (json['active'] ?? 0) == 1,
+      gender:
+          json['gender'] != null
+              ? CodeModel.fromJson(json['gender'] as Map<String, dynamic>)
+              : null,
+      telecoms:
+          json['telecoms'] != null
+              ? (json['telecoms'] as List)
+                  .map(
+                    (item) =>
+                        TelecomModel.fromJson(item as Map<String, dynamic>),
+                  )
+                  .toList()
+              : null,
+      communications:
+          json['communications'] != null
+              ? (json['communications'] as List)
+                  .map(
+                    (item) => CommunicationModel.fromJson(
+                      item as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList()
+              : null,
+      qualifications:
+          json['qualifications'] != null
+              ? (json['qualifications'] as List)
+                  .map(
+                    (item) => QualificationModel.fromJson(
+                      item as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList()
+              : null,
+      clinic:
+          json['clinic'] != null
+              ? ClinicModel.fromJson(json['clinic'] as Map<String, dynamic>)
+              : null,
     );
   }
 

@@ -31,31 +31,55 @@ class ArticleDetailsNotificationPage extends StatelessWidget {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.error)));
+
+            Future.delayed(Duration(seconds: 2), () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            });
           } else if (state is FavoriteOperationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
                   "articles.favorite_operation_success".tr(context),
                 ),
+                duration: Duration(seconds: 2),
               ),
             );
           }
         },
         builder: (context, state) {
-          final cubit = context.read<ArticleCubit>();
-          ArticleModel? article;
-
-          if (state is ArticleDetailsSuccess) {
-            article = state.article;
-          } else if (cubit.state is ArticleDetailsSuccess) {
-            article = (cubit.state as ArticleDetailsSuccess).article;
-          }
-
-          if (state is ArticleLoading) {
+          if (state is ArticleLoading || state is FavoriteOperationLoading) {
             return LoadingPage();
           }
 
-          return _buildScaffold(context, cubit, article, state);
+          if (state is ArticleDetailsSuccess) {
+            return _buildScaffold(
+              context,
+              context.read<ArticleCubit>(),
+              state.article,
+              state,
+            );
+          }
+
+          if (state is ArticleError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(state.error),
+                  ElevatedButton(
+                    onPressed:
+                        () => context.read<ArticleCubit>().getDetailsArticle(
+                          articleId: articleId,
+                          context: context,
+                        ),
+                    child: Text('retry'.tr(context)),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return LoadingPage();
         },
       ),
     );
