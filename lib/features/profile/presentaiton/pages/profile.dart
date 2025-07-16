@@ -44,7 +44,8 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(context).pop(),
+            color: AppColors.primaryColor,
           ),
           title: Row(
             spacing: 10,

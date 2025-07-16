@@ -1630,7 +1630,10 @@
   "createComplain_descriptionRequired": "الوصف مطلوب",
   "createComplain_typeLabel": "النوع",
   "createComplain_typeRequired": "النوع مطلوب",
-  "createComplain_submit": "إرسال"
+  "createComplain_submit": "إرسال",
+    "createComplain_addFromGallery": "المعرض",
+    "createComplain_takePhoto": "الكاميرا"
+
 },
   "diagnosticReportList": {
   "diagnosticReport_noReportsFound": "لم يتم العثور على تقارير تشخيصية",

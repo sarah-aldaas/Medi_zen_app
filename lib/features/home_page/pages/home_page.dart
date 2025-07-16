@@ -3,10 +3,9 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/extensions/media_query_extension.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
-import 'package:medizen_app/features/home_page/pages/home_page_body.dart';
 import 'package:medizen_app/features/appointment/pages/my_appointments_page.dart';
+import 'package:medizen_app/features/home_page/pages/home_page_body.dart';
 import 'package:medizen_app/features/medical_records/Medical_Record.dart';
-import 'package:flutter/services.dart';
 
 import '../../articles/presentation/pages/articles.dart';
 
@@ -105,7 +104,6 @@ class HomePage extends StatefulWidget {
 //   }
 // }
 
-
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
@@ -114,7 +112,7 @@ class _HomePageState extends State<HomePage> {
     List<Widget> _widgetOptions = <Widget>[
       const HomePageBody(),
       const MyAppointmentPage(),
-       MedicalRecordPage(),
+      MedicalRecordPage(),
       const ArticlesPage(),
     ];
 
@@ -153,7 +151,10 @@ class _HomePageState extends State<HomePage> {
                   gap: 8,
                   activeColor: Theme.of(context).primaryColor,
                   iconSize: 24,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                   duration: const Duration(milliseconds: 400),
                   color: Colors.grey,
                   tabs: [

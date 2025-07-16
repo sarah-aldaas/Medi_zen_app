@@ -19,13 +19,16 @@ class ComplainFilterDialog extends StatefulWidget {
 class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
   late ComplainFilterModel _filter;
   final TextEditingController _searchController = TextEditingController();
+
   String? _selectedStatusId;
   String? _selectedTypeId;
 
   @override
   void initState() {
     super.initState();
+
     _filter = widget.currentFilter;
+
     _searchController.text = _filter.searchQuery ?? '';
     _selectedStatusId = _filter.statusId;
     _selectedTypeId = _filter.typeId;
@@ -84,13 +87,37 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
                         labelText: 'complainFilterPage.complainFilter_search'
                             .tr(context),
                         border: const OutlineInputBorder(),
+                        suffixIcon:
+                            _searchController.text.isNotEmpty
+                                ? IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    setState(() {
+                                      _searchController.clear();
+                                      _filter = _filter.copyWith(
+                                        searchQuery: null,
+                                      );
+                                    });
+                                  },
+                                )
+                                : null,
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _filter = _filter.copyWith(
+                            searchQuery: value.isNotEmpty ? value : null,
+                          );
+                        });
+                      },
                     ),
                     const SizedBox(height: 20),
+
                     _buildStatusDropdown(),
                     const SizedBox(height: 20),
+
                     _buildTypeDropdown(),
                     const SizedBox(height: 20),
+
                     SwitchListTile(
                       title: Text(
                         'complainFilterPage.complainFilter_assignedToAdmin'.tr(
@@ -117,6 +144,7 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
                       _searchController.clear();
                       _selectedStatusId = null;
                       _selectedTypeId = null;
+
                       _filter = ComplainFilterModel();
                     });
                   },
@@ -143,6 +171,7 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
                       ),
                     ),
                     const SizedBox(width: 8),
+                    // Apply Button
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(
@@ -152,8 +181,6 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
                                 _searchController.text.isNotEmpty
                                     ? _searchController.text
                                     : null,
-                            statusId: _selectedStatusId,
-                            typeId: _selectedTypeId,
                           ),
                         );
                       },
@@ -215,12 +242,18 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
               value: null,
               child: Text('complainFilterPage.complainFilter_all'.tr(context)),
             ),
+
             ...?statusCodes?.map(
               (code) =>
                   DropdownMenuItem(value: code.id, child: Text(code.display)),
             ),
           ],
-          onChanged: (value) => setState(() => _selectedStatusId = value),
+          onChanged:
+              (value) => setState(() {
+                _selectedStatusId = value;
+
+                _filter = _filter.copyWith(statusId: value);
+              }),
         );
       },
     );
@@ -253,12 +286,17 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
               value: null,
               child: Text('complainFilterPage.complainFilter_all'.tr(context)),
             ),
+
             ...?typeCodes?.map(
               (code) =>
                   DropdownMenuItem(value: code.id, child: Text(code.display)),
             ),
           ],
-          onChanged: (value) => setState(() => _selectedTypeId = value),
+          onChanged:
+              (value) => setState(() {
+                _selectedTypeId = value;
+                _filter = _filter.copyWith(typeId: value);
+              }),
         );
       },
     );

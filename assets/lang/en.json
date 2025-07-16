@@ -1681,7 +1681,9 @@
     "createComplain_descriptionRequired": "Description required",
     "createComplain_typeLabel": "Type",
     "createComplain_typeRequired": "Type required",
-    "createComplain_submit": "Submit"
+    "createComplain_submit": "Submit",
+    "createComplain_addFromGallery": "Gallery",
+    "createComplain_takePhoto": "Camera"
   },
   "diagnosticReportList": {
     "diagnosticReport_noReportsFound": "No diagnostic reports found",

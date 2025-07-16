@@ -8,7 +8,11 @@ import '../../../../base/services/network/response_handler.dart';
 import '../model/doctor_model.dart';
 
 abstract class DoctorRemoteDataSource {
-  Future<Resource<PaginatedResponse<DoctorModel>>> getDoctorsOfClinic({required String clinicId, required int perPage, required int page});
+  Future<Resource<PaginatedResponse<DoctorModel>>> getDoctorsOfClinic({
+    required String clinicId,
+    required int perPage,
+    required int page,
+  });
 }
 
 class DoctorRemoteDataSourceImpl implements DoctorRemoteDataSource {
@@ -17,13 +21,28 @@ class DoctorRemoteDataSourceImpl implements DoctorRemoteDataSource {
   DoctorRemoteDataSourceImpl({required this.networkClient});
 
   @override
-  Future<Resource<PaginatedResponse<DoctorModel>>> getDoctorsOfClinic({required String clinicId, required int perPage, required int page}) async {
-    final queryParams = {'pagination_count': perPage,'page':page};
+  Future<Resource<PaginatedResponse<DoctorModel>>> getDoctorsOfClinic({
+    required String clinicId,
+    required int perPage,
+    required int page,
+  }) async {
+    final queryParams = {'pagination_count': perPage, 'page': page};
 
-    final response = await networkClient.invoke(DoctorEndPoints.getDoctorsOfClinic(clinicId: clinicId), RequestType.get, queryParameters: queryParams);
+    final response = await networkClient.invoke(
+      DoctorEndPoints.getDoctorsOfClinic(clinicId: clinicId),
+      RequestType.get,
+      queryParameters: queryParams,
+    );
 
     return ResponseHandler<PaginatedResponse<DoctorModel>>(
       response,
-    ).processResponse(fromJson: (json) => PaginatedResponse<DoctorModel>.fromJson(json, 'doctors', (dataJson) => DoctorModel.fromJson(dataJson)));
+    ).processResponse(
+      fromJson:
+          (json) => PaginatedResponse<DoctorModel>.fromJson(
+            json,
+            'doctors',
+            (dataJson) => DoctorModel.fromJson(dataJson),
+          ),
+    );
   }
 }
