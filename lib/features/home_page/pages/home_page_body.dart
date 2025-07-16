@@ -162,7 +162,14 @@ class _HomePageBodyState extends State<HomePageBody> {
             },
             child: Stack(
               children: [
-                 IconButton(onPressed: (){}, icon: Icon(
+                 IconButton(onPressed: (){
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(
+                       builder: (context) => NotificationsPage(),
+                     ),
+                   );
+                 }, icon: Icon(
                    Icons.notifications_outlined,
                    color: theme.iconTheme.color,
 

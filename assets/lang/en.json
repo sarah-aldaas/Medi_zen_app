@@ -471,6 +471,13 @@
     }
   },
   "homePage": {
+    "complaints": "Complaints",
+    "invoices": "Invoices",
+    "health_services": "Health services",
+    "confirm_exit": "Confirm Exit",
+    "sure_want": "Are you sure you want to exit the app?",
+    "no": "No",
+    "yes": "Yes",
     "header": {
       "greeting": "Good morning",
       "userName": "Andrew Ainsley"
@@ -1010,8 +1017,8 @@
     "ourServices": "Our Services",
     "noServicesAvailable": "No services available at the moment.",
     "viewOurServices": "View Our Services",
-    " noExtra": "No extra details provided.",
-    " appointment": "Appointment:",
+    "noExtra": "No extra details provided.",
+    "appointment": "Appointment:",
     "free": "Free",
     "service": "serviceId",
     "viewDetails": "View Details"
@@ -1674,7 +1681,9 @@
     "createComplain_descriptionRequired": "Description required",
     "createComplain_typeLabel": "Type",
     "createComplain_typeRequired": "Type required",
-    "createComplain_submit": "Submit"
+    "createComplain_submit": "Submit",
+    "createComplain_addFromGallery": "Gallery",
+    "createComplain_takePhoto": "Camera"
   },
   "diagnosticReportList": {
     "diagnosticReport_noReportsFound": "No diagnostic reports found",
@@ -1776,38 +1785,49 @@
   "notPaidMessage": "Invoice details are only available for paid appointments."
 },
 
-"invoiceDetailsPage":{
-  "title": "Invoice Details",
-  "invoiceHeader": "Invoice",
-  "invoiceNum": "Invoice No.",
-  "issuedDate": "Issued Date",
-  "paidStatus": "Paid",
-  "billedBy": "Billed By",
-  "descriptionHeader": "Description",
-  "amountHeader": "Amount",
-  "medicalConsultation": "Medical Consultation",
-  "adjustmentFactor": "Adjustment Factor",
-  "totalHeader": "Total",
-  "notesHeader": "Notes",
-  "cancellationReasonHeader": "Cancellation Reason",
-  "statusPaid": "Paid",
-  "statusCancelled": "Cancelled",
-  "statusPending": "Pending",
-  "statusIssued": "Issued",
-  "statusUnknown": "Unknown"
-},
+  "invoiceDetailsPage":{
+    "title": "Invoice Details",
+    "invoiceHeader": "Invoice",
+    "invoiceNum": "Invoice No.",
+    "issuedDate": "Issued Date",
+    "paidStatus": "Paid",
+    "billedBy": "Billed By",
+    "descriptionHeader": "Description",
+    "amountHeader": "Amount",
+    "medicalConsultation": "Medical Consultation",
+    "adjustmentFactor": "Adjustment Factor",
+    "totalHeader": "Total",
+    "notesHeader": "Notes",
+    "cancellationReasonHeader": "Cancellation Reason",
+    "statusPaid": "Paid",
+    "statusCancelled": "Cancelled",
+    "statusPending": "Pending",
+    "statusIssued": "Issued",
+    "statusUnknown": "Unknown"
+  },
   "invoiceFilterDialog": {
 
-  "title": "Filter Invoices",
-  "startDate": "Start Date",
-  "endDate": "End Date",
-  "notSelected": "Not Selected",
-  "endDateRequiredError": "End Date is required if Start Date is selected.",
-  "clearDates": "Clear Dates",
-  "cancelButton": "Cancel",
-  "applyButton": "Apply"
-}}
+    "title": "Filter Invoices",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "notSelected": "Not Selected",
+    "endDateRequiredError": "End Date is required if Start Date is selected.",
+    "clearDates": "Clear Dates",
+    "cancelButton": "Cancel",
+    "applyButton": "Apply"
+  },
+  "notifications":{
+    "title": "Notifications",
+    "retry": "Retry",
+    "deleteNotification": "Delete notification",
+    "Do_you_delete": "Do you want to delete this notification?",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "error": "Error",
+    "ok": "OK",
+    "notNotification": "There are not any notification.",
+    "noHealth": "No health tip content available"
 
 
 
-
+  }}

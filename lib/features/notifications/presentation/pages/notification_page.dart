@@ -98,9 +98,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
             if (state is NotificationError) {
               ShowToast.showToastError(message: state.error);
             } else if (state is FCMOperationSuccess) {
-              ShowToast.showToastSuccess(
-                message: state.response.msg ?? 'Operation successful',
-              );
+              // ShowToast.showToastSuccess(
+              //   message: state.response.msg ?? 'Operation successful',
+              // );
             }
           },
           builder: (context, state) {
