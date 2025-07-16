@@ -13,7 +13,6 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
 import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
 
-import '../../../base/constant/app_images.dart';
 import '../../../base/widgets/flexible_image.dart';
 
 class ClinicsPage extends StatefulWidget {
@@ -29,7 +28,9 @@ class _ClinicsPageState extends State<ClinicsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => serviceLocator<ClinicCubit>()..fetchClinics(context: context),
+      create:
+          (context) =>
+              serviceLocator<ClinicCubit>()..fetchClinics(context: context),
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -37,13 +38,20 @@ class _ClinicsPageState extends State<ClinicsPage> {
               context.pop();
             },
 
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).iconTheme.color,
+            ),
           ),
           toolbarHeight: 80,
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             "clinicsPage.appBarTitle".tr(context),
-            style: TextStyle(color: Theme.of(context).appBarTheme.titleTextStyle?.color, fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Theme.of(context).appBarTheme.titleTextStyle?.color,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           centerTitle: true,
           actions: [
@@ -54,7 +62,10 @@ class _ClinicsPageState extends State<ClinicsPage> {
                 });
               },
 
-              icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
+              icon: Icon(
+                Icons.search,
+                color: Theme.of(context).iconTheme.color,
+              ),
             ),
           ],
         ),
@@ -87,11 +98,16 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       _isLoadingMore = true;
-      context.read<ClinicCubit>().fetchClinics(loadMore: true, context: context).then((_) {
-        _isLoadingMore = false;
-      });
+      context
+          .read<ClinicCubit>()
+          .fetchClinics(loadMore: true, context: context)
+          .then((_) {
+            _isLoadingMore = false;
+          });
     }
   }
 
@@ -100,7 +116,10 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
   void _onSearchChanged() {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 500), () {
-      context.read<ClinicCubit>().fetchClinics(context: context, searchQuery: _searchController.text);
+      context.read<ClinicCubit>().fetchClinics(
+        context: context,
+        searchQuery: _searchController.text,
+      );
     });
   }
 
@@ -112,7 +131,10 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Visibility(visible: widget.isVisible, child: SearchFieldClinics(controller: _searchController)),
+              Visibility(
+                visible: widget.isVisible,
+                child: SearchFieldClinics(controller: _searchController),
+              ),
               const Gap(20),
               Expanded(child: _buildClinicList(state)),
             ],
@@ -126,17 +148,33 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
     if (state is ClinicLoading && state.isInitialLoad) {
       return Center(child: LoadingButton(isWhite: false));
     } else if (state is ClinicError) {
-      return Center(child: Text(state.error, style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)));
+      return Center(
+        child: Text(
+          state.error,
+          style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+        ),
+      );
     } else if (state is ClinicEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 50, color: Theme.of(context).iconTheme.color),
+            Icon(
+              Icons.search_off,
+              size: 50,
+              color: Theme.of(context).iconTheme.color,
+            ),
             const SizedBox(height: 16),
             Text(
-              _searchController.text.isEmpty ? state.message : 'No results found for "${_searchController.text}"'.tr(context),
-              style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color),
+              _searchController.text.isEmpty
+                  ? state.message
+                  : 'No results found for "${_searchController.text}"'.tr(
+                    context,
+                  ),
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+              ),
             ),
           ],
         ),
@@ -144,8 +182,12 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
     } else if (state is ClinicSuccess) {
       return NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
-          if (scrollNotification is ScrollEndNotification && _scrollController.position.extentAfter == 0) {
-            context.read<ClinicCubit>().fetchClinics(loadMore: true, context: context);
+          if (scrollNotification is ScrollEndNotification &&
+              _scrollController.position.extentAfter == 0) {
+            context.read<ClinicCubit>().fetchClinics(
+              loadMore: true,
+              context: context,
+            );
           }
           return false;
         },
@@ -160,7 +202,9 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
           itemCount: state.clinics.length + 1,
           itemBuilder: (context, index) {
             if (index >= state.clinics.length) {
-              return context.read<ClinicCubit>().hasMore ? Center(child: LoadingButton(isWhite: false)) : const SizedBox.shrink();
+              return context.read<ClinicCubit>().hasMore
+                  ? Center(child: LoadingButton(isWhite: false))
+                  : const SizedBox.shrink();
             }
             return _buildClinicGridItem(state.clinics[index], context);
           },
@@ -171,8 +215,19 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(state.error, style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
-            ElevatedButton(onPressed: () => context.read<ClinicCubit>().fetchClinics(context: context), child: const Text('Retry')),
+            Text(
+              state.error,
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
+            ElevatedButton(
+              onPressed:
+                  () => context.read<ClinicCubit>().fetchClinics(
+                    context: context,
+                  ),
+              child: const Text('Retry'),
+            ),
           ],
         ),
       );
@@ -186,7 +241,11 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
       color: Theme.of(context).cardTheme.color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: InkWell(
-        onTap: () => context.pushNamed(AppRouter.clinicDetails.name, extra: {"clinicId": clinic.id}),
+        onTap:
+            () => context.pushNamed(
+              AppRouter.clinicDetails.name,
+              extra: {"clinicId": clinic.id},
+            ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -196,7 +255,15 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: FlexibleImage(imageUrl: clinic.photo!, errorWidget: Center(child: SizedBox(height: 60, child: Icon(Icons.local_hospital)))),
+                  child: FlexibleImage(
+                    imageUrl: clinic.photo!,
+                    errorWidget: Center(
+                      child: SizedBox(
+                        height: 60,
+                        child: Icon(Icons.local_hospital),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -204,7 +271,11 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 clinic.name,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).textTheme.bodyLarge?.color),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -242,19 +313,40 @@ class SearchFieldClinics extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               filled: true,
-              fillColor: theme.brightness == Brightness.dark ? AppColors.powderLight.withOpacity(0.1) : Colors.grey.shade50,
+              fillColor:
+                  theme.brightness == Brightness.dark
+                      ? AppColors.powderLight.withOpacity(0.1)
+                      : Colors.grey.shade50,
               hintText: 'searchField.title'.tr(context),
               hintStyle: TextStyle(
-                color: theme.brightness == Brightness.dark ? Colors.white.withOpacity(_opacityLevel) : Colors.grey.withOpacity(_opacityLevel),
+                color:
+                    theme.brightness == Brightness.dark
+                        ? Colors.white.withOpacity(_opacityLevel)
+                        : Colors.grey.withOpacity(_opacityLevel),
               ),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0), borderSide: const BorderSide(color: Colors.transparent)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0), borderSide: const BorderSide(color: Colors.transparent)),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0), borderSide: BorderSide(color: Theme.of(context).primaryColor)),
-              contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: const BorderSide(color: Colors.transparent),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: const BorderSide(color: Colors.transparent),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: BorderSide(color: Theme.of(context).primaryColor),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 16.0,
+              ),
               prefixIcon: Icon(
                 Icons.search,
 
-                color: theme.brightness == Brightness.dark ? Colors.white.withOpacity(_opacityLevel) : Colors.grey.withOpacity(_opacityLevel),
+                color:
+                    theme.brightness == Brightness.dark
+                        ? Colors.white.withOpacity(_opacityLevel)
+                        : Colors.grey.withOpacity(_opacityLevel),
               ),
             ),
           );

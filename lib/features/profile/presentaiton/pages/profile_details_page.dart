@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart'; // استيراد الامتداد
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
@@ -11,7 +11,6 @@ import 'package:medizen_app/features/profile/data/models/update_profile_request_
 import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 
 import '../../../../base/theme/app_color.dart';
-import '../../../medical_records/series/presentation/pages/full_screen_image_viewer.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -119,11 +118,11 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               slivers: [
                 SliverAppBar(
                   leading: IconButton(
-                    onPressed: () {
-                      context.pushReplacementNamed(AppRouter.profile.name);
-                    },
-                    icon: Icon(Icons.arrow_back),
-                    color: Colors.white,
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: AppColors.whiteColor,
+                    ),
+                    onPressed: () => Navigator.pop(context),
                   ),
                   expandedHeight: 200.0,
                   floating: false,
@@ -138,14 +137,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                       fit: StackFit.expand,
                       children: [
                         FlexibleImage(
-                          imageUrl: patient.avatar!,
+                          imageUrl: patient.avatar ?? '',
                           errorWidget: const Icon(
                             Icons.person,
                             size: 60,
                             color: Colors.white70,
                           ),
                         ),
-
                         const DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -165,7 +163,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                           AppRouter.editProfile.name,
                           extra: {
                             'patientModel': UpdateProfileRequestModel(
-                              image: patient.active,
+                              image: patient.avatar,
                               genderId: patient.genderId,
                               maritalStatusId: patient.maritalStatusId,
                               fName: patient.fName,
@@ -196,17 +194,17 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                               _buildInfoTile(
                                 Icons.email_outlined,
                                 "profileDetailsPage.email",
-                                patient.email,
+                                patient.email ?? 'N/A',
                               ),
                               _buildInfoTile(
                                 Icons.person_outline,
                                 "profileDetailsPage.gender",
-                                patient.gender!.display,
+                                patient.gender?.display ?? 'N/A',
                               ),
                               _buildInfoTile(
                                 Icons.favorite_outline,
                                 "profileDetailsPage.maritalStatus",
-                                patient.maritalStatus!.display,
+                                patient.maritalStatus?.display ?? 'N/A',
                               ),
                               if (patient.dateOfBirth != null)
                                 _buildInfoTile(
@@ -285,7 +283,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                     color: AppColors.primaryColor,
                                   ),
                                   title: Text(
-                                    "${"profileDetailsPage.height".tr(context)}: ${patient.height ?? 'N/A'} cm",
+                                    "${"profileDetailsPage.height".tr(context)}: ${patient.height?.toString() ?? 'N/A'} cm",
                                   ),
                                 ),
                                 const Divider(indent: 16.0, endIndent: 16.0),
@@ -299,7 +297,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                     color: AppColors.primaryColor,
                                   ),
                                   title: Text(
-                                    "${"profileDetailsPage.weight".tr(context)}: ${patient.weight ?? 'N/A'} kg",
+                                    "${"profileDetailsPage.weight".tr(context)}: ${patient.weight?.toString() ?? 'N/A'} kg",
                                   ),
                                 ),
                                 const Divider(indent: 16.0, endIndent: 16.0),

@@ -35,6 +35,7 @@ class ComplainModel {
     this.attachmentsUrl,
     this.responses,
   });
+
   ComplainModel copyWith({
     String? id,
     String? title,
@@ -66,20 +67,43 @@ class ComplainModel {
       responses: responses ?? this.responses,
     );
   }
+
   factory ComplainModel.fromJson(Map<String, dynamic> json) {
     return ComplainModel(
       id: json['id']?.toString(),
       title: json['title']?.toString(),
       description: json['description']?.toString(),
       assignedToAdmin: json['assigned_to_admin'] ?? false,
-      statusChangedAt: json['status_changed_at'] != null ? DateTime.tryParse(json['status_changed_at']) : null,
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.tryParse(json['updated_at']) : null,
-      status: json['status'] != null ? CodeModel.fromJson(json['status']) : null,
+      statusChangedAt:
+          json['status_changed_at'] != null
+              ? DateTime.tryParse(json['status_changed_at'])
+              : null,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.tryParse(json['created_at'])
+              : null,
+      updatedAt:
+          json['updated_at'] != null
+              ? DateTime.tryParse(json['updated_at'])
+              : null,
+      status:
+          json['status'] != null ? CodeModel.fromJson(json['status']) : null,
       type: json['type'] != null ? CodeModel.fromJson(json['type']) : null,
-      appointment: json['appointment'] != null ? AppointmentModel.fromJson(json['appointment']) : null,
-      attachmentsUrl: json['attachments'] != null ? List<String>.from(json['attachments'].map((x) => x.toString())) : [],
-      responses: json['responses'] is List ? List<ComplainResponseModel>.from(json['responses'].map((x) => ComplainResponseModel.fromJson(x))) : null,
+      appointment:
+          json['appointment'] != null
+              ? AppointmentModel.fromJson(json['appointment'])
+              : null,
+
+      attachmentsUrl:
+          json['attachments'] != null
+              ? List<String>.from(json['attachments'].map((x) => x.toString()))
+              : [],
+      responses:
+          json['responses'] is List
+              ? List<ComplainResponseModel>.from(
+                json['responses'].map((x) => ComplainResponseModel.fromJson(x)),
+              )
+              : null,
     );
   }
 
@@ -90,31 +114,20 @@ class ComplainModel {
       'title': title,
       'description': description,
       'assigned_to_admin': assignedToAdmin,
-      'status_changed_at': statusChangedAt != null ? dateFormat.format(statusChangedAt!) : null,
+      'status_changed_at':
+          statusChangedAt != null ? dateFormat.format(statusChangedAt!) : null,
       'created_at': createdAt != null ? dateFormat.format(createdAt!) : null,
       'updated_at': updatedAt != null ? dateFormat.format(updatedAt!) : null,
       'status': status?.toJson(),
       'type': type?.toJson(),
       'appointment': appointment?.toJson(),
-      'attachments': attachmentsFiles!.map((x) => x),
+      'attachments_url': attachmentsUrl,
       'responses': responses?.map((x) => x.toJson()).toList(),
     };
   }
 
   Map<String, dynamic> createJson() {
-    return {
-      'title': title,
-      'description': description,
-      'type_id': type!.id,
-      'attachments':
-          attachmentsFiles?.map((file) {
-            return {
-              'name': file.path.split('/').last, // Get filename
-              'bytes': file.readAsBytesSync(), // Get file bytes
-              'size': file.lengthSync(), // Get file size
-            };
-          }).toList(),
-    };
+    return {'title': title, 'description': description, 'type_id': type!.id};
   }
 }
 
@@ -125,7 +138,10 @@ class ComplaintResponseAttachment {
   ComplaintResponseAttachment({required this.id, required this.fileUrl});
 
   factory ComplaintResponseAttachment.fromJson(Map<String, dynamic> json) {
-    return ComplaintResponseAttachment(id: json['id'] as int, fileUrl: json['file_url'] as String);
+    return ComplaintResponseAttachment(
+      id: json['id'] as int,
+      fileUrl: json['file_url'] as String,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -162,13 +178,24 @@ class ComplainResponseModel {
       response: json['response']?.toString(),
       senderId: json['sender_id']?.toString(),
       senderType: json['sender_type']?.toString(),
-      sender: json['sender'] != null ? SenderModel.fromJson(json['sender']) : null,
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.tryParse(json['updated_at']) : null,
+      sender:
+          json['sender'] != null ? SenderModel.fromJson(json['sender']) : null,
+      createdAt:
+          json['created_at'] != null
+              ? DateTime.tryParse(json['created_at'])
+              : null,
+      updatedAt:
+          json['updated_at'] != null
+              ? DateTime.tryParse(json['updated_at'])
+              : null,
       attachmentsUrl:
           json['attachments'] != null
               ? List<ComplaintResponseAttachment>.from(
-                (json['attachments'] as List).map((x) => ComplaintResponseAttachment.fromJson(x as Map<String, dynamic>)),
+                (json['attachments'] as List).map(
+                  (x) => ComplaintResponseAttachment.fromJson(
+                    x as Map<String, dynamic>,
+                  ),
+                ),
               )
               : [],
     );
@@ -184,7 +211,6 @@ class ComplainResponseModel {
       'sender': sender?.toJson(),
       'created_at': createdAt != null ? dateFormat.format(createdAt!) : null,
       'updated_at': updatedAt != null ? dateFormat.format(updatedAt!) : null,
-      'attachments': attachmentsFile,
     };
   }
 }
@@ -276,7 +302,8 @@ class SenderModel {
       'height': height,
       'weight': weight,
       'smoker': smoker != null ? (smoker! ? 1 : 0) : null,
-      'alcohol_drinker': alcoholDrinker != null ? (alcoholDrinker! ? 1 : 0) : null,
+      'alcohol_drinker':
+          alcoholDrinker != null ? (alcoholDrinker! ? 1 : 0) : null,
     };
   }
 }

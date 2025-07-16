@@ -20,7 +20,6 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../base/theme/app_style.dart';
 import '../../../base/widgets/show_toast.dart';
 import '../../appointment/data/models/days_work_doctor_model.dart';
 import '../../appointment/data/models/slots_model.dart';
@@ -54,12 +53,21 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
 
   Future<void> _fetchDoctorAvailability() async {
     setState(() => _isLoadingAvailability = true);
-    await context.read<AppointmentCubit>().getDaysWorkDoctor(context: context, doctorId: widget.doctorModel.id.toString());
+    await context.read<AppointmentCubit>().getDaysWorkDoctor(
+      context: context,
+      doctorId: widget.doctorModel.id.toString(),
+    );
   }
 
   void _fetchSlotsForDate(DateTime date) {
     final formattedDate = DateFormat('yyyy-MM-dd').format(date);
-    final isAvailable = _doctorAvailability?.availability.any((day) => DateFormat('yyyy-MM-dd').format(day.date) == formattedDate && day.isAvailable) ?? false;
+    final isAvailable =
+        _doctorAvailability?.availability.any(
+          (day) =>
+              DateFormat('yyyy-MM-dd').format(day.date) == formattedDate &&
+              day.isAvailable,
+        ) ??
+        false;
 
     if (!isAvailable) return;
 
@@ -69,7 +77,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       _selectedTime = null;
     });
 
-    context.read<AppointmentCubit>().getSlotsAppointment(practitionerId: widget.doctorModel.id.toString(), date: formattedDate, context: context);
+    context.read<AppointmentCubit>().getSlotsAppointment(
+      practitionerId: widget.doctorModel.id.toString(),
+      date: formattedDate,
+      context: context,
+    );
   }
 
   Future<void> downloadAndViewPdf(String pdfUrl, String qualificationId) async {
@@ -86,13 +98,17 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       if (Platform.isAndroid) {
         final status = await Permission.storage.request();
         if (!status.isGranted) {
-          throw Exception('Storage permission denied. Please allow storage access.');
+          throw Exception(
+            'Storage permission denied. Please allow storage access.',
+          );
         }
       }
 
       Directory directory;
       if (Platform.isAndroid) {
-        directory = await getExternalStorageDirectory() ?? await getTemporaryDirectory();
+        directory =
+            await getExternalStorageDirectory() ??
+            await getTemporaryDirectory();
       } else {
         directory = await getApplicationDocumentsDirectory();
       }
@@ -116,7 +132,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             });
           }
         },
-        options: Options(responseType: ResponseType.bytes, followRedirects: true, validateStatus: (status) => status! < 500),
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: true,
+          validateStatus: (status) => status! < 500,
+        ),
       );
 
       if (!await file.exists() || (await file.length()) == 0) {
@@ -146,14 +166,20 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     return BlocListener<AppointmentCubit, AppointmentState>(
       listener: (context, state) {
         if (state is DaysWorkDoctorSuccess) {
-          final sortedAvailability = state.days.availability..sort((a, b) => a.date.compareTo(b.date));
+          final sortedAvailability =
+              state.days.availability..sort((a, b) => a.date.compareTo(b.date));
           setState(() {
-            _doctorAvailability = state.days.copyWith(availability: sortedAvailability);
+            _doctorAvailability = state.days.copyWith(
+              availability: sortedAvailability,
+            );
             _isLoadingAvailability = false;
           });
 
           if (_doctorAvailability!.availability.isNotEmpty) {
-            final firstAvailable = sortedAvailability.firstWhere((day) => day.isAvailable, orElse: () => sortedAvailability.first);
+            final firstAvailable = sortedAvailability.firstWhere(
+              (day) => day.isAvailable,
+              orElse: () => sortedAvailability.first,
+            );
             setState(() {
               _selectedDate = firstAvailable.date;
             });
@@ -175,9 +201,14 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Text("${widget.doctorModel.fName} ${widget.doctorModel.lName}"),
+          title: Text(
+            "${widget.doctorModel.fName} ${widget.doctorModel.lName}",
+          ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).iconTheme.color,
+            ),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -190,14 +221,26 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             children: [
               Row(
                 children: [
-                   CircleAvatar(radius: 40, child: ClipOval(
-                    child: FlexibleImage(imageUrl: widget.doctorModel.avatar,assetPath: AppAssetImages.photoDoctor1,),
-                  ),),
+                  CircleAvatar(
+                    radius: 40,
+                    child: ClipOval(
+                      child: FlexibleImage(
+                        imageUrl: widget.doctorModel.avatar,
+                        assetPath: AppAssetImages.photoDoctor1,
+                      ),
+                    ),
+                  ),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("${widget.doctorModel.fName} ${widget.doctorModel.lName}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(
+                        "${widget.doctorModel.fName} ${widget.doctorModel.lName}",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       Text(widget.doctorModel.email),
                       Text(widget.doctorModel.address),
                     ],
@@ -209,24 +252,52 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // _buildInfoColumn(Icons.people, '5.000+', 'patients', context),
-                  _buildInfoColumn(Icons.calendar_today, widget.doctorModel.dateOfBirth, 'birthday', context),
+                  _buildInfoColumn(
+                    Icons.calendar_today,
+                    widget.doctorModel.dateOfBirth,
+                    'birthday',
+                    context,
+                  ),
                   // _buildInfoColumn(Icons.star, '4.8', 'rating', context),
-                  if (widget.doctorModel.gender != null) _buildInfoColumn(Icons.emoji_people, widget.doctorModel.gender!.display, "gender", context),
+                  if (widget.doctorModel.gender != null)
+                    _buildInfoColumn(
+                      Icons.emoji_people,
+                      widget.doctorModel.gender!.display,
+                      "gender",
+                      context,
+                    ),
                 ],
               ),
               const SizedBox(height: 20),
-              Text('doctorDetails.aboutMe'.tr(context), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+              Text(
+                'doctorDetails.aboutMe'.tr(context),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
               const SizedBox(height: 8),
               Text(widget.doctorModel.text),
               const SizedBox(height: 20),
-              Text('doctorDetails.workingTime'.tr(context), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+              Text(
+                'doctorDetails.workingTime'.tr(context),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
               const SizedBox(height: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (_isLoadingAvailability) Center(child: LoadingButton()),
-                  if (!_isLoadingAvailability && _doctorAvailability?.availability.isEmpty == true) const Text('No available days for this doctor'),
-                  if (!_isLoadingAvailability && _doctorAvailability?.availability.isNotEmpty == true)
+                  if (!_isLoadingAvailability &&
+                      _doctorAvailability?.availability.isEmpty == true)
+                    const Text('No available days for this doctor'),
+                  if (!_isLoadingAvailability &&
+                      _doctorAvailability?.availability.isNotEmpty == true)
                     SizedBox(
                       height: 60,
                       child: Center(
@@ -235,11 +306,15 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                           physics: const ClampingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           itemCount: _doctorAvailability!.availability.length,
-                          separatorBuilder: (context, index) => const SizedBox(width: 8),
+                          separatorBuilder:
+                              (context, index) => const SizedBox(width: 8),
                           itemBuilder: (context, index) {
-                            final day = _doctorAvailability!.availability[index];
+                            final day =
+                                _doctorAvailability!.availability[index];
                             final isSelected =
-                                day.date.day == _selectedDate.day && day.date.month == _selectedDate.month && day.date.year == _selectedDate.year;
+                                day.date.day == _selectedDate.day &&
+                                day.date.month == _selectedDate.month &&
+                                day.date.year == _selectedDate.year;
 
                             return InkWell(
                               onTap:
@@ -267,7 +342,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      DateFormat('E').format(day.date).substring(0, 3),
+                                      DateFormat(
+                                        'E',
+                                      ).format(day.date).substring(0, 3),
                                       style: TextStyle(
                                         fontSize: 12,
                                         color:
@@ -292,7 +369,12 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                                 : Colors.grey[400],
                                       ),
                                     ),
-                                    if (!day.isAvailable) const Icon(Icons.block, size: 12, color: Colors.red),
+                                    if (!day.isAvailable)
+                                      const Icon(
+                                        Icons.block,
+                                        size: 12,
+                                        color: Colors.red,
+                                      ),
                                   ],
                                 ),
                               ),
@@ -304,7 +386,8 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   const SizedBox(height: 20),
                   if (_isLoadingAvailability) Center(child: LoadingButton()),
                   if (_isLoadingSlots) Center(child: LoadingButton()),
-                  if (!_isLoadingSlots && _availableSlots.isEmpty) const Text('No available slots for this day'),
+                  if (!_isLoadingSlots && _availableSlots.isEmpty)
+                    const Text('No available slots for this day'),
                   if (!_isLoadingSlots && _availableSlots.isNotEmpty)
                     SizedBox(
                       width: context.width,
@@ -316,8 +399,11 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                             _availableSlots.map((slot) {
                               final startTime = DateTime.parse(slot.startDate);
                               final endTime = DateTime.parse(slot.endDate);
-                              final timeStr = '${DateFormat('hh:mm a').format(startTime)}';
-                              final isSelected = _selectedTime?.hour == startTime.hour && _selectedTime?.minute == startTime.minute;
+                              final timeStr =
+                                  '${DateFormat('hh:mm a').format(startTime)}';
+                              final isSelected =
+                                  _selectedTime?.hour == startTime.hour &&
+                                  _selectedTime?.minute == startTime.minute;
                               final isBooked = slot.status.code != 'available';
 
                               return InkWell(
@@ -326,11 +412,17 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                         ? null
                                         : () {
                                           setState(() {
-                                            _selectedTime = TimeOfDay.fromDateTime(startTime);
+                                            _selectedTime =
+                                                TimeOfDay.fromDateTime(
+                                                  startTime,
+                                                );
                                           });
                                         },
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
                                   decoration: BoxDecoration(
                                     color:
                                         isSelected
@@ -340,7 +432,16 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                                             : Colors.grey[200],
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: Text(timeStr, style: TextStyle(fontSize: 14, color: isSelected || isBooked ? Colors.white : Colors.black)),
+                                  child: Text(
+                                    timeStr,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color:
+                                          isSelected || isBooked
+                                              ? Colors.white
+                                              : Colors.black,
+                                    ),
+                                  ),
                                 ),
                               );
                             }).toList(),
@@ -370,10 +471,16 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     disabledBackgroundColor: Colors.grey[400],
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 16,
+                    ),
                   ),
 
-                  child: Text('doctorDetails.bookAppointment'.tr(context), style: const TextStyle(fontSize: 18, color: Colors.white)),
+                  child: Text(
+                    'doctorDetails.bookAppointment'.tr(context),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -381,58 +488,97 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('doctorDetails.telecom'.tr(context), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+                  Text(
+                    'doctorDetails.telecom'.tr(context),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
                 ],
               ),
               if (widget.doctorModel.telecoms != null)
                 if (widget.doctorModel.telecoms!.isNotEmpty)
                   Column(
-                    children: List.generate(widget.doctorModel.telecoms!.length, (index) {
+                    children: List.generate(widget.doctorModel.telecoms!.length, (
+                      index,
+                    ) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
-                          subtitle:widget.doctorModel.telecoms![index].type!=null? Text("${widget.doctorModel.telecoms![index].type!.display} :${widget.doctorModel.telecoms![index].value!}"):SizedBox.shrink(),
-                          title:widget.doctorModel.telecoms![index].use!=null? Text("${widget.doctorModel.telecoms![index].use!.display}"):SizedBox.shrink(),
+                          subtitle:
+                              widget.doctorModel.telecoms![index].type != null
+                                  ? Text(
+                                    "${widget.doctorModel.telecoms![index].type!.display} :${widget.doctorModel.telecoms![index].value!}",
+                                  )
+                                  : SizedBox.shrink(),
+                          title:
+                              widget.doctorModel.telecoms![index].use != null
+                                  ? Text(
+                                    "${widget.doctorModel.telecoms![index].use!.display}",
+                                  )
+                                  : SizedBox.shrink(),
                         ),
                       );
                     }),
                   ),
               if (widget.doctorModel.telecoms != null)
-                if (widget.doctorModel.telecoms!.isEmpty) Text('doctorDetails.noTelecom'.tr(context)),
+                if (widget.doctorModel.telecoms!.isEmpty)
+                  Text('doctorDetails.noTelecom'.tr(context)),
               Divider(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'doctorDetails.communications'.tr(context),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                   const Gap(10),
 
-                  if (widget.doctorModel.communications != null && widget.doctorModel.communications!.isNotEmpty)
+                  if (widget.doctorModel.communications != null &&
+                      widget.doctorModel.communications!.isNotEmpty)
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: Wrap(
                         spacing: 12.0,
                         runSpacing: 8.0,
-                        children: List.generate(widget.doctorModel.communications!.length, (index) {
-                          final communication = widget.doctorModel.communications![index];
-                          if (communication.language != null)
-                            return Text(
-                              "${communication.language!.display} ${communication.preferred ? "(preferred)" : ""}",
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                            );
-                          else {
-                            return SizedBox.shrink();
-                          }
-                        }),
+                        children: List.generate(
+                          widget.doctorModel.communications!.length,
+                          (index) {
+                            final communication =
+                                widget.doctorModel.communications![index];
+                            if (communication.language != null)
+                              return Text(
+                                "${communication.language!.display} ${communication.preferred ? "(preferred)" : ""}",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            else {
+                              return SizedBox.shrink();
+                            }
+                          },
+                        ),
                       ),
                     )
                   else
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text('doctorDetails.noCommunication', style: TextStyle(fontSize: 14, color: Colors.grey[600], fontStyle: FontStyle.italic)),
+                      child: Text(
+                        'doctorDetails.noCommunication',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
                     ),
                   const Gap(20),
                   const Divider(),
@@ -443,78 +589,135 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                 children: [
                   Text(
                     'doctorDetails.qualifications'.tr(context),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ],
               ),
               if (widget.doctorModel.qualifications != null)
                 if (widget.doctorModel.qualifications!.isNotEmpty)
                   Column(
-                    children: List.generate(widget.doctorModel.qualifications!.length, (index) {
-                      final qualificationId = widget.doctorModel.qualifications![index].id.toString();
-                      return Container(
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                        child: ListTile(
-                          trailing: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              if (_downloadProgress.containsKey(widget.doctorModel.qualifications![index].id.toString()))
-                                SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: CircularProgressIndicator(
-                                    value: _downloadProgress[widget.doctorModel.qualifications![index].id.toString()],
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                                  ),
-                                ),
-                              IconButton(
-                                onPressed:
-                                    _downloadProgress.containsKey(widget.doctorModel.qualifications![index].id.toString())
-                                        ? null
-                                        : () => downloadAndViewPdf(
-                                          widget.doctorModel.qualifications![index].pdf.toString(),
-                                          widget.doctorModel.qualifications![index].id.toString(),
-                                        ),
-                                icon: Icon(
-                                  _downloadComplete[widget.doctorModel.qualifications![index].id.toString()] == true
-                                      ? Icons.check_circle
-                                      : Icons.picture_as_pdf,
-                                  color:
-                                      _downloadComplete[widget.doctorModel.qualifications![index].id.toString()] == true
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.grey,
-                                ),
-                              ),
-                            ],
+                    children: List.generate(
+                      widget.doctorModel.qualifications!.length,
+                      (index) {
+                        final qualificationId =
+                            widget.doctorModel.qualifications![index].id
+                                .toString();
+                        return Container(
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          title:widget.doctorModel.qualifications![index].type!=null? Text("${widget.doctorModel.qualifications![index].type!.display}"):SizedBox.shrink(),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
+                          child: ListTile(
+                            trailing: Stack(
+                              alignment: Alignment.center,
                               children: [
-                                Text("${widget.doctorModel.qualifications![index].issuer}"),
-                                Row(
-                                  children: [
-                                    Icon(Icons.date_range_outlined),
-                                    Text(
-                                      " ${widget.doctorModel.qualifications![index].startDate} - ${widget.doctorModel.qualifications![index].endDate ?? "continue"}",
+                                if (_downloadProgress.containsKey(
+                                  widget.doctorModel.qualifications![index].id
+                                      .toString(),
+                                ))
+                                  SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          _downloadProgress[widget
+                                              .doctorModel
+                                              .qualifications![index]
+                                              .id
+                                              .toString()],
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Theme.of(context).primaryColor,
+                                      ),
                                     ),
-                                  ],
+                                  ),
+                                IconButton(
+                                  onPressed:
+                                      _downloadProgress.containsKey(
+                                            widget
+                                                .doctorModel
+                                                .qualifications![index]
+                                                .id
+                                                .toString(),
+                                          )
+                                          ? null
+                                          : () => downloadAndViewPdf(
+                                            widget
+                                                .doctorModel
+                                                .qualifications![index]
+                                                .pdf
+                                                .toString(),
+                                            widget
+                                                .doctorModel
+                                                .qualifications![index]
+                                                .id
+                                                .toString(),
+                                          ),
+                                  icon: Icon(
+                                    _downloadComplete[widget
+                                                .doctorModel
+                                                .qualifications![index]
+                                                .id
+                                                .toString()] ==
+                                            true
+                                        ? Icons.check_circle
+                                        : Icons.picture_as_pdf,
+                                    color:
+                                        _downloadComplete[widget
+                                                    .doctorModel
+                                                    .qualifications![index]
+                                                    .id
+                                                    .toString()] ==
+                                                true
+                                            ? Theme.of(context).primaryColor
+                                            : Colors.grey,
+                                  ),
                                 ),
                               ],
                             ),
+                            title:
+                                widget
+                                            .doctorModel
+                                            .qualifications![index]
+                                            .type !=
+                                        null
+                                    ? Text(
+                                      "${widget.doctorModel.qualifications![index].type!.display}",
+                                    )
+                                    : SizedBox.shrink(),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "${widget.doctorModel.qualifications![index].issuer}",
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.date_range_outlined),
+                                      Text(
+                                        " ${widget.doctorModel.qualifications![index].startDate} - ${widget.doctorModel.qualifications![index].endDate ?? "continue"}",
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                    ),
                   ),
               if (widget.doctorModel.qualifications != null)
-                if (widget.doctorModel.qualifications!.isEmpty) Text('doctorDetails.noQualifications'.tr(context)),
+                if (widget.doctorModel.qualifications!.isEmpty)
+                  Text('doctorDetails.noQualifications'.tr(context)),
               Divider(),
             ],
           ),
@@ -523,13 +726,25 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     );
   }
 
-  Widget _buildInfoColumn(IconData icon, String value, String labelKey, BuildContext context) {
+  Widget _buildInfoColumn(
+    IconData icon,
+    String value,
+    String labelKey,
+    BuildContext context,
+  ) {
     return Column(
-      children: [Icon(icon, color: Theme.of(context).primaryColor), Text(value, style: const TextStyle(fontWeight: FontWeight.bold)), Text(labelKey)],
+      children: [
+        Icon(icon, color: Theme.of(context).primaryColor),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(labelKey),
+      ],
     );
   }
 
-  Future<void> _showAppointmentDialog({required BuildContext context, required String title}) async {
+  Future<void> _showAppointmentDialog({
+    required BuildContext context,
+    required String title,
+  }) async {
     final formKey = GlobalKey<FormState>();
     String reason = 'doctorDetails.sick'.tr(context);
     String description = 'doctorDetails.medicalTreatment'.tr(context);
@@ -544,7 +759,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             if (state is CreateAppointmentSuccess) {
               Navigator.pop(context);
               _fetchDoctorAvailability();
-              ShowToast.showToastSuccess(message: 'doctorDetails.appointmentBooked'.tr(context));
+              ShowToast.showToastSuccess(
+                message: 'doctorDetails.appointmentBooked'.tr(context),
+              );
             } else if (state is AppointmentError) {
               Navigator.pop(context);
               _fetchDoctorAvailability();
@@ -561,11 +778,20 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const Gap(20),
                       TextFormField(
                         initialValue: reason,
-                        decoration: InputDecoration(labelText: 'doctorDetails.reason'.tr(context), hintText: 'doctorDetails.Why?'.tr(context)),
+                        decoration: InputDecoration(
+                          labelText: 'doctorDetails.reason'.tr(context),
+                          hintText: 'doctorDetails.Why?'.tr(context),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'doctorDetails.enterReason'.tr(context);
@@ -579,7 +805,9 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                         initialValue: description,
                         decoration: InputDecoration(
                           labelText: 'doctorDetails.description'.tr(context),
-                          hintText: 'doctorDetails.symptomsORconcerns'.tr(context),
+                          hintText: 'doctorDetails.symptomsORconcerns'.tr(
+                            context,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -592,7 +820,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                       const SizedBox(height: 16),
                       TextFormField(
                         initialValue: note,
-                        decoration: InputDecoration(labelText: 'doctorDetails.Note'.tr(context), hintText: 'doctorDetails.anyAdditional'.tr(context)),
+                        decoration: InputDecoration(
+                          labelText: 'doctorDetails.Note'.tr(context),
+                          hintText: 'doctorDetails.anyAdditional'.tr(context),
+                        ),
                         onSaved: (value) => note = value ?? '',
                       ),
                     ],
@@ -601,7 +832,10 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               ),
             ),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: Text('doctorDetails.cancel'.tr(context))),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('doctorDetails.cancel'.tr(context)),
+              ),
               BlocBuilder<AppointmentCubit, AppointmentState>(
                 builder: (context, state) {
                   if (state is AppointmentLoading) {
@@ -613,28 +847,44 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                         formKey.currentState!.save();
 
                         final selectedSlot = _availableSlots.firstWhere((slot) {
-                          final slotTime = TimeOfDay.fromDateTime(DateTime.parse(slot.startDate));
-                          return slotTime.hour == _selectedTime!.hour && slotTime.minute == _selectedTime!.minute;
+                          final slotTime = TimeOfDay.fromDateTime(
+                            DateTime.parse(slot.startDate),
+                          );
+                          return slotTime.hour == _selectedTime!.hour &&
+                              slotTime.minute == _selectedTime!.minute;
                         });
 
                         final appointment = AppointmentCreateModel(
                           reason: reason,
                           description: description,
-                          note: note.isNotEmpty ? note : 'doctorDetails.noThing'.tr(context),
+                          note:
+                              note.isNotEmpty
+                                  ? note
+                                  : 'doctorDetails.noThing'.tr(context),
                           doctorId: widget.doctorModel.id.toString(),
                           patientId: patientModel.id!,
                           previousAppointment: null,
                           slotId: selectedSlot.id.toString(),
                         );
 
-                        await context.read<AppointmentCubit>().createAppointment(appointmentModel: appointment, context: context);
+                        await context
+                            .read<AppointmentCubit>()
+                            .createAppointment(
+                              appointmentModel: appointment,
+                              context: context,
+                            );
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
                     ),
-                    child: Text('doctorDetails.confirm'.tr(context), style: TextStyle(color: Colors.white)),
+                    child: Text(
+                      'doctorDetails.confirm'.tr(context),
+                      style: TextStyle(color: Colors.white),
+                    ),
                   );
                 },
               ),

@@ -32,7 +32,8 @@ class _DiagnosticReportDetailsPageState
     super.initState();
     _loadDiagnosticReportsDetails();
   }
-  void _loadDiagnosticReportsDetails(){
+
+  void _loadDiagnosticReportsDetails() {
     context.read<DiagnosticReportCubit>().getDiagnosticReportDetails(
       diagnosticReportId: widget.diagnosticReportId,
       context: context,
@@ -99,9 +100,8 @@ class _DiagnosticReportDetailsPageState
                               ),
                       icon: const Icon(Icons.refresh),
                       label: Text(
-                        "diagnosticDetailsPage.diagnosticReportDetails_retry".tr(
-                          context,
-                        ),
+                        "diagnosticDetailsPage.diagnosticReportDetails_retry"
+                            .tr(context),
                       ),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -201,7 +201,7 @@ class _DiagnosticReportDetailsPageState
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).primaryColor
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );
@@ -243,9 +243,7 @@ class _DiagnosticReportDetailsPageState
                       backgroundColor: _getStatusColor(report.status!.code),
                       label: Text(
                         report.status!.display,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10,
@@ -762,7 +760,11 @@ class _DiagnosticReportDetailsPageState
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: small ? 20 : 24, color: Theme.of(context).primaryColor),
+          Icon(
+            icon,
+            size: small ? 20 : 24,
+            color: Theme.of(context).primaryColor,
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -770,19 +772,13 @@ class _DiagnosticReportDetailsPageState
               children: [
                 Text(
                   label,
-                  style:
-                      TextStyle(
-                        color: Colors.cyan,
-                        fontWeight: FontWeight.bold
-                      )
+                  style: TextStyle(
+                    color: Colors.cyan,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  value,
-                  style:TextStyle(
-                    color: Colors.grey
-                  )
-                ),
+                Text(value, style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
           ),
@@ -810,16 +806,13 @@ class _DiagnosticReportDetailsPageState
                 title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.cyan
+                  color: Colors.cyan,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            content,
-            style: TextStyle(color: Colors.grey),
-          ),
+          Text(content, style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );

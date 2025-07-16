@@ -6,6 +6,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/models/reaction_model.dart';
 
+import '../../../../../base/theme/app_color.dart';
 import '../../../../../base/widgets/show_toast.dart';
 import '../cubit/reaction_cubit/reaction_cubit.dart';
 
@@ -159,7 +160,8 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
                       'reactionsPage.description'.tr(context),
                       reaction.description,
                     ),
-                  if ( reaction.note!=null && (reaction.note?.isNotEmpty ?? false))
+                  if (reaction.note != null &&
+                      (reaction.note?.isNotEmpty ?? false))
                     _buildDetailRow(
                       context,
                       'reactionsPage.notes'.tr(context),
@@ -235,7 +237,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
     return Chip(
       label: Text(
         displayText,
-        style: TextStyle(color: chipColor.withAlpha(130), fontSize: 12),
+        style: TextStyle(color: AppColors.whiteColor, fontSize: 15),
       ),
       backgroundColor: chipColor,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

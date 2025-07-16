@@ -574,9 +574,8 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
           Expanded(
             child: Text(
               value,
-              style: TextStyle(
-                fontSize: 15,
-                color: valueColor ?? Colors.black87,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),

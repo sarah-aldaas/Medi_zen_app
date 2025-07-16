@@ -448,6 +448,13 @@
     }
   },
   "homePage": {
+    "complaints": "الشكاوي",
+    "invoices": "الفواتير",
+    "health_services": "الخدمات الصحية",
+    "confirm_exit": "تأكيد الخروج",
+    "sure_want": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
+   "no": "لا",
+    "yes": "نعم",
     "header": {
       "greeting": "صباح الخير",
       "userName": "أندرو إينسلي"
@@ -1623,7 +1630,10 @@
   "createComplain_descriptionRequired": "الوصف مطلوب",
   "createComplain_typeLabel": "النوع",
   "createComplain_typeRequired": "النوع مطلوب",
-  "createComplain_submit": "إرسال"
+  "createComplain_submit": "إرسال",
+    "createComplain_addFromGallery": "المعرض",
+    "createComplain_takePhoto": "الكاميرا"
+
 },
   "diagnosticReportList": {
   "diagnosticReport_noReportsFound": "لم يتم العثور على تقارير تشخيصية",

@@ -10,6 +10,7 @@ import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
 import 'package:medizen_app/features/services/pages/widgets/health_care_service_filter_dialog.dart';
 
+import '../../../base/theme/app_color.dart';
 import '../../../base/widgets/loading_page.dart';
 import '../../../base/widgets/show_toast.dart';
 import '../data/model/health_care_service_filter.dart';
@@ -80,6 +81,10 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          onPressed: () => context.pop(),
+        ),
         title: Text(
           'healthCareServicesPage.title'.tr(context),
 
