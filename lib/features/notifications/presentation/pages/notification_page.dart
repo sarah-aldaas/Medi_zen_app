@@ -394,95 +394,101 @@ class _NotificationsPageState extends State<NotificationsPage> {
     NotificationModel notification,
     BuildContext context,
   ) {
-    switch (notification.typeNotification) {
-      case NotificationType.articleCreated:
-        _navigateToArticleDetails(notification.data, context);
-        break;
-      case NotificationType.allergyCreated:
-      case NotificationType.allergyUpdated:
-      case NotificationType.allergyDeleted:
-        _navigateToAllergyDetails(notification.data, context);
-        break;
-      case NotificationType.organizationUpdated:
-        _navigateToOrganizationDetails(notification.data, context);
-        break;
-      case NotificationType.reactionCreated:
-      case NotificationType.reactionUpdated:
-      case NotificationType.reactionDeleted:
-        _navigateToReactionDetails(notification.data, context);
-        break;
-      case NotificationType.invoiceCreated:
-      case NotificationType.invoiceUpdated:
-      case NotificationType.invoiceCanceled:
-        _navigateToInvoiceDetails(notification.data, context);
-        break;
-      case NotificationType.serviceRequestCreated:
-      case NotificationType.serviceRequestUpdated:
-      case NotificationType.serviceRequestChangedStatus:
-      case NotificationType.serviceRequestCanceled:
-      case NotificationType.serviceRequestChangedStatusForLabOrRadiology:
-        _navigateToServiceRequestDetails(notification.data, context);
-        break;
-      case NotificationType.observationCreated:
-      case NotificationType.observationUpdated:
-      case NotificationType.observationChangedStatus:
-        _navigateToObservationDetails(notification.data, context);
-        break;
-      case NotificationType.imagingStudyCreated:
-      case NotificationType.imagingStudyUpdated:
-      case NotificationType.imagingStudyChangedStatus:
-        _navigateToImagingStudyDetails(notification.data, context);
-        break;
-      case NotificationType.seriesCreated:
-      case NotificationType.seriesUpdated:
-        _navigateToSeriesDetails(notification.data, context);
-        break;
-      case NotificationType.encounterCreated:
-      case NotificationType.encounterUpdated:
-        _navigateToEncounterDetails(notification.data, context);
-        break;
-      case NotificationType.appointmentCreated:
-      case NotificationType.appointmentUpdated:
-      case NotificationType.appointmentCanceled:
-      case NotificationType.reminderAppointment:
-        _navigateToAppointmentDetails(notification.data, context);
-        break;
-      case NotificationType.conditionCreated:
-      case NotificationType.conditionUpdated:
-      case NotificationType.conditionCanceled:
-        _navigateToConditionDetails(notification.data, context);
-        break;
-      case NotificationType.medicationRequestCreated:
-      case NotificationType.medicationRequestUpdated:
-      case NotificationType.medicationRequestCanceled:
-        // case NotificationType.reminderMedication:
-        _navigateToMedicationRequestDetails(notification.data, context);
-        break;
-      case NotificationType.medicationCreated:
-      case NotificationType.medicationUpdated:
-      case NotificationType.medicationCanceled:
-      case NotificationType.reminderMedication:
-        _navigateToMedicationDetails(notification.data, context);
-        break;
-      case NotificationType.diagnosticReportCreated:
-      case NotificationType.diagnosticReportUpdated:
-      case NotificationType.diagnosticReportCanceled:
-      case NotificationType.diagnosticReportFinalized:
-        _navigateToDiagnosticReportDetails(notification.data, context);
-        break;
-      case NotificationType.complaintCreated:
-      case NotificationType.complaintResolved:
-      case NotificationType.complaintRejected:
-      case NotificationType.complaintClosed:
-      case NotificationType.complaintResponded:
-        _navigateToComplaintDetails(notification.data, context);
-        break;
-      case NotificationType.dailyHealthTip:
-        _showHealthTipDialog(notification, context);
-        break;
-      default:
-        _showGenericNotificationDialog(notification, context);
+    if(notification.data!=null)
+   {
+     switch (notification.typeNotification) {
+       case NotificationType.articleCreated:
+         _navigateToArticleDetails(notification.data!, context);
+         break;
+       case NotificationType.allergyCreated:
+       case NotificationType.allergyUpdated:
+       case NotificationType.allergyDeleted:
+         _navigateToAllergyDetails(notification.data!, context);
+         break;
+       case NotificationType.organizationUpdated:
+         _navigateToOrganizationDetails(notification.data!, context);
+         break;
+       case NotificationType.reactionCreated:
+       case NotificationType.reactionUpdated:
+       case NotificationType.reactionDeleted:
+         _navigateToReactionDetails(notification.data!, context);
+         break;
+       case NotificationType.invoiceCreated:
+       case NotificationType.invoiceUpdated:
+       case NotificationType.invoiceCanceled:
+         _navigateToInvoiceDetails(notification.data!, context);
+         break;
+       case NotificationType.serviceRequestCreated:
+       case NotificationType.serviceRequestUpdated:
+       case NotificationType.serviceRequestChangedStatus:
+       case NotificationType.serviceRequestCanceled:
+       case NotificationType.serviceRequestChangedStatusForLabOrRadiology:
+         _navigateToServiceRequestDetails(notification.data!, context);
+         break;
+       case NotificationType.observationCreated:
+       case NotificationType.observationUpdated:
+       case NotificationType.observationChangedStatus:
+         _navigateToObservationDetails(notification.data!, context);
+         break;
+       case NotificationType.imagingStudyCreated:
+       case NotificationType.imagingStudyUpdated:
+       case NotificationType.imagingStudyChangedStatus:
+         _navigateToImagingStudyDetails(notification.data!, context);
+         break;
+       case NotificationType.seriesCreated:
+       case NotificationType.seriesUpdated:
+         _navigateToSeriesDetails(notification.data!, context);
+         break;
+       case NotificationType.encounterCreated:
+       case NotificationType.encounterUpdated:
+         _navigateToEncounterDetails(notification.data!, context);
+         break;
+       case NotificationType.appointmentCreated:
+       case NotificationType.appointmentUpdated:
+       case NotificationType.appointmentCanceled:
+       case NotificationType.reminderAppointment:
+         _navigateToAppointmentDetails(notification.data!, context);
+         break;
+       case NotificationType.conditionCreated:
+       case NotificationType.conditionUpdated:
+       case NotificationType.conditionCanceled:
+         _navigateToConditionDetails(notification.data!, context);
+         break;
+       case NotificationType.medicationRequestCreated:
+       case NotificationType.medicationRequestUpdated:
+       case NotificationType.medicationRequestCanceled:
+       // case NotificationType.reminderMedication:
+         _navigateToMedicationRequestDetails(notification.data!, context);
+         break;
+       case NotificationType.medicationCreated:
+       case NotificationType.medicationUpdated:
+       case NotificationType.medicationCanceled:
+       case NotificationType.reminderMedication:
+         _navigateToMedicationDetails(notification.data!, context);
+         break;
+       case NotificationType.diagnosticReportCreated:
+       case NotificationType.diagnosticReportUpdated:
+       case NotificationType.diagnosticReportCanceled:
+       case NotificationType.diagnosticReportFinalized:
+         _navigateToDiagnosticReportDetails(notification.data!, context);
+         break;
+       case NotificationType.complaintCreated:
+       case NotificationType.complaintResolved:
+       case NotificationType.complaintRejected:
+       case NotificationType.complaintClosed:
+       case NotificationType.complaintResponded:
+         _navigateToComplaintDetails(notification.data!, context);
+         break;
+       case NotificationType.dailyHealthTip:
+         _showHealthTipDialog(notification, context);
+         break;
+       default:
+         _showGenericNotificationDialog(notification, context);
+     }}
+     else{
+      _showGenericNotificationDialog(notification, context);
     }
+
   }
 
   void _navigateToArticleDetails(NotificationData data, BuildContext context) {
@@ -812,7 +818,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     NotificationModel notification,
     BuildContext context,
   ) {
-    if (notification.data.tip == null || notification.data.tip!.isEmpty) {
+    if (notification.data!.tip == null || notification.data!.tip!.isEmpty) {
       _showErrorDialog(context, 'No health tip content available');
       return;
     }
@@ -822,7 +828,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       builder:
           (context) => AlertDialog(
             title: Text(notification.title),
-            content: SingleChildScrollView(child: Text(notification.data.tip!)),
+            content: SingleChildScrollView(child: Text(notification.data!.tip!)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),

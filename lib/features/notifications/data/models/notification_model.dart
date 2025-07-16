@@ -4,7 +4,7 @@ class NotificationModel {
   final String id;
   final String title;
   final String body;
-  final NotificationData data;
+  final NotificationData? data;
   final bool isRead;
   final DateTime? readAt;
   final CodeModel? type;
@@ -26,7 +26,7 @@ class NotificationModel {
       id: json['id'].toString(),
       title: json['title'].toString(),
       body: json['body'].toString(),
-      data: NotificationData.fromJson(json['data']),
+      data:json['data']!=null? NotificationData.fromJson(json['data']):null,
       type:json['type']!=null? CodeModel.fromJson(json['type']):null,
       isRead: json['is_read']==1?true:false,
       readAt: json['read_at'] != null ? DateTime.parse(json['read_at']) : null,
@@ -39,7 +39,7 @@ class NotificationModel {
       'id': id,
       'title': title,
       'body': body,
-      'data': data.toJson(),
+      'data': data?.toJson(),
       'type': type!.toJson(),
       'is_read': isRead?1:0,
       'read_at': readAt?.toIso8601String(),
@@ -252,43 +252,45 @@ extension NotificationTypeExtension on NotificationModel {
 
   NotificationType _handleMedicalRecordType() {
     // Check which specific medical record type this is based on the data IDs
-    if (data.conditionId != null) {
-      if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.conditionCreated;
-      if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.conditionUpdated;
-      if (type!.code == 'MEDICAL_RECORD_DELETED') return NotificationType.conditionCanceled;
+    if(data!=null) {
+      if (data!.conditionId != null) {
+        if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.conditionCreated;
+        if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.conditionUpdated;
+        if (type!.code == 'MEDICAL_RECORD_DELETED') return NotificationType.conditionCanceled;
+      }
+      else if (data!.medicationRequestId != null) {
+        if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.medicationRequestCreated;
+        if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.medicationRequestUpdated;
+        if (type!.code == 'MEDICAL_RECORD_DELETED') return NotificationType.medicationRequestCanceled;
+      }
+      else if (data!.diagnosticReportId != null) {
+        if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.diagnosticReportCreated;
+        if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.diagnosticReportUpdated;
+        if (type!.code == 'MEDICAL_RECORD_DELETED') return NotificationType.diagnosticReportCanceled;
+      }
+      else if (data!.allergyId != null) {
+        if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.allergyCreated;
+        if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.allergyUpdated;
+        if (type!.code == 'MEDICAL_RECORD_DELETED') return NotificationType.allergyDeleted;
+      }
+      else if (data!.observationId != null) {
+        if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.observationCreated;
+        if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.observationUpdated;
+      }
+      else if (data!.imagingStudyId != null) {
+        if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.imagingStudyCreated;
+        if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.imagingStudyUpdated;
+      }
+      else if (data!.serviceRequestId != null) {
+        if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.serviceRequestCreated;
+        if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.serviceRequestUpdated;
+      }
+      else if (data!.encounterId != null) {
+        if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.encounterCreated;
+        if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.encounterUpdated;
+      }
+      return NotificationType.unknown;
     }
-    else if (data.medicationRequestId != null) {
-      if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.medicationRequestCreated;
-      if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.medicationRequestUpdated;
-      if (type!.code == 'MEDICAL_RECORD_DELETED') return NotificationType.medicationRequestCanceled;
-    }
-    else if (data.diagnosticReportId != null) {
-      if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.diagnosticReportCreated;
-      if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.diagnosticReportUpdated;
-      if (type!.code == 'MEDICAL_RECORD_DELETED') return NotificationType.diagnosticReportCanceled;
-    }
-    else if (data.allergyId != null) {
-      if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.allergyCreated;
-      if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.allergyUpdated;
-      if (type!.code == 'MEDICAL_RECORD_DELETED') return NotificationType.allergyDeleted;
-    }
-    else if (data.observationId != null) {
-      if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.observationCreated;
-      if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.observationUpdated;
-    }
-    else if (data.imagingStudyId != null) {
-      if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.imagingStudyCreated;
-      if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.imagingStudyUpdated;
-    }
-    else if (data.serviceRequestId != null) {
-      if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.serviceRequestCreated;
-      if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.serviceRequestUpdated;
-    }
-    else if (data.encounterId != null) {
-      if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.encounterCreated;
-      if (type!.code == 'MEDICAL_RECORD_UPDATED') return NotificationType.encounterUpdated;
-    }
-
     return NotificationType.unknown;
   }
 }
