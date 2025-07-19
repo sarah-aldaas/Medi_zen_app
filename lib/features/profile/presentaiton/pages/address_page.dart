@@ -163,6 +163,7 @@ class _AddressListPageState extends State<AddressListPage> {
                 padding: const EdgeInsets.all(16),
                 itemCount: addresses.length + (state.isLoadingMore ? 1 : 0),
                 itemBuilder: (context, index) {
+
                   if (index >= addresses.length) {
                     return Padding(
                       padding: EdgeInsets.all(16),

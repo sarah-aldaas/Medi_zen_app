@@ -41,8 +41,8 @@ class AddressModel {
       postalCode: json['postal_code'].toString(),
       startDate: json['start_date'].toString(),
       endDate: json['end_date'].toString(),
-      use: CodeModel.fromJson(json['use_id'] as Map<String, dynamic>),
-      type: CodeModel.fromJson(json['type_id'] as Map<String, dynamic>),
+      use:json['use_id']!=null? CodeModel.fromJson(json['use_id'] as Map<String, dynamic>):null,
+      type:json['type_id']!=null? CodeModel.fromJson(json['type_id'] as Map<String, dynamic>):null,
     );
   }
 
@@ -79,18 +79,18 @@ class AddOrUpdateAddressModel {
   final CodeModel? type;
 
   AddOrUpdateAddressModel({
-    required this.id,
-    required this.country,
-    required this.city,
-    required this.state,
-    required this.district,
-    required this.line,
-    required this.text,
-    required this.postalCode,
+     this.id,
+     this.country,
+     this.city,
+     this.state,
+     this.district,
+     this.line,
+     this.text,
+     this.postalCode,
     this.startDate,
     this.endDate,
-    required this.use,
-    required this.type,
+     this.use,
+     this.type,
   });
 
   factory AddOrUpdateAddressModel.fromJson(Map<String, dynamic> json) {
@@ -105,8 +105,8 @@ class AddOrUpdateAddressModel {
       postalCode: json['postal_code'].toString(),
       startDate: json['start_date'].toString(),
       endDate: json['end_date'] != null ? json['end_date'].toString() : null,
-      use: CodeModel.fromJson(json['use_id'] as Map<String, dynamic>),
-      type: CodeModel.fromJson(json['type_id'] as Map<String, dynamic>),
+      use:json['use_id']!=null? CodeModel.fromJson(json['use_id'] as Map<String, dynamic>):null,
+      type:json['type_id']!=null? CodeModel.fromJson(json['type_id'] as Map<String, dynamic>):null,
     );
   }
 

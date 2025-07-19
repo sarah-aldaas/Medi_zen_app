@@ -16,7 +16,7 @@ part 'address_state.dart';
 class AddressCubit extends Cubit<AddressState> {
   final AddressRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo; // Add NetworkInfo dependency
-  List<AddressModel> _allAddresses = [];
+  List<AddressModel>? _allAddresses = [];
   int _currentPage = 1;
   bool _hasMore = true;
   String? _typeIdFilter;
@@ -66,7 +66,7 @@ class AddressCubit extends Cubit<AddressState> {
         }
         final newAddresses = result.data.paginatedData?.items ?? [];
 
-        final updatedAddresses = List<AddressModel>.from(_allAddresses);
+        final updatedAddresses = List<AddressModel>.from(_allAddresses??[]);
 
         final existingIds = updatedAddresses.map((addr) => addr.id).toSet();
         updatedAddresses.addAll(
@@ -86,7 +86,7 @@ class AddressCubit extends Cubit<AddressState> {
               status: result.data.status,
               errNum: result.data.errNum,
               msg: result.data.msg,
-              paginatedData: PaginatedData<AddressModel>(items: _allAddresses),
+              paginatedData: PaginatedData<AddressModel>(items: _allAddresses??[]),
               meta: result.data.meta,
               links: result.data.links,
             ),
