@@ -37,10 +37,11 @@ import 'package:medizen_app/features/notifications/presentation/cubit/notificati
 import 'package:medizen_app/features/organization/data/data_source/organization_remote_datasource.dart';
 import 'package:medizen_app/features/organization/presentation/cubit/organization_cubit/organization_cubit.dart';
 import 'package:medizen_app/features/profile/data/data_sources/address_remote_data_sources.dart';
-import 'package:medizen_app/features/profile/data/data_sources/telecom_remote_data_sources.dart';
 import 'package:medizen_app/features/profile/data/data_sources/profile_remote_data_sources.dart';
+import 'package:medizen_app/features/profile/data/data_sources/telecom_remote_data_sources.dart';
 import 'package:medizen_app/features/profile/presentaiton/cubit/address_cubit/address_cubit.dart';
 import 'package:medizen_app/features/services/pages/cubits/service_cubit/service_cubit.dart';
+
 import '../../../FCM_manager.dart';
 import '../../../features/articles/data/data_sources/articles_remote_data_sources.dart';
 import '../../../features/authentication/data/datasource/auth_remote_data_source.dart';
@@ -75,78 +76,287 @@ Future<void> initDI() async {
 Future<void> _initService() async {
   serviceLocator.registerSingleton<LogService>(LogService(log: Logger()));
   await CacheDependencyInjection.initDi();
-  serviceLocator.registerSingleton<NetworkInfo>(NetworkInfoImplementation(connectivity: Connectivity()));
+  serviceLocator.registerSingleton<NetworkInfo>(
+    NetworkInfoImplementation(connectivity: Connectivity()),
+  );
   serviceLocator.registerSingleton<LocalizationBloc>(LocalizationBloc());
   await NetworkClientDependencyInjection.initDi();
 }
 
 Future<void> _initDataSource() async {
-  serviceLocator.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(networkClient: serviceLocator()));
+  serviceLocator.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
 
-  serviceLocator.registerLazySingleton<RemoteDataSourcePublic>(() => RemoteDataSourcePublicImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ProfileRemoteDataSource>(() => ProfileRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<TelecomRemoteDataSource>(() => TelecomRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<AddressRemoteDataSource>(() => AddressRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<AppointmentRemoteDataSource>(() => AppointmentRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ClinicRemoteDataSource>(() => ClinicRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<DoctorRemoteDataSource>(() => DoctorRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ServicesRemoteDataSource>(() => ServicesRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<AllergyRemoteDataSource>(() => AllergyRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<EncounterRemoteDataSource>(() => EncounterRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ReactionRemoteDataSource>(() => ReactionRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ServiceRequestRemoteDataSource>(() => ServiceRequestRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<SeriesRemoteDataSource>(() => SeriesRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ObservationRemoteDataSource>(() => ObservationRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ImagingStudyRemoteDataSource>(() => ImagingStudyRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<MedicationRequestRemoteDataSource>(() => MedicationRequestRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<MedicationRemoteDataSource>(() => MedicationRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ConditionRemoteDataSource>(() => ConditionRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ArticlesRemoteDataSource>(() => ArticlesRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<InvoiceRemoteDataSource>(() => InvoiceRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<ComplainRemoteDataSource>(() => ComplainRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<DiagnosticReportRemoteDataSource>(() => DiagnosticReportRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<NotificationRemoteDataSource>(() => NotificationRemoteDataSourceImpl(networkClient: serviceLocator()));
-  serviceLocator.registerLazySingleton<OrganizationRemoteDataSource>(() => OrganizationRemoteDataSourceImpl(networkClient: serviceLocator()));
+  serviceLocator.registerLazySingleton<RemoteDataSourcePublic>(
+    () => RemoteDataSourcePublicImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<TelecomRemoteDataSource>(
+    () => TelecomRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<AddressRemoteDataSource>(
+    () => AddressRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<AppointmentRemoteDataSource>(
+    () => AppointmentRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ClinicRemoteDataSource>(
+    () => ClinicRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<DoctorRemoteDataSource>(
+    () => DoctorRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ServicesRemoteDataSource>(
+    () => ServicesRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<AllergyRemoteDataSource>(
+    () => AllergyRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<EncounterRemoteDataSource>(
+    () => EncounterRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ReactionRemoteDataSource>(
+    () => ReactionRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ServiceRequestRemoteDataSource>(
+    () => ServiceRequestRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<SeriesRemoteDataSource>(
+    () => SeriesRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ObservationRemoteDataSource>(
+    () => ObservationRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ImagingStudyRemoteDataSource>(
+    () => ImagingStudyRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<MedicationRequestRemoteDataSource>(
+    () =>
+        MedicationRequestRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<MedicationRemoteDataSource>(
+    () => MedicationRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ConditionRemoteDataSource>(
+    () => ConditionRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ArticlesRemoteDataSource>(
+    () => ArticlesRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<InvoiceRemoteDataSource>(
+    () => InvoiceRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ComplainRemoteDataSource>(
+    () => ComplainRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<DiagnosticReportRemoteDataSource>(
+    () => DiagnosticReportRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<OrganizationRemoteDataSource>(
+    () => OrganizationRemoteDataSourceImpl(networkClient: serviceLocator()),
+  );
 }
 
 Future<void> _initBloc() async {
-  serviceLocator.registerLazySingleton(() => FCMManager(
-    notificationCubit: serviceLocator(),
-    storageService: serviceLocator(),
-  ));
-
-  serviceLocator.registerFactory<SignupCubit>(() => SignupCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<OtpCubit>(() => OtpCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ForgotPasswordCubit>(() => ForgotPasswordCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<OtpVerifyPasswordCubit>(() => OtpVerifyPasswordCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ResetPasswordCubit>(() => ResetPasswordCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<LoginCubit>(() => LoginCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-
-  serviceLocator.registerFactory<LogoutCubit>(() => LogoutCubit(authRemoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<CodeTypesCubit>(() => CodeTypesCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ProfileCubit>(() => ProfileCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<TelecomCubit>(() => TelecomCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<AddressCubit>(() => AddressCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<AppointmentCubit>(() => AppointmentCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ClinicCubit>(() => ClinicCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ServiceCubit>(() => ServiceCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<DoctorCubit>(() => DoctorCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<AllergyCubit>(() => AllergyCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ReactionCubit>(() => ReactionCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<EncounterCubit>(() => EncounterCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ServiceRequestCubit>(() => ServiceRequestCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ObservationCubit>(() => ObservationCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<SeriesCubit>(() => SeriesCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ImagingStudyCubit>(
-    () => ImagingStudyCubit(imagingStudyDataSource: serviceLocator(), seriesDataSource: serviceLocator(), networkInfo: serviceLocator()),
+  serviceLocator.registerLazySingleton(
+    () => FCMManager(
+      notificationCubit: serviceLocator(),
+      storageService: serviceLocator(),
+    ),
   );
-  serviceLocator.registerFactory<ConditionsCubit>(() => ConditionsCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<MedicationRequestCubit>(() => MedicationRequestCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<MedicationCubit>(() => MedicationCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<InvoiceCubit>(() => InvoiceCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ArticleCubit>(() => ArticleCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<ComplainCubit>(() => ComplainCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<DiagnosticReportCubit>(() => DiagnosticReportCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<NotificationCubit>(() => NotificationCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
-  serviceLocator.registerFactory<OrganizationCubit>(() => OrganizationCubit(remoteDataSource: serviceLocator(), networkInfo: serviceLocator()));
+
+  serviceLocator.registerFactory<SignupCubit>(
+    () => SignupCubit(
+      authRemoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<OtpCubit>(
+    () => OtpCubit(
+      authRemoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ForgotPasswordCubit>(
+    () => ForgotPasswordCubit(
+      authRemoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<OtpVerifyPasswordCubit>(
+    () => OtpVerifyPasswordCubit(
+      authRemoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ResetPasswordCubit>(
+    () => ResetPasswordCubit(
+      authRemoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<LoginCubit>(
+    () => LoginCubit(
+      authRemoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+
+  serviceLocator.registerFactory<LogoutCubit>(
+    () => LogoutCubit(
+      authRemoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<CodeTypesCubit>(
+    () => CodeTypesCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ProfileCubit>(
+    () => ProfileCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<TelecomCubit>(
+    () => TelecomCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<AddressCubit>(
+    () => AddressCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<AppointmentCubit>(
+    () => AppointmentCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ClinicCubit>(
+    () => ClinicCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ServiceCubit>(
+    () => ServiceCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<DoctorCubit>(
+    () => DoctorCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<AllergyCubit>(
+    () => AllergyCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ReactionCubit>(
+    () => ReactionCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<EncounterCubit>(
+    () => EncounterCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ServiceRequestCubit>(
+    () => ServiceRequestCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ObservationCubit>(
+    () => ObservationCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<SeriesCubit>(
+    () => SeriesCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ImagingStudyCubit>(
+    () => ImagingStudyCubit(
+      imagingStudyDataSource: serviceLocator(),
+      seriesDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ConditionsCubit>(
+    () => ConditionsCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<MedicationRequestCubit>(
+    () => MedicationRequestCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<MedicationCubit>(
+    () => MedicationCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<InvoiceCubit>(
+    () => InvoiceCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ArticleCubit>(
+    () => ArticleCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<ComplainCubit>(
+    () => ComplainCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<DiagnosticReportCubit>(
+    () => DiagnosticReportCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<NotificationCubit>(
+    () => NotificationCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
+  serviceLocator.registerFactory<OrganizationCubit>(
+    () => OrganizationCubit(
+      remoteDataSource: serviceLocator(),
+      networkInfo: serviceLocator(),
+    ),
+  );
 }

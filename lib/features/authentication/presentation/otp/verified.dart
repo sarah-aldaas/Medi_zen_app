@@ -10,7 +10,9 @@ class Verified extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: context.width,
@@ -20,31 +22,22 @@ class Verified extends StatelessWidget {
               fit: BoxFit.fill,
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.goNamed(AppRouter.login.name);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.width / 3,
-                      vertical: 12,
-                    ),
-                  ),
-                  child: Text(
-                    "Next",
-                    style: const TextStyle(color: Colors.white),
-                  ),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                context.goNamed(AppRouter.login.name);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.width / 3,
+                  vertical: 12,
                 ),
               ),
-              Gap(30),
-            ],
+              child: Text("Next", style: const TextStyle(color: Colors.white)),
+            ),
           ),
+          Gap(30),
         ],
       ),
     );

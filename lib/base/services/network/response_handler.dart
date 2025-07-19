@@ -25,7 +25,7 @@ class ResponseHandler<T> {
     returnErrorInSamDataModel = false,
   }) {
     int statusCode = response.statusCode!;
-
+    // Handle success responses
     if (statusCode >= 200 && statusCode < 300) {
       var responseData = response.data['data'];
 
@@ -46,6 +46,7 @@ class ResponseHandler<T> {
   _processResponseError<R>(response, int statusCode, {fromJson}) {
     final message = response.data['message'] ?? 'Unknown error occurred';
 
+    // Function to extract error messages
     String extractErrors(Map<String, dynamic> errors) {
       List<String> errorMessages = [];
       errors.forEach((key, value) {

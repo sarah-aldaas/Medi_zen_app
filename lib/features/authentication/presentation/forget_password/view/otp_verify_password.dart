@@ -69,7 +69,7 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
                   children: [
                     SizedBox(
                       width: context.width,
-                      height: context.height / 3,
+                      height: context.height / 2,
                       child: Image.asset(
                         "assets/images/locks/111.png",
                         fit: BoxFit.fill,

@@ -27,15 +27,32 @@ class TelecomModel {
 
   factory TelecomModel.fromJson(Map<String, dynamic> json) {
     return TelecomModel(
-      id: json['id']!=null?json['id'].toString():null,
-      value:json['value']!=null? json['value'].toString():null,
-      rank: json['rank']!=null? json['rank'].toString():null,
-      startDate:json['start_date']!=null?  json['start_date']?.toString():null,
-      endDate:json['end_date']!=null? json['end_date']?.toString():null,
-      type: json['type']!=null?CodeModel.fromJson(json['type'] as Map<String, dynamic>):null,
-      use: json['use']!=null?CodeModel.fromJson(json['use'] as Map<String, dynamic>):null,
-      typeId:json['type']!=null? json['type']['id']!=null?json['type']["id"].toString():null:null,
-      useId:json['use']!=null? json['use']['id']!=null?json['use']["id"].toString():null:null,
+      id: json['id'] != null ? json['id'].toString() : null,
+      value: json['value'] != null ? json['value'].toString() : null,
+      rank: json['rank'] != null ? json['rank'].toString() : null,
+      startDate:
+          json['start_date'] != null ? json['start_date']?.toString() : null,
+      endDate: json['end_date'] != null ? json['end_date']?.toString() : null,
+      type:
+          json['type'] != null
+              ? CodeModel.fromJson(json['type'] as Map<String, dynamic>)
+              : null,
+      use:
+          json['use'] != null
+              ? CodeModel.fromJson(json['use'] as Map<String, dynamic>)
+              : null,
+      typeId:
+          json['type'] != null
+              ? json['type']['id'] != null
+                  ? json['type']["id"].toString()
+                  : null
+              : null,
+      useId:
+          json['use'] != null
+              ? json['use']['id'] != null
+                  ? json['use']["id"].toString()
+                  : null
+              : null,
     );
   }
 
@@ -48,8 +65,8 @@ class TelecomModel {
 
       'type': type!.toJson(),
       'use': use!.toJson(),
-      'use_id':useId.toString(),
-      'type_id':typeId.toString()
+      'use_id': useId.toString(),
+      'type_id': typeId.toString(),
     };
   }
 }

@@ -11,6 +11,7 @@ import 'package:medizen_app/features/profile/data/models/update_profile_request_
 import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/profile_cubit.dart';
 
 import '../../../../base/theme/app_color.dart';
+import '../../data/models/address_model.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -130,7 +131,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                   backgroundColor: Theme.of(context).primaryColor,
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(
-                      "${patient.fName ?? 'profileDetailsPage.noAddressAvailable'.tr(context)} ${patient.lName ?? 'profileDetailsPage.noAddressAvailable'.tr(context)}",
+                      "${patient.fName ?? ''} ${patient.lName ?? ''}",
                       style: const TextStyle(color: Colors.white),
                     ),
                     background: Stack(
@@ -365,17 +366,15 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         "profileDetailsPage.address",
                         Icons.home,
                         () {
-                          if (patient.addressModel != null) {
-                            context.pushNamed(
-                              AppRouter.addressListPage.name,
-                              extra: {'addressModel': patient.addressModel!},
-                            );
-                          } else {
-                            ShowToast.showToastInfo(
-                              message: "profileDetailsPage.noAddressAvailable"
-                                  .tr(context),
-                            );
-                          }
+                          context.pushNamed(
+                            AppRouter.addressListPage.name,
+                            extra: {
+                              'addresses':
+                                  patient.addressModel != null
+                                      ? [patient.addressModel!]
+                                      : <AddressModel>[],
+                            },
+                          );
                         },
                       ),
                       const Gap(40),
