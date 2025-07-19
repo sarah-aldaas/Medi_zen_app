@@ -130,6 +130,8 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       child: InkWell(
         onTap: () {
           Navigator.push(

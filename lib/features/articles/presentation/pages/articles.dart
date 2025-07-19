@@ -47,13 +47,18 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
   @override
   void dispose() {
+    _scrollController.removeListener(
+      _scrollListener,
+    );
     _scrollController.dispose();
+    _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
   }
 
   void _loadInitialArticles() {
     _isLoadingMore = false;
+
     context.read<ArticleCubit>().getAllArticles(
       context: context,
       filters: _buildFilters(),
@@ -64,16 +69,21 @@ class _ArticlesPageState extends State<ArticlesPage> {
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
         !_isLoadingMore) {
+      if (!mounted) return;
       setState(() => _isLoadingMore = true);
       context
           .read<ArticleCubit>()
           .getAllArticles(
+
             filters: _buildFilters(),
             loadMore: true,
             context: context,
           )
           .then((_) {
-            setState(() => _isLoadingMore = false);
+            if (mounted) {
+
+              setState(() => _isLoadingMore = false);
+            }
           });
     }
   }
@@ -82,17 +92,21 @@ class _ArticlesPageState extends State<ArticlesPage> {
     final categories = await context
         .read<CodeTypesCubit>()
         .articleCategoryTypeCodes(context: context);
-    setState(() {
-      _categories = categories;
-    });
+    if (mounted) {
+      setState(() {
+        _categories = categories;
+      });
+    }
   }
 
   void _loadArticles() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ArticleCubit>().getAllArticles(
-        context: context,
-        filters: _buildFilters(),
-      );
+      if (mounted) {
+        context.read<ArticleCubit>().getAllArticles(
+          context: context,
+          filters: _buildFilters(),
+        );
+      }
     });
   }
 
@@ -127,19 +141,21 @@ class _ArticlesPageState extends State<ArticlesPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           _loadInitialArticles();
-          return Future.delayed(Duration(seconds: 1));
+          // await context.read<ArticleCubit>().stream.firstWhere((state) => state is! ArticleLoading);
         },
         child: BlocConsumer<ArticleCubit, ArticleState>(
           listener: (context, state) {
             if (state is ArticleError) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.error)));
+              if (mounted) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.error)));
+              }
             }
           },
           builder: (context, state) {
-            if (state is ArticleLoading) {
-              return Center(child: LoadingPage());
+            if (state is ArticleLoading && !state.isLoadMore) {
+              return const Center(child: LoadingPage());
             }
 
             if (state is ArticleError) {
@@ -148,8 +164,16 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(state.error),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _loadInitialArticles,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                       child: Text('articles.retry'.tr(context)),
                     ),
                   ],
@@ -157,7 +181,19 @@ class _ArticlesPageState extends State<ArticlesPage> {
               );
             }
 
-            return _buildContent(state is ArticleSuccess ? state : null);
+
+            final ArticleSuccess? currentArticlesState =
+                state is ArticleSuccess
+                    ? state
+                    : (context.read<ArticleCubit>().state is ArticleSuccess
+                        ? context.read<ArticleCubit>().state as ArticleSuccess
+                        : null);
+
+            if (currentArticlesState != null) {
+              return _buildContent(currentArticlesState);
+            }
+
+            return const SizedBox.shrink();
           },
         ),
       ),
@@ -173,7 +209,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
             _showSearchField = !_showSearchField;
             if (_showSearchField) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                _searchFocusNode.requestFocus();
+                if (mounted) {
+
+                  _searchFocusNode.requestFocus();
+                }
               });
             } else {
               _searchController.clear();
@@ -220,11 +259,21 @@ class _ArticlesPageState extends State<ArticlesPage> {
   }
 
   Widget _buildContent(ArticleSuccess? state) {
+
     final articles = state?.paginatedResponse.paginatedData?.items;
     final hasMore = state?.hasMore ?? false;
 
+    if (articles == null || articles.isEmpty) {
+      return Center(
+        child: Text(
+          'articles.no_articles_found'.tr(context),
+        ),      );
+    }
+
     return CustomScrollView(
       controller: _scrollController,
+      physics:
+          const AlwaysScrollableScrollPhysics(),
       slivers: [
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -234,21 +283,23 @@ class _ArticlesPageState extends State<ArticlesPage> {
           padding: const EdgeInsets.all(16),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              if (index < articles!.length) {
+              if (index < articles.length) {
+
                 return _buildArticleItem(
                   article: articles[index],
                   context: context,
                 );
               } else if (hasMore) {
-                return Center(
+                return const Center(
                   child: Padding(
                     padding: EdgeInsets.all(16),
-                    child: LoadingButton(),
+                    child:
+                        CircularProgressIndicator(),
                   ),
                 );
               }
               return const SizedBox.shrink();
-            }, childCount: articles!.length + (hasMore ? 1 : 0)),
+            }, childCount: articles.length + (hasMore ? 1 : 0)),
           ),
         ),
       ],
@@ -335,7 +386,9 @@ class _ArticlesPageState extends State<ArticlesPage> {
                     imageUrl: article.image,
                     width: 80,
                     height: 80,
-                    errorWidget: Center(child: Icon(Icons.article, size: 40)),
+                    errorWidget: const Center(
+                      child: Icon(Icons.article, size: 40),
+                    ),
                   ),
                 ),
               ),
@@ -355,7 +408,9 @@ class _ArticlesPageState extends State<ArticlesPage> {
                     const SizedBox(height: 4),
                     Text(
                       article.title ?? 'articles.no_title'.tr(context),
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -364,7 +419,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
                     Text(
                       article.createdAt?.toLocal().toString().split(' ')[0] ??
                           '',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -402,7 +460,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   children: [
                     Text(
                       "articles.filters.sortBy".tr(context),
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     RadioListTile<String?>(
                       title: Text("articles.filters.none".tr(context)),
@@ -429,9 +487,9 @@ class _ArticlesPageState extends State<ArticlesPage> {
                     const SizedBox(height: 16),
                     Text(
                       "articles.filters.category".tr(context),
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
-                    Gap(8),
+                    const Gap(8), // const
                     DropdownButtonFormField<String>(
                       value: tempCategoryId,
                       items: [
@@ -471,6 +529,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                     style: TextStyle(
                       color: AppColors.primaryColor,
                       fontSize: 17,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -491,7 +550,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   ),
                   child: Text(
                     "articles.apply".tr(context),
-                    style: TextStyle(fontSize: 17),
+                    style: const TextStyle(fontSize: 17),
                   ),
                 ),
               ],
@@ -502,12 +561,15 @@ class _ArticlesPageState extends State<ArticlesPage> {
     );
 
     if (result != null) {
-      setState(() {
-        _selectedSort = result['sort'];
-        _selectedCategoryId = result['categoryId'];
-        _selectedCategoryDisplay = result['categoryDisplay'];
-        _loadArticles();
-      });
+      if (mounted) {
+
+        setState(() {
+          _selectedSort = result['sort'];
+          _selectedCategoryId = result['categoryId'];
+          _selectedCategoryDisplay = result['categoryDisplay'];
+          _loadArticles();
+        });
+      }
     }
   }
 
@@ -519,16 +581,22 @@ class _ArticlesPageState extends State<ArticlesPage> {
             (context) => ArticleDetailsNotificationPage(articleId: article.id!),
       ),
     ).then((value) {
-      _loadInitialArticles();
+      if (mounted) {
+        _loadInitialArticles();
+      }
     });
   }
 
   void _navigateToBookmarks(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MyFavoriteArticles()),
+      MaterialPageRoute(
+        builder: (context) => const MyFavoriteArticles(),
+      ),
     ).then((value) {
-      _loadInitialArticles();
+      if (mounted) {
+        _loadInitialArticles();
+      }
     });
   }
 }

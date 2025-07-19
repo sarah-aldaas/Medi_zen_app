@@ -151,55 +151,63 @@ class _HomePageBodyState extends State<HomePageBody> {
             ),
           ),
 
-          Stack(
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NotificationsPage(),
-                    ),
-                  );
-                },
-                icon: Icon(
-                  Icons.notifications_outlined,
-                  color: theme.iconTheme.color,
+          GestureDetector(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsPage(),
                 ),
-              ),
-              // Notification badge
-              Positioned(
-                right: 2,
-                bottom: 8,
-                child: BlocBuilder<NotificationCubit, NotificationState>(
-                  builder: (context, state) {
-                    final unreadCount =
-                        state is NotificationSuccess
-                            ? state.paginatedResponse.paginatedData?.items
-                                    .where((n) => !n.isRead)
-                                    .length ??
-                                0
-                            : 0;
+              );
+            },
+            child: Stack(
+              children: [
+                 IconButton(onPressed: (){
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(
+                       builder: (context) => NotificationsPage(),
+                     ),
+                   );
+                 }, icon: Icon(
+                   Icons.notifications_outlined,
+                   color: theme.iconTheme.color,
 
-                    if (unreadCount == 0) return SizedBox.shrink();
+                 ),),
+                // Notification badge
+                Positioned(
+                  right: 2,
+                  bottom: 8,
+                  child: BlocBuilder<NotificationCubit, NotificationState>(
+                    builder: (context, state) {
+                      final unreadCount =
+                          state is NotificationSuccess
+                              ? state.paginatedResponse.paginatedData?.items
+                                      .where((n) => !n.isRead)
+                                      .length ??
+                                  0
+                              : 0;
 
-                    return Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: BoxConstraints(minWidth: 16, minHeight: 16),
-                      child: Text(
-                        unreadCount > 9 ? '9+' : '$unreadCount',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  },
+                      if (unreadCount == 0) return SizedBox.shrink();
+
+                      return Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: BoxConstraints(minWidth: 16, minHeight: 16),
+                        child: Text(
+                          unreadCount > 9 ? '9+' : '$unreadCount',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           PopupMenuButton<String>(
             icon: Icon(Icons.more_vert, color: theme.iconTheme.color),

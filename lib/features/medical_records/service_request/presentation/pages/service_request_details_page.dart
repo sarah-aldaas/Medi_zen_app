@@ -22,7 +22,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -166,9 +166,9 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder:
                         (context) => ObservationDetailsPage(
-                      serviceId: serviceId,
-                      observationId: request.observation!.id!,
-                    ),
+                          serviceId: serviceId,
+                          observationId: request.observation!.id!,
+                        ),
                   ),
                 );
               },
@@ -551,13 +551,12 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   Center(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12.0),
-                      child:FlexibleImage(
+                      child: FlexibleImage(
                         height: 180,
                         imageUrl: request.healthCareService!.photo,
                         errorWidget: Container(
                           height: 180,
-                          color:
-                          Theme.of(context).colorScheme.surfaceVariant,
+                          color: Theme.of(context).colorScheme.surfaceVariant,
                           child: Center(
                             child: Icon(
                               Icons.broken_image,
@@ -568,7 +567,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                      )
+                      ),
                       // Image.network(
                       //   request.healthCareService!.photo!,
                       //   height: 180,
@@ -689,8 +688,15 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                     Container(
                       width: 32,
                       height: 32,
-                      decoration: BoxDecoration(color: Theme.of(context).primaryColor.withOpacity(0.08), shape: BoxShape.circle),
-                      child: Icon(Icons.arrow_forward_ios_rounded, color: Theme.of(context).primaryColor.withOpacity(0.8), size: 18),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.08),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Theme.of(context).primaryColor.withOpacity(0.8),
+                        size: 18,
+                      ),
                     ),
                 ],
               ),
@@ -756,10 +762,10 @@ class ServiceRequestDetailsPage extends StatelessWidget {
   }
 
   Widget _buildStatusChip(
-      BuildContext context,
-      String? statusCode,
-      String? statusDisplay,
-      ) {
+    BuildContext context,
+    String? statusCode,
+    String? statusDisplay,
+  ) {
     final statusColor = _getStatusColor(statusCode);
 
     return Container(
@@ -773,8 +779,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
         ),
       ),
       child: Text(
-        statusDisplay ??
-            'serviceRequestDetailsPage.unknownStatus'.tr(context),
+        statusDisplay ?? 'serviceRequestDetailsPage.unknownStatus'.tr(context),
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
           color: statusColor.withAlpha(130), // Dynamic text color for contrast
           fontWeight: FontWeight.bold, // Slightly less bold
@@ -783,7 +788,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
     );
   }
 
- Color _getStatusColor(String? statusCode) {
+  Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
       case 'active':
         return Colors.blue; // Less intense than lightBlue.shade600
@@ -801,5 +806,4 @@ class ServiceRequestDetailsPage extends StatelessWidget {
         return Colors.grey;
     }
   }
-  
 }

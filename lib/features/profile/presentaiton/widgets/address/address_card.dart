@@ -38,38 +38,38 @@ class AddressCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               address.use?.display ??
                   'addressCard.defaultAddressUse'.tr(context),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               address.text ?? '',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               '${address.line}, ${address.district}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               '${address.city}, ${address.state}, ${address.postalCode}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               address.country ?? '',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             if (address.startDate != null || address.endDate != null)
               Padding(
-                padding: const EdgeInsets.only(top: 18),
+                padding: EdgeInsets.only(top: 18),
                 child: Text(
                   '${address.startDate != null ? 'addressCard.from'.tr(context) + ': ${address.startDate}' : ''}'
-                      '${(address.endDate != null && address.endDate!.isNotEmpty&& address.endDate!="null") ? ' ' + 'addressCard.to'.tr(context) + ': ${address.endDate}' : ' ' + 'addressCard.toContinue'.tr(context)}',
+                  '${(address.endDate != null && address.endDate!.isNotEmpty && address.endDate != "null") ? ' ' + 'addressCard.to'.tr(context) + ': ${address.endDate}' : ' ' + 'addressCard.toContinue'.tr(context)}',
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: Colors.grey),
@@ -79,19 +79,11 @@ class AddressCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(
-                    Icons.edit,
-                    size: 20,
-                    color: AppColors.gallery,
-                  ),
+                  icon: Icon(Icons.edit, size: 20, color: AppColors.gallery),
                   onPressed: onEdit,
                 ),
                 IconButton(
-                  icon: const Icon(
-                    Icons.delete,
-                    size: 20,
-                    color: AppColors.red,
-                  ),
+                  icon: Icon(Icons.delete, size: 20, color: AppColors.red),
                   onPressed: onDelete,
                 ),
               ],
