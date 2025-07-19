@@ -322,10 +322,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
     final ThemeData theme = Theme.of(context);
     final Color headerIconColor = theme.primaryColor;
     return Card(
-      elevation: 6,
-      shadowColor: cardElevationColor,
-      color: theme.cardColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      color: Theme.of(context).appBarTheme.backgroundColor,
+
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

@@ -401,7 +401,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                     ),
                     const Gap(6),
                     Text(
-                      doctor.text,
+                      doctor.text ?? 'N/A',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(

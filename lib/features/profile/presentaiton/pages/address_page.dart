@@ -101,7 +101,7 @@ class _AddressListPageState extends State<AddressListPage> {
             onPressed:
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const AddEditAddressPage()),
+                  MaterialPageRoute(builder: (_) => AddEditAddressPage()),
                 ).then(
                   (_) => context.read<AddressCubit>().fetchAddresses(
                     context: context,
@@ -142,9 +142,7 @@ class _AddressListPageState extends State<AddressListPage> {
                 onAction:
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const AddEditAddressPage(),
-                      ),
+                      MaterialPageRoute(builder: (_) => AddEditAddressPage()),
                     ).then(
                       (_) => context.read<AddressCubit>().fetchAddresses(
                         context: context,
@@ -208,7 +206,7 @@ class _AddressListPageState extends State<AddressListPage> {
           (context) => AlertDialog(
             title: Text(
               'addressList.deleteAddress'.tr(context),
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
                 color: AppColors.primaryColor,
@@ -216,14 +214,14 @@ class _AddressListPageState extends State<AddressListPage> {
             ),
             content: Text(
               'addressList.confirmDeleteAddress'.tr(context),
-              style: const TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'addressList.cancel'.tr(context),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: AppColors.gallery,
@@ -248,7 +246,7 @@ class _AddressListPageState extends State<AddressListPage> {
                     horizontal: 30,
                     vertical: 15,
                   ),
-                  textStyle: const TextStyle(
+                  textStyle: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
@@ -322,18 +320,15 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
               children: [
                 Text(
                   "addressList.filterAddresses".tr(context),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, size: 20),
+                  icon: Icon(Icons.close, size: 20),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
-            const Divider(),
+            Divider(),
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
@@ -341,12 +336,12 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                   children: [
                     Text(
                       "addressList.addressUse".tr(context),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
                       builder: (context, state) {
                         List<CodeModel> addressUses = [];
@@ -371,18 +366,14 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                         }
                         if (addressUses.isEmpty) {
                           return Text(
-                            "addressList.noAddressUsesAvailable".tr(
-                              context,
-                            ), // ترجمة
-                            style: const TextStyle(color: Colors.grey),
+                            "addressList.noAddressUsesAvailable".tr(context),
+                            style: TextStyle(color: Colors.grey),
                           );
                         }
                         return Column(
                           children: [
                             RadioListTile<String?>(
-                              title: Text(
-                                "addressList.allUses".tr(context),
-                              ), // ترجمة
+                              title: Text("addressList.allUses".tr(context)),
                               value: null,
                               groupValue: _selectedUseId,
                               activeColor: Theme.of(context).primaryColor,
@@ -394,7 +385,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                               return RadioListTile<String>(
                                 title: Text(
                                   use.display,
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(fontSize: 14),
                                 ),
                                 value: use.id,
                                 groupValue: _selectedUseId,
@@ -408,15 +399,15 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Text(
                       "addressList.addressType".tr(context),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
                       builder: (context, state) {
                         List<CodeModel> addressTypes = [];
@@ -441,18 +432,14 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                         }
                         if (addressTypes.isEmpty) {
                           return Text(
-                            "addressList.noAddressTypesAvailable".tr(
-                              context,
-                            ), // ترجمة
-                            style: const TextStyle(color: Colors.grey),
+                            "addressList.noAddressTypesAvailable".tr(context),
+                            style: TextStyle(color: Colors.grey),
                           );
                         }
                         return Column(
                           children: [
                             RadioListTile<String?>(
-                              title: Text(
-                                "addressList.allTypes".tr(context),
-                              ), // ترجمة
+                              title: Text("addressList.allTypes".tr(context)),
                               value: null,
                               groupValue: _selectedTypeId,
                               activeColor: Theme.of(context).primaryColor,
@@ -464,7 +451,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                               return RadioListTile<String>(
                                 title: Text(
                                   type.display,
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(fontSize: 14),
                                 ),
                                 value: type.id,
                                 groupValue: _selectedTypeId,
@@ -482,7 +469,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -495,7 +482,7 @@ class _AddressFilterDialogState extends State<AddressFilterDialog> {
                   },
                   child: Text(
                     "addressList.clearFilters".tr(context),
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
                 Row(

@@ -161,22 +161,31 @@ class ArticleCubit extends Cubit<ArticleState> {
   }) async {
     emit(ArticleLoading());
 
-    final result = await remoteDataSource.getDetailsArticle(
-      articleId: articleId,
-    );
-    if (result is Success<ArticleModel>) {
-      if (result.data.toString().contains("Unauthorized")) {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-        return;
-      }
-      emit(ArticleDetailsSuccess(article: result.data));
-    } else if (result is ResponseError<ArticleModel>) {
-      emit(
-        ArticleError(
-          error:
-              result.message ?? 'failed_to_fetch_article_details'.tr(context),
-        ),
+    try {
+      final result = await remoteDataSource.getDetailsArticle(
+        articleId: articleId,
       );
+
+      if (result is Success<ArticleModel>) {
+        if (result.data.toString().contains("Unauthorized")) {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          return;
+        }
+        emit(ArticleDetailsSuccess(article: result.data));
+      } else if (result is ResponseError<ArticleModel>) {
+        emit(
+          ArticleError(
+            error:
+                result.message ?? 'failed_to_fetch_article_details'.tr(context),
+          ),
+        );
+        await Future.delayed(Duration(milliseconds: 300));
+        emit(ArticleInitial());
+      }
+    } catch (e) {
+      emit(ArticleError(error: e.toString()));
+      await Future.delayed(Duration(milliseconds: 300));
+      emit(ArticleInitial());
     }
   }
 
@@ -217,29 +226,39 @@ class ArticleCubit extends Cubit<ArticleState> {
       ShowToast.showToastError(
         message: 'no_internet_check_network'.tr(context),
       );
+      await Future.delayed(Duration(milliseconds: 300));
+      emit(ArticleInitial());
       return;
     }
 
-    final result = await remoteDataSource.addArticleFavorite(
-      articleId: articleId,
-    );
-    if (result is Success<PublicResponseModel>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-        return;
-      }
-      emit(FavoriteOperationSuccess(isFavorite: true));
+    try {
+      final result = await remoteDataSource.addArticleFavorite(
+        articleId: articleId,
+      );
 
-      getDetailsArticle(articleId: articleId, context: context);
-      ShowToast.showToastSuccess(
-        message: result.data.msg ?? 'added_to_favorites'.tr(context),
-      );
-    } else if (result is ResponseError<PublicResponseModel>) {
-      emit(
-        ArticleError(
-          error: result.message ?? 'failed_to_add_favorite'.tr(context),
-        ),
-      );
+      if (result is Success<PublicResponseModel>) {
+        if (result.data.msg == "Unauthorized. Please login first.") {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          return;
+        }
+        emit(FavoriteOperationSuccess(isFavorite: true));
+        ShowToast.showToastSuccess(
+          message: result.data.msg ?? 'added_to_favorites'.tr(context),
+        );
+        await getDetailsArticle(articleId: articleId, context: context);
+      } else if (result is ResponseError<PublicResponseModel>) {
+        emit(
+          ArticleError(
+            error: result.message ?? 'failed_to_add_favorite'.tr(context),
+          ),
+        );
+        await Future.delayed(Duration(milliseconds: 300));
+        emit(ArticleInitial());
+      }
+    } catch (e) {
+      emit(ArticleError(error: e.toString()));
+      await Future.delayed(Duration(milliseconds: 300));
+      emit(ArticleInitial());
     }
   }
 
@@ -249,26 +268,34 @@ class ArticleCubit extends Cubit<ArticleState> {
   }) async {
     emit(FavoriteOperationLoading());
 
-    final result = await remoteDataSource.removeArticleFavorite(
-      articleId: articleId,
-    );
-    if (result is Success<PublicResponseModel>) {
-      if (result.data.msg == "Unauthorized. Please login first.") {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-        return;
-      }
-      emit(FavoriteOperationSuccess(isFavorite: false));
+    try {
+      final result = await remoteDataSource.removeArticleFavorite(
+        articleId: articleId,
+      );
 
-      getDetailsArticle(articleId: articleId, context: context);
-      ShowToast.showToastSuccess(
-        message: result.data.msg ?? 'removed_from_favorites'.tr(context),
-      );
-    } else if (result is ResponseError<PublicResponseModel>) {
-      emit(
-        ArticleError(
-          error: result.message ?? 'failed_to_remove_favorite'.tr(context),
-        ),
-      );
+      if (result is Success<PublicResponseModel>) {
+        if (result.data.msg == "Unauthorized. Please login first.") {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          return;
+        }
+        emit(FavoriteOperationSuccess(isFavorite: false));
+        ShowToast.showToastSuccess(
+          message: result.data.msg ?? 'removed_from_favorites'.tr(context),
+        );
+        await getDetailsArticle(articleId: articleId, context: context);
+      } else if (result is ResponseError<PublicResponseModel>) {
+        emit(
+          ArticleError(
+            error: result.message ?? 'failed_to_remove_favorite'.tr(context),
+          ),
+        );
+        await Future.delayed(Duration(milliseconds: 300));
+        emit(ArticleInitial());
+      }
+    } catch (e) {
+      emit(ArticleError(error: e.toString()));
+      await Future.delayed(Duration(milliseconds: 300));
+      emit(ArticleInitial());
     }
   }
 

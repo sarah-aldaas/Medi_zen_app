@@ -326,44 +326,6 @@ GoRouter goRouter() {
               medicationId: state.pathParameters['id']!,
             ),
       ),
-      // GoRoute(
-      //   path: "/notificationSettings",
-      //   name: AppRouter.notificationSettings.name,
-      //   builder: (BuildContext context, GoRouterState state) {
-      //     return NotificationSettingsPage();
-      //   },
-      // ),
-      // GoRoute(
-      //   path: "/myBookMark",
-      //   name: AppRouter.myBookMark.name,
-      //   builder: (BuildContext context, GoRouterState state) {
-      //     return MyBookmarkPage();
-      //   },
-      // ),
-      // GoRoute(
-      //   path: "/complaint",
-      //   name: AppRouter.complaint.name,
-      //   builder: (BuildContext context, GoRouterState state) {
-      //     return ComplaintListScreen();
-      //   },
-      // ),
-      // GoRoute(
-      //   path: '/noInternet',
-      //   name: AppRouter.noInternet.name,
-      //   builder: (context, state) => const NoInternetPage(),
-      // ),
-      // GoRoute(
-      //   path: '/conditions',
-      //   name: AppRouter.conditions.name,
-      //   builder: (context, state) => ConditionsListPage(),
-      // ),
-      // GoRoute(
-      //   name: AppRouter.medicationRequestDetails.name,
-      //   path: '/medication-request-details',
-      //   builder: (context, state) => MedicationRequestDetailsPage(
-      //         medicationRequestId: state.pathParameters['id']!,
-      //       ),
-      // ),
     ],
   );
 }
