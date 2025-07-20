@@ -19,3 +19,26 @@ class OrganizationError extends OrganizationState {
 
   const OrganizationError({required this.error});
 }
+
+
+
+class QualificationOrganizationLoading extends OrganizationState {
+  final bool isLoadMore;
+
+  QualificationOrganizationLoading({this.isLoadMore = false});
+}
+
+class QualificationOrganizationSuccess extends OrganizationState {
+  final bool hasMore;
+  final PaginatedResponse<QualificationsOrganizationModel> paginatedResponse;
+
+  QualificationOrganizationSuccess({required this.paginatedResponse, required this.hasMore});
+
+}
+
+
+class QualificationOrganizationError extends OrganizationState {
+  final String error;
+
+  const QualificationOrganizationError({required this.error});
+}

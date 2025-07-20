@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/features/organization/presentation/pages/qualification_page.dart';
 
 import '../../../../base/theme/app_color.dart';
 import '../../data/models/organization_model.dart';
@@ -58,9 +60,9 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
   }
 
   Widget _buildOrganizationDetails(
-    OrganizationModel organization,
-    BuildContext context,
-  ) {
+      OrganizationModel organization,
+      BuildContext context,
+      ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -137,18 +139,47 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                 : Icons.cancel_outlined,
             valueColor: organization.active ? Colors.green : Colors.red,
           ),
+          
+          Gap(20),
+          Card(
+            margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            child: InkWell(
+              onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>QualificationPage())).then((_){
+                context.read<OrganizationCubit>().getOrganizationDetails(context: context);
+
+              }),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.file_present, color: Theme.of(context).primaryColor),
+                    const Gap(12),
+                    Text(
+                      "Qualifications",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
   }
 
   Widget _buildDetailCard(
-    BuildContext context,
-    String label,
-    String value,
-    IconData icon, {
-    Color? valueColor,
-  }) {
+      BuildContext context,
+      String label,
+      String value,
+      IconData icon, {
+        Color? valueColor,
+      }) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       elevation: 2,
@@ -177,7 +208,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w500,
                       color:
-                          valueColor ??
+                      valueColor ??
                           Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                   ),
