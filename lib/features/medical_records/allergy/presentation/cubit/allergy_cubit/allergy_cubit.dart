@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/data_source/allergy_remote_datasource.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/models/allergy_model.dart';
@@ -14,11 +13,9 @@ part 'allergy_state.dart';
 
 class AllergyCubit extends Cubit<AllergyState> {
   final AllergyRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
   AllergyCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(AllergyInitial());
 
   int _currentPage = 1;
@@ -43,16 +40,6 @@ class AllergyCubit extends Cubit<AllergyState> {
 
     if (filters != null) {
       _currentFilters = filters;
-    }
-    // Check internet connectivity for initial load
-    if (!loadMore) {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed(AppRouter.noInternet.name);
-      //   emit(AllergyError(error: 'No internet connection'));
-      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      //   return;
-      // }
     }
 
 
@@ -116,16 +103,6 @@ class AllergyCubit extends Cubit<AllergyState> {
       _currentFiltersOfAppointment = filters;
     }
 
-    // Check internet connectivity for initial load
-    if (!loadMore) {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed(AppRouter.noInternet.name);
-      //   emit(AllergyError(error: 'No internet connection'));
-      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      //   return;
-      // }
-    }
     final result = await remoteDataSource.getAllMyAllergiesOfAppointment(
       filters: _currentFiltersOfAppointment,
       page: _currentPageOfAppointment,
@@ -163,19 +140,9 @@ class AllergyCubit extends Cubit<AllergyState> {
 
   Future<void> getSpecificAllergy({
     required String allergyId,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     emit(AllergyLoading(isLoadMore: false));
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(AllergyError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.getSpecificAllergy(allergyId: allergyId);
     if (result is Success<AllergyModel>) {

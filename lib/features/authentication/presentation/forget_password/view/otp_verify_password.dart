@@ -49,7 +49,6 @@ class _OtpVerifyPasswordState extends State<OtpVerifyPassword> {
           child: BlocConsumer<OtpVerifyPasswordCubit, OtpVerifyPasswordState>(
             listener: (context, state) {
               if (state is OtpSuccess) {
-                // ShowToast.showToastSuccess(message: state.message);
                 context.goNamed(
                   AppRouter.resetPassword.name,
                   extra: {'email': widget.email},

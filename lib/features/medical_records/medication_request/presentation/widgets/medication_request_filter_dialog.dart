@@ -95,7 +95,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Search Query
                     Text(
                       "filterMedicationRequests.search".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -114,7 +113,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                     ),
                     const SizedBox(height: 20),
 
-                    // Do Not Perform
                     Text(
                       "filterMedicationRequests.doNotPerform".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -127,8 +125,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                       onChanged: (value) => setState(() => _doNotPerform = value),
                     ),
                     const SizedBox(height: 20),
-
-                    // Status
                     Text(
                       "filterMedicationRequests.status".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -165,7 +161,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                     ),
                     const SizedBox(height: 20),
 
-                    // Intent
                     Text(
                       "filterMedicationRequests.intent".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -202,7 +197,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                     ),
                     const SizedBox(height: 20),
 
-                    // Priority
                     Text(
                       "filterMedicationRequests.priority".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -239,7 +233,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                     ),
                     const SizedBox(height: 20),
 
-                    // Course of Therapy Type
                     Text(
                       "filterMedicationRequests.courseOfTherapy".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -276,7 +269,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                     ),
                     const SizedBox(height: 20),
 
-                    // Condition
                     Text(
                       "filterMedicationRequests.condition".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -313,7 +305,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                     ),
                     const SizedBox(height: 20),
 
-                    // Start Date
                     Text(
                       "filterMedicationRequests.startDate".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -357,7 +348,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                     ),
                     const SizedBox(height: 20),
 
-                    // End Date
                     Text(
                       "filterMedicationRequests.endDate".tr(context),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -394,7 +384,6 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                     ),
                     const SizedBox(height: 20),
 
-                    // Buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

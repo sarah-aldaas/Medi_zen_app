@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import '../../../../../base/theme/app_color.dart';
+import '../../../../../base/widgets/not_found_data_page.dart';
 import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/allergy_filter_model.dart';
 import '../../data/models/allergy_model.dart';
@@ -106,10 +107,7 @@ class _AllAllergiesOfAppointmentPageState extends State<AllAllergiesOfAppointmen
               if (index < allergies.length) {
                 final AllergyModel allergy = allergies[index];
                 return _buildAllergyItem(allergy, Theme.of(context));
-                //   AllergyListItem(
-                //   allergy: allergy,
-                //   onTap: () => _navigateToAllergyDetails(allergy.id!),
-                // );
+
               } else {
                 return Padding(padding: const EdgeInsets.all(16.0), child: Center(child: LoadingPage()));
               }

@@ -239,7 +239,7 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                       contentPadding: EdgeInsets.zero,
                       title: Text(
                         _selectedMinStartDate != null
-                            ? '${"encountersPge.from".tr(context)}: ${DateFormat('MMM d, y').format(_selectedMinStartDate!)}' // Translated
+                            ? '${"encountersPge.from".tr(context)}: ${DateFormat('MMM d, y').format(_selectedMinStartDate!)}'
                             : "encountersPge.selectStartDate".tr(
                           context,
                         ),
@@ -288,7 +288,7 @@ class _EncounterFilterDialogState extends State<EncounterFilterDialog> {
                       contentPadding: EdgeInsets.zero,
                       title: Text(
                         _selectedMaxStartDate != null
-                            ? '${"encountersPge.to".tr(context)}: ${DateFormat('MMM d, y').format(_selectedMaxStartDate!)}' // Translated
+                            ? '${"encountersPge.to".tr(context)}: ${DateFormat('MMM d, y').format(_selectedMaxStartDate!)}'
                             : "encountersPge.selectEndDate".tr(
                           context,
                         ),

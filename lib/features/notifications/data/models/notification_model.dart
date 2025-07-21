@@ -199,14 +199,12 @@ extension NotificationTypeExtension on NotificationModel {
   NotificationType get typeNotification {
     if (type == null) return NotificationType.unknown;
 
-    // First handle medical record cases which need special ID checking
     if (type!.code == 'MEDICAL_RECORD_UPDATED' ||
         type!.code == 'MEDICAL_RECORD_CREATED' ||
         type!.code == 'MEDICAL_RECORD_DELETED') {
       return _handleMedicalRecordType();
     }
 
-    // Handle all other standard cases
     switch (type!.code) {
       case 'UPDATE_ORGANIZATION':
         return NotificationType.organizationUpdated;
@@ -228,7 +226,7 @@ extension NotificationTypeExtension on NotificationModel {
       case 'NEW_PRESCRIPTION':
         return NotificationType.medicationRequestCreated;
       case 'ADMIN_BROADCAST':
-        return NotificationType.unknown; // Or create a new type if needed
+        return NotificationType.unknown;
       case 'HEALTH_TIP':
         return NotificationType.dailyHealthTip;
       case 'NEW_COMPLAINT':
@@ -251,7 +249,6 @@ extension NotificationTypeExtension on NotificationModel {
   }
 
   NotificationType _handleMedicalRecordType() {
-    // Check which specific medical record type this is based on the data IDs
     if(data!=null) {
       if (data!.conditionId != null) {
         if (type!.code == 'MEDICAL_RECORD_CREATED') return NotificationType.conditionCreated;

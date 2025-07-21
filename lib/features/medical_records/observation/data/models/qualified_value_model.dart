@@ -47,7 +47,6 @@ class QualifiedValueModel {
     );
   }
 
-  // Optional: Add a method to check if required fields are present
   bool get isValid =>
       id != null &&
           ageRange != null &&
@@ -57,7 +56,6 @@ class QualifiedValueModel {
           gender != null &&
           rangeCategory != null;
 
-  // Optional: Add copyWith method for easier updates
   QualifiedValueModel copyWith({
     String? id,
     AgeRangeModel? ageRange,

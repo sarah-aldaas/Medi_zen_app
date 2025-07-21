@@ -371,8 +371,8 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
         endDate:
             _endDateController.text.isEmpty ? null : _endDateController.text,
 
-        useId: _selectedUse?.id, //
-        typeId: _selectedType?.id, //
+        useId: _selectedUse?.id,
+        typeId: _selectedType?.id,
       );
 
       if (widget.address == null) {

@@ -44,9 +44,7 @@ class ConditionsModel {
   factory ConditionsModel.fromJson(Map<String, dynamic> json) {
     return ConditionsModel(
       id: json['id']?.toString() ?? '',
-      // Convert to String and provide default
       isChronic: json['is_chronic'] == 1,
-      // Convert 1/0 to boolean
       healthIssue: json['health_issue']?.toString(),
       onSetDate: json['on_set_date']?.toString(),
       onSetAge: json['on_set_age']?.toString(),

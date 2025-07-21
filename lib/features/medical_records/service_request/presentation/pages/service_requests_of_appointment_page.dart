@@ -5,11 +5,11 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_model.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_request_details_page.dart';
 
+import '../../../../../base/widgets/not_found_data_page.dart';
 import '../../data/data_source/service_request_remote_data_source.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
@@ -51,7 +51,6 @@ class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppo
 
     if (widget.filter != oldWidget.filter) {
       _loadInitialRequests();
-      // _scrollController.jumpTo(0.0);
     }
   }
 
@@ -82,16 +81,14 @@ class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppo
             }
 
             if (state is ServiceRequestError) {
-              return NotFoundDataPage();
-            }
+              return NotFoundDataPage();         }
 
             if (state is ServiceRequestLoaded) {
               final requests = state.paginatedResponse!.paginatedData!.items;
               final hasMore = state.hasMore;
 
               if (requests.isEmpty) {
-                return NotFoundDataPage();
-              }
+                return NotFoundDataPage();             }
 
               return ListView.builder(
                 controller: _scrollController,
@@ -128,7 +125,7 @@ class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppo
                   (context) => BlocProvider(
                     create:
                         (context) =>
-                            ServiceRequestCubit(networkInfo: serviceLocator(), remoteDataSource: serviceLocator<ServiceRequestRemoteDataSource>())
+                            ServiceRequestCubit( remoteDataSource: serviceLocator<ServiceRequestRemoteDataSource>())
                               ..getServiceRequestDetails(request.id!, context),
                     child: ServiceRequestDetailsPage(serviceId: request.id!),
                   ),
@@ -271,10 +268,10 @@ class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppo
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.15), // More subtle background
-        borderRadius: BorderRadius.circular(16.0), // Less rounded corners
+        color: statusColor.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
-          color: statusColor.withOpacity(0.3), // Subtle border
+          color: statusColor.withOpacity(0.3),
           width: 1.0,
         ),
       ),
@@ -282,8 +279,8 @@ class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppo
         statusDisplay ??
             'serviceRequestDetailsPage.unknownStatus'.tr(context),
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: statusColor.withAlpha(130), // Dynamic text color for contrast
-          fontWeight: FontWeight.bold, // Slightly less bold
+          color: statusColor.withAlpha(130),
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
@@ -292,7 +289,7 @@ class _ServiceRequestsOfAppointmentPageState extends State<ServiceRequestsOfAppo
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
       case 'active':
-        return Colors.blue; // Less intense than lightBlue.shade600
+        return Colors.blue;
       case 'on-hold':
         return Colors.orange;
       case 'revoked':

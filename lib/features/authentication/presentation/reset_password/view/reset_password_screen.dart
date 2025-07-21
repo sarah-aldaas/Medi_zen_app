@@ -22,7 +22,6 @@ class ResetPasswordScreen extends StatelessWidget {
       create:
           (context) => ResetPasswordCubit(
             authRemoteDataSource: serviceLocator(),
-            networkInfo: serviceLocator(),
           ),
       child: _ResetPasswordContent(email: email),
     );
@@ -50,7 +49,6 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
     return BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
       listener: (context, state) {
         if (state is ResetPasswordSuccess) {
-          // ShowToast.showToastSuccess(message: state.message);
           context.goNamed(AppRouter.login.name);
         } else if (state is ResetPasswordFailure) {
           ShowToast.showToastError(message: state.error);
@@ -91,7 +89,6 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                       style: AppStyles.instructionTextStyle,
                     ),
                     const SizedBox(height: 60),
-                    // Password Field
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscureText,
@@ -132,7 +129,6 @@ class _ResetPasswordContentState extends State<_ResetPasswordContent> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Confirm Password Field
                     TextFormField(
                       controller: _confirmPasswordController,
                       obscureText: _obscureConfirmText,

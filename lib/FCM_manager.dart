@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 
 import 'base/constant/storage_key.dart';
 import 'base/services/storage/storage_service.dart';
-import 'base/widgets/app_globals.dart';
 import 'features/notifications/data/models/store_FCM_model.dart';
 import 'features/notifications/presentation/cubit/notification_cubit/notification_cubit.dart';
 
@@ -20,19 +19,16 @@ class FCMManager {
   });
 
   Future<void> initialize(BuildContext context) async {
-    // Get token if user is logged in
     if (storageService.getFromDisk(StorageKey.tokenFCM) != null) {
       await setupFCMToken(context);
     }
 
-    // Listen for token refreshes
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
       if (storageService.getFromDisk(StorageKey.tokenFCM) != null) {
         await _updateFCMToken(newToken,context);
       }
     });
 
-    // Handle background/foreground messages
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
   }
@@ -55,7 +51,6 @@ class FCMManager {
 
     if (kIsWeb) {
       platform = 'Web';
-      // Web specific device info
     } else if (Platform.isAndroid) {
       platform = 'Android';
       final androidInfo = await deviceInfo.androidInfo;
@@ -105,7 +100,6 @@ class FCMManager {
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
-    // Handle foreground notifications
     debugPrint('Got a message whilst in the foreground!');
     debugPrint('Message data: ${message.data}');
 
@@ -115,19 +109,17 @@ class FCMManager {
   }
 
   void _handleBackgroundMessage(RemoteMessage message) {
-    // Handle when app is opened from background
     debugPrint('Message opened from background: ${message.data}');
-    // You might want to navigate to specific screen based on message
   }
   Future<String> getDeviceName() async {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
     if (Platform.isAndroid) {
       final androidInfo = await deviceInfo.androidInfo;
-      return androidInfo.model; // e.g. "Pixel 5"
+      return androidInfo.model;
     } else if (Platform.isIOS) {
       final iosInfo = await deviceInfo.iosInfo;
-      return iosInfo.utsname.machine ?? 'iOS Device'; // e.g. "iPhone12,1"
+      return iosInfo.utsname.machine;
     } else if (Platform.isWindows) {
       final windowsInfo = await deviceInfo.windowsInfo;
       return windowsInfo.computerName;

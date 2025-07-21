@@ -105,7 +105,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       decoration: InputDecoration(
                         labelText: 'allergyFilter.search'.tr(
                           context,
-                        ), // Translated
+                        ),
                         labelStyle: TextStyle(
                           color: theme.textTheme.bodySmall?.color,
                         ),
@@ -407,7 +407,7 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                           return Text(
                             "allergyFilter.noClinicalStatusesAvailable".tr(
                               context,
-                            ), // Translated
+                            ),
                             style: TextStyle(
                               color: theme.textTheme.bodySmall?.color,
                             ),
@@ -548,7 +548,6 @@ class _AllergyFilterDialogState extends State<AllergyFilterDialog> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    // Sort Order
                     Text(
                       "allergyFilter.sortOrder".tr(context),
                       style: theme.textTheme.titleMedium?.copyWith(

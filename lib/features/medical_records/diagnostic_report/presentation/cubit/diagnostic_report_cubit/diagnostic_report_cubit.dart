@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import '../../../../../../base/data/models/pagination_model.dart';
 import '../../../../../../base/go_router/go_router.dart';
 import '../../../../../../base/services/network/resource.dart';
@@ -12,9 +11,8 @@ part 'diagnostic_report_state.dart';
 
 class DiagnosticReportCubit extends Cubit<DiagnosticReportState> {
   final DiagnosticReportRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
-  DiagnosticReportCubit({required this.remoteDataSource, required this.networkInfo})
+  DiagnosticReportCubit({required this.remoteDataSource})
       : super(DiagnosticReportInitial());
 
   int _currentPage = 1;

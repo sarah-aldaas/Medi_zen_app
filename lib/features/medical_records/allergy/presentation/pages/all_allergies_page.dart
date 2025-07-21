@@ -118,10 +118,7 @@ class _AllAllergiesPageState extends State<AllAllergiesPage> {
                 if (index < allergies.length) {
                   final AllergyModel allergy = allergies[index];
                   return _buildAllergyItem(allergy, Theme.of(context));
-                  //   AllergyListItem(
-                  //   allergy: allergy,
-                  //   onTap: () => _navigateToAllergyDetails(allergy.id!),
-                  // );
+
                 } else {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),

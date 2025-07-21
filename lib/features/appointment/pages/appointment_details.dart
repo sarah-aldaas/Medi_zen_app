@@ -44,24 +44,6 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      //
-      //   title: Text(
-      //     "appointmentDetails.title".tr(context),
-      //     style: TextStyle(
-      //       color: Theme.of(context).primaryColor,
-      //       fontSize: 22,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //     icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-      //   ),
-      // ),
       body: RefreshIndicator(
         onRefresh: () async {
           _loadAppointmentDetails();
@@ -490,9 +472,6 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
         context.read<AppointmentCubit>().getDetailsAppointment(
           context: context,
           id: widget.appointmentId,
-        );
-        ShowToast.showToastSuccess(
-          message: 'appointmentDetails.updateSuccess'.tr(context),
         );
       }
     });

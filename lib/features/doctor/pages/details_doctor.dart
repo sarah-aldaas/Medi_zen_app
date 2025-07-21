@@ -96,12 +96,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
       });
 
       if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          throw Exception(
-            'Storage permission denied. Please allow storage access.',
-          );
-        }
+        await checkAndRequestPermissions();
       }
 
       Directory directory;
@@ -251,14 +246,12 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // _buildInfoColumn(Icons.people, '5.000+', 'patients', context),
                   _buildInfoColumn(
                     Icons.calendar_today,
                     widget.doctorModel.dateOfBirth,
                     'birthday',
                     context,
                   ),
-                  // _buildInfoColumn(Icons.star, '4.8', 'rating', context),
                   if (widget.doctorModel.gender != null)
                     _buildInfoColumn(
                       Icons.emoji_people,

@@ -149,7 +149,7 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
                     ),
                   ),
                 ],
-              ), //
+              ),
               Gap(200),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

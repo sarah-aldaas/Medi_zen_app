@@ -25,7 +25,7 @@ abstract class ComplainRemoteDataSource {
 
   Future<Resource<PublicResponseModel>> deleteComplain({required String complainId});
 
-  Future<Resource<PublicResponseModel>> createComplain({required String appointmentId, required ComplainModel complain});
+  Future<Resource<PublicResponseModel>> createComplain({required String appointmentId, required ComplainModel complain,});
 
   Future<Resource<List<ComplainResponseModel>>> getResponseOfComplain({required String complainId});
 
@@ -86,7 +86,6 @@ class ComplainRemoteDataSourceImpl implements ComplainRemoteDataSource {
   Future<Resource<PublicResponseModel>> createComplain({required String appointmentId, required ComplainModel complain}) async {
     final formData = FormData.fromMap({'title': complain.title, 'description': complain.description, 'type_id': complain.type?.id});
 
-    // Add attachments if they exist
     if (complain.attachmentsFiles != null && complain.attachmentsFiles!.isNotEmpty) {
       formData.files.addAll(
         complain.attachmentsFiles!.map((file) => MapEntry('attachments[]', MultipartFile.fromFileSync(file.path, filename: file.path.split('/').last))),
@@ -114,15 +113,13 @@ class ComplainRemoteDataSourceImpl implements ComplainRemoteDataSource {
 
   @override
   Future<Resource<PublicResponseModel>> responseOnComplain({required String complainId, required String responseText, List<File>? attachments}) async {
-    // Create FormData
     final formData = FormData.fromMap({'response': responseText});
 
-    // Add attachments if they exist
     if (attachments != null && attachments.isNotEmpty) {
       formData.files.addAll(
         attachments.map(
           (file) => MapEntry(
-            'attachments[]', // Note the [] for multiple files
+            'attachments[]',
             MultipartFile.fromFileSync(file.path, filename: file.path.split('/').last),
           ),
         ),

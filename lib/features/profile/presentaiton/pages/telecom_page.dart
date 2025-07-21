@@ -340,7 +340,6 @@ class _TelecomPageState extends State<TelecomPage> {
                               ],
                             ),
                           );
-                          // return _buildTelecomCard(context, filteredTelecoms[index],state);
                         },
                       ),
                 ],

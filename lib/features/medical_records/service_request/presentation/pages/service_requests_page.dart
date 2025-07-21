@@ -5,11 +5,11 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_model.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_request_details_page.dart';
 
+import '../../../../../base/widgets/not_found_data_page.dart';
 import '../../data/data_source/service_request_remote_data_source.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
@@ -53,7 +53,6 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
 
     if (widget.filter != oldWidget.filter) {
       _loadInitialRequests();
-      // _scrollController.jumpTo(0.0);
     }
   }
 
@@ -141,7 +140,6 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                   (context) => BlocProvider(
                     create:
                         (context) => ServiceRequestCubit(
-                          networkInfo: serviceLocator(),
                           remoteDataSource:
                               serviceLocator<ServiceRequestRemoteDataSource>(),
                         )..getServiceRequestDetails(request.id!, context),

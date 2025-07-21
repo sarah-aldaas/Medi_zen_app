@@ -26,7 +26,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       create:
           (context) => ForgotPasswordCubit(
             authRemoteDataSource: serviceLocator(),
-            networkInfo: serviceLocator(),
           ),
       child: _ForgotPasswordContent(),
     );
@@ -47,7 +46,6 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
     return BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
       listener: (context, state) {
         if (state is ForgotPasswordSuccess) {
-          // ShowToast.showToastSuccess(message: state.message);
           context.pushNamed(
             AppRouter.verifyPasswordOtp.name,
             extra: {'email': _emailController.text},

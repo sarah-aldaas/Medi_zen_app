@@ -149,13 +149,10 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
               return TabBarView(
                 controller: _tabController,
                 children: [
-                  // First tab - Condition Details
                   _buildConditionDetails(state.condition),
 
-                  // Second tab - Medication Requests
                   MyMedicationRequestsPage(conditionId: state.condition.id!),
 
-                  // Third tab - Diagnostic Reports
                   DiagnosticReportListPage(conditionId: state.condition.id!),
                 ],
               );

@@ -36,7 +36,6 @@ class CodeTypeModel {
   }
 }
 
-// models/code_model.dart
 class CodeModel {
   final String id;
   final String code;
@@ -44,7 +43,6 @@ class CodeModel {
   final String description;
   final String codeTypeId;
   final String? createdAt;
-  // final DateTime createdAt;
   final String? updatedAt;
   CodeTypeModel? codeTypeModel;
 
@@ -66,7 +64,6 @@ class CodeModel {
       display: json['display'].toString(),
       description: json['description'].toString(),
       codeTypeId: json['code_type_id'].toString(),
-      // createdAt: DateTime.parse(json['created_at']),
       createdAt:
           json['created_at'] != null ? json['created_at'].toString() : "",
       updatedAt:
@@ -75,7 +72,6 @@ class CodeModel {
           json["code_type"] != null
               ? CodeTypeModel.fromJson(json["code_type"])
               : null,
-      // updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 
@@ -86,7 +82,6 @@ class CodeModel {
       'display': display.toString(),
       'description': description.toString(),
       'code_type_id': codeTypeId.toString(),
-      // 'created_at': createdAt.toIso8601String(),
       'created_at': createdAt.toString(),
       'updated_at': updatedAt.toString(),
     };

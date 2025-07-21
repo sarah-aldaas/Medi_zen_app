@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
 import 'package:medizen_app/base/data/models/respons_model.dart';
 import 'package:medizen_app/base/error/exception.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/services/network/resource.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import '../../../../../base/go_router/go_router.dart';
@@ -14,25 +13,13 @@ part 'forgot_password_state.dart';
 
 class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   final AuthRemoteDataSource authRemoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
   ForgotPasswordCubit({
     required this.authRemoteDataSource,
-    required this.networkInfo,
   }) : super(ForgotPasswordInitial());
 
   void sendResetLink(String email, BuildContext context) async {
     emit(ForgotPasswordLoading());
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ForgotPasswordError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     try {
       final result = await authRemoteDataSource.forgetPassword(email: email);

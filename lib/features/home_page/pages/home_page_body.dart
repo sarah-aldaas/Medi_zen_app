@@ -174,7 +174,6 @@ class _HomePageBodyState extends State<HomePageBody> {
                    color: theme.iconTheme.color,
 
                  ),),
-                // Notification badge
                 Positioned(
                   right: 2,
                   bottom: 8,

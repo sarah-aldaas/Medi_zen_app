@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import '../../../../../../base/data/models/pagination_model.dart';
 import '../../../../../../base/go_router/go_router.dart';
 import '../../../../../../base/services/network/resource.dart';
@@ -13,9 +12,8 @@ part 'conditions_state.dart';
 
 class ConditionsCubit extends Cubit<ConditionsState> {
   final ConditionRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
-  ConditionsCubit({required this.remoteDataSource, required this.networkInfo})
+  ConditionsCubit({required this.remoteDataSource,})
       : super(ConditionsInitial());
 
   int _currentPage = 1;
@@ -40,14 +38,6 @@ class ConditionsCubit extends Cubit<ConditionsState> {
     if (filters != null) {
       _currentFilters = filters;
     }
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(ConditionsError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.getAllConditions(
       filters: _currentFilters,
@@ -100,14 +90,6 @@ class ConditionsCubit extends Cubit<ConditionsState> {
       _currentFilters = filters;
     }
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(ConditionsError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     final result = await remoteDataSource.getAllConditionForAppointment(
       appointmentId: appointmentId,
       filters: _currentFilters,
@@ -146,14 +128,6 @@ class ConditionsCubit extends Cubit<ConditionsState> {
     required BuildContext context,
   }) async {
     emit(ConditionsLoading());
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(ConditionsError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.getDetailsConditions(conditionId: conditionId);
     if (result is Success<ConditionsModel>) {

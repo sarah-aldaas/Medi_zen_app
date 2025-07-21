@@ -56,7 +56,7 @@ void showTelecomDetailsDialog({required BuildContext context, required TelecomMo
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(dialogContext); // Close the dialog
+              Navigator.pop(dialogContext);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.primaryColor,

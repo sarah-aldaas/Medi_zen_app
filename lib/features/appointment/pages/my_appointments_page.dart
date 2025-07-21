@@ -9,7 +9,6 @@ import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_model.dart';
 import 'package:medizen_app/features/appointment/pages/widgets/cancel_appointment_dialog.dart';
@@ -17,6 +16,7 @@ import 'package:medizen_app/features/appointment/pages/widgets/filter_appointmen
 import 'package:medizen_app/features/appointment/pages/widgets/update_appointment_page.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../base/widgets/not_found_data_page.dart';
 import '../data/models/appointment_filter.dart';
 import 'cubit/appointment_cubit/appointment_cubit.dart';
 
@@ -233,7 +233,6 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                               ),
                             ],
                           ),
-                          // Text(DateFormat('yyyy-M-d / hh:mma').format(DateTime.parse(appointment.startDate!))),
                           Row(
                             spacing: 20,
                             children: [
@@ -351,9 +350,9 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
     ).then((success) {
       if (success) {
         _loadInitialAppointments();
-        ShowToast.showToastSuccess(
-          message: 'appointmentDetails.updateSuccess'.tr(context),
-        );
+        // ShowToast.showToastSuccess(
+        //   message: 'appointmentDetails.updateSuccess'.tr(context),
+        // );
       }
       if (!success) {
         _loadInitialAppointments();
@@ -397,12 +396,10 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        // Doctor details column
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Doctor name
                               Container(
                                 width: 150,
                                 height: 20,
@@ -412,7 +409,6 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              // Date row
                               Row(
                                 children: [
                                   Container(
@@ -429,7 +425,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              // Time row
+
                               Row(
                                 children: [
                                   Container(
@@ -446,7 +442,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              // Status
+
                               Container(
                                 width: 100,
                                 height: 24,
@@ -460,7 +456,6 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                         ),
                       ],
                     ),
-                    // Buttons (only for some items)
                     if (index % 2 == 0) ...[
                       const SizedBox(height: 16),
                       Row(

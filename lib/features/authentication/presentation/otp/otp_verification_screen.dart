@@ -51,7 +51,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           child: BlocConsumer<OtpCubit, OtpState>(
             listener: (context, state) {
               if (state is OtpSuccess) {
-                // ShowToast.showToastSuccess(message: state.message);
                 context.goNamed(AppRouter.verified.name);
               } else if (state is OtpResendSuccess) {
                 ShowToast.showToastSuccess(message: state.message);

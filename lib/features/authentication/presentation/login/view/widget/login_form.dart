@@ -33,7 +33,6 @@ class _LoginFormState extends State<LoginForm> {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          // ShowToast.showToastSuccess(message: state.message);
           context.goNamed(AppRouter.homePage.name);
         } else if (state is LoginError) {
           ShowToast.showToastError(message: state.error);

@@ -1,42 +1,25 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
 import 'package:medizen_app/base/data/models/respons_model.dart';
 import 'package:medizen_app/base/error/exception.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
-import '../../../../../base/go_router/go_router.dart';
 import '../../../data/datasource/auth_remote_data_source.dart';
 
 part 'otp_verify_password_state.dart';
 
 class OtpVerifyPasswordCubit extends Cubit<OtpVerifyPasswordState> {
   final AuthRemoteDataSource authRemoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
   OtpVerifyPasswordCubit({
     required this.authRemoteDataSource,
-    required this.networkInfo,
   }) : super(OtpVerifyPasswordInitial());
 
   Future<void> verifyOtp({
     required String email,
     required String otp,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     emit(OtpLoadingVerify());
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(OtpError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     try {
       final result = await authRemoteDataSource.verifyOtpPassword(
         email: email,

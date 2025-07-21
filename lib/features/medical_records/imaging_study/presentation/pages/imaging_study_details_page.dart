@@ -210,7 +210,6 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
                 study.cancelledReason!,
                 valueColor: Colors.red[800],
               ),
-            // MODIFICATION END HERE
           ],
         ),
       ),

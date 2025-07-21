@@ -172,7 +172,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
               borderRadius: BorderRadius.circular(10),
               child:FlexibleImage(imageUrl:clinic.photo ,errorWidget: Center(child: SizedBox(
                   height: 60,
-                  child: Icon(Icons.local_hospital)),),height: 60,) //Image.asset(AppAssetImages.clinic2),
+                  child: Icon(Icons.local_hospital)),),height: 60,)
             ),
             const SizedBox(height: 4.0),
             Text(

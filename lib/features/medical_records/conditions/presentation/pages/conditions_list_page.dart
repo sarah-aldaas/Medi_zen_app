@@ -4,11 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_model.dart';
 import 'package:medizen_app/features/medical_records/conditions/presentation/pages/condition_details_page.dart';
 
 import '../../../../../base/theme/app_color.dart';
+import '../../../../../base/widgets/not_found_data_page.dart';
 import '../../data/models/conditions_filter_model.dart';
 import '../cubit/condition_cubit/conditions_cubit.dart';
 
@@ -81,9 +81,7 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
         color: Theme.of(context).primaryColor,
         child: BlocConsumer<ConditionsCubit, ConditionsState>(
           listener: (context, state) {
-            // if (state is ConditionsError) {
-            //   ShowToast.showToastError(message: state.error);
-            // }
+
           },
           builder: (context, state) {
             if (state is ConditionsLoading && !state.isLoadMore) {
@@ -145,8 +143,7 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
             children: [
               Row(
                 children: [
-                  // Icon(Icons.medical_information, color: AppColors.primaryColor, size: 28),
-                  // const SizedBox(width: 12),
+
                   Expanded(
                     child: Text(
                       condition.healthIssue ??
@@ -237,7 +234,6 @@ class _ConditionsListPageState extends State<ConditionsListPage> {
                     value,
                     maxLines: maxLines,
                     overflow: TextOverflow.ellipsis,
-                    // style: const TextStyle(color: Colors.black87),
                   ),
                 ),
               ],

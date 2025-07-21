@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/reaction/data/data_source/reaction_remote_datasource.dart';
 import 'package:meta/meta.dart';
@@ -14,11 +13,9 @@ part 'reaction_state.dart';
 
 class ReactionCubit extends Cubit<ReactionState> {
   final ReactionRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
   ReactionCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(ReactionInitial());
 
   int _currentPage = 1;
@@ -47,16 +44,7 @@ class ReactionCubit extends Cubit<ReactionState> {
     if (filters != null) {
       _currentFilters = filters;
     }
-// Check internet connectivity for initial load
-    if (!loadMore) {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed(AppRouter.noInternet.name);
-      //   emit(ReactionError(error: 'No internet connection'));
-      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      //   return;
-      // }
-    }
+
     final result = await remoteDataSource.getAllReactionOfAppointment(
       filters: _currentFilters,
       page: _currentPage,
@@ -96,18 +84,9 @@ class ReactionCubit extends Cubit<ReactionState> {
   Future<void> getSpecificReaction({
     required String allergyId,
     required String reactionId,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     emit(ReactionLoading(isLoadMore: false));
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ReactionError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.getSpecificReaction(
       allergyId: allergyId,
