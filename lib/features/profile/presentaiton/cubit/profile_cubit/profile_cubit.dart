@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/data/models/public_response_model.dart';
 import 'package:medizen_app/base/services/network/network_info.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/profile/data/data_sources/profile_remote_data_sources.dart';
+
 import '../../../../../base/constant/storage_key.dart';
 import '../../../../../base/go_router/go_router.dart';
 import '../../../../../base/services/di/injection_container_common.dart';
@@ -19,14 +19,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
-  ProfileCubit({
-    required this.remoteDataSource,
-    required this.networkInfo,
-  }) : super(ProfileState.initial());
+  ProfileCubit({required this.remoteDataSource, required this.networkInfo})
+    : super(ProfileState.initial());
 
-  Future<void> fetchMyProfile({
-    required BuildContext context, // Add context parameter
-  }) async {
+  Future<void> fetchMyProfile({required BuildContext context}) async {
     emit(ProfileState.loading());
 
     // Check internet connectivity
@@ -63,15 +59,6 @@ class ProfileCubit extends Cubit<ProfileState> {
   }) async {
     emit(ProfileState.loadingUpdate());
 
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ProfileState.error('No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     try {
       final result = await remoteDataSource.updateMyProfile(
         updateProfileRequestModel: updateProfileRequestModel,
@@ -80,6 +67,10 @@ class ProfileCubit extends Cubit<ProfileState> {
         success: (PublicResponseModel updatedPatient) {
           if (updatedPatient.msg == "Unauthorized. Please login first.") {
             context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          } else {
+            fetchMyProfile(context: context);
+
+            Navigator.of(context).pop();
           }
           emit(ProfileState.success(null));
         },

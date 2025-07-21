@@ -7,7 +7,6 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 
 import '../../../../../base/theme/app_color.dart';
-import '../../../../../base/widgets/show_toast.dart';
 import '../../data/models/encounter_model.dart';
 import '../cubit/encounter_cubit/encounter_cubit.dart';
 import '../widgets/encounter_list_item.dart';
@@ -21,20 +20,25 @@ const double _kCardPaddingVertical = 16.0;
 const double _kCardPaddingHorizontal = 20.0;
 
 class AllEncountersOfAppointmentPage extends StatefulWidget {
-final String appointmentId;
-  const AllEncountersOfAppointmentPage({super.key,required this.appointmentId});
+  final String appointmentId;
+  const AllEncountersOfAppointmentPage({
+    super.key,
+    required this.appointmentId,
+  });
 
   @override
-  State<AllEncountersOfAppointmentPage> createState() => _AllEncountersOfAppointmentPageState();
+  State<AllEncountersOfAppointmentPage> createState() =>
+      _AllEncountersOfAppointmentPageState();
 }
 
-class _AllEncountersOfAppointmentPageState extends State<AllEncountersOfAppointmentPage> {
-
+class _AllEncountersOfAppointmentPageState
+    extends State<AllEncountersOfAppointmentPage> {
   @override
   void initState() {
     super.initState();
     _loadInitialEncounters();
   }
+
   Color _getStatusColor(String? status) {
     switch (status?.toLowerCase()) {
       case 'completed':
@@ -65,19 +69,18 @@ class _AllEncountersOfAppointmentPageState extends State<AllEncountersOfAppointm
       },
       color: Theme.of(context).primaryColor,
       child: BlocConsumer<EncounterCubit, EncounterState>(
-        listener: (context, state) {
-          if (state is EncounterError) {
-            ShowToast.showToastError(message: 'encountersPge.errorLoading'.tr(context));
-          }
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           if (state is EncounterLoading) {
             return const Center(child: LoadingPage());
           }
 
           final List<EncounterModel> encounters =
-          state is EncounterOfAppointmentSuccess
-              ? state.encounterModel!=null?[state.encounterModel]:[]:[];
+              state is EncounterOfAppointmentSuccess
+                  ? state.encounterModel != null
+                      ? [state.encounterModel]
+                      : []
+                  : [];
 
           if (encounters.isEmpty) {
             return NotFoundDataPage();
@@ -106,7 +109,8 @@ class _AllEncountersOfAppointmentPageState extends State<AllEncountersOfAppointm
               if (index < encounters.length) {
                 return EncounterListItem(
                   encounter: encounters[index],
-                  onTap: () => _navigateToEncounterDetails(encounters[index].id!),
+                  onTap:
+                      () => _navigateToEncounterDetails(encounters[index].id!),
                 );
               } else {
                 return Center(child: LoadingButton());
@@ -129,6 +133,7 @@ class _AllEncountersOfAppointmentPageState extends State<AllEncountersOfAppointm
     });
   }
 }
+
 class _EncounterCard extends StatelessWidget {
   final EncounterModel encounter;
   // final bool showAppointmentReason;
@@ -155,7 +160,9 @@ class _EncounterCard extends StatelessWidget {
         formattedTime = DateFormat('hh:mm a').format(dateTime);
       }
     } catch (e) {
-      formattedDate = encounter.actualStartDate ?? 'encounterPage.not_available_short'.tr(context);
+      formattedDate =
+          encounter.actualStartDate ??
+          'encounterPage.not_available_short'.tr(context);
     }
 
     return Card(
@@ -186,7 +193,8 @@ class _EncounterCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      encounter.reason ?? 'encounterPage.no_reason_specified'.tr(context),
+                      encounter.reason ??
+                          'encounterPage.no_reason_specified'.tr(context),
                       style: textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.secondaryColor,
@@ -198,7 +206,8 @@ class _EncounterCard extends StatelessWidget {
                   const Gap(15),
                   Chip(
                     label: Text(
-                      encounter.status?.display ?? 'encounterPage.unknown_status'.tr(context),
+                      encounter.status?.display ??
+                          'encounterPage.unknown_status'.tr(context),
                       style: textTheme.labelSmall?.copyWith(
                         color: AppColors.primaryColor,
                         fontWeight: FontWeight.bold,

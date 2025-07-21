@@ -25,12 +25,13 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
     super.initState();
     _loadMedicationDetails();
   }
-void _loadMedicationDetails(){
-  context.read<MedicationCubit>().getMedicationDetails(
-    context: context,
-    medicationId: widget.medicationId,
-  );
-}
+
+  void _loadMedicationDetails() {
+    context.read<MedicationCubit>().getMedicationDetails(
+      context: context,
+      medicationId: widget.medicationId,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +105,28 @@ void _loadMedicationDetails(){
                   "medicationDetails.instructions".tr(context),
                   medication.dosageInstructions!,
                 ),
+              _buildInfoCard(
+                title: "medicationDetails.dosageInfo".tr(context),
+                children: [
+                  if (medication.dose != null && medication.doseUnit != null)
+                    _buildDetailRow(
+                      "medicationDetails.dose".tr(context),
+                      "${medication.dose} ${medication.doseUnit}",
+                    ),
+                  if (medication.maxDosePerPeriod != null)
+                    _buildDetailRow(
+                      "medicationDetails.maxDose".tr(context),
+                      "${medication.maxDosePerPeriod!.numerator.value} ${medication.maxDosePerPeriod!.numerator.unit} ${"medicationDetails.per".tr(context)} ${medication.maxDosePerPeriod!.denominator.value} ${medication.maxDosePerPeriod!.denominator.unit}",
+                    ),
+                  if (medication.dosageInstructions != null)
+                    _buildDetailRow(
+                      "medicationDetails.instructions".tr(context),
+                      medication.dosageInstructions!,
+                    ),
+
+
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -129,6 +152,23 @@ void _loadMedicationDetails(){
                   medication.asNeeded!
                       ? 'medicationDetails.yes'.tr(context)
                       : 'medicationDetails.no'.tr(context),
+
+                ),
+              if (medication.when != null)
+                _buildDetailRow(
+                  "medicationDetails.whenToTake".tr(context),
+                  medication.when!,
+                ),
+              if (medication.event != null)
+                _buildDetailRow(
+                  "medicationDetails.eventTime".tr(context),
+                  medication.event!,
+                ),
+              if (medication.offset != null &&
+                  medication.offsetUnit != null)
+                _buildDetailRow(
+                  "medicationDetails.offset".tr(context),
+                  "${medication.offset} ${medication.offsetUnit!.length}",
                 ),
             ],
           ),
@@ -244,12 +284,7 @@ void _loadMedicationDetails(){
             ),
           ),
         ),
-        Expanded(
-          child: Text(
-            value,
-            style: const TextStyle(fontSize: 15),
-          ),
-        ),
+        Expanded(child: Text(value, style: const TextStyle(fontSize: 15))),
       ],
     );
   }

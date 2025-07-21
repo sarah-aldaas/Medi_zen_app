@@ -1254,13 +1254,15 @@
     "statusOnHold": "معلق"
   },
   "medicationDetails": {
-
     "title": "تفاصيل الدواء",
     "failedToLoad": "فشل في تحميل تفاصيل الدواء.",
     "dosageInfo": "معلومات الجرعة",
     "dose": "الجرعة",
     "maxDose": "الحد الأقصى للجرعة",
     "per": "لكل",
+    "whenToTake": "متى تأخذ",
+    "eventTime": "وقت الحدث",
+    "offset": "الإزاحة",
     "instructions": "التعليمات",
     "patientAndAdditionalInstructions": "تعليمات المريض والإرشادات الإضافية",
     "patientInstructions": "تعليمات المريض",
@@ -1457,6 +1459,8 @@
     "stage": "المرحلة"
   },
   "conditionDetails": {
+    "generateArticle": "توليد مقال",
+   "showArticles":"عرض المقالات",
     "details": "التفاصيل",
     "diagnosticReports": "التقارير الطبية",
     "medicationRequest": "طلبات الادوية",
@@ -1503,8 +1507,12 @@
     "arabic": "العربية",
     "english": "الإنكليزية",
     "select_model": "اختر النموذج:",
-    "generate": "توليد"
-  },
+    "generate": "توليد",
+
+  "noArticlesFound": "لم يتم العثور على مقالات",
+  "noArticlesAvailable": "لا توجد مقالات متاحة لهذه الحالة بعد."
+},
+
   "conditionsFilter": {
     "title": "تصفية الحالات",
     "all": "الكل",
