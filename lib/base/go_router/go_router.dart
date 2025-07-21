@@ -222,6 +222,7 @@ GoRouter goRouter() {
           return ClinicsPage();
         },
       ),
+
       GoRoute(
         path: '/profile-details',
         name: AppRouter.profileDetails.name,

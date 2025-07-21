@@ -38,10 +38,7 @@ class _ClinicsPageState extends State<ClinicsPage> {
               context.pop();
             },
 
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Theme.of(context).iconTheme.color,
-            ),
+            icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
           ),
           toolbarHeight: 80,
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,

@@ -3,11 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
@@ -148,7 +146,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
           ShowToast.showToasts(
             message: 'editProfile.updateSuccessMessage'.tr(context),
           );
-          context.pushNamed(AppRouter.profileDetails.name);
+          // لا حاجة لتنقل هنا لأن الكيوبت سيتعامل مع ذلك
         } else if (state.errorMessage.isNotEmpty) {
           ShowToast.showToastError(message: state.errorMessage);
         } else if (state.status == ProfileStatus.success &&
