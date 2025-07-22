@@ -123,7 +123,9 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                       Icons.arrow_back_ios,
                       color: AppColors.whiteColor,
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                   expandedHeight: 200.0,
                   floating: false,

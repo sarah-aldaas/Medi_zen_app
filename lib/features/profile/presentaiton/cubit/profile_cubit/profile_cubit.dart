@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/data/models/public_response_model.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
+
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/profile/data/data_sources/profile_remote_data_sources.dart';
+
 import '../../../../../base/constant/storage_key.dart';
 import '../../../../../base/go_router/go_router.dart';
 import '../../../../../base/services/di/injection_container_common.dart';
@@ -25,6 +27,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> fetchMyProfile({
     required BuildContext context,
   }) async {
+
     emit(ProfileState.loading());
     try {
       final result = await remoteDataSource.getMyProfile();
@@ -59,6 +62,10 @@ class ProfileCubit extends Cubit<ProfileState> {
         success: (PublicResponseModel updatedPatient) {
           if (updatedPatient.msg == "Unauthorized. Please login first.") {
             context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          } else {
+            fetchMyProfile(context: context);
+
+            Navigator.of(context).pop();
           }
           emit(ProfileState.success(null));
         },

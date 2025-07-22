@@ -1255,6 +1255,9 @@
     "dose": "Dose",
     "maxDose": "Max Dose",
     "per": "per",
+    "whenToTake": "When to take",
+    "eventTime": "Event time",
+    "offset": "Offset",
     "instructions": "Instructions",
     "patientAndAdditionalInstructions": "Patient & Additional Instructions",
     "patientInstructions": "Patient Instructions",
@@ -1499,6 +1502,9 @@
     "stage": "Stage"
   },
   "conditionDetails": {
+    "generateArticle": "Generate article",
+    "showArticles": "Show articles",
+    "select_model": "select model",
     "details": "Details",
     "medicationRequest": "Medication request",
     "diagnosticReports": "Diagnostic reports",
@@ -1545,7 +1551,10 @@
     "arabic": "Arabic",
     "english": "English",
     "select_model:": "Select model:",
-    "generate": "Generate"
+    "generate": "Generate",
+    "noArticlesFound": "No Articles Found",
+    "noArticlesAvailable": "There are no articles available for this condition yet."
+
   },
   "conditionsFilter": {
     "title": "Filter Conditions",
@@ -1584,6 +1593,9 @@
     "dose": "Dose",
     "maxDose": "Max Dose",
     "per": "per",
+    "whenToTake": "When to take",
+    "eventTime": "Event time",
+    "offset": "Offset",
     "instructions": "Instructions",
     "patientAndAdditionalInstructions": "Patient and Additional Instructions",
     "patientInstructions": "Patient Instructions",

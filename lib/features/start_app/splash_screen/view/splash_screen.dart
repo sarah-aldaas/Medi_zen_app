@@ -17,7 +17,8 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   double _opacity = 0.0;
   bool _isFirstLaunch = true;
   late AnimationController _heartbeatController;
@@ -33,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       duration: const Duration(milliseconds: 1800),
     );
 
+// <<<<<<< HEAD
     _heartbeatAnimation = TweenSequence<double>(
       <TweenSequenceItem<double>>[
         TweenSequenceItem<double>(
@@ -54,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       ],
     ).animate(_heartbeatController);
     _checkFirstLaunchAndPatient();
-
+ 
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
         setState(() => _opacity = 1.0);
@@ -68,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Future<void> _checkFirstLaunchAndPatient() async {
     final isFirst =
         serviceLocator<StorageService>().getFromDisk(StorageKey.firstInstall) ??
-            true;
+        true;
 
     if (mounted) {
       setState(() {
@@ -86,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       if (token != null) {
         context.goNamed(AppRouter.homePage.name);
       } else {
-        context.goNamed(AppRouter.welcomeScreen.name);
+        context.goNamed(AppRouter.login.name);
       }
     }
   }

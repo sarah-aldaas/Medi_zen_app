@@ -150,9 +150,13 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 controller: _tabController,
                 children: [
                   _buildConditionDetails(state.condition),
-
+// <<<<<<< HEAD
+//
+//                   MyMedicationRequestsPage(conditionId: state.condition.id!),
+//
+// =======
                   MyMedicationRequestsPage(conditionId: state.condition.id!),
-
+// >>>>>>> c804e45c3224c511626af6e9cbcb1dd2e908ee6d
                   DiagnosticReportListPage(conditionId: state.condition.id!),
                 ],
               );
@@ -211,12 +215,10 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
         children: [
           _buildHeaderSection(context, condition),
           const SizedBox(height: 16),
-
           _buildMainDetailsCard(context, condition),
           const SizedBox(height: 16),
           _buildSectionHeader(context, 'conditionDetails.articles'.tr(context)),
           _buildArticlesSection(context, condition),
-
           if (condition.onSetDate != null ||
               condition.abatementDate != null ||
               condition.recordDate != null) ...[
@@ -227,7 +229,6 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
             _buildTimelineSection(context, condition),
             const SizedBox(height: 16),
           ],
-
           if (condition.bodySite != null) ...[
             _buildSectionHeader(
               context,
@@ -236,14 +237,12 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
             _buildBodySiteSection(context, condition),
             const SizedBox(height: 16),
           ],
-
           _buildSectionHeader(
             context,
             'conditionDetails.clinicalInformation'.tr(context),
           ),
           _buildClinicalInfoSection(context, condition),
           const SizedBox(height: 16),
-
           if (condition.encounters != null &&
               condition.encounters!.isNotEmpty) ...[
             _buildSectionHeader(
@@ -253,7 +252,6 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
             _buildEncountersSection(context, condition),
             const SizedBox(height: 16),
           ],
-
           if (condition.serviceRequests != null &&
               condition.serviceRequests!.isNotEmpty) ...[
             _buildSectionHeader(
@@ -263,7 +261,6 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
             _buildServiceRequestsSection(context, condition),
             const SizedBox(height: 16),
           ],
-
           if (condition.note != null ||
               condition.summary != null ||
               condition.extraNote != null) ...[
@@ -359,74 +356,60 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'conditionDetails.articles'.tr(context),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(
-                  children: [
-                    Text("Show article"),
-                    IconButton(
-                      onPressed:
-                          () => _showConditionArticles(context, condition.id!),
-                      icon: const Icon(Icons.article),
-                      tooltip: 'View articles about this condition',
-                    ),
-                  ],
+                _buildArticleActionButton(
+                  context: context,
+                  icon: Icons.article,
+                  label: 'conditionDetails.showArticles'.tr(context),
+                  onPressed:
+                      () => _showConditionArticles(context, condition.id!),
                 ),
-                Row(
-                  children: [
-                    Text("Generate article"),
-                    BlocBuilder<ArticleCubit, ArticleState>(
-                      builder: (context, state) {
-                        final cubit = context.read<ArticleCubit>();
-                        final lastGenerationTime = cubit.lastGenerationTime;
-                        final generationCount = cubit.generationCount;
-                        final canGenerate = _checkGenerationCooldown(
+                BlocBuilder<ArticleCubit, ArticleState>(
+                  builder: (context, state) {
+                    final cubit = context.read<ArticleCubit>();
+                    final lastGenerationTime = cubit.lastGenerationTime;
+                    final generationCount = cubit.generationCount;
+                    final canGenerate = _checkGenerationCooldown(
+                      lastGenerationTime,
+                      generationCount,
+                    );
+
+                    return canGenerate
+                        ? _buildArticleActionButton(
+                          context: context,
+                          icon: Icons.note_add,
+                          label: 'conditionDetails.generateArticle'.tr(context),
+                          onPressed:
+                              () =>
+                                  _showAiModelSelection(context, condition.id!),
+                        )
+                        : _buildCooldownTimer(
+                          context,
                           lastGenerationTime,
                           generationCount,
                         );
-
-                        return canGenerate
-                            ? IconButton(
-                              onPressed:
-                                  () => _showAiModelSelection(
-                                    context,
-                                    condition.id!,
-                                  ),
-                              icon: const Icon(Icons.note_add),
-                              tooltip: 'Generate AI article',
-                            )
-                            : StreamBuilder<String>(
-                              stream: _getCooldownStream(
-                                lastGenerationTime,
-                                generationCount,
-                              ),
-                              builder: (context, snapshot) {
-                                return Row(
-                                  children: [
-                                    const Icon(Icons.timer, color: Colors.grey),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      snapshot.data ?? 'Calculating...',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                      },
-                    ),
-                  ],
+                  },
                 ),
               ],
             ),
             BlocBuilder<ArticleCubit, ArticleState>(
               builder: (context, state) {
                 if (state is ArticleGenerateLoading) {
-                  return const LinearProgressIndicator();
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: LinearProgressIndicator(),
+                  );
                 }
                 return const SizedBox();
               },
@@ -434,6 +417,58 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildArticleActionButton({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 20),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).primaryColor,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+
+  Widget _buildCooldownTimer(
+    BuildContext context,
+    DateTime? lastGenerationTime,
+    int generationCount,
+  ) {
+    return StreamBuilder<String>(
+      stream: _getCooldownStream(lastGenerationTime, generationCount),
+      builder: (context, snapshot) {
+        return Tooltip(
+          message: 'conditionDetails.generationCooldown'.tr(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.timer, color: Colors.grey, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  snapshot.data ?? 'Calculating...',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -456,6 +491,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               title: Text(
                 'conditionDetails.select_AI_model'.tr(context),
                 style: TextStyle(
@@ -647,21 +683,27 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
       barrierDismissible: false,
       builder:
           (context) => AlertDialog(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Text('conditionDetails.loading_articles'.tr(context)),
             content: BlocConsumer<ArticleCubit, ArticleState>(
               listener: (context, state) {
                 if (state is ArticleConditionSuccess) {
-                  Navigator.pop(context);
+                  Navigator.pop(context); // Close the loading dialog
                   _showArticleDialog(context, state.article);
                 } else if (state is ArticleError) {
-                  Navigator.pop(context);
-                  ShowToast.showToastError(message: state.error);
+                  Navigator.pop(context); // Close the loading dialog
+                  // If there's an error and no article is found, show a specific message
+                  _showArticleDialog(
+                    context,
+                    null,
+                  ); // Pass null to indicate no article
                 }
               },
               builder: (context, state) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Assuming LoadingButton() is a widget for showing loading indicator
                     LoadingButton(),
                     SizedBox(height: 16),
                     Text('conditionDetails.fetching_articles'.tr(context)),
@@ -685,10 +727,14 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                     ? Text(
                       article.title ?? 'conditionDetails.articles'.tr(context),
                     )
-                    : SizedBox.shrink(),
+                    : Text(
+                      'conditionDetails.noArticlesFound'.tr(context),
+                    ), // New title for no articles
             content:
                 article == null
-                    ? Text('conditionDetails.can_not_generate'.tr(context))
+                    ? Text(
+                      'conditionDetails.noArticlesAvailable'.tr(context),
+                    ) // Specific message for no articles
                     : SizedBox(
                       width: double.maxFinite,
                       height: MediaQuery.of(context).size.height * 0.5,
@@ -734,7 +780,6 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
             ),
             const Divider(height: 10, thickness: 1.5, color: Colors.grey),
             const SizedBox(height: 8),
-
             _buildDetailRow(
               icon: Icons.calendar_month,
               label: 'conditionDetails.type'.tr(context),
@@ -745,14 +790,12 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                           : 'conditionDetails.acute'.tr(context))
                       : 'conditionDetails.notSpecified'.tr(context),
             ),
-
             if (condition.verificationStatus != null)
               _buildDetailRow(
                 icon: Icons.verified_user,
                 label: 'conditionDetails.verification'.tr(context),
                 value: condition.verificationStatus!.display,
               ),
-
             if (condition.stage != null)
               _buildDetailRow(
                 icon: Icons.insights,
@@ -784,9 +827,8 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 date: DateFormat(
                   'MMM d, y',
                 ).format(DateTime.parse(condition.onSetDate!)),
-                age: condition.onSetAge,
+                age: condition.onSetAge?.toString(), // Ensure age is String
               ),
-
             if (condition.abatementDate != null)
               _buildTimelineItem(
                 icon: Icons.check_circle_outline,
@@ -794,9 +836,8 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 date: DateFormat(
                   'MMM d, y',
                 ).format(DateTime.parse(condition.abatementDate!)),
-                age: condition.abatementAge,
+                age: condition.abatementAge?.toString(), // Ensure age is String
               ),
-
             if (condition.recordDate != null)
               _buildTimelineItem(
                 icon: Icons.assignment,
@@ -870,14 +911,12 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 label: 'conditionDetails.clinicalStatus'.tr(context),
                 value: condition.clinicalStatus!.display,
               ),
-
             if (condition.verificationStatus != null)
               _buildDetailRow(
                 icon: Icons.verified_outlined,
                 label: 'conditionDetails.verificationStatus'.tr(context),
                 value: condition.verificationStatus!.display,
               ),
-
             if (condition.stage != null)
               _buildDetailRow(
                 icon: Icons.bar_chart,
@@ -1034,14 +1073,12 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 title: 'conditionDetails.summary'.tr(context),
                 content: condition.summary!,
               ),
-
             if (condition.note != null)
               _buildNoteItem(
                 icon: Icons.note_alt,
                 title: 'conditionDetails.notesLabel'.tr(context),
                 content: condition.note!,
               ),
-
             if (condition.extraNote != null)
               _buildNoteItem(
                 icon: Icons.bookmark_add,
@@ -1058,21 +1095,32 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
     required IconData icon,
     required String label,
     required String value,
+    Color? iconColor,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 24, color: Theme.of(context).primaryColor),
+          Icon(icon, color: iconColor ?? AppColors.primaryColor, size: 24),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.titel,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(value, style: TextStyle(color: Colors.grey)),
+                Text(
+                  value,
+                  style: const TextStyle(fontSize: 15, color: Colors.black87),
+                ),
               ],
             ),
           ),
@@ -1112,7 +1160,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                     if (age != null) ...[
                       const SizedBox(width: 8),
                       Text(
-                        'conditionDetails.yearsAge'.tr(context),
+                        '($age ${'conditionDetails.yearsAge'.tr(context)})', // Updated translation key here
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.grey[500],
                         ),

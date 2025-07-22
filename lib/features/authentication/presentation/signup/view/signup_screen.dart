@@ -7,6 +7,7 @@ import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/features/authentication/presentation/signup/view/widget/signup_form.dart';
 
 import '../../../../../base/go_router/go_router.dart';
+import '../../../../../base/theme/app_color.dart';
 import '../cubit/signup_cubit.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -18,11 +19,24 @@ class SignupScreen extends StatelessWidget {
       providers: [
         BlocProvider(
           create:
-              (context) => SignupCubit(authRemoteDataSource: serviceLocator(),),
+// <<<<<<< HEAD
+//               (context) => SignupCubit(authRemoteDataSource: serviceLocator(),),
+//         ),
+//         BlocProvider(
+//           create:
+//               (context) => CodeTypesCubit(remoteDataSource: serviceLocator()),
+// =======
+              (context) => SignupCubit(
+                authRemoteDataSource: serviceLocator(),
+
+              ),
         ),
         BlocProvider(
           create:
-              (context) => CodeTypesCubit(remoteDataSource: serviceLocator()),
+              (context) => CodeTypesCubit(
+                remoteDataSource: serviceLocator(),
+              ),
+// >>>>>>> c804e45c3224c511626af6e9cbcb1dd2e908ee6d
         ),
       ],
       child: Scaffold(
@@ -39,9 +53,9 @@ class SignupScreen extends StatelessWidget {
                       onPressed: () {
                         context.replaceNamed(AppRouter.welcomeScreen.name);
                       },
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.grey,
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: AppColors.primaryColor,
                       ),
                     ),
                     Expanded(
@@ -49,7 +63,7 @@ class SignupScreen extends StatelessWidget {
                         child: Text(
                           "sign_up_page.sign_up".tr(context),
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).primaryColor,
                           ),
@@ -59,7 +73,7 @@ class SignupScreen extends StatelessWidget {
                     SizedBox(width: 48),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 60),
                 SignupForm(),
               ],
             ),

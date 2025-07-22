@@ -86,7 +86,7 @@ enum AppRouter {
 
 GoRouter goRouter() {
   return GoRouter(
-    initialLocation: "/home",
+    initialLocation: "/splashScreen",
     routes: [
       GoRoute(
         path: "/splashScreen",
@@ -214,6 +214,7 @@ GoRouter goRouter() {
           return ClinicsPage();
         },
       ),
+
       GoRoute(
         path: '/profile-details',
         name: AppRouter.profileDetails.name,
