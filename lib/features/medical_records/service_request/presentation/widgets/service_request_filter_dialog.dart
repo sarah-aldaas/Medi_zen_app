@@ -184,7 +184,6 @@ class _ServiceRequestFilterDialogState
                           ),
                         ),
                         const SizedBox(height: 10),
-                        // Priority Filter
                         _buildFilterSection(
                           title:
                               'serviceRequestFilterDialogPage.priorityFilterTitle'
@@ -216,7 +215,6 @@ class _ServiceRequestFilterDialogState
                           ),
                         ),
                         const SizedBox(height: 10),
-                        // Body Site Filter
                         _buildFilterSection(
                           title:
                               'serviceRequestFilterDialogPage.bodySiteFilterTitle'

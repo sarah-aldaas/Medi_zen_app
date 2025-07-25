@@ -60,7 +60,6 @@ class _MyMedicationsOfAppointmentPageState extends State<MyMedicationsOfAppointm
 
     if (widget.filter != oldWidget.filter) {
       _loadInitialMedications();
-      // _scrollController.jumpTo(0.0);
     }
   }
 
@@ -74,9 +73,7 @@ class _MyMedicationsOfAppointmentPageState extends State<MyMedicationsOfAppointm
         color: Theme.of(context).primaryColor,
         child: BlocConsumer<MedicationCubit, MedicationState>(
           listener: (context, state) {
-            // if (state is MedicationError) {
-            //   ShowToast.showToastError(message: state.error);
-            // }
+
           },
           builder: (context, state) {
             if (state is MedicationLoading && !state.isLoadMore) {

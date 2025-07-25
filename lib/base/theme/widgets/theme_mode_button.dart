@@ -15,7 +15,6 @@ class ThemeModeButton extends StatelessWidget {
 
   const ThemeModeButton.outlined() : this._(_Variant.outlined);
 
-  // ignore: library_private_types_in_public_api
   final _Variant variant;
 
   @override

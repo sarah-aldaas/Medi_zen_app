@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:meta/meta.dart';
 import '../../../../../../base/data/models/pagination_model.dart';
 import '../../../../../../base/go_router/go_router.dart';
@@ -13,9 +12,8 @@ part 'medication_state.dart';
 
 class MedicationCubit extends Cubit<MedicationState> {
   final MedicationRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
-  MedicationCubit({required this.remoteDataSource, required this.networkInfo})
+  MedicationCubit({required this.remoteDataSource})
       : super(MedicationInitial());
 
   int _currentPage = 1;
@@ -40,14 +38,6 @@ class MedicationCubit extends Cubit<MedicationState> {
     if (filters != null) {
       _currentFilters = filters;
     }
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(MedicationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.getAllMedication(
       filters: _currentFilters,
@@ -173,14 +163,6 @@ class MedicationCubit extends Cubit<MedicationState> {
     if (filters != null) {
       _currentFilters = filters;
     }
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(MedicationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.getAllMedicationForMedicationRequest(
       medicationRequestId: medicationRequestId,

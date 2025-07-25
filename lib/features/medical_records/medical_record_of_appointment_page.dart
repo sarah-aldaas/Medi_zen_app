@@ -36,15 +36,9 @@ class _MedicalRecordOfAppointmentPageState
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // EncounterFilterModel _encounterFilter = EncounterFilterModel();
   AllergyFilterModel _allergyFilter = AllergyFilterModel();
   ServiceRequestFilter _serviceRequestFilter = ServiceRequestFilter();
   ConditionsFilterModel _conditionFilter = ConditionsFilterModel();
-  MedicationRequestFilterModel _medicationRequestFilter =
-      MedicationRequestFilterModel();
-  MedicationFilterModel _medicationFilter = MedicationFilterModel();
-  DiagnosticReportFilterModel _diagnosticReportFilter =
-      DiagnosticReportFilterModel();
 
   @override
   void initState() {

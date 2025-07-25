@@ -9,6 +9,7 @@ import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/appointment/data/models/appointment_model.dart';
 import 'package:medizen_app/features/invoice/presentation/cubit/invoice_cubit/invoice_cubit.dart';
 
+import '../../../../base/widgets/flexible_image.dart';
 import '../../data/models/invoice_filter_model.dart';
 import '../widgets/invoice_filter_dialog.dart';
 import 'invoice_details_page.dart';
@@ -267,7 +268,7 @@ class _MyAppointmentFinishedInvoicePageState
               SnackBar(
                 content: Text("invoicesPage.notPaidMessage".tr(context)),
               ),
-            ); // Changed key
+            );
           }
         },
         child: Card(
@@ -290,12 +291,12 @@ class _MyAppointmentFinishedInvoicePageState
                         width: 100,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            AppAssetImages.photoDoctor1,
+                          child:FlexibleImage(
+                            imageUrl: appointment.doctor!.avatar,
+                            assetPath: AppAssetImages.photoDoctor1 ,
                             height: 100,
                             width: 100,
-                            fit: BoxFit.fill,
-                          ),
+                          )
                         ),
                       ),
                       const SizedBox(

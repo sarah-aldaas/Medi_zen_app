@@ -16,13 +16,9 @@ class ImagingStudyLoading extends ImagingStudyState {
 
 class ImagingStudyLoaded extends ImagingStudyState {
   final ImagingStudyModel imagingStudy;
-  // final List<SeriesModel> series;
-  // final bool hasMoreSeries;
 
   const ImagingStudyLoaded({
     required this.imagingStudy,
-    // required this.series,
-    // required this.hasMoreSeries,
   });
 
   @override

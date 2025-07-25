@@ -31,7 +31,6 @@ class _ArticleDetailsNotificationPageState
     super.initState();
     _cubit = ArticleCubit(
       remoteDataSource: serviceLocator(),
-      networkInfo: serviceLocator(),
     );
     _cubit.getDetailsArticle(articleId: widget.articleId, context: context);
   }

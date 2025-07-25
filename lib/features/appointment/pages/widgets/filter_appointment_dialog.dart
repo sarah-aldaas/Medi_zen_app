@@ -57,7 +57,6 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -218,7 +217,6 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    // Start Date
                     Text(
                       "filterAppointments.startDate".tr(context),
                       style: const TextStyle(
@@ -276,7 +274,6 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // End Date
                     Text(
                       "filterAppointments.endDate".tr(context),
                       style: const TextStyle(
@@ -330,43 +327,9 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                         }
                       },
                     ),
-                    // const SizedBox(height: 16),
-                    // Doctor (Commented out in original code, leaving as is)
-                    // const Text(
-                    //   "Doctor",
-                    //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    // ),
-                    // const SizedBox(height: 8),
-                    // FutureBuilder<List<DoctorModel>>(
-                    //   future: _fetchDoctors(),
-                    //   builder: (context, snapshot) {
-                    //     if (snapshot.connectionState == ConnectionState.waiting) {
-                    //       return const Center(child: CircularProgressIndicator());
-                    //     }
-                    //     if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-                    //       return const Text("No doctors available", style: TextStyle(color: Colors.grey));
-                    //     }
-                    //     return DropdownButtonFormField<int>(
-                    //       value: _filter.doctorId,
-                    //       decoration: InputDecoration(
-                    //         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-                    //         contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                    //       ),
-                    //       items: [
-                    //         const DropdownMenuItem(value: null, child: Text("All Doctors")),
-                    //         ...snapshot.data!.map((doctor) => DropdownMenuItem(
-                    //           value: doctor.id,
-                    //           child: Text("${doctor.fName} ${doctor.lName}"),
-                    //         )),
-                    //       ],
-                    //       onChanged: (value) => setState(() {
-                    //         _filter = _filter.copyWith(doctorId: value);
-                    //       }),
-                    //     );
-                    //   },
-                    // ),
+
                     const SizedBox(height: 20),
-                    // Sort Order
+
                     Text(
                       "filterAppointments.sortOrder".tr(context),
                       style: const TextStyle(
@@ -416,7 +379,6 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
               ),
             ),
             const SizedBox(height: 20),
-            // Action Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:meta/meta.dart';
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/go_router/go_router.dart';
@@ -14,11 +13,9 @@ part 'invoice_state.dart';
 
 class InvoiceCubit extends Cubit<InvoiceState> {
   final InvoiceRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
   InvoiceCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(InvoiceInitial());
 
   int _currentPagePaid = 1;
@@ -58,14 +55,6 @@ class InvoiceCubit extends Cubit<InvoiceState> {
         _currentFiltersUnpaid = filters;
       }
     }
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(InvoiceError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final currentFilters = isPaid ? _currentFiltersPaid : _currentFiltersUnpaid;
     final currentPage = isPaid ? _currentPagePaid : _currentPageUnpaid;

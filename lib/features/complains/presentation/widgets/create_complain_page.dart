@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/complains/data/models/complain_model.dart';
 
 import '../../../../base/blocs/code_types_bloc/code_types_cubit.dart';
@@ -66,6 +67,10 @@ class _CreateComplainPageState extends State<CreateComplainPage> {
   }
 
   void _submitComplain() {
+    print("********************************");
+    print(_attachments.length);
+    print("********************************");
+
     if (_formKey.currentState!.validate()) {
       final complain = ComplainModel(
         title: _titleController.text,
@@ -87,9 +92,7 @@ class _CreateComplainPageState extends State<CreateComplainPage> {
             }
           })
           .catchError((error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to create complain: $error')),
-            );
+            ShowToast.showToastError(message: error.toString());
           });
     }
   }

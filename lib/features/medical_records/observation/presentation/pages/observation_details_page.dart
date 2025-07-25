@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../../../base/services/di/injection_container_common.dart';
 import '../../../../../base/services/network/network_client.dart';
 import '../../../../../base/theme/app_color.dart';
+import '../../../../../main.dart';
 import '../cubit/observation_cubit/observation_cubit.dart';
 
 class ObservationDetailsPage extends StatefulWidget {
@@ -66,15 +67,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
         ),
         centerTitle: true,
         elevation: 4,
-        // flexibleSpace: Container(
-        //   decoration:  BoxDecoration(
-        //     gradient: LinearGradient(
-        //       colors: [AppColors.backGroundLogo, Colors.black87],
-        //       begin: Alignment.topLeft,
-        //       end: Alignment.bottomRight,
-        //     ),
-        //   ),
-        // ),
       ),
       body: BlocBuilder<ObservationCubit, ObservationState>(
         builder: (context, state) {
@@ -206,42 +198,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
             ],
           ),
           const SizedBox(height: 24),
-
-          // if (observation.pdf != null)
-          //   _buildSectionCard(
-          //     context,
-          //     title: 'observationDetailsPage.testReportSectionTitle'.tr(
-          //       context,
-          //     ),
-          //     icon: Icons.picture_as_pdf_outlined,
-          //     children: [
-          //       Center(
-          //         child: ElevatedButton.icon(
-          //           onPressed: () => _viewPdfReport(context, observation.pdf!),
-          //           icon: const Icon(Icons.open_in_new, color: Colors.white),
-          //           label: Text(
-          //             'observationDetailsPage.viewFullReportPDFButton'.tr(
-          //               context,
-          //             ),
-          //             style: Theme.of(
-          //               context,
-          //             ).textTheme.labelLarge?.copyWith(color: Colors.white),
-          //           ),
-          //           style: ElevatedButton.styleFrom(
-          //             backgroundColor: AppColors.secondaryColor,
-          //             shape: RoundedRectangleBorder(
-          //               borderRadius: BorderRadius.circular(12),
-          //             ),
-          //             padding: const EdgeInsets.symmetric(
-          //               horizontal: 24,
-          //               vertical: 12,
-          //             ),
-          //             elevation: 4,
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
           if (observation.pdf != null)
             _buildSectionCard(
               context,
@@ -611,83 +567,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
     );
   }
 
-  // void  _viewPdfReport(BuildContext context, String pdfUrl) {
-  //   showDialog(
-  //     context: context,
-  //     builder:
-  //         (context) => AlertDialog(
-  //           title: Text(
-  //             'observationDetailsPage.pdfReportDialogTitle'.tr(context),
-  //             style: TextStyle(
-  //               fontSize: 20,
-  //               fontWeight: FontWeight.bold,
-  //               color: AppColors.blackColor,
-  //             ),
-  //           ),
-  //           content: Text(
-  //             'observationDetailsPage.pdfReportDialogContent'.tr(context),
-  //             style: Theme.of(context).textTheme.bodyLarge,
-  //           ),
-  //           actions: [
-  //             TextButton(
-  //               onPressed: () => Navigator.pop(context),
-  //               child: Text(
-  //                 'observationDetailsPage.pdfReportDialogCancel'.tr(context),
-  //                 style: TextStyle(
-  //                   fontSize: 18,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: AppColors.secondaryColor,
-  //                 ),
-  //               ),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //               },
-  //               child: Text(
-  //                 'observationDetailsPage.pdfReportDialogView'.tr(context),
-  //                 style: TextStyle(
-  //                   fontSize: 18,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: AppColors.secondaryColor,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //   );
-  // }
-
-  Widget _buildStatusChip(
-    BuildContext context,
-    String? statusCode,
-    String? statusDisplay,
-  ) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        color: _getStatusColor(statusCode),
-        borderRadius: BorderRadius.circular(25.0),
-        boxShadow: [
-          BoxShadow(
-            color: _getStatusColor(statusCode).withOpacity(0.3),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        statusDisplay ?? 'observationDetailsPage.unknownStatus'.tr(context),
-        style: textTheme.labelLarge?.copyWith(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
-
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
       case 'active':
@@ -737,12 +616,7 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
       });
 
       if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          throw Exception(
-            'Storage permission denied. Please allow storage access.',
-          );
-        }
+        await checkAndRequestPermissions();
       }
 
       Directory directory;

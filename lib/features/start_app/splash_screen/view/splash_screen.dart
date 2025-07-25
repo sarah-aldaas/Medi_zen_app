@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -31,12 +30,12 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-
     _heartbeatController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1800),
     );
 
+    // <<<<<<< HEAD
     _heartbeatAnimation = TweenSequence<double>(<TweenSequenceItem<double>>[
       TweenSequenceItem<double>(
         tween: Tween<double>(
@@ -69,7 +68,6 @@ class _SplashScreenState extends State<SplashScreen>
     ]).animate(_heartbeatController);
     _checkFirstLaunchAndPatient();
 
-
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
         setState(() => _opacity = 1.0);
@@ -101,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (token != null) {
         context.goNamed(AppRouter.homePage.name);
       } else {
-        context.goNamed(AppRouter.login.name);
+        context.goNamed(AppRouter.welcomeScreen.name);
       }
     }
   }
@@ -139,42 +137,6 @@ class _SplashScreenState extends State<SplashScreen>
                         fit: BoxFit.contain,
                       ),
                     ),
-                    // const SizedBox(height: 20),
-                    //
-                    // RichText(
-                    //   text: TextSpan(
-                    //     text: 'M',
-                    //     style: TextStyle(
-                    //       color: Theme.of(context).primaryColor,
-                    //       fontWeight: FontWeight.bold,
-                    //       fontSize: 20,
-                    //       fontFamily: 'ChypreNorm',
-                    //     ),
-                    //     children: <TextSpan>[
-                    //       TextSpan(
-                    //         text: 'edi',
-                    //         style: TextStyle(
-                    //           color: Colors.white,
-                    //           fontWeight: FontWeight.normal,
-                    //         ),
-                    //       ),
-                    //       TextSpan(
-                    //         text: 'Z',
-                    //         style: TextStyle(
-                    //           color: Theme.of(context).primaryColor,
-                    //           fontWeight: FontWeight.bold,
-                    //         ),
-                    //       ),
-                    //       TextSpan(
-                    //         text: 'en',
-                    //         style: TextStyle(
-                    //           color: Colors.white,
-                    //           fontWeight: FontWeight.normal,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

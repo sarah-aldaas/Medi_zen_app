@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import '../../../../../base/data/models/pagination_model.dart';
 import '../../../../../base/go_router/go_router.dart';
@@ -14,7 +13,6 @@ part 'clinic_state.dart';
 
 class ClinicCubit extends Cubit<ClinicState> {
   final ClinicRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
   int currentPage = 1;
   bool hasMore = true;
   bool isLoading = false;
@@ -24,7 +22,6 @@ class ClinicCubit extends Cubit<ClinicState> {
 
   ClinicCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(ClinicInitial());
 
   @override
@@ -55,19 +52,6 @@ class ClinicCubit extends Cubit<ClinicState> {
         return;
       }
       currentPage++;
-    }
-
-
-    // Check internet connectivity for initial load
-    if (!loadMore) {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed(AppRouter.noInternet.name);
-      //   emit(ClinicError(error: 'No internet connection'));
-      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      //   isLoading = false;
-      //   return;
-      // }
     }
     try {
       final result = await remoteDataSource.getAllClinics(
@@ -137,18 +121,6 @@ class ClinicCubit extends Cubit<ClinicState> {
       }
       currentPage++;
     }
-// Check internet connectivity for initial load
-    if (!loadMore) {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed(AppRouter.noInternet.name);
-      //   emit(ClinicError(error: 'No internet connection'));
-      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      //   isLoading = false;
-      //   return;
-      // }
-    }
-
     try {
       final result = await remoteDataSource.getAllClinics(
         searchQuery: currentSearchQuery,
@@ -196,21 +168,10 @@ class ClinicCubit extends Cubit<ClinicState> {
 
   Future<void> getSpecificClinic({
     required String id,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     if (_isClosed) return;
     emit(ClinicLoading());
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ClinicError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     try {
       final result = await remoteDataSource.getSpecificClinic(id: id);
       if (_isClosed) return;

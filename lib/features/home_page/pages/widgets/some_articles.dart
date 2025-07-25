@@ -136,7 +136,6 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                           color: Theme.of(context).primaryColor,
                           fontSize: 13,
                         ),
-                        // textDirection: article.language == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                       ),
                     const SizedBox(height: 4),
                     Text(
@@ -144,14 +143,12 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                       maxLines: 5,
                       overflow: TextOverflow.ellipsis,
-                      // textDirection: article.language == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       article.createdAt?.toLocal().toString().split(' ')[0] ??
                           '',
                       style: TextStyle(fontSize: 12, color: Colors.grey),
-                      // textDirection: article.language == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                     ),
                   ],
                 ),
@@ -186,7 +183,6 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
       separatorBuilder: (context, index) => const SizedBox(height: 8),
       padding: const EdgeInsets.all(16),
       itemCount: 5,
-      // Show 5 shimmer items
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: baseColor,
@@ -198,7 +194,6 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Image placeholder
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Container(
@@ -208,15 +203,12 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Text content placeholders
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Category placeholder
                         Container(width: 80, height: 16, color: containerColor),
                         const SizedBox(height: 8),
-                        // Title placeholder
                         Container(
                           width: double.infinity,
                           height: 16,
@@ -229,7 +221,6 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                           color: containerColor,
                         ),
                         const SizedBox(height: 4),
-                        // Date placeholder
                         Container(
                           width: 100,
                           height: 12,

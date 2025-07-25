@@ -150,7 +150,13 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 controller: _tabController,
                 children: [
                   _buildConditionDetails(state.condition),
+// <<<<<<< HEAD
+//
+//                   MyMedicationRequestsPage(conditionId: state.condition.id!),
+//
+// =======
                   MyMedicationRequestsPage(conditionId: state.condition.id!),
+// >>>>>>> c804e45c3224c511626af6e9cbcb1dd2e908ee6d
                   DiagnosticReportListPage(conditionId: state.condition.id!),
                 ],
               );

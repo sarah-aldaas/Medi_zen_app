@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/services/data/datasources/services_remote_datasoources.dart';
 import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
@@ -15,7 +14,6 @@ part 'service_state.dart';
 
 class ServiceCubit extends Cubit<ServiceState> {
   final ServicesRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
   int _currentPage = 1;
   bool _hasMore = true;
   bool isLoading = false;
@@ -24,7 +22,6 @@ class ServiceCubit extends Cubit<ServiceState> {
 
   ServiceCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(ServiceInitial());
 
   Future<void> getAllServiceHealthCare({
@@ -45,21 +42,11 @@ class ServiceCubit extends Cubit<ServiceState> {
     if (filters != null) {
       _currentFilters = filters;
     }
-    // Check internet connectivity for initial load
-    if (!loadMore) {
-      // final isConnected = await networkInfo.isConnected;
-      // if (!isConnected) {
-      //   context.pushNamed(AppRouter.noInternet.name);
-      //   emit(ServiceHealthCareError(error: 'No internet connection'));
-      //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-      //   return;
-      // }
-    }
 
     final result = await remoteDataSource.getAllHealthCareServices(
       filters: _currentFilters,
       page: _currentPage,
-      perPage: 5,
+      perPage: 95,
     );
 
     if (result is Success<PaginatedResponse<HealthCareServiceModel>>) {
@@ -98,19 +85,9 @@ class ServiceCubit extends Cubit<ServiceState> {
 
   Future<void> getSpecificServiceHealthCare({
     required String id,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     emit(ServiceHealthCareLoading());
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ServiceHealthCareError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     try {
       final result = await remoteDataSource.getSpecificHealthCareServices(id: id);
       if (result is Success<HealthCareServiceModel>) {

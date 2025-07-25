@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart'; // Make sure this is imported
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/data/models/diagnostic_report_filter_model.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/data/models/diagnostic_report_model.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/presentation/pages/diagnostic_report_details_page.dart';
@@ -83,9 +82,7 @@ class _DiagnosticReportListPublicPageState
         color: Theme.of(context).primaryColor,
         child: BlocConsumer<DiagnosticReportCubit, DiagnosticReportState>(
           listener: (context, state) {
-            // if (state is DiagnosticReportError) {
-            //   ShowToast.showToastError(message: state.error);
-            // }
+
           },
           builder: (context, state) {
             if (state is DiagnosticReportLoading && !state.isLoadMore) {
@@ -100,7 +97,6 @@ class _DiagnosticReportListPublicPageState
                 state is DiagnosticReportSuccess ? state.hasMore : false;
 
             if (reports.isEmpty) {
-              return NotFoundDataPage();
             }
 
             return ListView.builder(
@@ -150,12 +146,7 @@ class _DiagnosticReportListPublicPageState
             children: [
               Row(
                 children: [
-                  // Icon(
-                  //   Icons.assignment,
-                  //   color: AppColors.primaryColor,
-                  //   size: 28,
-                  // ),
-                  // const SizedBox(width: 12),
+
                   Expanded(
                     child: Text(
                       report.name ??

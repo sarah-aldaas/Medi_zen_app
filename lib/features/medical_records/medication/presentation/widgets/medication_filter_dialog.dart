@@ -21,7 +21,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _medicationRequestIdController = TextEditingController();
 
-  // Form values
   String? _searchQuery;
   String? _selectedStatusId;
   String? _selectedDoseForm;
@@ -49,7 +48,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
     _searchController.text = _searchQuery ?? '';
     _medicationRequestIdController.text = _medicationRequestId ?? '';
 
-    // Load code types
     context.read<CodeTypesCubit>().getMedicationStatusTypeCodes(context: context);
     context.read<CodeTypesCubit>().getMedicationDoseFormTypeCodes(context: context);
     context.read<CodeTypesCubit>().getMedicationRouteTypeCodes(context: context);
@@ -106,7 +104,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Search Query
                     Text("filterMedications.search".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     TextField(
@@ -120,7 +117,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Status
                     Text("filterMedications.status".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
@@ -156,7 +152,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Dose Form
                     Text("filterMedications.doseForm".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
@@ -182,7 +177,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Route
                     Text("filterMedications.route".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
@@ -208,7 +202,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Site
                     Text("filterMedications.site".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     BlocBuilder<CodeTypesCubit, CodeTypesState>(
@@ -234,33 +227,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // As Needed
-                    // Text("filterMedications.asNeeded".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                    // const SizedBox(height: 8),
-                    // CheckboxListTile(
-                    //   title: Text("filterMedications.asNeededLabel".tr(context)),
-                    //   value: _asNeeded ?? false,
-                    //   activeColor: Theme.of(context).primaryColor,
-                    //   onChanged: (value) => setState(() => _asNeeded = value),
-                    // ),
-                    // const SizedBox(height: 20),
-
-                    // Medication Request ID
-                    // Text("filterMedications.medicationRequestId".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                    // const SizedBox(height: 8),
-                    // TextField(
-                    //   controller: _medicationRequestIdController,
-                    //   decoration: InputDecoration(
-                    //     hintText: "filterMedications.enterMedicationRequestId".tr(context),
-                    //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                    //     prefixIcon: Icon(Icons.medication, color: Theme.of(context).primaryColor),
-                    //   ),
-                    //   keyboardType: TextInputType.text,
-                    //   onChanged: (value) => _medicationRequestId = value,
-                    // ),
-                    // const SizedBox(height: 20),
-
-                    // Date Range
                     Text("filterMedications.dateRange".tr(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     Row(
@@ -294,7 +260,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -321,7 +286,6 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                             const SizedBox(width: 8),
                             ElevatedButton(
                               onPressed: () {
-                                // Validate date range
                                 if (_startFrom != null && _endUntil != null && _startFrom!.isAfter(_endUntil!)) {
                                   ScaffoldMessenger.of(
                                     context,

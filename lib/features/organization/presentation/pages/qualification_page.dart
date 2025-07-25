@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/organization/data/models/qualification_organization_model.dart';
@@ -14,6 +12,8 @@ import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../../../main.dart';
 
 class QualificationPage extends StatefulWidget {
   const QualificationPage({super.key});
@@ -69,10 +69,7 @@ class _QualificationPageState extends State<QualificationPage> {
       });
 
       if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          throw Exception('Storage permission denied. Please allow storage access.');
-        }
+        await checkAndRequestPermissions();
       }
 
       Directory directory;
@@ -194,43 +191,44 @@ class _QualificationPageState extends State<QualificationPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              qualification.issuer.toString(),
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  qualification.issuer.toString(),
+                  style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
+                ),
+                if (qualification.pdf != null && qualification.pdf!.isNotEmpty)
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (_downloadProgress.containsKey(qualification.id))
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(
+                            value: _downloadProgress[qualification.id],
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      IconButton(
+                        onPressed: _downloadProgress.containsKey(qualification.id) ? null : () => downloadAndViewPdf(qualification.pdf!, qualification.id!),
+                        icon: Icon(
+                          _downloadComplete[qualification.id] == true ? Icons.check_circle : Icons.picture_as_pdf,
+                          color: _downloadComplete[qualification.id] == true ? Theme.of(context).primaryColor : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
             const SizedBox(height: 10),
             _buildInfoRow(icon: Icons.date_range_outlined, label: "Start date: ", value: qualification.startDate.toString(), theme: theme),
             const SizedBox(height: 10),
             _buildInfoRow(icon: Icons.date_range_outlined, label: "End date: ", value: qualification.endDate.toString(), theme: theme),
             const SizedBox(height: 10),
-
-            // PDF Download Button
-            if (qualification.pdf != null && qualification.pdf!.isNotEmpty)
-              Align(
-                alignment: Alignment.centerRight,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    if (_downloadProgress.containsKey(qualification.id))
-                      SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: CircularProgressIndicator(
-                          value: _downloadProgress[qualification.id],
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                        ),
-                      ),
-                    IconButton(
-                      onPressed: _downloadProgress.containsKey(qualification.id) ? null : () => downloadAndViewPdf(qualification.pdf!, qualification.id!),
-                      icon: Icon(
-                        _downloadComplete[qualification.id] == true ? Icons.check_circle : Icons.picture_as_pdf,
-                        color: _downloadComplete[qualification.id] == true ? Theme.of(context).primaryColor : Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            _buildInfoRow(icon: Icons.date_range_outlined, label: "Type: ", value: qualification.type!.display.toString(), theme: theme),
+            const SizedBox(height: 10),
           ],
         ),
       ),
@@ -238,7 +236,7 @@ class _QualificationPageState extends State<QualificationPage> {
   }
 }
 
-Widget _buildInfoRow({required IconData icon, required String label, required String value, required ThemeData theme, int maxLines = 2}) {
+Widget _buildInfoRow({required IconData icon, required String label, required String value, required ThemeData theme, int maxLines = 3}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 6.0),
     child: Row(
@@ -259,4 +257,5 @@ Widget _buildInfoRow({required IconData icon, required String label, required St
       ],
     ),
   );
+
 }

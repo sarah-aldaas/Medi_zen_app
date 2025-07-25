@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/medical_records/encounter/data/data_source/encounter_remote_datasource.dart';
 import 'package:meta/meta.dart';
@@ -14,9 +13,8 @@ part 'encounter_state.dart';
 
 class EncounterCubit extends Cubit<EncounterState> {
   final EncounterRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
-  EncounterCubit({required this.remoteDataSource, required this.networkInfo}) : super(EncounterInitial());
+  EncounterCubit({required this.remoteDataSource,}) : super(EncounterInitial());
 
   int _currentPage = 1;
   bool _hasMore = true;
@@ -71,7 +69,7 @@ class EncounterCubit extends Cubit<EncounterState> {
 
   Future<void> getAllMyEncounterOfAppointment({
     required String appointmentId,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     emit(EncounterLoading(isLoadMore: false));
     try {
@@ -79,7 +77,7 @@ class EncounterCubit extends Cubit<EncounterState> {
       if (result is Success<EncounterModel>) {
         emit(EncounterOfAppointmentSuccess(encounterModel: result.data));
       } else if (result is ResponseError<EncounterModel>) {
-        ShowToast.showToastError(message: result.message ?? 'Failed to fetch encounter details');
+        // ShowToast.showToastError(message: result.message ?? 'Failed to fetch encounter details');
         emit(EncounterError(error: result.message ?? 'Failed to fetch encounter details'));
       }
     } catch (e) {
@@ -89,7 +87,7 @@ class EncounterCubit extends Cubit<EncounterState> {
 
   Future<void> getSpecificEncounter({
     required String encounterId,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     emit(EncounterLoading(isLoadMore: false));
     try {
@@ -97,7 +95,7 @@ class EncounterCubit extends Cubit<EncounterState> {
       if (result is Success<EncounterModel>) {
         emit(EncounterDetailsSuccess(encounterModel: result.data));
       } else if (result is ResponseError<EncounterModel>) {
-        ShowToast.showToastError(message: result.message ?? 'Failed to fetch encounter details');
+        // ShowToast.showToastError(message: result.message ?? 'Failed to fetch encounter details');
         emit(EncounterError(error: result.message ?? 'Failed to fetch encounter details'));
       }
     } catch (e) {

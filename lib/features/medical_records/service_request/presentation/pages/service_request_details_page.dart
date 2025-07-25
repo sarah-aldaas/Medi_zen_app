@@ -11,11 +11,21 @@ import 'package:medizen_app/features/medical_records/service_request/data/models
 import '../../../../../base/theme/app_color.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
-class ServiceRequestDetailsPage extends StatelessWidget {
+class ServiceRequestDetailsPage extends StatefulWidget {
   final String serviceId;
 
   const ServiceRequestDetailsPage({super.key, required this.serviceId});
 
+  @override
+  State<ServiceRequestDetailsPage> createState() => _ServiceRequestDetailsPageState();
+}
+
+class _ServiceRequestDetailsPageState extends State<ServiceRequestDetailsPage> {
+  @override
+  void initState() {
+    context.read<ServiceRequestCubit>().getServiceRequestDetails(widget.serviceId, context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -166,7 +176,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder:
                         (context) => ObservationDetailsPage(
-                          serviceId: serviceId,
+                          serviceId: widget.serviceId,
                           observationId: request.observation!.id!,
                         ),
                   ),
@@ -206,39 +216,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                       ).format(request.observation!.effectiveDateTime!)
                       : null,
                 ),
-                // if (request.observation!.pdf != null)
-                //   Padding(
-                //     padding: const EdgeInsets.only(top: 16.0),
-                //     child: Center(
-                //       child: ElevatedButton.icon(
-                //         onPressed: () {},
-                //         icon: Icon(
-                //           Icons.picture_as_pdf_outlined,
-                //           color: Theme.of(context).colorScheme.onSecondary,
-                //         ),
-                //         label: Text(
-                //           'serviceRequestDetailsPage.viewTestReportPDFButton'
-                //               .tr(context),
-                //           style: Theme.of(
-                //             context,
-                //           ).textTheme.labelLarge?.copyWith(
-                //             color: Theme.of(context).colorScheme.onSecondary,
-                //           ),
-                //         ),
-                //         style: ElevatedButton.styleFrom(
-                //           backgroundColor: AppColors.secondaryColor,
-                //           shape: RoundedRectangleBorder(
-                //             borderRadius: BorderRadius.circular(12),
-                //           ),
-                //           padding: const EdgeInsets.symmetric(
-                //             horizontal: 24,
-                //             vertical: 12,
-                //           ),
-                //           elevation: 4,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
               ],
             ),
           if (request.observation != null) const SizedBox(height: 24),
@@ -255,7 +232,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder:
                         (context) => ImagingStudyDetailsPage(
-                          serviceId: serviceId,
+                          serviceId: widget.serviceId,
                           imagingStudyId: request.imagingStudy!.id!,
                         ),
                   ),
@@ -568,26 +545,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Image.network(
-                      //   request.healthCareService!.photo!,
-                      //   height: 180,
-                      //   fit: BoxFit.cover,
-                      //   errorBuilder:
-                      //       (context, error, stackTrace) => Container(
-                      //         height: 180,
-                      //         color:
-                      //             Theme.of(context).colorScheme.surfaceVariant,
-                      //         child: Center(
-                      //           child: Icon(
-                      //             Icons.broken_image,
-                      //             size: 50,
-                      //             color: Theme.of(
-                      //               context,
-                      //             ).colorScheme.onSurface.withOpacity(0.5),
-                      //           ),
-                      //         ),
-                      //       ),
-                      // ),
                     ),
                   ),
                 ],
@@ -771,18 +728,18 @@ class ServiceRequestDetailsPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.15), // More subtle background
-        borderRadius: BorderRadius.circular(16.0), // Less rounded corners
+        color: statusColor.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
-          color: statusColor.withOpacity(0.3), // Subtle border
+          color: statusColor.withOpacity(0.3),
           width: 1.0,
         ),
       ),
       child: Text(
         statusDisplay ?? 'serviceRequestDetailsPage.unknownStatus'.tr(context),
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: statusColor.withAlpha(130), // Dynamic text color for contrast
-          fontWeight: FontWeight.bold, // Slightly less bold
+          color: statusColor.withAlpha(130),
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
@@ -791,7 +748,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
       case 'active':
-        return Colors.blue; // Less intense than lightBlue.shade600
+        return Colors.blue;
       case 'on-hold':
         return Colors.orange;
       case 'revoked':

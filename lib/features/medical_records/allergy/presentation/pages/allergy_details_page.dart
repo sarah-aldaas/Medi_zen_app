@@ -103,7 +103,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     Text(
                       'allergiesPage.failedToLoadAllergyDetails'.tr(
                         context,
-                      ), // Translated
+                      ),
                       style: TextStyle(
                         fontSize: 18,
                         color: theme.textTheme.bodyMedium?.color,
@@ -148,7 +148,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     allergy.name ??
                         'allergiesPage.unknownAllergy'.tr(
                           context,
-                        ), // Translated
+                        ),
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.textTheme.bodyLarge?.color,
@@ -279,7 +279,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                       Text(
                         'allergiesPage.viewAllReactions'.tr(
                           context,
-                        ), // Translated
+                        ),
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.primaryColor,
@@ -379,7 +379,6 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
     final ThemeData theme = Theme.of(context);
     return Card(
       elevation: 4,
-      // color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       clipBehavior: Clip.antiAlias,
       child: Padding(
@@ -450,21 +449,21 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
 
     switch (criticality?.code?.toLowerCase()) {
       case 'high':
-        chipColor = Colors.red.withAlpha(64); // ~25% opacity
+        chipColor = Colors.red.withAlpha(64);
         displayText = criticality?.display ?? 'allergiesPage.high'.tr(context);
         break;
       case 'low':
-        chipColor = Colors.green.withAlpha(64); // ~25% opacity
+        chipColor = Colors.green.withAlpha(64);
         displayText = criticality?.display ?? 'allergiesPage.low'.tr(context);
         break;
       case 'unable-to-assess':
-        chipColor = Colors.blueGrey.withAlpha(64); // ~25% opacity
+        chipColor = Colors.blueGrey.withAlpha(64);
         displayText =
             criticality?.display ?? 'allergiesPage.unableToAssess'.tr(context);
         break;
       default:
         chipColor =
-            (theme.textTheme.bodySmall?.color?.withAlpha(32)) ?? // ~12% opacity
+            (theme.textTheme.bodySmall?.color?.withAlpha(32)) ??
             Colors.grey.withAlpha(32);
         displayText = 'allergiesPage.notApplicable'.tr(context);
     }
@@ -473,7 +472,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
       label: Text(
         displayText,
         style: TextStyle(
-          color: chipColor.withAlpha(128), // Auto-contrast text
+          color: chipColor.withAlpha(128),
           fontSize: 13,
           fontWeight: FontWeight.bold,
         ),
@@ -483,7 +482,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
         side: BorderSide(
-          color: chipColor.withAlpha(128), // Semi-transparent border
+          color: chipColor.withAlpha(128),
           width: 1,
         ),
       ),

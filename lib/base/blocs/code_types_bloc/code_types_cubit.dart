@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/storage_key.dart';
-import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/services/storage/storage_service.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:meta/meta.dart';
 import '../../../../../base/error/exception.dart';
 import '../../../../../base/services/network/resource.dart';
@@ -19,11 +15,9 @@ part 'code_types_state.dart';
 
 class CodeTypesCubit extends Cubit<CodeTypesState> {
   final RemoteDataSourcePublic remoteDataSource;
-  final NetworkInfo networkInfo;
 
   CodeTypesCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(CodeTypesInitial());
 
   Future<void> initializeData({required BuildContext context}) async {
@@ -42,15 +36,7 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     if (isClosed) return;
 
     emit(CodeTypesLoading());
-    // final isConnected = await networkInfo.isConnected;
-    //
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(CodeTypesError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
+
     try {
       final result = await remoteDataSource.getCodeTypes();
       if (result is Success<CodeTypesResponseModel>) {
@@ -99,15 +85,6 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     if (isClosed) return;
     emit(CodesLoading());
 
-    // final isConnected = await networkInfo.isConnected;
-    //
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(CodesError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
     try {
       final result = await remoteDataSource.getCodes(codeTypeId: codeTypeId);
       if (result is Success<CodesResponseModel>) {

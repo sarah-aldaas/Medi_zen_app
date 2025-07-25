@@ -25,7 +25,6 @@ class ResponseHandler<T> {
     returnErrorInSamDataModel = false,
   }) {
     int statusCode = response.statusCode!;
-    // Handle success responses
     if (statusCode >= 200 && statusCode < 300) {
       var responseData = response.data['data'];
 
@@ -46,7 +45,6 @@ class ResponseHandler<T> {
   _processResponseError<R>(response, int statusCode, {fromJson}) {
     final message = response.data['message'] ?? 'Unknown error occurred';
 
-    // Function to extract error messages
     String extractErrors(Map<String, dynamic> errors) {
       List<String> errorMessages = [];
       errors.forEach((key, value) {
@@ -59,13 +57,11 @@ class ResponseHandler<T> {
       return errorMessages.join(" ");
     }
 
-    // Check if errors key exists in the response
     String errorMessages = "";
     if (response.data.containsKey('errors')) {
       errorMessages = extractErrors(response.data['errors']);
     }
 
-    // Handle specific cases and general cases for status codes 400-500
     if (statusCode == 426) {
       return ResponseError<R>(
         data: fromJson != null ? fromJson(response.data) : null,
@@ -73,16 +69,13 @@ class ResponseHandler<T> {
         message: "$message $errorMessages",
       );
     } else if (statusCode >= 400 && statusCode < 500) {
-      // Handle 400-499 errors
       return ResponseError<R>(data: null, message: "$message $errorMessages");
     } else if (statusCode >= 500 && statusCode <= 599) {
-      // Handle 500-599 errors (server errors)
       return ResponseError<R>(
         data: null,
         message: "Server error: $message $errorMessages",
       );
     } else {
-      // Handle any other unexpected status codes
       return ResponseError<R>(message: "$message $errorMessages");
     }
   }

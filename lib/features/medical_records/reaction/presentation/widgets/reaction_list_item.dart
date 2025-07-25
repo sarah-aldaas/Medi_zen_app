@@ -34,19 +34,19 @@ class ReactionListItem extends StatelessWidget {
 
     switch (severity?.code?.toLowerCase()) {
       case 'mild':
-        chipColor = Colors.green.withAlpha(40); // Very light green
+        chipColor = Colors.green.withAlpha(40);
         displayText = severity?.display ?? 'reactionsPage.mild'.tr(context);
         break;
       case 'moderate':
-        chipColor = Colors.orange.withAlpha(40); // Very light orange
+        chipColor = Colors.orange.withAlpha(40);
         displayText = severity?.display ?? 'reactionsPage.moderate'.tr(context);
         break;
       case 'severe':
-        chipColor = Colors.red.withAlpha(40); // Very light red
+        chipColor = Colors.red.withAlpha(40);
         displayText = severity?.display ?? 'reactionsPage.severe'.tr(context);
         break;
       default:
-        chipColor = (theme.textTheme.bodySmall?.color?.withAlpha(20)) ?? // Very subtle
+        chipColor = (theme.textTheme.bodySmall?.color?.withAlpha(20)) ??
             Colors.grey.withAlpha(20);
         displayText = 'reactionsPage.notApplicable'.tr(context);
     }
@@ -55,22 +55,22 @@ class ReactionListItem extends StatelessWidget {
       label: Text(
         displayText,
         style: TextStyle(
-          color: chipColor.withAlpha(128), // Automatically picks readable text
+          color: chipColor.withAlpha(128),
           fontSize: 12,
-          fontWeight: FontWeight.w600, // Slightly less bold than before
+          fontWeight: FontWeight.w600,
         ),
       ),
       backgroundColor: chipColor,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12), // Slightly less rounded
+        borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: chipColor.withAlpha(100), // Subtle border
-          width: 0.5, // Thinner border
+          color: chipColor.withAlpha(100),
+          width: 0.5,
         ),
       ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      visualDensity: VisualDensity.compact, // Makes chip more compact
+      visualDensity: VisualDensity.compact,
     );
   }
 
@@ -100,7 +100,7 @@ class ReactionListItem extends StatelessWidget {
                         reaction.manifestation ??
                             'reactionsPage.unknownReaction'.tr(
                               context,
-                            ), // Translated
+                            ),
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.textTheme.bodyLarge?.color,

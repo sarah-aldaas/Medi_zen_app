@@ -29,14 +29,12 @@ class EditProfileScreen extends StatelessWidget {
           create:
               (context) => ProfileCubit(
                 remoteDataSource: serviceLocator(),
-                networkInfo: serviceLocator(),
               ),
         ),
         BlocProvider(
           create:
               (context) => CodeTypesCubit(
                 remoteDataSource: serviceLocator(),
-                networkInfo: serviceLocator(),
               ),
         ),
         BlocProvider(
@@ -143,10 +141,11 @@ class _EditProfileFormState extends State<EditProfileForm> {
     return BlocConsumer<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state.status == ProfileStatus.success && state.patient == null) {
-          ShowToast.showToasts(
-            message: 'editProfile.updateSuccessMessage'.tr(context),
-          );
-          // لا حاجة لتنقل هنا لأن الكيوبت سيتعامل مع ذلك
+          // ShowToast.showToasts(
+          //   message: 'editProfile.updateSuccessMessage'.tr(context),
+          // );
+          Navigator.pop(context);
+          // context.pushNamed(AppRouter.profileDetails.name);
         } else if (state.errorMessage.isNotEmpty) {
           ShowToast.showToastError(message: state.errorMessage);
         } else if (state.status == ProfileStatus.success &&
@@ -168,13 +167,13 @@ class _EditProfileFormState extends State<EditProfileForm> {
           builder: (context, formState) {
             if (formState.isLoadingCodes ||
                 profileState.status == ProfileStatus.loadignUpdate) {
-              return const Center(child: LoadingPage());
+              return  Center(child: LoadingButton());
             }
 
             return Form(
               key: const Key('EditProfileForm'),
               child: Column(
-                children: [
+                 children: [
                   _buildAvatarPicker(formState.avatar),
                   const SizedBox(height: 20),
                   _buildTextField(
@@ -232,7 +231,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                   ),
                 ),
                 radius: 80,
-              ) //AvatarImage(imageUrl: image, radius: 80, key: ValueKey(image))
+              )
               : CircleAvatar(
                 radius: 80,
                 backgroundImage: const AssetImage("assets/images/person.jpg"),
@@ -304,7 +303,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
             return DropdownMenuItem<String>(
               value: code.id.toString(),
               child: Container(
-                // color: Colors.white,
                 child:
                     key == 'genderId'
                         ? Row(

@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/services/network/resource.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:meta/meta.dart';
@@ -14,30 +13,17 @@ part 'reset_password_state.dart';
 
 class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   final AuthRemoteDataSource authRemoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
   ResetPasswordCubit({
     required this.authRemoteDataSource,
-    required this.networkInfo,
   }) : super(ResetPasswordInitial());
 
   void resetPassword({
     required String email,
     required String newPassword,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     emit(ResetPasswordLoading());
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ResetPasswordFailure(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     try {
       final result = await authRemoteDataSource.resetPassword(
         email: email,

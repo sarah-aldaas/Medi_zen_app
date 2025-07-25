@@ -17,7 +17,7 @@ class ComplainModel {
   final CodeModel? type;
   final AppointmentModel? appointment;
   final List<File>? attachmentsFiles;
-  final List<String>? attachmentsUrl;
+  final List<ComplaintResponseAttachment>? attachmentsUrl;
   final List<ComplainResponseModel>? responses;
 
   ComplainModel({
@@ -48,7 +48,7 @@ class ComplainModel {
     CodeModel? type,
     AppointmentModel? appointment,
     List<File>? attachmentsFiles,
-    List<String>? attachmentsUrl,
+    final List<ComplaintResponseAttachment>? attachmentsUrl,
     List<ComplainResponseModel>? responses,
   }) {
     return ComplainModel(
@@ -95,9 +95,15 @@ class ComplainModel {
               : null,
 
       attachmentsUrl:
-          json['attachments'] != null
-              ? List<String>.from(json['attachments'].map((x) => x.toString()))
-              : [],
+      json['attachments'] != null
+          ? List<ComplaintResponseAttachment>.from(
+        (json['attachments'] as List).map(
+              (x) => ComplaintResponseAttachment.fromJson(
+            x as Map<String, dynamic>,
+          ),
+        ),
+      )
+          : [],
       responses:
           json['responses'] is List
               ? List<ComplainResponseModel>.from(

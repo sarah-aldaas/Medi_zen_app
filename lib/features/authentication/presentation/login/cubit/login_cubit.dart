@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/services/network/resource.dart';
 import 'package:medizen_app/base/services/storage/storage_service.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
@@ -18,25 +17,14 @@ part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthRemoteDataSource authRemoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
   LoginCubit({
     required this.authRemoteDataSource,
-    required this.networkInfo,
   }) : super(LoginInitial());
 
   void login(String email, String password, BuildContext context) async {
 
     emit(LoginLoading());
-
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(LoginError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
     try {
       final result = await authRemoteDataSource.login(
         email: email,
@@ -45,7 +33,6 @@ class LoginCubit extends Cubit<LoginState> {
 
       if (result is Success<AuthResponseModel>) {
         if (result.data.status) {
-          // After successful login
           final loginData = result.data.loginData;
           if (loginData != null) {
             token = loginData.token;

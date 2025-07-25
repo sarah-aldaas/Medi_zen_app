@@ -122,3 +122,35 @@ class AppointmentModel {
     createdByPractitioner,
   );
 }
+
+class AppointmentResponseModel {
+  final bool status;
+  final String errNum;
+  final String msg;
+  final AppointmentModel? appointment;
+
+  AppointmentResponseModel({
+    required this.status,
+    required this.errNum,
+    required this.msg,
+    this.appointment
+  });
+
+  factory AppointmentResponseModel.fromJson(Map<String, dynamic> json) {
+    return AppointmentResponseModel(
+      status: json['status'] as bool,
+      errNum: json['errNum'].toString(),
+      msg: json['msg'].toString(),
+      appointment: json["appointment"]!=null?AppointmentModel.fromJson(json['appointment']):null
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'errNum': errNum,
+      'msg': msg,
+      'appointment':appointment
+    };
+  }
+}

@@ -9,12 +9,10 @@ class NavigatorService {
     navigatorKey.currentState?.push(MaterialPageRoute(builder: (context) => page));
   }
 
-  // Pop the top route from the navigator stack
   pop() {
     navigatorKey.currentState?.pop();
   }
 
-  // Push a new route to the navigator stack by name
   pushWithName(String routeName) {
     navigatorKey.currentState?.pushNamed(routeName);
   }

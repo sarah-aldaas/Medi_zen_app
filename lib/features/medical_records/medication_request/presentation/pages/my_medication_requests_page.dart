@@ -10,7 +10,6 @@ import '../../data/models/medication_request_model.dart';
 import '../cubit/medication_request_cubit/medication_request_cubit.dart';
 
 class MyMedicationRequestsPage extends StatefulWidget {
-  // final MedicationRequestFilterModel filter;
   final String conditionId;
   const MyMedicationRequestsPage({super.key,required this.conditionId});
 
@@ -41,7 +40,6 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
     context.read<MedicationRequestCubit>().getMedicationRequestForCondition(
       conditionId:widget.conditionId ,
       context: context,
-      // filters: widget.filter.toJson(),
     );
   }
 
@@ -54,22 +52,12 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
           .read<MedicationRequestCubit>()
           .getMedicationRequestForCondition(
         conditionId:widget.conditionId,
-            // filters: widget.filter.toJson(),
             loadMore: true,
             context: context,
           )
           .then((_) => setState(() => _isLoadingMore = false));
     }
   }
-
-  // @override
-  // void didUpdateWidget(MyMedicationRequestsPage oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //
-  //   if (widget.filter != oldWidget.filter) {
-  //     _loadInitialMedicationRequests();
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +69,7 @@ class _MyMedicationRequestsPageState extends State<MyMedicationRequestsPage> {
         color: Theme.of(context).primaryColor,
         child: BlocConsumer<MedicationRequestCubit, MedicationRequestState>(
           listener: (context, state) {
-            // if (state is MedicationRequestError) {
-            //   ShowToast.showToastError(message: state.error);
-            // }
+
           },
           builder: (context, state) {
             if (state is MedicationRequestLoading && !state.isLoadMore) {

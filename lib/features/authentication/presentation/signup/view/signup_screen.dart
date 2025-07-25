@@ -19,17 +19,24 @@ class SignupScreen extends StatelessWidget {
       providers: [
         BlocProvider(
           create:
+// <<<<<<< HEAD
+//               (context) => SignupCubit(authRemoteDataSource: serviceLocator(),),
+//         ),
+//         BlocProvider(
+//           create:
+//               (context) => CodeTypesCubit(remoteDataSource: serviceLocator()),
+// =======
               (context) => SignupCubit(
                 authRemoteDataSource: serviceLocator(),
-                networkInfo: serviceLocator(),
+
               ),
         ),
         BlocProvider(
           create:
               (context) => CodeTypesCubit(
                 remoteDataSource: serviceLocator(),
-                networkInfo: serviceLocator(),
               ),
+// >>>>>>> c804e45c3224c511626af6e9cbcb1dd2e908ee6d
         ),
       ],
       child: Scaffold(

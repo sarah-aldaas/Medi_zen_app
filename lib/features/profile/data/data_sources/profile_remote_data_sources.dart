@@ -32,20 +32,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     );
   }
 
-  // @override
-  // Future<Resource<PublicResponseModel>> updateMyProfile({
-  //   required UpdateProfileRequestModel updateProfileRequestModel,
-  // }) async {
-  //   final response = await networkClient.invoke(
-  //     ProfileEndPoints.editMyProfile,
-  //     RequestType.post,
-  //     body: updateProfileRequestModel.toJson(),
-  //   );
-  //   return ResponseHandler<PublicResponseModel>(
-  //     response,
-  //   ).processResponse(fromJson: (json) => PublicResponseModel.fromJson(json));
-  // }
-
   @override
   Future<Resource<PublicResponseModel>> updateMyProfile({
     required UpdateProfileRequestModel updateProfileRequestModel,

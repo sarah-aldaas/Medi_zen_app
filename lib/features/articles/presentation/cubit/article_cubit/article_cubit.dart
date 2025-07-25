@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
 import '../../../../../base/data/models/pagination_model.dart';
@@ -17,9 +16,8 @@ part 'article_state.dart';
 
 class ArticleCubit extends Cubit<ArticleState> {
   final ArticlesRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
-  ArticleCubit({required this.remoteDataSource, required this.networkInfo})
+  ArticleCubit({required this.remoteDataSource})
     : super(ArticleInitial());
 
   int _currentPage = 1;
@@ -194,21 +192,43 @@ class ArticleCubit extends Cubit<ArticleState> {
     required BuildContext context,
   }) async {
     emit(ArticleLoading());
-
-    final result = await remoteDataSource.getArticleOfCondition(
-      conditionId: conditionId,
-    );
-    if (result is Success<ArticleResponseModel>) {
-      if (result.data.toString().contains("Unauthorized")) {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-        return;
+    try{
+      final result = await remoteDataSource.getArticleOfCondition(
+        conditionId: conditionId,
+      );
+      if (result is Success<ArticleResponseModel>) {
+        if (result.data.toString().contains("Unauthorized")) {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          return;
+        }
+        if (result.data.status) {
+          if (result.data.articleModel != null) {
+            emit(ArticleConditionSuccess(article: result.data.articleModel));
+          }
+          else {
+            ShowToast.showToastInfo(message: "You should generate first");
+            emit(ArticleInitial());
+          }
+        } else {
+          emit(
+            ArticleError(
+              error:
+              result.data.msg ?? 'failed_to_fetch_condition_article'.tr(context),
+            ),
+          );
+        }
+      } else if (result is ResponseError<ArticleResponseModel>) {
+        emit(
+          ArticleError(
+            error:
+            result.message ?? 'failed_to_fetch_condition_article'.tr(context),
+          ),
+        );
       }
-      emit(ArticleConditionSuccess(article: result.data.articleModel));
-    } else if (result is ResponseError<ArticleResponseModel>) {
+    }catch(e){
       emit(
         ArticleError(
-          error:
-              result.message ?? 'failed_to_fetch_condition_article'.tr(context),
+          error:"You should generate article first.",
         ),
       );
     }
@@ -219,18 +239,6 @@ class ArticleCubit extends Cubit<ArticleState> {
     required BuildContext context,
   }) async {
     emit(FavoriteOperationLoading());
-
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-      ShowToast.showToastError(
-        message: 'no_internet_check_network'.tr(context),
-      );
-      await Future.delayed(Duration(milliseconds: 300));
-      emit(ArticleInitial());
-      return;
-    }
-
     try {
       final result = await remoteDataSource.addArticleFavorite(
         articleId: articleId,
@@ -311,12 +319,6 @@ class ArticleCubit extends Cubit<ArticleState> {
     emit(ArticleGenerateLoading());
 
     try {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-        return;
-      }
 
       if (language.isEmpty) {
         language = await _showLanguageSelectionDialog(context);
@@ -334,7 +336,6 @@ class ArticleCubit extends Cubit<ArticleState> {
         }
       }
 
-      // final params = {'language': language, if (apiModel != null) 'model': apiModel};
       final response = await remoteDataSource.generateAiArticle(
         conditionId: conditionId,
         apiModel: apiModel,

@@ -14,6 +14,7 @@ class AppointmentLoading extends AppointmentState {
 }
 
 class CreateAppointmentSuccess extends AppointmentState {}
+class UpdateAppointmentSuccess extends AppointmentState {}
 
 class SlotsAppointmentLoading extends AppointmentState {}
 

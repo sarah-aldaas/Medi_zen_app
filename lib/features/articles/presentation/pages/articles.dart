@@ -141,7 +141,6 @@ class _ArticlesPageState extends State<ArticlesPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           _loadInitialArticles();
-          // await context.read<ArticleCubit>().stream.firstWhere((state) => state is! ArticleLoading);
         },
         child: BlocConsumer<ArticleCubit, ArticleState>(
           listener: (context, state) {
@@ -275,10 +274,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
       physics:
           const AlwaysScrollableScrollPhysics(),
       slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          sliver: _buildActiveFilters(),
-        ),
+        // SliverPadding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        //   sliver: _buildActiveFilters(),
+        // ),
         SliverPadding(
           padding: const EdgeInsets.all(16),
           sliver: SliverList(
@@ -489,7 +488,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                       "articles.filters.category".tr(context),
                       style: const TextStyle(fontSize: 18),
                     ),
-                    const Gap(8), // const
+                    const Gap(8),
                     DropdownButtonFormField<String>(
                       value: tempCategoryId,
                       items: [
