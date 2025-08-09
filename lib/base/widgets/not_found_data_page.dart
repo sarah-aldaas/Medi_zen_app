@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medizen_app/base/extensions/localization_extensions.dart';
 
 class NotFoundDataPage extends StatelessWidget {
   const NotFoundDataPage({Key? key}) : super(key: key);
@@ -12,14 +13,10 @@ class NotFoundDataPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             // Replace with your actual asset path
-            Image.asset(
-              'assets/images/noData.png',
-              width: 250,
-              height: 250,
-            ),
+            Image.asset('assets/images/noData.png', width: 250, height: 250),
             const SizedBox(height: 20),
-             Text(
-              'Not found any data!!',
+            Text(
+              'NotFoundDataPage.notFound'.tr(context),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -27,8 +24,8 @@ class NotFoundDataPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-             Text(
-              'Check your filters or try again later.',
+            Text(
+              'NotFoundDataPage.checkAgain'.tr(context),
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).primaryColor,

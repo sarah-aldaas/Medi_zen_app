@@ -110,7 +110,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           ),
         ],
       ),
-      body:  RefreshIndicator(
+      body: RefreshIndicator(
         onRefresh: () async {
           _loadInitialAppointments();
         },

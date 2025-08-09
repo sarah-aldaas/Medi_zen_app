@@ -1,4 +1,5 @@
 class EndPointsAuth{
+
   static String register= "/patient/auth/register";
   static String verifyOtpRegister= "/patient/auth/verify-otp";
   static String resendOtp= "/patient/auth/resend-otp";

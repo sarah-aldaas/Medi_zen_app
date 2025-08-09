@@ -26,8 +26,7 @@ void showUpdateTelecomDialog({
     builder: (dialogContext) {
       final ThemeData theme = Theme.of(dialogContext);
       return AlertDialog(
-        backgroundColor: theme.dialogTheme.backgroundColor,
-        surfaceTintColor: theme.dialogTheme.surfaceTintColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         content: FutureBuilder<List<List<CodeModel>>>(
           future: Future.wait([telecomTypesFuture, telecomUseFuture]),
           builder: (context, snapshot) {

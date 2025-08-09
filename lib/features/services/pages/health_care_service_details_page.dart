@@ -235,7 +235,7 @@ class _HealthCareServiceDetailsPageState
               Icon(Icons.local_offer_outlined, color: primaryColor, size: 26),
               const Gap(10),
               Text(
-                '${'healthCareServicesPage.price'.tr(context)}: \$${service.price ?? 'healthCareServicesPage.free'.tr(context)}',
+                '${'healthCareServicesPage.price'.tr(context)}: ${service.price ?? 'healthCareServicesPage.free'.tr(context)}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,

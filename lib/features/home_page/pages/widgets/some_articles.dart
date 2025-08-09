@@ -7,7 +7,6 @@ import 'package:medizen_app/features/articles/presentation/cubit/article_cubit/a
 import 'package:medizen_app/features/articles/presentation/pages/article_details_page.dart';
 import 'package:shimmer/shimmer.dart';
 
-
 class SimpleArticlesPage extends StatefulWidget {
   const SimpleArticlesPage({super.key});
 
@@ -64,7 +63,7 @@ class _SimpleArticlesPageState extends State<SimpleArticlesPage> {
                     Text(state.error),
                     ElevatedButton(
                       onPressed: _loadInitialArticles,
-                      child: Text("Retry".tr(context)),
+                      child: Text('articles.retry'.tr(context)),
                     ),
                   ],
                 ),

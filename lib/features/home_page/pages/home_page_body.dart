@@ -82,6 +82,7 @@ class _HomePageBodyState extends State<HomePageBody> {
           context: context,
           builder:
               (context) => AlertDialog(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: Text(
                   'homePage.confirm_exit'.tr(context),
                   style: TextStyle(
@@ -152,28 +153,28 @@ class _HomePageBodyState extends State<HomePageBody> {
           ),
 
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => NotificationsPage(),
-                ),
+                MaterialPageRoute(builder: (context) => NotificationsPage()),
               );
             },
             child: Stack(
               children: [
-                 IconButton(onPressed: (){
-                   Navigator.push(
-                     context,
-                     MaterialPageRoute(
-                       builder: (context) => NotificationsPage(),
-                     ),
-                   );
-                 }, icon: Icon(
-                   Icons.notifications_outlined,
-                   color: theme.iconTheme.color,
-
-                 ),),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationsPage(),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.notifications_outlined,
+                    color: theme.iconTheme.color,
+                  ),
+                ),
                 Positioned(
                   right: 2,
                   bottom: 8,
@@ -195,7 +196,10 @@ class _HomePageBodyState extends State<HomePageBody> {
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        constraints: BoxConstraints(minWidth: 16, minHeight: 16),
+                        constraints: BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
                         child: Text(
                           unreadCount > 9 ? '9+' : '$unreadCount',
                           style: TextStyle(color: Colors.white, fontSize: 12),
@@ -211,7 +215,7 @@ class _HomePageBodyState extends State<HomePageBody> {
           PopupMenuButton<String>(
             icon: Icon(Icons.more_vert, color: theme.iconTheme.color),
 
-            color: theme.cardColor,
+            color: theme.scaffoldBackgroundColor,
             elevation: 8.0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),

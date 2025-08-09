@@ -27,7 +27,7 @@ class _CancelAppointmentDialogState extends State<CancelAppointmentDialog> {
 
   @override
   void initState() {
-    _reasonController.text = "Because I want choose another time.";
+    _reasonController.text = '';
     super.initState();
   }
 
@@ -77,13 +77,13 @@ class _CancelAppointmentDialogState extends State<CancelAppointmentDialog> {
           TextField(
             controller: _reasonController,
             decoration: InputDecoration(
-              labelText: "Reason cancel",
+              labelText: 'cancelAppointment.reason_cancel'.tr(context),
               border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 45.0),
           _isLoading
-              ?  Center(child: LoadingButton())
+              ? Center(child: LoadingButton())
               : Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -95,7 +95,11 @@ class _CancelAppointmentDialogState extends State<CancelAppointmentDialog> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_reasonController.text.isEmpty) {
-                        ShowToast.showToastError(message: "Please enter a cancellation reason");
+                        ShowToast.showToastError(
+                          message: 'cancelAppointment.enter_cancellation'.tr(
+                            context,
+                          ),
+                        );
                         return;
                       }
                       setState(() => _isLoading = true);
