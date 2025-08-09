@@ -19,7 +19,6 @@ import '../../features/authentication/presentation/otp/otp_verification_screen.d
 import '../../features/authentication/presentation/signup/view/signup_screen.dart';
 import '../../features/clinics/pages/clinics_page.dart';
 import '../../features/doctor/pages/details_doctor.dart';
-import '../../features/doctor/pages/doctors_page.dart';
 import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
 import '../../features/home_page/pages/home_page_body.dart';
@@ -206,13 +205,6 @@ GoRouter goRouter() {
         name: AppRouter.clinics.name,
         builder: (BuildContext context, GoRouterState state) {
           return ClinicsPage();
-        },
-      ),
-      GoRoute(
-        path: "/doctors",
-        name: AppRouter.doctors.name,
-        builder: (BuildContext context, GoRouterState state) {
-          return DoctorsPage();
         },
       ),
       GoRoute(

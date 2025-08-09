@@ -1,7 +1,3 @@
-class AppNetworkImages {
-  ///Example
-  //  static const Medical_IMAGES="https://plus.unsplash.com/premium_photo-1688561384438-bfa9273e2c00?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bmV3c3xlbnwwfHwwfHx8MA%3D%3D";
-}
 
 class AppAssetImages {
   ///logo

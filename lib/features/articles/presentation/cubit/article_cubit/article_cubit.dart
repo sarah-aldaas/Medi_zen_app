@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 
 import '../../../../../base/data/models/pagination_model.dart';
@@ -17,10 +16,8 @@ part 'article_state.dart';
 
 class ArticleCubit extends Cubit<ArticleState> {
   final ArticlesRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
-  ArticleCubit({required this.remoteDataSource, required this.networkInfo})
-    : super(ArticleInitial());
+  ArticleCubit({required this.remoteDataSource}) : super(ArticleInitial());
 
   int _currentPage = 1;
   bool _hasMore = true;
@@ -194,23 +191,42 @@ class ArticleCubit extends Cubit<ArticleState> {
     required BuildContext context,
   }) async {
     emit(ArticleLoading());
-
-    final result = await remoteDataSource.getArticleOfCondition(
-      conditionId: conditionId,
-    );
-    if (result is Success<ArticleResponseModel>) {
-      if (result.data.toString().contains("Unauthorized")) {
-        context.pushReplacementNamed(AppRouter.welcomeScreen.name);
-        return;
-      }
-      emit(ArticleConditionSuccess(article: result.data.articleModel));
-    } else if (result is ResponseError<ArticleResponseModel>) {
-      emit(
-        ArticleError(
-          error:
-              result.message ?? 'failed_to_fetch_condition_article'.tr(context),
-        ),
+    try {
+      final result = await remoteDataSource.getArticleOfCondition(
+        conditionId: conditionId,
       );
+      if (result is Success<ArticleResponseModel>) {
+        if (result.data.toString().contains("Unauthorized")) {
+          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          return;
+        }
+        if (result.data.status) {
+          if (result.data.articleModel != null) {
+            emit(ArticleConditionSuccess(article: result.data.articleModel));
+          } else {
+            ShowToast.showToastInfo(message: "You should generate first");
+            emit(ArticleInitial());
+          }
+        } else {
+          emit(
+            ArticleError(
+              error:
+                  result.data.msg ??
+                  'failed_to_fetch_condition_article'.tr(context),
+            ),
+          );
+        }
+      } else if (result is ResponseError<ArticleResponseModel>) {
+        emit(
+          ArticleError(
+            error:
+                result.message ??
+                'failed_to_fetch_condition_article'.tr(context),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(ArticleError(error: "You should generate article first."));
     }
   }
 
@@ -219,18 +235,6 @@ class ArticleCubit extends Cubit<ArticleState> {
     required BuildContext context,
   }) async {
     emit(FavoriteOperationLoading());
-
-    final isConnected = await networkInfo.isConnected;
-    if (!isConnected) {
-      emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-      ShowToast.showToastError(
-        message: 'no_internet_check_network'.tr(context),
-      );
-      await Future.delayed(Duration(milliseconds: 300));
-      emit(ArticleInitial());
-      return;
-    }
-
     try {
       final result = await remoteDataSource.addArticleFavorite(
         articleId: articleId,
@@ -242,9 +246,7 @@ class ArticleCubit extends Cubit<ArticleState> {
           return;
         }
         emit(FavoriteOperationSuccess(isFavorite: true));
-        ShowToast.showToastSuccess(
-          message: result.data.msg ?? 'added_to_favorites'.tr(context),
-        );
+        ShowToast.showToastSuccess(message: 'added_to_favorites'.tr(context));
         await getDetailsArticle(articleId: articleId, context: context);
       } else if (result is ResponseError<PublicResponseModel>) {
         emit(
@@ -274,28 +276,57 @@ class ArticleCubit extends Cubit<ArticleState> {
       );
 
       if (result is Success<PublicResponseModel>) {
-        if (result.data.msg == "Unauthorized. Please login first.") {
-          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+
+        if (result.data.msg?.contains("Unauthorized") == true) {
+          if (context.mounted) {
+            context.pushReplacementNamed(AppRouter.welcomeScreen.name);
+          }
           return;
         }
-        emit(FavoriteOperationSuccess(isFavorite: false));
-        ShowToast.showToastSuccess(
-          message: result.data.msg ?? 'removed_from_favorites'.tr(context),
-        );
-        await getDetailsArticle(articleId: articleId, context: context);
+
+
+        if (result.data.status == true) {
+          emit(FavoriteOperationSuccess(isFavorite: false));
+
+
+          if (context.mounted) {
+            ShowToast.showToastSuccess(
+              message: 'article.removed_from_favorites'.tr(context),
+            );
+          }
+
+          await Future.wait([
+            getDetailsArticle(articleId: articleId, context: context),
+            getMyFavoriteArticles(context: context),
+          ]);
+        } else {
+          final errorMsg =
+              result.data.msg ?? 'article.failed_to_remove'.tr(context);
+          emit(ArticleError(error: errorMsg));
+          if (context.mounted) {
+            ShowToast.showToastError(message: errorMsg);
+          }
+        }
       } else if (result is ResponseError<PublicResponseModel>) {
-        emit(
-          ArticleError(
-            error: result.message ?? 'failed_to_remove_favorite'.tr(context),
-          ),
-        );
-        await Future.delayed(Duration(milliseconds: 300));
-        emit(ArticleInitial());
+        final errorMsg =
+            result.message ?? 'article.failed_to_remove'.tr(context);
+        emit(ArticleError(error: errorMsg));
+        if (context.mounted) {
+          ShowToast.showToastError(message: errorMsg);
+        }
       }
     } catch (e) {
-      emit(ArticleError(error: e.toString()));
-      await Future.delayed(Duration(milliseconds: 300));
-      emit(ArticleInitial());
+      final errorMsg = 'article.removal_error'.tr(context);
+      debugPrint('Error removing favorite: $e');
+      emit(ArticleError(error: errorMsg));
+      if (context.mounted) {
+        ShowToast.showToastError(message: errorMsg);
+      }
+    } finally {
+      if (context.mounted) {
+        await Future.delayed(const Duration(milliseconds: 300));
+        emit(ArticleInitial());
+      }
     }
   }
 
@@ -311,13 +342,6 @@ class ArticleCubit extends Cubit<ArticleState> {
     emit(ArticleGenerateLoading());
 
     try {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        context.pushNamed(AppRouter.noInternet.name);
-        emit(ArticleError(error: 'no_internet_connection'.tr(context)));
-        return;
-      }
-
       if (language.isEmpty) {
         language = await _showLanguageSelectionDialog(context);
         if (language.isEmpty) {
@@ -334,7 +358,6 @@ class ArticleCubit extends Cubit<ArticleState> {
         }
       }
 
-      // final params = {'language': language, if (apiModel != null) 'model': apiModel};
       final response = await remoteDataSource.generateAiArticle(
         conditionId: conditionId,
         apiModel: apiModel,
@@ -377,6 +400,7 @@ class ArticleCubit extends Cubit<ArticleState> {
           context: context,
           builder:
               (context) => AlertDialog(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: Text("select_language".tr(context)),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -401,6 +425,7 @@ class ArticleCubit extends Cubit<ArticleState> {
       context: context,
       builder:
           (context) => AlertDialog(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Text("articles.select_model".tr(context)),
             content: SizedBox(
               width: double.maxFinite,

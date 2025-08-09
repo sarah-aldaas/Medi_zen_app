@@ -53,11 +53,7 @@ class PaginatedData<T> {
         ? (data as List<dynamic>)
         .map((item) => fromJsonT(item as Map<String, dynamic>))
         .toList()
-        : <T>[]; // Return empty list if null or not List
-
-    // final items = (json['data'] as List<dynamic>)
-    //     .map((item) => fromJsonT(item as Map<String, dynamic>))
-    //     .toList();
+        : <T>[];
     return PaginatedData<T>(items: items);
   }
 }

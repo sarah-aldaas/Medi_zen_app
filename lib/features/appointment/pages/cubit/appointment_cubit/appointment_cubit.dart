@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart'; // Import NetworkInfo
 import 'package:medizen_app/features/appointment/data/models/appointment_update_model.dart';
 import 'package:medizen_app/features/appointment/data/models/days_work_doctor_model.dart';
 import 'package:medizen_app/features/appointment/data/models/slots_model.dart';
@@ -20,15 +19,10 @@ part 'appointment_state.dart';
 
 class AppointmentCubit extends Cubit<AppointmentState> {
   final AppointmentRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
-  AppointmentCubit({required this.remoteDataSource, required this.networkInfo}) : super(AppointmentInitial());
+  AppointmentCubit({required this.remoteDataSource}) : super(AppointmentInitial());
 
-  Future<void> getSlotsAppointment({
-    required String practitionerId,
-    required String date,
-    required BuildContext context, // Add context parameter
-  }) async {
+  Future<void> getSlotsAppointment({required String practitionerId, required String date, required BuildContext context}) async {
     emit(SlotsAppointmentLoading());
     try {
       final result = await remoteDataSource.getAllSlots(practitionerId: practitionerId, date: date);
@@ -86,20 +80,23 @@ class AppointmentCubit extends Cubit<AppointmentState> {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
         }
         try {
-          _allAppointments.addAll(result.data.paginatedData!.items);
-          _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
-          _currentPage++;
-
-          emit(
-            AppointmentSuccess(
-              hasMore: _hasMore,
-              paginatedResponse: PaginatedResponse<AppointmentModel>(
-                paginatedData: PaginatedData<AppointmentModel>(items: _allAppointments),
-                meta: result.data.meta,
-                links: result.data.links,
+          if (result.data.status!) {
+            _allAppointments.addAll(result.data.paginatedData!.items);
+            _hasMore = result.data.paginatedData!.items.isNotEmpty && result.data.meta!.currentPage < result.data.meta!.lastPage;
+            _currentPage++;
+            emit(
+              AppointmentSuccess(
+                hasMore: _hasMore,
+                paginatedResponse: PaginatedResponse<AppointmentModel>(
+                  paginatedData: PaginatedData<AppointmentModel>(items: _allAppointments),
+                  meta: result.data.meta,
+                  links: result.data.links,
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            emit(AppointmentError(error: result.data.msg ?? 'Failed to fetch Appointments'));
+          }
         } catch (e) {
           emit(AppointmentError(error: result.data.msg ?? 'Failed to fetch Appointments'));
         }
@@ -142,6 +139,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
           context.pushReplacementNamed(AppRouter.welcomeScreen.name);
         }
         if (result.data.status) {
+          emit(UpdateAppointmentSuccess());
           await getMyAppointment(context: context);
         } else {
           ShowToast.showToastError(message: result.data.msg);
@@ -179,16 +177,17 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-  Future<void> getDetailsAppointment({
-    required String id,
-    required BuildContext context, // Add context parameter
-  }) async {
+  Future<void> getDetailsAppointment({required String id, required BuildContext context}) async {
     emit(AppointmentLoading(isLoadMore: false));
     try {
       final result = await remoteDataSource.getDetailsAppointment(id: id);
-      if (result is Success<AppointmentModel>) {
-        emit(AppointmentDetailsSuccess(appointmentModel: result.data));
-      } else if (result is ResponseError<AppointmentModel>) {
+      if (result is Success<AppointmentResponseModel>) {
+        if (result.data.status) {
+          emit(AppointmentDetailsSuccess(appointmentModel: result.data.appointment!));
+        } else {
+          emit(AppointmentError(error: result.data.msg));
+        }
+      } else if (result is ResponseError<AppointmentResponseModel>) {
         ShowToast.showToastError(message: result.message ?? 'Failed to fetch appointment details');
         emit(AppointmentError(error: result.message ?? 'Failed to fetch appointment details'));
       }

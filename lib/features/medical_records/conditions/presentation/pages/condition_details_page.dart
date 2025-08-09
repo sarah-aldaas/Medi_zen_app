@@ -150,7 +150,13 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 controller: _tabController,
                 children: [
                   _buildConditionDetails(state.condition),
+                  // <<<<<<< HEAD
+                  //
+                  //                   MyMedicationRequestsPage(conditionId: state.condition.id!),
+                  //
+                  // =======
                   MyMedicationRequestsPage(conditionId: state.condition.id!),
+                  // >>>>>>> c804e45c3224c511626af6e9cbcb1dd2e908ee6d
                   DiagnosticReportListPage(conditionId: state.condition.id!),
                 ],
               );
@@ -318,7 +324,10 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                         condition.clinicalStatus!.code,
                       ),
                       label: Text(
-                        condition.clinicalStatus!.display,
+                        _getStatusTranslation(
+                          condition.clinicalStatus!.display,
+                          context,
+                        ),
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -682,22 +691,17 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
             content: BlocConsumer<ArticleCubit, ArticleState>(
               listener: (context, state) {
                 if (state is ArticleConditionSuccess) {
-                  Navigator.pop(context); // Close the loading dialog
+                  Navigator.pop(context);
                   _showArticleDialog(context, state.article);
                 } else if (state is ArticleError) {
-                  Navigator.pop(context); // Close the loading dialog
-                  // If there's an error and no article is found, show a specific message
-                  _showArticleDialog(
-                    context,
-                    null,
-                  ); // Pass null to indicate no article
+                  Navigator.pop(context);
+                  _showArticleDialog(context, null);
                 }
               },
               builder: (context, state) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Assuming LoadingButton() is a widget for showing loading indicator
                     LoadingButton(),
                     SizedBox(height: 16),
                     Text('conditionDetails.fetching_articles'.tr(context)),
@@ -716,19 +720,16 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
       context: context,
       builder:
           (context) => AlertDialog(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title:
                 article != null
                     ? Text(
                       article.title ?? 'conditionDetails.articles'.tr(context),
                     )
-                    : Text(
-                      'conditionDetails.noArticlesFound'.tr(context),
-                    ), // New title for no articles
+                    : Text('conditionDetails.noArticlesFound'.tr(context)),
             content:
                 article == null
-                    ? Text(
-                      'conditionDetails.noArticlesAvailable'.tr(context),
-                    ) // Specific message for no articles
+                    ? Text('conditionDetails.noArticlesAvailable'.tr(context))
                     : SizedBox(
                       width: double.maxFinite,
                       height: MediaQuery.of(context).size.height * 0.5,
@@ -821,7 +822,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 date: DateFormat(
                   'MMM d, y',
                 ).format(DateTime.parse(condition.onSetDate!)),
-                age: condition.onSetAge?.toString(), // Ensure age is String
+                age: condition.onSetAge?.toString(),
               ),
             if (condition.abatementDate != null)
               _buildTimelineItem(
@@ -830,7 +831,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 date: DateFormat(
                   'MMM d, y',
                 ).format(DateTime.parse(condition.abatementDate!)),
-                age: condition.abatementAge?.toString(), // Ensure age is String
+                age: condition.abatementAge?.toString(),
               ),
             if (condition.recordDate != null)
               _buildTimelineItem(
@@ -860,25 +861,20 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
           children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(
-                Icons.emoji_people,
-                color: Theme.of(context).primaryColor,
-                size: 28,
+              leading: Tooltip(
+                message:
+                    condition.bodySite?.description ??
+                    condition.bodySite!.display,
+                child: Icon(
+                  Icons.emoji_people,
+                  color: Theme.of(context).primaryColor,
+                  size: 28,
+                ),
               ),
-              title: Text(
-                condition.bodySite!.display,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
+              title: Text(condition.bodySite!.display),
               subtitle:
-                  condition.bodySite!.description != null
-                      ? Text(
-                        condition.bodySite!.description!,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-                      )
+                  condition.bodySite?.description != null
+                      ? Text(condition.bodySite!.description!)
                       : null,
             ),
           ],
@@ -970,9 +966,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                                 DateTime.parse(encounter.actualStartDate!),
                               )
                               : 'conditionDetails.noDateProvided'.tr(context),
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                         trailing: const Icon(
                           Icons.arrow_forward_ios,
@@ -1096,7 +1090,14 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: iconColor ?? AppColors.primaryColor, size: 24),
+          Tooltip(
+            message: value,
+            child: Icon(
+              icon,
+              color: iconColor ?? AppColors.primaryColor,
+              size: 24,
+            ),
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -1111,10 +1112,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: const TextStyle(fontSize: 15, color: Colors.black87),
-                ),
+                Text(value, style: const TextStyle(fontSize: 15)),
               ],
             ),
           ),
@@ -1144,20 +1142,13 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(
-                      date,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    Text(date, style: Theme.of(context).textTheme.bodyLarge),
+
                     if (age != null) ...[
                       const SizedBox(width: 8),
                       Text(
-                        '($age ${'conditionDetails.yearsAge'.tr(context)})', // Updated translation key here
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[500],
-                        ),
+                        '($age ${'conditionDetails.yearsAge'.tr(context)})',
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
                   ],
@@ -1192,9 +1183,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                     const SizedBox(height: 8),
                     Text(
                       content,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -1204,6 +1193,31 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
         ],
       ),
     );
+  }
+
+  String _getStatusTranslation(String? statusCode, BuildContext context) {
+    switch (statusCode) {
+      case 'active':
+        return 'active'.tr(context);
+      case 'in-progress':
+        return 'in_progress'.tr(context);
+      case 'recurrence':
+        return 'recurrence'.tr(context);
+      case 'relapse':
+        return 'relapse'.tr(context);
+      case 'inactive':
+        return 'inactive'.tr(context);
+      case 'remission':
+        return 'remission'.tr(context);
+      case 'resolved':
+        return 'resolved'.tr(context);
+      case 'completed':
+        return 'completed'.tr(context);
+      case 'entered-in-error':
+        return 'entered_in_error'.tr(context);
+      default:
+        return 'unknown'.tr(context);
+    }
   }
 
   Color _getStatusColor(String? statusCode) {

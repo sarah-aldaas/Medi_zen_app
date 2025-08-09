@@ -29,23 +29,3 @@ class ServiceHealthCareError extends ServiceState {
 
   ServiceHealthCareError({required this.error});
 }
-
-// class ServiceHealthCareEligibilityLoading extends ServiceState {}
-//
-// class ServiceHealthCareEligibilitySuccess extends ServiceState {
-//   final PaginatedResponse<HealthCareServiceEligibilityCodesModel> paginatedResponse;
-//   final List<HealthCareServiceEligibilityCodesModel> allEligibilityCodes;
-//   final bool hasMore;
-//
-//   ServiceHealthCareEligibilitySuccess({
-//     required this.paginatedResponse,
-//     required this.allEligibilityCodes,
-//     required this.hasMore,
-//   });
-// }
-//
-// class ServiceHealthCareEligibilityError extends ServiceState {
-//   final String error;
-//
-//   ServiceHealthCareEligibilityError({required this.error});
-// }

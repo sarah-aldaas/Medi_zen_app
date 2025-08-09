@@ -11,10 +11,149 @@ import 'package:medizen_app/features/medical_records/service_request/data/models
 import '../../../../../base/theme/app_color.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
-class ServiceRequestDetailsPage extends StatelessWidget {
+class ServiceRequestDetailsPage extends StatefulWidget {
   final String serviceId;
 
   const ServiceRequestDetailsPage({super.key, required this.serviceId});
+
+  @override
+  State<ServiceRequestDetailsPage> createState() =>
+      _ServiceRequestDetailsPageState();
+}
+
+class _ServiceRequestDetailsPageState extends State<ServiceRequestDetailsPage> {
+  final Map<GlobalKey, OverlayEntry> _tooltipEntries = {};
+
+  void _showCustomTooltip(BuildContext context, String message, GlobalKey key) {
+    _removeTooltip(key);
+
+    final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final screenSize = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+
+    final lineCount = (message.length / 30).ceil();
+    final maxLines = lineCount.clamp(1, 5);
+
+    final lineHeight = 20.0;
+    final verticalPadding = 24.0;
+    final tooltipHeight = (maxLines * lineHeight) + verticalPadding;
+
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder:
+          (context) => Positioned(
+            left: position.dx.clamp(
+              10.0,
+              screenSize.width - screenSize.width * 0.8 - 10,
+            ),
+            top: position.dy + size.height + 8,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: screenSize.width * 0.8,
+                height: tooltipHeight,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: 14,
+                      height: 1.2,
+                    ),
+                    maxLines: maxLines,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+          ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+    _tooltipEntries[key] = overlayEntry;
+
+    Future.delayed(const Duration(seconds: 4), () {
+      _removeTooltip(key);
+    });
+  }
+
+  void _removeTooltip(GlobalKey key) {
+    if (_tooltipEntries.containsKey(key)) {
+      _tooltipEntries[key]?.remove();
+      _tooltipEntries.remove(key);
+    }
+  }
+
+  Widget _buildClickableTextWithTooltip(
+    BuildContext context,
+    String? value,
+    String? description,
+  ) {
+    final tooltipKey = GlobalKey();
+
+    if (value == null || value.isEmpty) {
+      return Text(
+        'serviceRequestDetailsPage.notSpecified'.tr(context),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      );
+    }
+
+    if (description == null || description.isEmpty) {
+      return Text(
+        value,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      );
+    }
+
+    return InkWell(
+      key: tooltipKey,
+      onTap: () {
+        _showCustomTooltip(context, description, tooltipKey);
+      },
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Text(
+          value,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+
+            decorationColor: Theme.of(context).primaryColor.withOpacity(0.5),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    context.read<ServiceRequestCubit>().getServiceRequestDetails(
+      widget.serviceId,
+      context,
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,11 +263,13 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                 context,
                 'serviceRequestDetailsPage.categoryLabel'.tr(context),
                 request.serviceRequestCategory?.display,
+                tooltip: request.serviceRequestCategory?.description,
               ),
               _buildDetailRow(
                 context,
                 'serviceRequestDetailsPage.priorityLabel'.tr(context),
                 request.serviceRequestPriority?.display,
+                tooltip: request.serviceRequestPriority?.description,
               ),
               if (request.serviceRequestBodySite != null)
                 _buildDetailRow(
@@ -166,7 +307,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder:
                         (context) => ObservationDetailsPage(
-                          serviceId: serviceId,
+                          serviceId: widget.serviceId,
                           observationId: request.observation!.id!,
                         ),
                   ),
@@ -206,39 +347,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                       ).format(request.observation!.effectiveDateTime!)
                       : null,
                 ),
-                // if (request.observation!.pdf != null)
-                //   Padding(
-                //     padding: const EdgeInsets.only(top: 16.0),
-                //     child: Center(
-                //       child: ElevatedButton.icon(
-                //         onPressed: () {},
-                //         icon: Icon(
-                //           Icons.picture_as_pdf_outlined,
-                //           color: Theme.of(context).colorScheme.onSecondary,
-                //         ),
-                //         label: Text(
-                //           'serviceRequestDetailsPage.viewTestReportPDFButton'
-                //               .tr(context),
-                //           style: Theme.of(
-                //             context,
-                //           ).textTheme.labelLarge?.copyWith(
-                //             color: Theme.of(context).colorScheme.onSecondary,
-                //           ),
-                //         ),
-                //         style: ElevatedButton.styleFrom(
-                //           backgroundColor: AppColors.secondaryColor,
-                //           shape: RoundedRectangleBorder(
-                //             borderRadius: BorderRadius.circular(12),
-                //           ),
-                //           padding: const EdgeInsets.symmetric(
-                //             horizontal: 24,
-                //             vertical: 12,
-                //           ),
-                //           elevation: 4,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
               ],
             ),
           if (request.observation != null) const SizedBox(height: 24),
@@ -255,7 +363,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder:
                         (context) => ImagingStudyDetailsPage(
-                          serviceId: serviceId,
+                          serviceId: widget.serviceId,
                           imagingStudyId: request.imagingStudy!.id!,
                         ),
                   ),
@@ -341,11 +449,13 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   context,
                   'serviceRequestDetailsPage.typeLabel'.tr(context),
                   request.encounter?.type?.display,
+                  tooltip: request.encounter?.type?.description,
                 ),
                 _buildDetailRow(
                   context,
                   'serviceRequestDetailsPage.statusLabel'.tr(context),
                   request.encounter?.status?.display,
+                  tooltip: request.encounter?.status?.description,
                 ),
                 _buildDetailRow(
                   context,
@@ -520,6 +630,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   context,
                   'serviceRequestDetailsPage.categoryLabel'.tr(context),
                   request.healthCareService?.category?.display,
+                  tooltip: request.healthCareService?.category?.description,
                 ),
                 _buildDetailRow(
                   context,
@@ -568,26 +679,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Image.network(
-                      //   request.healthCareService!.photo!,
-                      //   height: 180,
-                      //   fit: BoxFit.cover,
-                      //   errorBuilder:
-                      //       (context, error, stackTrace) => Container(
-                      //         height: 180,
-                      //         color:
-                      //             Theme.of(context).colorScheme.surfaceVariant,
-                      //         child: Center(
-                      //           child: Icon(
-                      //             Icons.broken_image,
-                      //             size: 50,
-                      //             color: Theme.of(
-                      //               context,
-                      //             ).colorScheme.onSurface.withOpacity(0.5),
-                      //           ),
-                      //         ),
-                      //       ),
-                      // ),
                     ),
                   ),
                 ],
@@ -596,11 +687,6 @@ class ServiceRequestDetailsPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String? servicePriceFormatted(String? price) {
-    if (price == null || price.isEmpty) return null;
-    return price.contains('\$') ? price : '$price\$';
   }
 
   Widget _buildServiceHeader(
@@ -632,10 +718,22 @@ class ServiceRequestDetailsPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                _buildStatusChip(
-                  context,
-                  request.serviceRequestStatus?.code,
-                  request.serviceRequestStatus?.display,
+                InkWell(
+                  onTap: () {
+                    if (request.serviceRequestStatus?.description != null) {
+                      final tooltipKey = GlobalKey();
+                      _showCustomTooltip(
+                        context,
+                        request.serviceRequestStatus!.description!,
+                        tooltipKey,
+                      );
+                    }
+                  },
+                  child: _buildStatusChip(
+                    context,
+                    request.serviceRequestStatus?.code,
+                    request.serviceRequestStatus?.display,
+                  ),
                 ),
               ],
             ),
@@ -655,6 +753,73 @@ class ServiceRequestDetailsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildDetailRow(
+    BuildContext context,
+    String label,
+    String? value, {
+    String? tooltip,
+  }) {
+    if (value == null || value.isEmpty) return const SizedBox.shrink();
+
+    final tooltipKey = GlobalKey();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 130,
+            child: Text(
+              '$label:',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.cyan,
+                fontSize: 15,
+              ),
+            ),
+          ),
+          Expanded(
+            child:
+                tooltip != null && tooltip.isNotEmpty
+                    ? InkWell(
+                      key: tooltipKey,
+                      onTap: () {
+                        _showCustomTooltip(context, tooltip, tooltipKey);
+                      },
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Text(
+                          value,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+
+                            decorationColor: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    )
+                    : Text(
+                      value,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String? servicePriceFormatted(String? price) {
+    if (price == null || price.isEmpty) return null;
+    return price.contains('\$') ? price : '$price\$';
   }
 
   Widget _buildSectionCard(
@@ -729,60 +894,30 @@ class ServiceRequestDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, String label, String? value) {
-    if (value == null || value.isEmpty) return const SizedBox.shrink();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 130,
-            child: Text(
-              '$label:',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: AppColors.cyan,
-                fontSize: 15,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildStatusChip(
     BuildContext context,
     String? statusCode,
     String? statusDisplay,
   ) {
     final statusColor = _getStatusColor(statusCode);
+    final translatedStatus = _getTranslatedStatus(
+      context,
+      statusCode,
+      statusDisplay,
+    );
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.15), // More subtle background
-        borderRadius: BorderRadius.circular(16.0), // Less rounded corners
-        border: Border.all(
-          color: statusColor.withOpacity(0.3), // Subtle border
-          width: 1.0,
-        ),
+        color: statusColor.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(16.0),
+        border: Border.all(color: statusColor.withOpacity(0.3), width: 1.0),
       ),
       child: Text(
-        statusDisplay ?? 'serviceRequestDetailsPage.unknownStatus'.tr(context),
+        translatedStatus,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: statusColor.withAlpha(130), // Dynamic text color for contrast
-          fontWeight: FontWeight.bold, // Slightly less bold
+          color: statusColor.withAlpha(130),
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
@@ -791,7 +926,7 @@ class ServiceRequestDetailsPage extends StatelessWidget {
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
       case 'active':
-        return Colors.blue; // Less intense than lightBlue.shade600
+        return Colors.blue;
       case 'on-hold':
         return Colors.orange;
       case 'revoked':
@@ -804,6 +939,42 @@ class ServiceRequestDetailsPage extends StatelessWidget {
         return Colors.green;
       default:
         return Colors.grey;
+    }
+  }
+
+  String _getTranslatedStatus(
+    BuildContext context,
+    String? statusCode,
+    String? statusDisplay,
+  ) {
+    if (statusDisplay == null) {
+      return 'serviceRequestDetailsPage.unknownStatus'.tr(context);
+    }
+
+    final translationKey = _getStatusTranslationKey(statusCode);
+    if (translationKey != null) {
+      return translationKey.tr(context);
+    }
+
+    return statusDisplay.tr(context);
+  }
+
+  String? _getStatusTranslationKey(String? statusCode) {
+    switch (statusCode) {
+      case 'active':
+        return 'serviceRequestDetailsPage.status.active';
+      case 'on-hold':
+        return 'serviceRequestDetailsPage.status.onHold';
+      case 'revoked':
+        return 'serviceRequestDetailsPage.status.revoked';
+      case 'entered-in-error':
+        return 'serviceRequestDetailsPage.status.enteredInError';
+      case 'rejected':
+        return 'serviceRequestDetailsPage.status.rejected';
+      case 'completed':
+        return 'serviceRequestDetailsPage.status.completed';
+      default:
+        return null;
     }
   }
 }

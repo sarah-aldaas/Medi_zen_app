@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:meta/meta.dart';
 import '../../../../../base/data/models/pagination_model.dart';
@@ -15,7 +14,6 @@ part 'address_state.dart';
 
 class AddressCubit extends Cubit<AddressState> {
   final AddressRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
   List<AddressModel> _allAddresses = [];
   int _currentPage = 1;
   bool _hasMore = true;
@@ -24,7 +22,6 @@ class AddressCubit extends Cubit<AddressState> {
 
   AddressCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(AddressInitial());
 
   Future<void> fetchAddresses({
@@ -40,16 +37,6 @@ class AddressCubit extends Cubit<AddressState> {
         emit(AddressLoading(isFirstFetch: true));
       } else if (!_hasMore) {
         return;
-      }
-
-      if (!loadMore) {
-        // final isConnected = await networkInfo.isConnected;
-        // if (!isConnected) {
-        //   context.pushNamed(AppRouter.noInternet.name);
-        //   emit(AddressError(error: 'No internet connection'));
-        //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        //   return;
-        // }
       }
 
       final result = await remoteDataSource.getListAllAddress(
@@ -117,16 +104,6 @@ class AddressCubit extends Cubit<AddressState> {
     required AddOrUpdateAddressModel addressModel,
   }) async {
     emit(AddressLoading());
-
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(AddressError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     try {
       final result = await remoteDataSource.createAddress(
         addressModel: addressModel,
@@ -158,16 +135,6 @@ class AddressCubit extends Cubit<AddressState> {
     required BuildContext context,
   }) async {
     emit(AddressLoading());
-
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(AddressError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     try {
       final result = await remoteDataSource.updateAddress(
         id: id,
@@ -200,15 +167,6 @@ class AddressCubit extends Cubit<AddressState> {
   }) async {
     emit(AddressLoading());
 
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(AddressError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     try {
       final result = await remoteDataSource.deleteAddress(id: id);
       if (result is Success<PublicResponseModel>) {
@@ -237,16 +195,6 @@ class AddressCubit extends Cubit<AddressState> {
     required BuildContext context,
   }) async {
     emit(AddressLoading());
-
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(AddressError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return null;
-    // }
-
     try {
       final result = await remoteDataSource.showAddress(id: id);
       if (result is Success<AddressModel>) {

@@ -179,7 +179,7 @@ class _HealthCareServiceFilterDialogState
                           onChanged: (val) {
                             setState(() {
                               _selectedActiveStatus =
-                                  val; // Update local UI state
+                                  val;
                             });
                           },
                           activeColor: Theme.of(context).primaryColor,

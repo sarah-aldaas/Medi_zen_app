@@ -4,7 +4,7 @@ import 'code_type_model.dart';
 class AuthResponseModel {
   final bool status;
   final String errNum;
-  final dynamic msg; // Changed to dynamic to handle String or Map
+  final dynamic msg;
   final LoginData? loginData;
 
   AuthResponseModel({
@@ -17,13 +17,11 @@ class AuthResponseModel {
   factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
     dynamic parsedMsg = json['msg'];
     if (parsedMsg is Map<String, dynamic>) {
-      // If msg is a map, keep it as is
       parsedMsg = parsedMsg;
     } else if (parsedMsg is String) {
-      // If msg is a string, use it directly
       parsedMsg = parsedMsg;
     } else {
-      parsedMsg = ''; // Default to empty string if neither
+      parsedMsg = '';
     }
 
     return AuthResponseModel(
@@ -74,7 +72,6 @@ class LoginData {
 
 
 
-// models/codes_response.dart
 class CodesResponseModel {
   final bool status;
   final int errNum;
@@ -104,7 +101,6 @@ class CodesResponseModel {
   }
 }
 
-// models/code_types_response.dart
 class CodeTypesResponseModel {
   final bool status;
   final int errNum;

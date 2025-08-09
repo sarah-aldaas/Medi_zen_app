@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/features/organization/data/models/qualification_organization_model.dart';
 import '../../../../../../base/services/network/resource.dart';
 import '../../../../../base/data/models/pagination_model.dart';
@@ -13,9 +12,8 @@ part 'organization_state.dart';
 
 class OrganizationCubit extends Cubit<OrganizationState> {
   final OrganizationRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
-  OrganizationCubit({required this.remoteDataSource, required this.networkInfo}) : super(OrganizationInitial());
+  OrganizationCubit({required this.remoteDataSource}) : super(OrganizationInitial());
 
   Future<void> getOrganizationDetails({required BuildContext context}) async {
     emit(OrganizationLoading());
@@ -56,7 +54,9 @@ class OrganizationCubit extends Cubit<OrganizationState> {
       if (result.data.msg == "Unauthorized. Please login first.") {
          context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
+
       try {
+        if(result.data.status!){
         _allQualification.addAll(result.data.paginatedData!.items);
         _hasMore = result.data.paginatedData!.items.isNotEmpty &&
             result.data.meta!.currentPage < result.data.meta!.lastPage;
@@ -71,7 +71,10 @@ class OrganizationCubit extends Cubit<OrganizationState> {
               links: result.data.links,
             ),
           ),
-        );
+        );}
+        else{
+          emit(QualificationOrganizationError(error: result.data.msg ?? 'Failed to fetch qualification'));
+        }
       } catch (e) {
         emit(QualificationOrganizationError(error: result.data.msg ?? 'Failed to fetch qualification'));
       }

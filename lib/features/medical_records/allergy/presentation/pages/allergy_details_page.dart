@@ -29,6 +29,93 @@ class AllergyDetailsPage extends StatefulWidget {
 }
 
 class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
+  final Map<GlobalKey, OverlayEntry> _tooltipEntries = {};
+
+  void _showCustomTooltip(BuildContext context, String message, GlobalKey key) {
+    _removeTooltip(key);
+
+    final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final screenSize = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+
+    final lineCount = (message.length / 30).ceil();
+    final maxLines = lineCount.clamp(1, 5);
+
+    final lineHeight = 20.0;
+    final verticalPadding = 24.0;
+    final tooltipHeight = (maxLines * lineHeight) + verticalPadding;
+
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder:
+          (context) => Positioned(
+            left: position.dx.clamp(
+              10.0,
+              screenSize.width - screenSize.width * 0.8 - 10,
+            ),
+            top: position.dy + size.height + 8,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: screenSize.width * 0.8,
+                height: tooltipHeight,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: 14,
+                      height: 1.2,
+                    ),
+                    maxLines: maxLines,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+          ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+    _tooltipEntries[key] = overlayEntry;
+
+    Future.delayed(const Duration(seconds: 4), () {
+      _removeTooltip(key);
+    });
+  }
+
+  void _removeTooltip(GlobalKey key) {
+    if (_tooltipEntries.containsKey(key)) {
+      _tooltipEntries[key]?.remove();
+      _tooltipEntries.remove(key);
+    }
+  }
+
+  @override
+  void dispose() {
+    _tooltipEntries.values.forEach((entry) => entry.remove());
+    _tooltipEntries.clear();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -101,9 +188,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'allergiesPage.failedToLoadAllergyDetails'.tr(
-                        context,
-                      ), // Translated
+                      'allergiesPage.failedToLoadAllergyDetails'.tr(context),
                       style: TextStyle(
                         fontSize: 18,
                         color: theme.textTheme.bodyMedium?.color,
@@ -145,10 +230,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
               children: [
                 Expanded(
                   child: Text(
-                    allergy.name ??
-                        'allergiesPage.unknownAllergy'.tr(
-                          context,
-                        ), // Translated
+                    allergy.name ?? 'allergiesPage.unknownAllergy'.tr(context),
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.textTheme.bodyLarge?.color,
@@ -169,24 +251,28 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                 Icons.info_outline,
                 'allergiesPage.type'.tr(context),
                 allergy.type?.display,
+                tooltip: allergy.type?.description,
               ),
               _buildDetailRow(
                 context,
                 Icons.category_outlined,
                 'allergiesPage.category'.tr(context),
                 allergy.category?.display,
+                tooltip: allergy.category?.description,
               ),
               _buildDetailRow(
                 context,
                 Icons.medical_services_outlined,
                 'allergiesPage.clinicalStatus'.tr(context),
                 allergy.clinicalStatus?.display,
+                tooltip: allergy.clinicalStatus?.description,
               ),
               _buildDetailRow(
                 context,
                 Icons.verified_outlined,
                 'allergiesPage.verification'.tr(context),
                 allergy.verificationStatus?.display,
+                tooltip: allergy.verificationStatus?.description,
               ),
               _buildDetailRow(
                 context,
@@ -277,9 +363,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'allergiesPage.viewAllReactions'.tr(
-                          context,
-                        ), // Translated
+                        'allergiesPage.viewAllReactions'.tr(context),
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.primaryColor,
@@ -379,7 +463,6 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
     final ThemeData theme = Theme.of(context);
     return Card(
       elevation: 4,
-      // color: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       clipBehavior: Clip.antiAlias,
       child: Padding(
@@ -412,9 +495,40 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
     BuildContext context,
     IconData icon,
     String label,
-    String? value,
-  ) {
+    String? value, {
+    String? tooltip,
+  }) {
     final ThemeData theme = Theme.of(context);
+    final tooltipKey = GlobalKey();
+
+    Widget textWidget = Text(
+      value ?? 'allergiesPage.notSpecified'.tr(context),
+      style: TextStyle(
+        fontWeight: FontWeight.w500,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+
+    if (tooltip != null && tooltip.isNotEmpty) {
+      textWidget = InkWell(
+        key: tooltipKey,
+        onTap: () {
+          _showCustomTooltip(context, tooltip, tooltipKey);
+        },
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [Flexible(child: textWidget)],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -432,12 +546,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
               ),
             ),
           ),
-          Expanded(
-            child: Text(
-              value ?? 'allergiesPage.notSpecified'.tr(context),
-              style: TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ),
+          Expanded(child: textWidget),
         ],
       ),
     );
@@ -450,30 +559,29 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
 
     switch (criticality?.code?.toLowerCase()) {
       case 'high':
-        chipColor = Colors.red.withAlpha(64); // ~25% opacity
-        displayText = criticality?.display ?? 'allergiesPage.high'.tr(context);
+        chipColor = Colors.red.withAlpha(64);
+        displayText = 'allergies.high'.tr(context);
         break;
       case 'low':
-        chipColor = Colors.green.withAlpha(64); // ~25% opacity
-        displayText = criticality?.display ?? 'allergiesPage.low'.tr(context);
+        chipColor = Colors.green.withAlpha(64);
+        displayText = 'allergies.low'.tr(context);
         break;
       case 'unable-to-assess':
-        chipColor = Colors.blueGrey.withAlpha(64); // ~25% opacity
-        displayText =
-            criticality?.display ?? 'allergiesPage.unableToAssess'.tr(context);
+        chipColor = Colors.blueGrey.withAlpha(64);
+        displayText = 'allergies.unable_to_assess'.tr(context);
         break;
       default:
         chipColor =
-            (theme.textTheme.bodySmall?.color?.withAlpha(32)) ?? // ~12% opacity
+            (theme.textTheme.bodySmall?.color?.withAlpha(32)) ??
             Colors.grey.withAlpha(32);
-        displayText = 'allergiesPage.notApplicable'.tr(context);
+        displayText = 'allergies.not_applicable'.tr(context);
     }
 
     return Chip(
       label: Text(
         displayText,
         style: TextStyle(
-          color: chipColor.withAlpha(128), // Auto-contrast text
+          color: chipColor.withAlpha(200),
           fontSize: 13,
           fontWeight: FontWeight.bold,
         ),
@@ -482,10 +590,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
-        side: BorderSide(
-          color: chipColor.withAlpha(128), // Semi-transparent border
-          width: 1,
-        ),
+        side: BorderSide(color: chipColor.withAlpha(150), width: 1),
       ),
     );
   }

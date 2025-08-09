@@ -37,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     PatientModel? myPatientModel =
-        loadingPatientModel(); // Changed to nullable PatientModel
+        loadingPatientModel();
 
     return BlocProvider(
       create: (context) => GetIt.I<LogoutCubit>(),
@@ -50,14 +50,13 @@ class _ProfilePageState extends State<ProfilePage> {
             color: AppColors.primaryColor,
           ),
           title: Row(
-            // Removed 'spacing: 10,' as it's not a valid property for Row
             children: [
               CircleAvatar(
                 backgroundColor: Colors.transparent,
                 radius: 10,
                 child: Image.asset(AppAssetImages.logoGreenPng),
               ),
-              const SizedBox(width: 10), // Added SizedBox for spacing
+              const SizedBox(width: 10),
               Text(
                 'profilePage.title'.tr(context),
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -77,7 +76,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       GestureDetector(
                         onTap: () {
                           if (myPatientModel?.avatar != null) {
-                            // Check for null before accessing avatar
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -97,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: FlexibleImage(
                               imageUrl:
                                   myPatientModel
-                                      ?.avatar, // Use null-aware operator
+                                      ?.avatar,
                               assetPath: "assets/images/person.jpg",
                             ),
                           ),
@@ -108,9 +106,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       Text(
                         myPatientModel == null
                             ? ""
-                            : "${myPatientModel.fName ?? ""} ${myPatientModel.lName ?? ""}", // Corrected null check and null-aware access
+                            : "${myPatientModel.fName ?? ""} ${myPatientModel.lName ?? ""}",
                         style: const TextStyle(
-                          // Added const
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -118,14 +115,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 24), // Added const
+                const SizedBox(height: 24),
                 ListTile(
                   leading: Icon(
                     Icons.person_outline,
                     color: Theme.of(context).primaryColor,
                   ),
                   title: Text('profilePage.personalDetails'.tr(context)),
-                  trailing: const Icon(Icons.chevron_right), // Added const
+                  trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     context.pushNamed(AppRouter.profileDetails.name);
                   },
@@ -137,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Theme.of(context).primaryColor,
                   ),
                   title: Text('profilePage.complaint'.tr(context)),
-                  trailing: const Icon(Icons.chevron_right), // Added const
+                  trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -156,10 +153,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text(
                     'organizationDetailsPage.organization'.tr(context),
                   ),
-                  trailing: const Icon(Icons.chevron_right), // Added const
+                  trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    // TODO: Replace 'YOUR_ORGANIZATION_ID' with the actual organization ID.
-                    // This could come from user data, a default, or require a selection.
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -174,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Theme.of(context).primaryColor,
                   ),
                   title: Text('invoicesPage.invoice'.tr(context)),
-                  trailing: const Icon(Icons.chevron_right), // Added const
+                  trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -194,12 +189,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Row(
                       children: [
-                        const SizedBox(width: 50), // Added const
+                        const SizedBox(width: 50),
                         TextButton(
                           onPressed: () {
                             final bloc = context.read<LocalizationBloc>();
                             if (bloc.isArabic()) {
-                              // Added curly braces for if statement
                               bloc.add(const ChangeLanguageEvent(Locale('en')));
                             }
                           },
@@ -209,12 +203,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Row(
                       children: [
-                        const SizedBox(width: 50), // Added const
+                        const SizedBox(width: 50),
                         TextButton(
                           onPressed: () {
                             final bloc = context.read<LocalizationBloc>();
                             if (!bloc.isArabic()) {
-                              // Added curly braces for if statement
                               bloc.add(const ChangeLanguageEvent(Locale('ar')));
                             }
                           },
@@ -246,10 +239,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ? darkTheme
                                 : lightTheme;
 
-                        // Change the theme immediately
                         switcher.changeTheme(theme: newTheme);
 
-                        // Persist the theme preference
                         final isDark = newTheme.brightness == Brightness.dark;
                         context.read<ThemeCubit>().toggleTheme(isDark);
                       },
@@ -273,12 +264,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(
                         Icons.logout,
                         color: Colors.red,
-                      ), // Added const
+                      ),
                       title: Text(
                         'profilePage.logout'.tr(context),
                         style: const TextStyle(
                           color: Colors.red,
-                        ), // Added const
+                        ),
                       ),
                       children: [
                         RadioListTile<int>(
@@ -292,7 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           context,
                                         ),
                                       ),
-                                      const SizedBox(width: 10), // Added const
+                                      const SizedBox(width: 10),
 
                                       LoadingAnimationWidget.hexagonDots(
                                         color: Theme.of(context).primaryColor,
@@ -304,7 +295,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     'profilePage.logoutThisDevice'.tr(context),
                                     style: const TextStyle(
                                       color: Colors.red,
-                                    ), // Added const
+                                    ),
                                   ),
                           value: 0,
                           groupValue: _selectedLogoutOption,
@@ -330,7 +321,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           context,
                                         ),
                                       ),
-                                      const SizedBox(width: 10), // Added const
+                                      const SizedBox(width: 10),
                                       LoadingAnimationWidget.hexagonDots(
                                         color: Theme.of(context).primaryColor,
                                         size: 25,
@@ -341,7 +332,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     'profilePage.logoutAllDevices'.tr(context),
                                     style: const TextStyle(
                                       color: Colors.red,
-                                    ), // Added const
+                                    ),
                                   ),
                           value: 1,
                           groupValue: _selectedLogoutOption,

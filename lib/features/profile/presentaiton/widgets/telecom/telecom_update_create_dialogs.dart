@@ -26,8 +26,7 @@ void showUpdateTelecomDialog({
     builder: (dialogContext) {
       final ThemeData theme = Theme.of(dialogContext);
       return AlertDialog(
-        backgroundColor: theme.dialogTheme.backgroundColor,
-        surfaceTintColor: theme.dialogTheme.surfaceTintColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         content: FutureBuilder<List<List<CodeModel>>>(
           future: Future.wait([telecomTypesFuture, telecomUseFuture]),
           builder: (context, snapshot) {
@@ -161,7 +160,6 @@ void showCreateTelecomDialog({
       return AlertDialog(
         backgroundColor: theme.dialogTheme.backgroundColor,
         surfaceTintColor: theme.dialogTheme.surfaceTintColor,
-        // surfaceTintColor: Colors.white,
         contentPadding: const EdgeInsets.all(25),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         content: FutureBuilder<List<List<CodeModel>>>(
@@ -341,7 +339,7 @@ void showCreateTelecomDialog({
                               context: context,
                               telecomModel: newTelecom,
                             );
-                            if (context.mounted) Navigator.pop(context); // Check if mounted
+                            if (context.mounted) Navigator.pop(context);
                           } else {
                             ShowToast.showToastError(
                               message: 'telecomPage.allFieldsRequired'.tr(

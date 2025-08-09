@@ -80,9 +80,7 @@ class _MyMedicationsPublicPageState extends State<MyMedicationsPublicPage> {
         color: Theme.of(context).primaryColor,
         child: BlocConsumer<MedicationCubit, MedicationState>(
           listener: (context, state) {
-            // if (state is MedicationError) {
-            //   ShowToast.showToastError(message: state.error);
-            // }
+
           },
           builder: (context, state) {
             if (state is MedicationLoading && !state.isLoadMore) {

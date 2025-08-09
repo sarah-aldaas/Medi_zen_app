@@ -15,7 +15,7 @@ class NetworkClientDependencyInjection {
         sendTimeout: const Duration(minutes: 5),
         headers: {
           "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+          "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
           "Access-Control-Allow-Methods": "*"
         },
@@ -26,28 +26,15 @@ class NetworkClientDependencyInjection {
     dio.options = baseOptions;
     dio.options.contentType = Headers.formUrlEncodedContentType;
 
-    // try {
-    //   (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-    //     final client = HttpClient();
-    //     client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-    //     return client;
-    //   };
-    // } catch (e) {
-    //   logger.e(e, StackTrace.current);
-    // }
-
     dio.interceptors.clear();
 
-    // Logger for API calls.
     dio.interceptors.add(PrettyDioLogger(
         requestBody: true, error: true, request: true, compact: true, maxWidth: 90, requestHeader: true, responseBody: true, responseHeader: false));
 
-    // If we need to call refresh access token API.
-    // We can modify below network interceptor.
+
     dio.interceptors.add(InterceptorsWrapper(onError: (DioException error, handler) {
       return handler.next(error);
     }, onRequest: (RequestOptions requestOptions, handler) async {
-      // TODO:  Get latest access token from preferences
       var accessToken = "";
       if (accessToken != "") {
         var authHeader = {'Authorization': 'Bearer $accessToken'};
@@ -60,7 +47,6 @@ class NetworkClientDependencyInjection {
 
     serviceLocator.registerLazySingleton(() => dio);
 
-    // Network Client.
     serviceLocator.registerLazySingleton(() => NetworkClient(dio: serviceLocator(), logger: serviceLocator(), storageService: serviceLocator()));
   }
 }

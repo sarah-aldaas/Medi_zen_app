@@ -3,17 +3,17 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/base/widgets/not_found_data_page.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/organization/data/models/qualification_organization_model.dart';
 import 'package:medizen_app/features/organization/presentation/cubit/organization_cubit/organization_cubit.dart';
-import 'package:medizen_app/base/theme/app_color.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+import '../../../../main.dart';
 
 class QualificationPage extends StatefulWidget {
   const QualificationPage({super.key});
@@ -45,15 +45,23 @@ class _QualificationPageState extends State<QualificationPage> {
 
   void _loadInitialQualification() {
     _isLoadingMore = false;
-    context.read<OrganizationCubit>().getAllQualification(context: context, loadMore: false);
+    context.read<OrganizationCubit>().getAllQualification(
+      context: context,
+      loadMore: false,
+    );
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       setState(() => _isLoadingMore = true);
-      context.read<OrganizationCubit>().getAllQualification(loadMore: true, context: context).then((_) {
-        setState(() => _isLoadingMore = false);
-      });
+      context
+          .read<OrganizationCubit>()
+          .getAllQualification(loadMore: true, context: context)
+          .then((_) {
+            setState(() => _isLoadingMore = false);
+          });
     }
   }
 
@@ -69,15 +77,14 @@ class _QualificationPageState extends State<QualificationPage> {
       });
 
       if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          throw Exception('Storage permission denied. Please allow storage access.');
-        }
+        await checkAndRequestPermissions();
       }
 
       Directory directory;
       if (Platform.isAndroid) {
-        directory = await getExternalStorageDirectory() ?? await getTemporaryDirectory();
+        directory =
+            await getExternalStorageDirectory() ??
+            await getTemporaryDirectory();
       } else {
         directory = await getApplicationDocumentsDirectory();
       }
@@ -99,7 +106,11 @@ class _QualificationPageState extends State<QualificationPage> {
             });
           }
         },
-        options: Options(responseType: ResponseType.bytes, followRedirects: true, validateStatus: (status) => status! < 500),
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: true,
+          validateStatus: (status) => status! < 500,
+        ),
       );
 
       if (!await file.exists() || (await file.length()) == 0) {
@@ -129,7 +140,7 @@ class _QualificationPageState extends State<QualificationPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Qualification organization',
+          'Qualification.qualificationOrganization'.tr(context),
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
         ),
 
@@ -147,12 +158,19 @@ class _QualificationPageState extends State<QualificationPage> {
             }
           },
           builder: (context, state) {
-            if (state is QualificationOrganizationLoading && !state.isLoadMore) {
+            if (state is QualificationOrganizationLoading &&
+                !state.isLoadMore) {
               return Center(child: LoadingPage());
             }
 
-            final qualification = state is QualificationOrganizationSuccess ? state.paginatedResponse.paginatedData?.items : [];
-            final hasMore = state is QualificationOrganizationSuccess ? state.hasMore : false;
+            final qualification =
+                state is QualificationOrganizationSuccess
+                    ? state.paginatedResponse.paginatedData?.items
+                    : [];
+            final hasMore =
+                state is QualificationOrganizationSuccess
+                    ? state.hasMore
+                    : false;
 
             if (qualification == null || qualification.isEmpty) {
               return NotFoundDataPage();
@@ -171,9 +189,15 @@ class _QualificationPageState extends State<QualificationPage> {
                 itemBuilder: (context, index) {
                   if (index < qualification.length) {
                     final qualificationItem = qualification[index];
-                    return _buildQualificationItem(qualificationItem, Theme.of(context));
+                    return _buildQualificationItem(
+                      qualificationItem,
+                      Theme.of(context),
+                    );
                   } else {
-                    return Padding(padding: const EdgeInsets.all(16.0), child: Center(child: LoadingPage()));
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(child: LoadingPage()),
+                    );
                   }
                 },
               ),
@@ -184,7 +208,10 @@ class _QualificationPageState extends State<QualificationPage> {
     );
   }
 
-  Widget _buildQualificationItem(QualificationsOrganizationModel qualification, ThemeData theme) {
+  Widget _buildQualificationItem(
+    QualificationsOrganizationModel qualification,
+    ThemeData theme,
+  ) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       elevation: 4,
@@ -194,43 +221,76 @@ class _QualificationPageState extends State<QualificationPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              qualification.issuer.toString(),
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
-            ),
-            const SizedBox(height: 10),
-            _buildInfoRow(icon: Icons.date_range_outlined, label: "Start date: ", value: qualification.startDate.toString(), theme: theme),
-            const SizedBox(height: 10),
-            _buildInfoRow(icon: Icons.date_range_outlined, label: "End date: ", value: qualification.endDate.toString(), theme: theme),
-            const SizedBox(height: 10),
-
-            // PDF Download Button
-            if (qualification.pdf != null && qualification.pdf!.isNotEmpty)
-              Align(
-                alignment: Alignment.centerRight,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    if (_downloadProgress.containsKey(qualification.id))
-                      SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: CircularProgressIndicator(
-                          value: _downloadProgress[qualification.id],
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  qualification.issuer.toString(),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                ),
+                if (qualification.pdf != null && qualification.pdf!.isNotEmpty)
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (_downloadProgress.containsKey(qualification.id))
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(
+                            value: _downloadProgress[qualification.id],
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      IconButton(
+                        onPressed:
+                            _downloadProgress.containsKey(qualification.id)
+                                ? null
+                                : () => downloadAndViewPdf(
+                                  qualification.pdf!,
+                                  qualification.id!,
+                                ),
+                        icon: Icon(
+                          _downloadComplete[qualification.id] == true
+                              ? Icons.check_circle
+                              : Icons.picture_as_pdf,
+                          color:
+                              _downloadComplete[qualification.id] == true
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.grey,
                         ),
                       ),
-                    IconButton(
-                      onPressed: _downloadProgress.containsKey(qualification.id) ? null : () => downloadAndViewPdf(qualification.pdf!, qualification.id!),
-                      icon: Icon(
-                        _downloadComplete[qualification.id] == true ? Icons.check_circle : Icons.picture_as_pdf,
-                        color: _downloadComplete[qualification.id] == true ? Theme.of(context).primaryColor : Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            _buildInfoRow(
+              icon: Icons.date_range_outlined,
+              label: 'Qualification.start'.tr(context),
+              value: qualification.startDate.toString(),
+              theme: theme,
+            ),
+            const SizedBox(height: 10),
+            _buildInfoRow(
+              icon: Icons.date_range_outlined,
+              label: 'Qualification.end'.tr(context),
+              value: qualification.endDate.toString(),
+              theme: theme,
+            ),
+            const SizedBox(height: 10),
+            _buildInfoRow(
+              icon: Icons.date_range_outlined,
+              label: 'Qualification.type'.tr(context),
+              value: qualification.type!.display.toString(),
+              theme: theme,
+            ),
+            const SizedBox(height: 10),
           ],
         ),
       ),
@@ -238,7 +298,13 @@ class _QualificationPageState extends State<QualificationPage> {
   }
 }
 
-Widget _buildInfoRow({required IconData icon, required String label, required String value, required ThemeData theme, int maxLines = 2}) {
+Widget _buildInfoRow({
+  required IconData icon,
+  required String label,
+  required String value,
+  required ThemeData theme,
+  int maxLines = 3,
+}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 6.0),
     child: Row(
@@ -250,9 +316,25 @@ Widget _buildInfoRow({required IconData icon, required String label, required St
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(width: 100, child: Text(label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.label))),
+              SizedBox(
+                width: 100,
+                child: Text(
+                  label,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.label,
+                  ),
+                ),
+              ),
               const SizedBox(width: 4),
-              Expanded(child: Text(value, style: theme.textTheme.bodyMedium, maxLines: maxLines, overflow: TextOverflow.ellipsis)),
+              Expanded(
+                child: Text(
+                  value,
+                  style: theme.textTheme.bodyMedium,
+                  maxLines: maxLines,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ],
           ),
         ),

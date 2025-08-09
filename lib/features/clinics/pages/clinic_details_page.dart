@@ -35,11 +35,9 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
     super.initState();
     _clinicCubit = ClinicCubit(
       remoteDataSource: serviceLocator<ClinicRemoteDataSource>(),
-      networkInfo: serviceLocator(),
     );
     _doctorCubit = DoctorCubit(
       remoteDataSource: serviceLocator<DoctorRemoteDataSource>(),
-      networkInfo: serviceLocator(),
     );
     _clinicCubit.getSpecificClinic(id: widget.clinicId, context: context);
     _doctorCubit.getDoctorsOfClinic(
@@ -79,7 +77,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                 Theme.of(context).appBarTheme.titleTextStyle ??
                 Theme.of(
                   context,
-                ).textTheme.displayLarge!.copyWith(fontSize: 20); // fallback
+                ).textTheme.displayLarge!.copyWith(fontSize: 20);
 
             if (state is ClinicLoadedSuccess) {
               return Text(state.clinic.name, style: appBarTitleStyle);
@@ -177,13 +175,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             imageUrl: clinic.photo,
             errorWidget: Center(child: Icon(Icons.local_hospital)),
           ),
-          // Image.network(
-          //   clinic.photo,
-          //   fit: BoxFit.cover,
-          //   errorBuilder:
-          //       (context, error, stackTrace) =>
-          //       Image.asset(AppAssetImages.clinic6, fit: BoxFit.cover),
-          // ),
+
         ),
       ),
     );
@@ -452,7 +444,6 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                 ),
               ),
               const Gap(8),
-              //
               Icon(
                 Icons.arrow_forward_ios,
                 color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
@@ -586,7 +577,7 @@ class ClinicServicesPage extends StatelessWidget {
                   child: Text(
                     'clinicDetails.noServicesAvailable'.tr(
                       context,
-                    ), // Localized
+                    ),
                     style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).textTheme.bodySmall?.color,
@@ -744,13 +735,6 @@ class ClinicServicesPage extends StatelessWidget {
                                   backgroundColor: Theme.of(
                                     context,
                                   ).primaryColor.withOpacity(0.9),
-                                  // foregroundColor:
-                                  //     Theme.of(context).buttonTheme.textTheme ==
-                                  //             ButtonTextTheme.primary
-                                  //         ? Theme.of(
-                                  //           context,
-                                  //         ).textTheme.labelLarge?.color
-                                  //         : null,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),

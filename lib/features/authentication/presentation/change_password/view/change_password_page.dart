@@ -24,7 +24,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChangePasswordCubit(networkInfo: serviceLocator()),
+      create: (context) => ChangePasswordCubit(),
       child: Scaffold(
         appBar: AppBar(
           title: Text("changePassword.title".tr(context), style: AppStyles.appBarTitle),

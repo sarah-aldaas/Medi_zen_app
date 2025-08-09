@@ -171,7 +171,6 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    // Apply Button
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(

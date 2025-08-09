@@ -220,6 +220,7 @@ class _TelecomPageState extends State<TelecomPage> {
                         itemCount: filteredTelecoms.length,
                         itemBuilder: (context, index) {
                           return Card(
+                            color: Theme.of(context).scaffoldBackgroundColor,
                             margin: const EdgeInsets.symmetric(
                               horizontal: 20,
                               vertical: 12,
@@ -228,7 +229,7 @@ class _TelecomPageState extends State<TelecomPage> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             elevation: 5,
-                            color: theme.cardColor,
+
                             child: ExpansionTile(
                               leading: Icon(
                                 Icons.phone_android,
@@ -340,7 +341,6 @@ class _TelecomPageState extends State<TelecomPage> {
                               ],
                             ),
                           );
-                          // return _buildTelecomCard(context, filteredTelecoms[index],state);
                         },
                       ),
                 ],

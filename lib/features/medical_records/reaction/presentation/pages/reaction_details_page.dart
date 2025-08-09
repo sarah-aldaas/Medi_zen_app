@@ -119,7 +119,7 @@ class _ReactionDetailsPageState extends State<ReactionDetailsPage> {
           const SizedBox(height: 16),
           Card(
             elevation: 2,
-            color: theme.cardColor,
+            color: theme.scaffoldBackgroundColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

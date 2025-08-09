@@ -10,10 +10,6 @@ abstract class ServicesRemoteDataSource {
   Future<Resource<PaginatedResponse<HealthCareServiceModel>>> getAllHealthCareServices({int page = 1, int perPage = 10, Map<String, dynamic>? filters,});
 
   Future<Resource<HealthCareServiceModel>> getSpecificHealthCareServices({required String id});
-
-  // Future<Resource<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>> getAllHealthCareServiceEligibilityCodes({int page = 1, int perPage = 10});
-
-  // Future<Resource<HealthCareServiceEligibilityCodesModel>> getSpecificHealthCareServiceEligibilityCodes({required String id});
 }
 
 class ServicesRemoteDataSourceImpl implements ServicesRemoteDataSource {
@@ -53,27 +49,5 @@ class ServicesRemoteDataSourceImpl implements ServicesRemoteDataSource {
       ),
     );
   }
-  // @override
-  // Future<Resource<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>> getAllHealthCareServiceEligibilityCodes({int page = 1, int perPage = 10}) async {
-  //   final queryParams = {'page': page, 'pagination_count': perPage};
-  //
-  //   final response = await networkClient.invoke(ServicesEndPoints.getAllHealthCareServiceEligibilityCodes, RequestType.get, queryParameters: queryParams);
-  //
-  //   return ResponseHandler<PaginatedResponse<HealthCareServiceEligibilityCodesModel>>(response).processResponse(
-  //     fromJson:
-  //         (json) => PaginatedResponse<HealthCareServiceEligibilityCodesModel>.fromJson(
-  //           json,
-  //           'healthCareServiceEligibilityCodes',
-  //           (dataJson) => HealthCareServiceEligibilityCodesModel.fromJson(dataJson),
-  //         ),
-  //   );
-  // }
 
-  // @override
-  // Future<Resource<HealthCareServiceEligibilityCodesModel>> getSpecificHealthCareServiceEligibilityCodes({required String id}) async {
-  //   final response = await networkClient.invoke(ServicesEndPoints.getSpecificHealthCareServiceEligibilityCodes(id: id), RequestType.get);
-  //   return ResponseHandler<HealthCareServiceEligibilityCodesModel>(
-  //     response,
-  //   ).processResponse(fromJson: (json) => HealthCareServiceEligibilityCodesModel.fromJson(json));
-  // }
 }

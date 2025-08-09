@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/complains/data/models/complain_model.dart';
 import 'package:medizen_app/main.dart';
 
@@ -179,14 +180,10 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
       body: BlocConsumer<ComplainCubit, ComplainState>(
         listener: (context, state) {
           if (state is ComplainError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.error)));
+          ShowToast.showToastError(message: state.error);
             setState(() => _isSending = false);
           } else if (state is ComplainActionSuccess) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+           ShowToast.showToastError(message: state.message);
             _responseController.clear();
             setState(() {
               _isSending = false;
@@ -322,7 +319,7 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
         createdAt: complain.createdAt ?? DateTime.now(),
         isFromUser: true,
         senderName: 'complaintDetailsPage.youSender'.tr(context),
-        attachmentsUrl: [],
+        attachmentsUrl: complain.attachmentsUrl ?? [],
       ),
       ...responses.map(
         (r) => _MessageItem(

@@ -36,7 +36,6 @@ class AppointmentCreateModel {
       'note': note.toString(),
       'doctor_id': doctorId.toString(),
       'patient_id': patientId.toString(),
-      // 'previous_appointment': previousAppointment,
       'slot_id': slotId.toString(),
     };
   }

@@ -231,7 +231,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                       ),
                       const SizedBox(height: 10.0),
                       Text(
-                        '${'healthCareServicesPage.price'.tr(context)}: \$${service.price ?? 'N/A'}',
+                        '${'healthCareServicesPage.price'.tr(context)}: ${service.price ?? 'N/A'}',
                         style: TextStyle(
                           color: Theme.of(context).textTheme.bodyLarge?.color,
                         ),

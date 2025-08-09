@@ -73,9 +73,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   tooltip: "helpCenter.search.clear".tr(context),
-                  onPressed: () {
-                    // Clear search
-                  },
+                  onPressed: () {},
                 ),
               ),
             ),

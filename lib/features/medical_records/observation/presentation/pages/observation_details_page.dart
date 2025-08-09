@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:medizen_app/features/medical_records/observation/data/models/obs
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import '../../../../../base/services/di/injection_container_common.dart';
 import '../../../../../base/services/network/network_client.dart';
 import '../../../../../base/theme/app_color.dart';
@@ -32,6 +34,133 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
   final Map<String, double> _downloadProgress = {};
   final Map<String, bool> _downloadComplete = {};
   final Dio _dio = serviceLocator<NetworkClient>().dio;
+
+  final Map<GlobalKey, OverlayEntry> _tooltipEntries = {};
+
+  void _showCustomTooltip(BuildContext context, String message, GlobalKey key) {
+    _removeTooltip(key);
+
+    final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final screenSize = MediaQuery.of(context).size;
+    final padding = MediaQuery.of(context).padding;
+
+    final lineCount = (message.length / 30).ceil();
+    final maxLines = lineCount.clamp(1, 5);
+
+
+    final lineHeight = 20.0;
+    final verticalPadding = 24.0;
+    final tooltipHeight = (maxLines * lineHeight) + verticalPadding;
+
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder:
+          (context) => Positioned(
+            left: position.dx.clamp(
+              10.0,
+              screenSize.width - screenSize.width * 0.8 - 10,
+            ),
+            top: position.dy + size.height + 8,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: screenSize.width * 0.8,
+                height: tooltipHeight,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: 14,
+                      height: 1.2,
+                    ),
+                    maxLines: maxLines,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+          ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+    _tooltipEntries[key] = overlayEntry;
+
+    Future.delayed(const Duration(seconds: 4), () {
+      _removeTooltip(key);
+    });
+  }
+
+  void _removeTooltip(GlobalKey key) {
+    if (_tooltipEntries.containsKey(key)) {
+      _tooltipEntries[key]?.remove();
+      _tooltipEntries.remove(key);
+    }
+  }
+
+  Widget _buildClickableTextWithTooltip(
+    BuildContext context,
+    String? value,
+    String? description,
+  ) {
+    if (value == null || value.isEmpty) {
+      return Text(
+        'observationDetailsPage.notSpecified'.tr(context),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      );
+    }
+
+    if (description == null || description.isEmpty) {
+      return Text(
+        value,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      );
+    }
+
+    return InkWell(
+      onTap: () {
+        final RenderBox renderBox = context.findRenderObject() as RenderBox;
+        final offset = renderBox.localToGlobal(Offset.zero);
+        _showCustomTooltip(
+          context,
+          description,
+          offset as GlobalKey<State<StatefulWidget>>,
+        );
+      },
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Text(
+          value,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            decorationColor: Theme.of(context).primaryColor.withOpacity(0.5),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -66,15 +195,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
         ),
         centerTitle: true,
         elevation: 4,
-        // flexibleSpace: Container(
-        //   decoration:  BoxDecoration(
-        //     gradient: LinearGradient(
-        //       colors: [AppColors.backGroundLogo, Colors.black87],
-        //       begin: Alignment.topLeft,
-        //       end: Alignment.bottomRight,
-        //     ),
-        //   ),
-        // ),
       ),
       body: BlocBuilder<ObservationCubit, ObservationState>(
         builder: (context, state) {
@@ -150,7 +270,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
     BuildContext context,
     ObservationModel observation,
   ) {
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -174,21 +293,25 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
                 context,
                 'observationDetailsPage.interpretationLabel'.tr(context),
                 observation.interpretation?.display,
+                tooltip: observation.interpretation?.description,
               ),
               _buildDetailRow(
                 context,
                 'observationDetailsPage.statusLabel'.tr(context),
                 observation.status?.display,
+                tooltip: observation.status?.description,
               ),
               _buildDetailRow(
                 context,
                 'observationDetailsPage.methodLabel'.tr(context),
                 observation.method?.display,
+                tooltip: observation.method?.description,
               ),
               _buildDetailRow(
                 context,
                 'observationDetailsPage.bodySiteLabel'.tr(context),
                 observation.bodySite?.display,
+                tooltip: observation.bodySite?.description,
               ),
               _buildDetailRow(
                 context,
@@ -206,42 +329,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
             ],
           ),
           const SizedBox(height: 24),
-
-          // if (observation.pdf != null)
-          //   _buildSectionCard(
-          //     context,
-          //     title: 'observationDetailsPage.testReportSectionTitle'.tr(
-          //       context,
-          //     ),
-          //     icon: Icons.picture_as_pdf_outlined,
-          //     children: [
-          //       Center(
-          //         child: ElevatedButton.icon(
-          //           onPressed: () => _viewPdfReport(context, observation.pdf!),
-          //           icon: const Icon(Icons.open_in_new, color: Colors.white),
-          //           label: Text(
-          //             'observationDetailsPage.viewFullReportPDFButton'.tr(
-          //               context,
-          //             ),
-          //             style: Theme.of(
-          //               context,
-          //             ).textTheme.labelLarge?.copyWith(color: Colors.white),
-          //           ),
-          //           style: ElevatedButton.styleFrom(
-          //             backgroundColor: AppColors.secondaryColor,
-          //             shape: RoundedRectangleBorder(
-          //               borderRadius: BorderRadius.circular(12),
-          //             ),
-          //             padding: const EdgeInsets.symmetric(
-          //               horizontal: 24,
-          //               vertical: 12,
-          //             ),
-          //             elevation: 4,
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
           if (observation.pdf != null)
             _buildSectionCard(
               context,
@@ -332,16 +419,27 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
                   context,
                   'observationDetailsPage.typeLabel'.tr(context),
                   observation.observationDefinition?.type?.display,
+                  tooltip: observation.observationDefinition?.type?.description,
                 ),
                 _buildDetailRow(
                   context,
                   'observationDetailsPage.classificationLabel'.tr(context),
                   observation.observationDefinition?.classification?.display,
+                  tooltip:
+                      observation
+                          .observationDefinition
+                          ?.classification
+                          ?.description,
                 ),
                 _buildDetailRow(
                   context,
                   'observationDetailsPage.preferredUnitLabel'.tr(context),
                   observation.observationDefinition?.permittedUnit?.display,
+                  tooltip:
+                      observation
+                          .observationDefinition
+                          ?.permittedUnit
+                          ?.description,
                 ),
 
                 if (observation
@@ -396,16 +494,19 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
                                 context,
                               ),
                               qv.appliesTo?.display,
+                              tooltip: qv.appliesTo?.description,
                             ),
                             _buildDetailRow(
                               context,
                               'observationDetailsPage.genderLabel'.tr(context),
                               qv.gender?.display,
+                              tooltip: qv.gender?.description,
                             ),
                             _buildDetailRow(
                               context,
                               'observationDetailsPage.contextLabel'.tr(context),
                               qv.context?.display,
+                              tooltip: qv.context?.description,
                             ),
                           ],
                         ),
@@ -477,24 +578,105 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
                   context,
                   'observationDetailsPage.priorityLabel'.tr(context),
                   observation.serviceRequest!.serviceRequestPriority?.display,
+                  tooltip:
+                      observation
+                          .serviceRequest!
+                          .serviceRequestPriority
+                          ?.description,
                 ),
                 _buildDetailRow(
                   context,
                   'observationDetailsPage.statusLabel'.tr(context),
                   observation.serviceRequest!.serviceRequestStatus?.display,
+                  tooltip:
+                      observation
+                          .serviceRequest!
+                          .serviceRequestStatus
+                          ?.description,
                 ),
                 _buildDetailRow(
                   context,
                   'observationDetailsPage.categoryLabel'.tr(context),
                   observation.serviceRequest!.serviceRequestCategory?.display,
+                  tooltip:
+                      observation
+                          .serviceRequest!
+                          .serviceRequestCategory
+                          ?.description,
                 ),
                 _buildDetailRow(
                   context,
                   'observationDetailsPage.bodySiteLabel'.tr(context),
                   observation.serviceRequest!.serviceRequestBodySite?.display,
+                  tooltip:
+                      observation
+                          .serviceRequest!
+                          .serviceRequestBodySite
+                          ?.description,
                 ),
               ],
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(
+    BuildContext context,
+    String label,
+    String? value, {
+    String? tooltip,
+  }) {
+    if (value == null || value.isEmpty) return const SizedBox.shrink();
+
+    final tooltipKey = GlobalKey();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 130,
+            child: Text(
+              '$label:',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.cyan,
+                fontSize: 17,
+              ),
+            ),
+          ),
+          Expanded(
+            child:
+                tooltip != null && tooltip.isNotEmpty
+                    ? InkWell(
+                      key: tooltipKey,
+                      onTap: () {
+                        _showCustomTooltip(context, tooltip, tooltipKey);
+                      },
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Text(
+                          value,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            decorationColor: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    )
+                    : Text(
+                      value,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+          ),
         ],
       ),
     );
@@ -565,7 +747,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
   }
 
   Widget _buildSubSectionTitle(BuildContext context, String title) {
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
@@ -574,115 +755,6 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
           color: Theme.of(context).primaryColor,
           fontWeight: FontWeight.bold,
           fontSize: 20,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(BuildContext context, String label, String? value) {
-    if (value == null || value.isEmpty) return const SizedBox.shrink();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 130,
-            child: Text(
-              '$label:',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.cyan,
-                fontSize: 17,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // void  _viewPdfReport(BuildContext context, String pdfUrl) {
-  //   showDialog(
-  //     context: context,
-  //     builder:
-  //         (context) => AlertDialog(
-  //           title: Text(
-  //             'observationDetailsPage.pdfReportDialogTitle'.tr(context),
-  //             style: TextStyle(
-  //               fontSize: 20,
-  //               fontWeight: FontWeight.bold,
-  //               color: AppColors.blackColor,
-  //             ),
-  //           ),
-  //           content: Text(
-  //             'observationDetailsPage.pdfReportDialogContent'.tr(context),
-  //             style: Theme.of(context).textTheme.bodyLarge,
-  //           ),
-  //           actions: [
-  //             TextButton(
-  //               onPressed: () => Navigator.pop(context),
-  //               child: Text(
-  //                 'observationDetailsPage.pdfReportDialogCancel'.tr(context),
-  //                 style: TextStyle(
-  //                   fontSize: 18,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: AppColors.secondaryColor,
-  //                 ),
-  //               ),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //               },
-  //               child: Text(
-  //                 'observationDetailsPage.pdfReportDialogView'.tr(context),
-  //                 style: TextStyle(
-  //                   fontSize: 18,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: AppColors.secondaryColor,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //   );
-  // }
-
-  Widget _buildStatusChip(
-    BuildContext context,
-    String? statusCode,
-    String? statusDisplay,
-  ) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        color: _getStatusColor(statusCode),
-        borderRadius: BorderRadius.circular(25.0),
-        boxShadow: [
-          BoxShadow(
-            color: _getStatusColor(statusCode).withOpacity(0.3),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Text(
-        statusDisplay ?? 'observationDetailsPage.unknownStatus'.tr(context),
-        style: textTheme.labelLarge?.copyWith(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -737,12 +809,7 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
       });
 
       if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          throw Exception(
-            'Storage permission denied. Please allow storage access.',
-          );
-        }
+        await checkAndRequestPermissions();
       }
 
       Directory directory;
@@ -799,6 +866,15 @@ class _ObservationDetailsPageState extends State<ObservationDetailsPage> {
       setState(() {
         _downloadProgress.remove('observation');
       });
+    }
+  }
+
+  Future<void> checkAndRequestPermissions() async {
+    if (Platform.isAndroid) {
+      final status = await Permission.storage.request();
+      if (!status.isGranted) {
+        throw Exception('Storage permission not granted');
+      }
     }
   }
 }

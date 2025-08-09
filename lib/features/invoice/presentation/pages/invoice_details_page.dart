@@ -283,7 +283,7 @@ class InvoiceDetailsPage extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Text(
                         'invoiceDetailsPage.descriptionHeader'.tr(context),
                         style: TextStyle(
@@ -309,7 +309,7 @@ class InvoiceDetailsPage extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Text(
                         'invoiceDetailsPage.medicalConsultation'.tr(context),
                         style: TextStyle(fontSize: 16, color: textColor),
@@ -332,7 +332,7 @@ class InvoiceDetailsPage extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        flex: 3,
+                        flex: 2,
                         child: Text(
                           'invoiceDetailsPage.adjustmentFactor'.tr(context),
                           style: TextStyle(fontSize: 16, color: textColor),
@@ -355,7 +355,7 @@ class InvoiceDetailsPage extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Text(
                         'invoiceDetailsPage.totalHeader'.tr(context),
                         style: TextStyle(
@@ -365,6 +365,7 @@ class InvoiceDetailsPage extends StatelessWidget {
                         ),
                       ),
                     ),
+
                     Expanded(
                       child: Text(
                         invoice.totalNet ?? 'N/A',

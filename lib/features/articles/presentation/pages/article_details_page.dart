@@ -206,6 +206,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Text(
             "articleDetails.removeFavoriteTitle".tr(context),
             style: TextStyle(color: AppColors.primaryColor),

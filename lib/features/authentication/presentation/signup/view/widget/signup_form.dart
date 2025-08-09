@@ -26,7 +26,7 @@ class _SignupFormState extends State<SignupForm> {
   @override
   void initState() {
     super.initState();
-    _cubit = SignupFormCubit(codeTypesCubit: context.read<CodeTypesCubit>(), networkInfo: serviceLocator());
+    _cubit = SignupFormCubit(codeTypesCubit: context.read<CodeTypesCubit>(),);
     _cubit.loadCodes(context);
   }
 
@@ -43,7 +43,6 @@ class _SignupFormState extends State<SignupForm> {
       child: BlocConsumer<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state.successMessage != null) {
-            // ShowToast.showToastSuccess(message: state.successMessage!);
             context.pushNamed(
               AppRouter.otpVerification.name,
               extra: {'email': _cubit.state.formData['email']},

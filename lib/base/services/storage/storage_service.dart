@@ -46,14 +46,12 @@ class StorageService {
     return await _preferences.clear();
   }
 
-  // New method to save Patient model
   void savePatient(String key, PatientModel patient) async {
     final jsonString = jsonEncode(patient.toJson());
      saveToDisk(key, jsonString);
     logger.log.i('(TRACE) LocalStorageService:savePatient. key: $key value: $jsonString');
   }
 
-  // New method to retrieve Patient model
   PatientModel? getPatient(String key) {
     final jsonString = getFromDisk(key) as String?;
     if (jsonString == null) {

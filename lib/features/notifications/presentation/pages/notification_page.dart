@@ -87,7 +87,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 _loadInitialNotifications();
               });
             },
-            tooltip: _showUnreadOnly ? "show_all" : "show_unread",
+            tooltip:
+                _showUnreadOnly
+                    ? 'notifications.show_all'.tr(context)
+                    : 'notifications.show_unread'.tr(context),
           ),
         ],
       ),
@@ -97,11 +100,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           listener: (context, state) {
             if (state is NotificationError) {
               ShowToast.showToastError(message: state.error);
-            } else if (state is FCMOperationSuccess) {
-              // ShowToast.showToastSuccess(
-              //   message: state.response.msg ?? 'Operation successful',
-              // );
-            }
+            } else if (state is FCMOperationSuccess) {}
           },
           builder: (context, state) {
             if (state is NotificationLoading) {
@@ -181,7 +180,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final isDarkMode = theme.brightness == Brightness.dark;
 
     final icon = _getNotificationIcon(notification);
-    // Use theme.primaryColor for all icons, regardless of read status
     final iconColor = theme.primaryColor;
 
     return Dismissible(
@@ -207,12 +205,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
       },
       child:
           cubit.state is NotificationOperationLoading
-              ? const Center(
-                child: CircularProgressIndicator(),
-              ) // Changed LoadingButton to CircularProgressIndicator
+              ? Center(child: LoadingButton())
               : Card(
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                // Keep the background color conditional based on read status
                 color:
                     notification.isRead
                         ? (isDarkMode ? Colors.grey[800] : Colors.grey[100])
@@ -224,7 +219,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         notificationId: notification.id,
                         context: context,
                       );
-                      // This will reload all notifications, including the one just marked as read
                       _loadInitialNotifications();
                     }
                     _handleNotificationTap(notification, context);
@@ -234,7 +228,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(icon, color: iconColor, size: 30), // Use iconColor
+                        Icon(icon, color: iconColor, size: 30),
                         const Gap(12),
                         Expanded(
                           child: Column(
@@ -243,16 +237,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               Text(
                                 notification.title,
                                 style: TextStyle(
-                                  // Apply bold only if not read
                                   fontWeight:
                                       notification.isRead
                                           ? FontWeight.normal
                                           : FontWeight.bold,
-                                  color:
-                                      theme
-                                          .textTheme
-                                          .titleMedium
-                                          ?.color, // Keep text color consistent
+                                  color: theme.textTheme.titleMedium?.color,
                                 ),
                               ),
                               const Gap(4),
@@ -397,7 +386,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case NotificationType.medicationRequestCreated:
       case NotificationType.medicationRequestUpdated:
       case NotificationType.medicationRequestCanceled:
-        // case NotificationType.reminderMedication:
         return Icons.medication_outlined;
       case NotificationType.medicationCreated:
       case NotificationType.medicationUpdated:
@@ -488,7 +476,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
         case NotificationType.medicationRequestCreated:
         case NotificationType.medicationRequestUpdated:
         case NotificationType.medicationRequestCanceled:
-          // case NotificationType.reminderMedication:
           _navigateToMedicationRequestDetails(notification.data!, context);
           break;
         case NotificationType.medicationCreated:
@@ -559,7 +546,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     NotificationData data,
     BuildContext context,
   ) {
-    // Check if organizationId is available in notification data
     if (data.organizationId == null) {
       _showErrorDialog(context, 'Organization ID is missing for notification.');
       return;
@@ -736,7 +722,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
         builder:
             (context) => MedicalRecordOfAppointmentPage(
               appointmentId: data.appointmentId!,
-              // doctorId: data.doctorId,
             ),
       ),
     ).then((_) {
@@ -779,7 +764,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
         builder:
             (context) => MedicationRequestDetailsPage(
               medicationRequestId: data.medicationRequestId!,
-              // medicationId: data.medicationId,
             ),
       ),
     ).then((_) {

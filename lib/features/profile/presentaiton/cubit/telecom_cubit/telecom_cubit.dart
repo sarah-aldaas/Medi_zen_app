@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/services/network/resource.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/profile/data/models/telecom_model.dart';
@@ -14,11 +13,9 @@ part 'telecom_state.dart';
 
 class TelecomCubit extends Cubit<TelecomState> {
   final TelecomRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
   TelecomCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(TelecomInitial());
 
   Future<void> fetchTelecoms({
@@ -28,16 +25,6 @@ class TelecomCubit extends Cubit<TelecomState> {
     required BuildContext context,
   }) async {
     emit(TelecomLoading());
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(TelecomError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     final result = await remoteDataSource.getListAllTelecom(
       rank: rank,
       paginationCount: paginationCount,
@@ -58,15 +45,6 @@ class TelecomCubit extends Cubit<TelecomState> {
       final nextPage = currentState.currentPage + 1;
       if (nextPage <= currentState.paginatedResponse.meta!.lastPage) {
         emit(TelecomLoading());
-        // Check internet connectivity
-        // final isConnected = await networkInfo.isConnected;
-        // if (!isConnected) {
-        //   emit(TelecomError(error: 'No internet connection'));
-        //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        //   return;
-        // }
-
-
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
           paginationCount: currentState.paginatedResponse.meta!.perPage.toString(),
@@ -93,15 +71,6 @@ class TelecomCubit extends Cubit<TelecomState> {
       final prevPage = currentState.currentPage - 1;
       if (prevPage >= 1) {
         emit(TelecomLoading());
-
-        // Check internet connectivity
-        // final isConnected = await networkInfo.isConnected;
-        // if (!isConnected) {
-        //   emit(TelecomError(error: 'No internet connection'));
-        //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-        //   return;
-        // }
-
         final result = await remoteDataSource.getListAllTelecom(
           rank: '1',
           paginationCount: currentState.paginatedResponse.meta!.perPage.toString(),
@@ -128,17 +97,6 @@ class TelecomCubit extends Cubit<TelecomState> {
     required BuildContext context,
   }) async {
     emit(TelecomLoading());
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   if (context.mounted) {
-    //     context.pushNamed(AppRouter.noInternet.name);
-    //   }
-    //   emit(TelecomError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     final result = await remoteDataSource.createTelecom(telecomModel: telecomModel);
     await fetchTelecoms(rank: '1', paginationCount: '100', context: context);
 
@@ -162,15 +120,6 @@ class TelecomCubit extends Cubit<TelecomState> {
     required BuildContext context,
   }) async {
     emit(TelecomLoading());
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(TelecomError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.updateTelecom(
       id: id,
@@ -205,15 +154,6 @@ class TelecomCubit extends Cubit<TelecomState> {
     required BuildContext context,
   }) async {
     emit(TelecomLoading());
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(TelecomError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     final result = await remoteDataSource.deleteTelecom(id: id);
     if (result is Success<PublicResponseModel>) {
       if (result.data.msg == "Unauthorized. Please login first.") {
@@ -239,19 +179,9 @@ class TelecomCubit extends Cubit<TelecomState> {
 
   Future<TelecomModel?> showTelecom({
     required String id,
-    required BuildContext context, // Add context parameter
+    required BuildContext context,
   }) async {
     emit(TelecomLoading());
-
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(TelecomError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return null;
-    // }
-
     final result = await remoteDataSource.showTelecom(id: id);
     if (result is Success<TelecomModel>) {
       return result.data;

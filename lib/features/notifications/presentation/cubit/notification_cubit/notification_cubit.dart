@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
-import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../base/data/models/pagination_model.dart';
@@ -17,9 +15,8 @@ part 'notification_state.dart';
 
 class NotificationCubit extends Cubit<NotificationState> {
   final NotificationRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
-  NotificationCubit({required this.remoteDataSource, required this.networkInfo}) : super(NotificationInitial());
+  NotificationCubit({required this.remoteDataSource,}) : super(NotificationInitial());
 
   int _currentPage = 1;
   bool _hasMore = true;
@@ -34,14 +31,6 @@ class NotificationCubit extends Cubit<NotificationState> {
     } else if (!_hasMore) {
       return;
     }
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(NotificationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.getMyNotification(page: _currentPage, perPage: perPage, isRead: isRead);
 
@@ -75,14 +64,6 @@ class NotificationCubit extends Cubit<NotificationState> {
   Future<void> storeFCMToken({required StoreFCMModel model, required BuildContext context}) async {
     emit(NotificationOperationLoading());
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(NotificationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     final result = await remoteDataSource.storeFCMToken(storeFCMModel: model);
 
     if (result is Success<PublicResponseModel>) {
@@ -90,7 +71,6 @@ class NotificationCubit extends Cubit<NotificationState> {
         context.pushReplacementNamed(AppRouter.welcomeScreen.name);
       }
       emit(FCMOperationSuccess(response: result.data));
-      // ShowToast.showToastSuccess(message: result.data.msg ?? 'FCM token stored successfully');
     } else if (result is ResponseError<PublicResponseModel>) {
       emit(NotificationError(error: result.message ?? 'Failed to store FCM token'));
     }
@@ -98,16 +78,6 @@ class NotificationCubit extends Cubit<NotificationState> {
 
   Future<void> deleteFCMToken({required StoreFCMModel model, required BuildContext context}) async {
     emit(NotificationOperationLoading());
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(NotificationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
-
     final result = await remoteDataSource.deleteFCMToken(storeFCMModel: model);
 
     if (result is Success<PublicResponseModel>) {
@@ -124,14 +94,6 @@ class NotificationCubit extends Cubit<NotificationState> {
   Future<void> markNotificationAsRead({required String notificationId, required BuildContext context}) async {
     emit(NotificationOperationLoading());
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(NotificationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
-
     final result = await remoteDataSource.makeNotificationAsRead(notificationId: notificationId);
 
     if (result is Success<PublicResponseModel>) {
@@ -146,14 +108,6 @@ class NotificationCubit extends Cubit<NotificationState> {
 
   Future<void> deleteNotification({required String notificationId, required BuildContext context,required bool isRead}) async {
     emit(NotificationOperationLoading());
-
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed('noInternet');
-    //   emit(NotificationError(error: 'No internet connection'));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
 
     final result = await remoteDataSource.deleteNotification(notificationId: notificationId);
 

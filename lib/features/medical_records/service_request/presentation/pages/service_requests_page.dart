@@ -5,11 +5,11 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
-import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_model.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_request_details_page.dart';
 
+import '../../../../../base/widgets/not_found_data_page.dart';
 import '../../data/data_source/service_request_remote_data_source.dart';
 import '../cubit/service_request_cubit/service_request_cubit.dart';
 
@@ -53,7 +53,6 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
 
     if (widget.filter != oldWidget.filter) {
       _loadInitialRequests();
-      // _scrollController.jumpTo(0.0);
     }
   }
 
@@ -141,7 +140,6 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
                   (context) => BlocProvider(
                     create:
                         (context) => ServiceRequestCubit(
-                          networkInfo: serviceLocator(),
                           remoteDataSource:
                               serviceLocator<ServiceRequestRemoteDataSource>(),
                         )..getServiceRequestDetails(request.id!, context),
@@ -370,11 +368,12 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
   }
 
   Widget _buildStatusChip(
-    BuildContext context,
-    String? statusCode,
-    String? statusDisplay,
-  ) {
+      BuildContext context,
+      String? statusCode,
+      String? statusDisplay,
+      ) {
     final statusColor = _getStatusColor(statusCode);
+    final translatedStatus = _getTranslatedStatus(context, statusCode, statusDisplay);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
@@ -384,7 +383,7 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
         border: Border.all(color: statusColor.withOpacity(0.3), width: 1.0),
       ),
       child: Text(
-        statusDisplay ?? 'serviceRequestDetailsPage.unknownStatus'.tr(context),
+        translatedStatus,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
           color: statusColor.withAlpha(130),
           fontWeight: FontWeight.bold,
@@ -412,6 +411,39 @@ class _ServiceRequestsPageState extends State<ServiceRequestsPage> {
     }
   }
 
+  String _getTranslatedStatus(BuildContext context, String? statusCode, String? statusDisplay) {
+    if (statusDisplay == null) {
+      return 'serviceRequestDetailsPage.unknownStatus'.tr(context);
+    }
+
+
+    final translationKey = _getStatusTranslationKey(statusCode);
+    if (translationKey != null) {
+      return translationKey.tr(context);
+    }
+
+
+    return statusDisplay.tr(context);
+  }
+
+  String? _getStatusTranslationKey(String? statusCode) {
+    switch (statusCode) {
+      case 'active':
+        return 'serviceRequestDetailsPage.status.active';
+      case 'on-hold':
+        return 'serviceRequestDetailsPage.status.onHold';
+      case 'revoked':
+        return 'serviceRequestDetailsPage.status.revoked';
+      case 'entered-in-error':
+        return 'serviceRequestDetailsPage.status.enteredInError';
+      case 'rejected':
+        return 'serviceRequestDetailsPage.status.rejected';
+      case 'completed':
+        return 'serviceRequestDetailsPage.status.completed';
+      default:
+        return null;
+    }
+  }
   String _formatDate(DateTime date) {
     return DateFormat('MMM d, y').format(date);
   }

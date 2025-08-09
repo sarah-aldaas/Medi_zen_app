@@ -23,6 +23,56 @@ class EncounterDetailsPage extends StatefulWidget {
 }
 
 class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
+  void _showCustomTooltip(BuildContext context, String message, Offset offset) {
+    final OverlayState overlayState = Overlay.of(context);
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final position = renderBox.localToGlobal(offset);
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder:
+          (context) => Positioned(
+            left: position.dx.clamp(10.0, screenWidth - 200),
+            top: position.dy + 30,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: screenWidth * 0.8,
+                  maxHeight: 200,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(12),
+                  child: Text(
+                    message,
+                    style: TextStyle(color: AppColors.whiteColor, fontSize: 14),
+                  ),
+                ),
+              ),
+            ),
+          ),
+    );
+
+    overlayState.insert(overlayEntry);
+
+    Future.delayed(const Duration(seconds: 4), () {
+      if (overlayEntry.mounted) {
+        overlayEntry.remove();
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -173,6 +223,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                 icon: Icons.category_outlined,
                 primaryTextColor: primaryTextColor,
                 secondaryTextColor: secondaryTextColor,
+                tooltip: encounter.type?.description,
               ),
               _buildDetailRow(
                 context,
@@ -325,7 +376,6 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       color: Theme.of(context).appBarTheme.backgroundColor,
-
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -365,8 +415,38 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
     required IconData icon,
     required Color primaryTextColor,
     required Color secondaryTextColor,
+    String? tooltip,
   }) {
     final ThemeData theme = Theme.of(context);
+
+    Widget textWidget = Text(
+      value ?? 'N/A',
+      style: TextStyle(
+        fontWeight: FontWeight.w500,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+
+    if (tooltip != null && tooltip.isNotEmpty) {
+      textWidget = InkWell(
+        onTap: () {
+          final RenderBox renderBox = context.findRenderObject() as RenderBox;
+          final offset = renderBox.localToGlobal(Offset.zero);
+          _showCustomTooltip(context, tooltip, offset);
+        },
+        child: Tooltip(
+          message: 'click_to_view_details'.tr(context),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: textWidget,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -386,12 +466,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
             ),
           ),
           const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              value ?? 'N/A',
-              style: TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ),
+          Expanded(child: textWidget),
         ],
       ),
     );
@@ -400,8 +475,10 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
   Widget _buildStatusChip(CodeModel? status, BuildContext context) {
     Color chipColor;
     Color textColor;
+    String statusKey = status?.code?.toLowerCase() ?? 'default';
 
-    switch (status?.code?.toLowerCase()) {
+
+    switch (statusKey) {
       case 'in-progress':
         chipColor = Colors.orange.withAlpha(40);
         textColor = Colors.orange.shade800;
@@ -415,6 +492,9 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
         textColor = Colors.grey.shade800;
     }
 
+
+    String translatedText = 'status.$statusKey'.tr(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
@@ -423,9 +503,9 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
         border: Border.all(color: chipColor.withAlpha(100), width: 0.8),
       ),
       child: Text(
-        status?.display ?? 'Unknown',
+        translatedText,
         style: TextStyle(
-          color: chipColor.withAlpha(128),
+          color: textColor,
           fontSize: 12,
           fontWeight: FontWeight.w600,
         ),

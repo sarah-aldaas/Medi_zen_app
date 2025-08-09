@@ -24,7 +24,6 @@ class AppLocalizations {
   ];
 
   Future<bool> load() async {
-    // Load the JSON file from the default path
     String jsonString = await rootBundle.loadString(
       '${kIsWeb ? '' : 'assets/'}lang/${locale.languageCode}.json',
     );

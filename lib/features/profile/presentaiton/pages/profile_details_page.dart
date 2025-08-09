@@ -173,7 +173,9 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                               lName: patient.lName,
                             ),
                           },
-                        );
+                        ).then((_){
+                          context.read<ProfileCubit>().fetchMyProfile(context: context);
+                        });
                       },
                       icon: const Icon(Icons.edit, color: Colors.white),
                     ),

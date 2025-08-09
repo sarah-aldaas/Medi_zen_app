@@ -44,29 +44,13 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      //
-      //   title: Text(
-      //     "appointmentDetails.title".tr(context),
-      //     style: TextStyle(
-      //       color: Theme.of(context).primaryColor,
-      //       fontSize: 22,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //     icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-      //   ),
-      // ),
       body: RefreshIndicator(
         onRefresh: () async {
           _loadAppointmentDetails();
         },
-        color: Theme.of(context).primaryColor,
+        color: Theme
+            .of(context)
+            .primaryColor,
         child: BlocConsumer<AppointmentCubit, AppointmentState>(
           listener: (context, state) {
             if (state is AppointmentError) {
@@ -124,7 +108,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) => CreateComplainPage(
+                          (context) =>
+                          CreateComplainPage(
                             appointmentId: appointment.id!,
                           ),
                     ),
@@ -187,9 +172,11 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
         const SizedBox(height: 5),
         if (appointment.startDate != null && appointment.endDate != null)
           Text(
-            '${DateFormat('HH:mm').format(DateTime.parse(appointment.startDate!))} - '
-            '${DateFormat('HH:mm').format(DateTime.parse(appointment.endDate!))} '
-            '(${appointment.minutesDuration ?? 'N/A'} minutes)',
+            '${DateFormat('HH:mm').format(
+                DateTime.parse(appointment.startDate!))} - '
+                '${DateFormat('HH:mm').format(
+                DateTime.parse(appointment.endDate!))} '
+                '(${appointment.minutesDuration ?? 'N/A'} minutes)',
           ),
       ],
     );
@@ -206,7 +193,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           MaterialPageRoute(
             builder:
                 (context) =>
-                    DoctorDetailsPage(doctorModel: appointment.doctor!),
+                DoctorDetailsPage(doctorModel: appointment.doctor!),
           ),
         ).then((value) {
           context.read<AppointmentCubit>().getDetailsAppointment(
@@ -231,7 +218,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${appointment.doctor!.prefix ?? ''} ${appointment.doctor!.fName ?? ''} ${appointment.doctor!.lName ?? ''}',
+                  '${appointment.doctor!.prefix ?? ''} ${appointment.doctor!
+                      .fName ?? ''} ${appointment.doctor!.lName ?? ''}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -280,7 +268,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                 context.pushNamed(AppRouter.profileDetails.name);
               },
               child: Text(
-                "${appointment.patient!.fName ?? ''} ${appointment.patient!.lName ?? ''}",
+                "${appointment.patient!.fName ?? ''} ${appointment.patient!
+                    .lName ?? ''}",
               ),
             ),
           ],
@@ -293,7 +282,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              "${appointment.patient!.dateOfBirth != null ? _calculateAge(appointment.patient!.dateOfBirth!) : 'N/A'}",
+              "${appointment.patient!.dateOfBirth != null ? _calculateAge(
+                  appointment.patient!.dateOfBirth!) : 'N/A'}",
             ),
           ],
         ),
@@ -314,42 +304,48 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           ),
         ),
         const SizedBox(height: 8),
-        Text.rich(
-          TextSpan(
-            children: [
-              const TextSpan(
-                text: "Reason: ",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(text: appointment.reason ?? 'N/A'),
-            ],
-          ),
-        ),
+
+        _buildLabeledText(
+            'appointmentDetails.reason'.tr(context), appointment.reason),
         const SizedBox(height: 5),
-        Text.rich(
-          TextSpan(
-            children: [
-              const TextSpan(
-                text: "Description: ",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(text: appointment.description ?? 'N/A'),
-            ],
-          ),
-        ),
+        _buildLabeledText('appointmentDetails.description'.tr(context),
+            appointment.description),
         const SizedBox(height: 5),
-        Text.rich(
-          TextSpan(
-            children: [
-              const TextSpan(
-                text: "Notes: ",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(text: appointment.note ?? 'N/A'),
-            ],
-          ),
-        ),
+        _buildLabeledText(
+            'appointmentDetails.notes'.tr(context), appointment.note),
       ],
+    );
+  }
+
+  Widget _buildLabeledText(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '$label:',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(value ?? 'N/A', overflow: TextOverflow.ellipsis),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -375,10 +371,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     );
   }
 
-  Widget _buildActionButtons(
-    BuildContext context,
-    AppointmentModel appointment,
-  ) {
+  Widget _buildActionButtons(BuildContext context,
+      AppointmentModel appointment,) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -392,7 +386,9 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme
+                .of(context)
+                .primaryColor,
             foregroundColor: Colors.white,
           ),
           onPressed: () => _editAppointment(context, appointment),
@@ -413,10 +409,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     return age;
   }
 
-  Future<void> _cancelAppointment(
-    BuildContext context,
-    AppointmentModel appointment,
-  ) async {
+  Future<void> _cancelAppointment(BuildContext context,
+      AppointmentModel appointment,) async {
     if (appointment.id == null) {
       ShowToast.showToastError(
         message: 'appointmentDetails.invalidAppointmentId'.tr(context),
@@ -427,7 +421,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       context: context,
       builder:
           (context) =>
-              CancelAppointmentDialog(appointmentId: appointment.id.toString()),
+          CancelAppointmentDialog(appointmentId: appointment.id.toString()),
     );
 
     if (reason != null && reason.isNotEmpty) {
@@ -448,7 +442,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder:
-          (context) => AlertDialog(
+          (context) =>
+          AlertDialog(
             title: Text("appointmentDetails.confirmDelete".tr(context)),
             content: Text("appointmentDetails.deleteMessage".tr(context)),
             actions: [
@@ -478,7 +473,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       context,
       MaterialPageRoute(
         builder:
-            (context) => UpdateAppointmentPage(
+            (context) =>
+            UpdateAppointmentPage(
               appointmentId: appointment.id.toString(),
               initialReason: appointment.reason ?? '',
               initialDescription: appointment.description ?? '',
@@ -490,9 +486,6 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
         context.read<AppointmentCubit>().getDetailsAppointment(
           context: context,
           id: widget.appointmentId,
-        );
-        ShowToast.showToastSuccess(
-          message: 'appointmentDetails.updateSuccess'.tr(context),
         );
       }
     });

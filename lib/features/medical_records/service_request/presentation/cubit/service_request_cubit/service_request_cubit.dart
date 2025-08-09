@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../../base/data/models/pagination_model.dart';
 import '../../../../../../base/go_router/go_router.dart';
-import '../../../../../../base/services/network/network_info.dart';
 import '../../../../../../base/services/network/resource.dart';
 import '../../../data/data_source/service_request_remote_data_source.dart';
 import '../../../data/models/service_request_model.dart';
@@ -14,7 +13,6 @@ part 'service_request_state.dart';
 
 class ServiceRequestCubit extends Cubit<ServiceRequestState> {
   final ServiceRequestRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
   int _currentPage = 1;
   bool _hasMore = true;
@@ -23,7 +21,6 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
 
   ServiceRequestCubit({
     required this.remoteDataSource,
-    required this.networkInfo,
   }) : super(ServiceRequestInitial());
 
   Future<void> getServiceRequests({
@@ -44,12 +41,6 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
       _currentFilters = filters;
     }
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ServiceRequestError("No internet connection"));
-    //   return;
-    // }
 
     final result = await remoteDataSource.getAllServiceRequest(
       filters: _currentFilters,
@@ -116,13 +107,6 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
       _currentFilters = filters;
     }
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ServiceRequestError("No internet connection"));
-    //   return;
-    // }
-
     final result = await remoteDataSource.getAllServiceRequestForAppointment(
       appointmentId: appointmentId,
       filters: _currentFilters,
@@ -176,12 +160,6 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
   ) async {
     emit(ServiceRequestLoading(isDetailsLoading: true));
 
-    // final isConnected = await networkInfo.isConnected;
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(ServiceRequestError('No internet connection'));
-    //   return;
-    // }
     final result = await remoteDataSource.getDetailsServiceRequest(
       serviceId: serviceId,
     );

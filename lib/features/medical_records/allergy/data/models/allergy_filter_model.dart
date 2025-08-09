@@ -93,7 +93,7 @@ class AllergyFilterModel {
         'searchQuery: $searchQuery, '
         'isDiscoveredDuringEncounter: $isDiscoveredDuringEncounter, '
         'typeId: $typeId, '
-        'clinicalStatusId: $clinicalStatusId, '
+        'clinicalStaallergyFiltertusId: $clinicalStatusId, '
         'verificationStatusId: $verificationStatusId, '
         'categoryId: $categoryId, '
         'criticalityId: $criticalityId, '

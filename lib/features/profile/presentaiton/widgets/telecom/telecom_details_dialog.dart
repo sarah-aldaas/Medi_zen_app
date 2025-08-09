@@ -25,8 +25,8 @@ void showTelecomDetailsDialog({required BuildContext context, required TelecomMo
       final ThemeData theme = Theme.of(dialogContext);
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        backgroundColor: theme.dialogTheme.backgroundColor,
-        surfaceTintColor: theme.dialogTheme.surfaceTintColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -56,7 +56,7 @@ void showTelecomDetailsDialog({required BuildContext context, required TelecomMo
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(dialogContext); // Close the dialog
+              Navigator.pop(dialogContext);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.primaryColor,

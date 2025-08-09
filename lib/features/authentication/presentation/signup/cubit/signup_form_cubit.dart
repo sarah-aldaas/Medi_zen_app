@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
-import 'package:medizen_app/base/services/network/network_info.dart';
 import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/data/models/register_request_model.dart';
 import 'package:medizen_app/features/authentication/presentation/signup/cubit/signup_cubit.dart';
@@ -63,11 +62,9 @@ class SignupFormState {
 
 class SignupFormCubit extends Cubit<SignupFormState> {
   final CodeTypesCubit codeTypesCubit;
-  final NetworkInfo networkInfo; // Add NetworkInfo dependency
 
   SignupFormCubit({
     required this.codeTypesCubit,
-    required this.networkInfo,
   }) : super(SignupFormState());
 
   Future<void> loadCodes(BuildContext context) async {
@@ -103,15 +100,7 @@ class SignupFormCubit extends Cubit<SignupFormState> {
         ),
       );
     }
-    // Check internet connectivity
-    // final isConnected = await networkInfo.isConnected;
-    //
-    // if (!isConnected) {
-    //   context.pushNamed(AppRouter.noInternet.name);
-    //   emit(state.copyWith(isLoadingCodes: false));
-    //   ShowToast.showToastError(message: 'No internet connection. Please check your network.');
-    //   return;
-    // }
+
   }
 
   void updateFormData(String key, String value) {
@@ -147,7 +136,7 @@ class SignupFormCubit extends Cubit<SignupFormState> {
           genderId: state.genderId!,
           maritalStatusId: state.maritalStatusId!,
         ),
-        context: context, // Pass context to SignupCubit
+        context: context,
       );
     }
   }

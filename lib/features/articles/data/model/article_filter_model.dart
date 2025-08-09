@@ -30,7 +30,6 @@ class ArticleFilter {
     );
   }
 
-  // Helper methods for common filter operations
   ArticleFilter withSearchQuery(String query) {
     return copyWith(searchQuery: query);
   }

@@ -57,16 +57,6 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
           .then((_) => setState(() => _isLoadingMore = false));
     }
   }
-
-  // @override
-  // void didUpdateWidget(MyMedicationsPage oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //
-  //   if (widget.filter != oldWidget.filter) {
-  //     _loadInitialMedications();
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,9 +67,7 @@ class _MyMedicationsPageState extends State<MyMedicationsPage> {
         color: Theme.of(context).primaryColor,
         child: BlocConsumer<MedicationCubit, MedicationState>(
           listener: (context, state) {
-            // if (state is MedicationError) {
-            //   ShowToast.showToastError(message: state.error);
-            // }
+
           },
           builder: (context, state) {
             if (state is MedicationLoading && !state.isLoadMore) {

@@ -47,12 +47,10 @@ class LoadingPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        // Doctor details column
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Doctor name
                               Container(
                                 width: 150,
                                 height: 20,
@@ -62,7 +60,6 @@ class LoadingPage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              // Date row
                               Row(
                                 children: [
                                   Container(
@@ -79,7 +76,6 @@ class LoadingPage extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              // Time row
                               Row(
                                 children: [
                                   Container(
@@ -96,7 +92,6 @@ class LoadingPage extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              // Status
                               Container(
                                 width: 100,
                                 height: 24,
@@ -110,7 +105,6 @@ class LoadingPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // Buttons (only for some items)
                     if (index % 2 == 0) ...[
                       const SizedBox(height: 16),
                       Row(
@@ -150,30 +144,6 @@ class LoadingPage extends StatelessWidget {
    }
 
 }
-
-// class LoadingPage extends StatelessWidget {
-//   const LoadingPage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: context.width / 2,
-//       height: context.height / 2,
-//       padding: const EdgeInsets.all(20),
-//       child: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             Text("loading.title".tr(context), style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold)),
-//             const SizedBox(height: 10),
-//             LoadingAnimationWidget.hexagonDots(color: Theme.of(context).primaryColor, size: 40),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class LoadingButton extends StatelessWidget {
   LoadingButton({super.key, this.isWhite = false});
