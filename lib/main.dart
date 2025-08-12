@@ -49,7 +49,6 @@ import 'base/blocs/localization_bloc/localization_bloc.dart';
 import 'base/constant/storage_key.dart';
 import 'base/go_router/go_router.dart';
 import 'base/services/di/injection_container_common.dart';
-import 'base/services/di/injection_container_gen.dart';
 import 'base/services/localization/app_localization_service.dart';
 import 'base/services/storage/storage_service.dart';
 import 'base/theme/some classes/theme_cubit.dart';
@@ -68,6 +67,7 @@ void main() async {
 
   final messaging = FirebaseMessaging.instance;
   await messaging.requestPermission();
+  await Permission.activityRecognition.request();
   await checkAndRequestPermissions();
   GoRouter.optionURLReflectsImperativeAPIs = true;
   await bootstrapApplication();
@@ -106,7 +106,6 @@ String? token = serviceLocator<StorageService>().getFromDisk(StorageKey.token);
 
 Future<void> bootstrapApplication() async {
   await initDI();
-  await DependencyInjectionGen.initDI();
 }
 
 PatientModel loadingPatientModel() {

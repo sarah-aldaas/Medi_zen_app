@@ -22,6 +22,7 @@ import '../../../main.dart';
 import '../../authentication/presentation/logout/cubit/logout_cubit.dart';
 import '../../complains/presentation/pages/complain_list_page.dart';
 import '../../invoice/presentation/pages/my_appointment_finished_invoice_page.dart';
+import '../../steps/steps_screen.dart';
 
 class HomePageBody extends StatefulWidget {
   const HomePageBody({super.key});
@@ -231,6 +232,11 @@ class _HomePageBodyState extends State<HomePageBody> {
                   context,
                   MaterialPageRoute(builder: (context) => ComplainListPage()),
                 );
+              }else if (value == 'step') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StepsScreen()),
+                );
               }
             },
             itemBuilder:
@@ -278,6 +284,22 @@ class _HomePageBodyState extends State<HomePageBody> {
 
                       title: Text(
                         'homePage.complaints'.tr(context),
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'step',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.feedback,
+                        color: Theme.of(context).primaryColor,
+                      ),
+
+                      title: Text(
+                        "steps",
                         style: TextStyle(
                           color: theme.textTheme.bodyLarge?.color,
                         ),
