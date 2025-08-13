@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
+import 'package:medizen_app/base/widgets/flexible_image.dart';
 import 'package:medizen_app/base/widgets/not_found_data_page.dart';
 import 'package:medizen_app/features/services/data/model/health_care_services_model.dart';
 import 'package:medizen_app/features/services/pages/widgets/health_care_service_filter_dialog.dart';
@@ -181,13 +182,11 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      AppAssetImages.article2,
+                    child:FlexibleImage(
                       width: 110,
                       height: 120,
-                      fit: BoxFit.cover,
-                      errorBuilder:
-                          (context, error, stackTrace) => Icon(
+                      imageUrl:service.photo,
+                      errorWidget: Icon(
                         Icons.image_not_supported_outlined,
                         size: 40,
                         color: Theme.of(
@@ -195,6 +194,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                         ).iconTheme.color?.withOpacity(0.5),
                       ),
                     ),
+
                   ),
                 ),
                 const SizedBox(width: 16.0),
@@ -231,7 +231,7 @@ class _HealthCareServicesPageState extends State<HealthCareServicesPage> {
                       ),
                       const SizedBox(height: 10.0),
                       Text(
-                        '${'healthCareServicesPage.price'.tr(context)}: \$${service.price ?? 'N/A'}',
+                        '${'healthCareServicesPage.price'.tr(context)}: ${service.price ?? 'N/A'}',
                         style: TextStyle(
                           color: Theme.of(context).textTheme.bodyLarge?.color,
                         ),

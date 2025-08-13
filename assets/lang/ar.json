@@ -16,6 +16,25 @@
     "failed_to_load_allergies": "فشل في تحميل الحساسيات.",
     "no_allergies_found": "لم يتم العثور على حساسيات. انقر على زر '+' لإضافة حساسية جديدة."
   },
+  "step_counter": {
+    "title": "عداد الخطوات",
+    "permission_required": "الإذن مطلوب",
+    "permission_message": "هذا التطبيق يحتاج إلى إذن التعرف على النشاط لتتبع خطواتك.",
+    "grant_permission": "منح الإذن",
+    "set_daily_goal": "تعيين الهدف اليومي",
+    "daily_steps_goal": "هدف الخطوات اليومية",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "walking": "تمشية",
+    "stopped": "متوقف",
+    "steps": "خطوة",
+    "weekly_activity": "النشاط الأسبوعي",
+    "stats": {
+      "calories": "سعرة",
+      "distance": "كم",
+      "time": "دقيقة"
+    }
+  },
   "welcome": {
     "title": "مرحبا بك! هيا بنا",
     "loading_to_enjoy": "هيا للاستمتاع بالميزات المقدمة",
@@ -80,7 +99,10 @@
     "message": "هل أنت متأكد أنك تريد إلغاء موعدك؟",
     "refundNote": "سيتم إرجاع 50٪ فقط من المبلغ إلى حسابك.",
     "backButton": "رجوع",
-    "confirmButton": "نعم، إلغاء"
+    "confirmButton": "نعم، إلغاء",
+    "because": "لأنني أريد اختيار وقت آخر.",
+    "reason_cancel": "سبب الإلغاء",
+    "enter_cancellation": "الرجاء إدخال سبب الإلغاء"
   },
   "rescheduleSuccess": {
     "title": "تم تغيير الموعد بنجاح!",
@@ -101,7 +123,7 @@
     "paid": "مدفوع",
     "reason": "السبب",
     "description": "وصف",
-    "note": "ملاحظة",
+    "notes": "ملاحظات",
     "save": "حفظ",
     "medicalRecord": "السجل الطبي",
     "reasonIsRequired": "السبب مطلوب",
@@ -119,6 +141,7 @@
   },
   "myAppointments": {
     "title": "مواعيدي",
+    "booked_appointment": "موعد محجوز",
     "tabs": {
       "upcoming": "القادمة",
       "completed": "المكتملة",
@@ -194,7 +217,6 @@
     "author": "المؤلف",
     "removeFavoriteTitle": "إزالة العنوان المفضل",
     "removeFavoriteMessage": "إزالة الرسالة المفضلة",
-
     "cancel": "إلغاء",
     "remove": "حذف",
     "actions": {
@@ -225,12 +247,11 @@
     "defaultSort": "افتراضي",
     "oldestFirst": "الأقدم أولاً",
     "newestFirst": "الأحدث أولاً",
-    "clearFilters": "مسح المرشحات",
+    "clearFilters": "مسح الفلترة",
     "cancel": "إلغاء",
     "apply": "تطبيق"
   },
   "articles": {
-
     "title": "المقالات",
     "trending": "الأكثر شيوعًا",
     "seeAll": "عرض الكل",
@@ -265,7 +286,6 @@
     "noArticlesFound": "لم يتم العثور على مقالات.",
     "noTitle": "لا يوجد عنوان متاح"
   },
-
   "actions": {
     "search": "بحث",
     "bookmark": "الإشارات المرجعية"
@@ -366,7 +386,6 @@
     "Why?": "لماذا تحجز هذا الموعد؟",
     "Note": "ملاحظة (اختياري)",
     "anyAdditional": "أي معلومات إضافية"
-
   },
   "doctorsPage": {
     "title": "الأطباء",
@@ -699,8 +718,8 @@
     "enterCountry": "الرجاء إدخال البلد",
     "city": "المدينة",
     "enterCity": "الرجاء إدخال المدينة",
-    "stateProvince": "الولاية/المقاطعة",
-    "enterStateProvince": "الرجاء إدخال الولاية/المقاطعة",
+    "stateProvince": "الدولة",
+    "enterStateProvince": "الرجاء إدخال الدولة",
     "district": "المنطقة",
     "enterDistrict": "الرجاء إدخال المنطقة",
     "streetAddress": "عنوان الشارع",
@@ -756,8 +775,8 @@
     "countryValidation": "الرجاء إدخال البلد",
     "cityLabel": "المدينة",
     "cityValidation": "الرجاء إدخال المدينة",
-    "stateProvinceLabel": "الولاية/المقاطعة",
-    "stateProvinceValidation": "الرجاء إدخال الولاية/المقاطعة",
+    "stateProvinceLabel": "الدولة",
+    "stateProvinceValidation": "الرجاء إدخال الدولة",
     "districtLabel": "المنطقة",
     "districtValidation": "الرجاء إدخال المنطقة",
     "streetAddressLabel": "عنوان الشارع",
@@ -771,6 +790,10 @@
     "endDateLabel": "تاريخ الانتهاء (اختياري)",
     "addAddressButton": "إضافة عنوان",
     "updateAddressButton": "تحديث العنوان"
+  },
+  "NotFoundDataPage": {
+    "notFound": "لم يتم العثور على أي بيانات !!",
+    "checkAgain": "تحقق من الفلترة الخاصة بك أو حاول مرة أخرى لاحقاً."
   },
   "emptyState": {
     "noDataTitle": "لا توجد بيانات متاحة",
@@ -825,7 +848,7 @@
     "severity": "الخطورة",
     "allSeverities": "جميع مستويات الخطورة",
     "noSeveritiesAvailable": "لا توجد مستويات خطورة متاحة",
-    "exposureRoute": "طريق التعرض",
+    "exposureRoute": "طرق التعرض",
     "allExposureRoutes": "جميع طرق التعرض",
     "noExposureRoutesAvailable": "لا توجد طرق تعرض متاحة",
     "sortOrder": "ترتيب الفرز",
@@ -892,7 +915,8 @@
     "moderate": "متوسطة",
     "low": "منخفضة",
     "noAllergiesFound": "لم يتم العثور على أي حساسيات باستخدام الفلاتر الحالية. حاول تعديل بحثك.",
-    "refreshList": "تحديث القائمة"
+    "refreshList": "تحديث القائمة",
+    "unableToAssess": "غير قادر على التقييم"
   },
   "allergyFilter": {
     "filterAllergies": "تصفية الحساسيات",
@@ -939,8 +963,8 @@
     "noCategoryDescription": "لا يوجد وصف للفئة.",
     "clinicInformation": "معلومات العيادة",
     "noClinicDescription": "لم يتم تقديم وصف للعيادة.",
-    "eligibilityRequirements": "متطلبات الأهلية",
-    "noEligibilityDescription": "لم يتم تقديم وصف لمتطلبات الأهلية.",
+    "eligibilityRequirements": "شروط الخدمة",
+    "noEligibilityDescription": "لم يتم تقديم وصف لشروط الخدمة.",
     "filterHealthCareServices": "تصفية خدمات الرعاية الصحية",
     "search": "بحث",
     "searchServicesHint": "ابحث عن الخدمات...",
@@ -973,7 +997,7 @@
       "encounters": "الزيارات",
       "allergies": "الحساسية",
       "serviceRequest": "طلب خدمة",
-      "conditions": "الحالات",
+      "conditions": "التشخيصات",
       "observations": "الملاحظات",
       "medication": "الادوية",
       "diagnosticReports": "التقارير التشخيصية",
@@ -1052,6 +1076,14 @@
     "statusOnHold": "معلق"
   },
   "serviceRequestDetailsPage": {
+    "status": {
+      "active": "نشط",
+      "onHold": "قيد الانتظار",
+      "revoked": "ملغى",
+      "enteredInError": "تم إدخاله خطأ",
+      "rejected": "مرفوض",
+      "completed": "مكتمل"
+    },
     "appBarTitle": "تفاصيل طلب الخدمة",
     "noDetailsFoundTitle": "عفواً! لم يتم العثور على تفاصيل لهذا الطلب.",
     "noDetailsFoundMessage": "ربما تم نقله، حذفه، أو قد لا تملك صلاحية الوصول إليه.",
@@ -1158,6 +1190,73 @@
     "pdfReportDialogCancel": "إلغاء",
     "pdfReportDialogView": "عرض"
   },
+  "reactions": {
+    "severity": {
+      "mild": "خفيف",
+      "moderate": "متوسط",
+      "severe": "شديد",
+      "not_applicable": "غير مطبق"
+    }
+  },
+  "failed_to_fetch_articles": "فشل جلب المقالات",
+  "allergies": {
+    "high": "عالي",
+    "low": "منخفض",
+    "unable_to_assess": "غير قادر على التقييم",
+    "not_applicable": "غير مطبق"
+  },
+  "final_status": "نهائي",
+  "completed_status": "مكتمل",
+  "condition_confirmed_status": "مؤكد",
+  "service_request_active_status": "نشط",
+  "partial_status": "جزئي",
+  "service_request_pending_status": "قيد الانتظار",
+  "preliminary_status": "مبدئي",
+  "amended_status": "معدل",
+  "corrected_status": "مصحح",
+  "appended_status": "مضاف",
+  "cancelled_status": "ملغى",
+  "service_request_cancelled_status": "ملغى",
+  "entered_in_error_status": "تم إدخاله بالخطأ",
+  "unknown_status": "غير معروف",
+  "condition_active_status": "نشط",
+  "service_request_completed_status": "مكتمل",
+  "service_request_rejected_status": "مرفوض",
+  "active": "نشط",
+  "in_progress": "قيد التقدم",
+  "recurrence": "تكرار",
+  "relapse": "انتكاسة",
+  "inactive": "غير نشط",
+  "remission": "هدأة",
+  "resolved": "محلول",
+  "completed": "مكتمل",
+  "entered_in_error": "تم إدخاله بالخطأ",
+  "unknown": "غير معروف",
+  "click_to_view_details": "انقر لعرض التفاصيل",
+  "status": {
+    "in_progress": "قيد التقدم",
+    "inactive": "غير نشط",
+    "remission": "هدأة",
+    "resolved": "محلول",
+    "entered_in_error": "تم إدخاله بالخطأ",
+    "unknown": "غير معروف",
+    "in-progress": "قيد التنفيذ",
+    "final": "مكتمل",
+    "recurrence": "تكرار",
+    "relapse": "انتكاسة",
+    "on-hold": "معلّق",
+    "entered-in-error": "تم إدخاله خطأ",
+    "default": "غير معروف",
+    "active": "نشط",
+    "onHold": "قيد الانتظار",
+    "revoked": "ملغى",
+    "enteredInError": "تم إدخاله خطأ",
+    "rejected": "مرفوض",
+    "completed": "مكتمل"
+  },
+  "failed_to_fetch_condition_article": "فشل تحميل المقال المتعلق بالحالة",
+  "removed_from_favorites": "تمت إزالة المقال من المفضلة بنجاح",
+  "added_to_favorites": "تمت إضافة المقال إلى المفضلة بنجاح",
   "imagingStudyDetailsPage": {
     "appBarTitle": "تفاصيل دراسة التصوير",
     "failedToLoadStudyDetails": "فشل في تحميل تفاصيل الدراسة",
@@ -1260,9 +1359,12 @@
     "dose": "الجرعة",
     "maxDose": "الحد الأقصى للجرعة",
     "per": "لكل",
+    "site": "موقع الجسم",
+    "route": "طريقة التناول",
     "whenToTake": "متى تأخذ",
+    "doseForm": "نموذج الجرعة",
     "eventTime": "وقت الحدث",
-    "offset": "الإزاحة",
+    "offset": "إزاحة الوقت",
     "instructions": "التعليمات",
     "patientAndAdditionalInstructions": "تعليمات المريض والإرشادات الإضافية",
     "patientInstructions": "تعليمات المريض",
@@ -1276,10 +1378,29 @@
     "endDate": "تاريخ الانتهاء",
     "unknownMedication": "دواء غير معروف",
     "noDescriptionAvailable": "لا توجد وصف متاح"
-
   },
   "myMedications": {
-    "title": "أدويتي",
+    "noMedicationsFound": "لا توجد أدوية.",
+    "noInstructions": "لا توجد تعليمات",
+    "title": "تفاصيل الدواء",
+    "failedToLoad": "فشل تحميل تفاصيل الدواء. يرجى المحاولة مرة أخرى.",
+    "dosageInfo": "معلومات الجرعات",
+    "dose": "الجرعة",
+    "maxDose": "الجرعة القصوى",
+    "per": "لكل",
+    "instructions": "التعليمات",
+    "patientAndAdditionalInstructions": "تعليمات المريض وتعليمات إضافية",
+    "patientInstructions": "تعليمات للمريض",
+    "additionalInstructions": "تعليمات إضافية",
+    "asNeeded": "حسب الحاجة",
+    "yes": "نعم",
+    "no": "لا",
+    "statusAndDates": "الحالة والتواريخ",
+    "status": "الحالة",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
+    "unknownMedication": "دواء غير معروف",
+    "noDescriptionAvailable": "لا يوجد وصف متاح",
     "noMedications": "لا توجد أدوية",
     "filter": {
       "title": "تصفية الأدوية",
@@ -1310,7 +1431,6 @@
       "invalidDateRange": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية"
     }
   },
-
   "myMedicationRequests": {
     "title": "طلبات الأدوية الخاصة بي",
     "noRequests": "لا توجد طلبات أدوية",
@@ -1322,8 +1442,8 @@
       "doNotPerformLabel": "عرض الطلبات غير المطلوب تنفيذها فقط",
       "status": "الحالة",
       "allStatuses": "جميع الحالات",
-      "intent": "النية",
-      "selectIntent": "اختر النية",
+      "intent": "النيّة العلاجية",
+      "selectIntent": "اختر النيّة العلاجية",
       "allIntents": "جميع النوايا",
       "priority": "الأولوية",
       "selectPriority": "اختر الأولوية",
@@ -1331,9 +1451,9 @@
       "courseOfTherapy": "مسار العلاج",
       "selectCourseOfTherapy": "اختر مسار العلاج",
       "allCourses": "جميع المسارات",
-      "condition": "الحالة",
-      "selectCondition": "اختر الحالة",
-      "allConditions": "جميع الحالات",
+      "condition": "التشخيص",
+      "selectCondition": "اختر التشخيص",
+      "allConditions": "جميع التشخيصات",
       "startDate": "تاريخ البدء",
       "selectStartDate": "اختر تاريخ البدء",
       "endDate": "تاريخ الانتهاء",
@@ -1369,8 +1489,8 @@
     "doNotPerformLabel": "عرض الطلبات غير المنفذة فقط",
     "status": "الحالة",
     "allStatuses": "جميع الحالات",
-    "intent": "النية",
-    "selectIntent": "اختر النية",
+    "intent": "النيّة العلاجية",
+    "selectIntent": "اختر النيّة العلاجية",
     "allIntents": "جميع النوايا",
     "priority": "الأولوية",
     "selectPriority": "اختر الأولوية",
@@ -1378,9 +1498,9 @@
     "courseOfTherapy": "مسار العلاج",
     "selectCourseOfTherapy": "اختر المسار",
     "allCourses": "جميع المسارات",
-    "condition": "الحالة المرضية",
-    "selectCondition": "اختر الحالة",
-    "allConditions": "جميع الحالات المرضية",
+    "condition": "التشخيص المرضي",
+    "selectCondition": "اختر التشخيص",
+    "allConditions": "جميع التشخيصات المرضية",
     "startDate": "تاريخ البداية",
     "selectStartDate": "اختر تاريخ البداية",
     "endDate": "تاريخ النهاية",
@@ -1389,7 +1509,6 @@
     "cancel": "إلغاء",
     "apply": "تطبيق"
   },
-
   "medicationRequestCard": {
     "defaultReason": "طلب دواء",
     "noNotes": "لا توجد ملاحظات إضافية"
@@ -1403,7 +1522,7 @@
     "status": "الحالة",
     "statusReason": "سبب الحالة",
     "statusChanged": "تاريخ تغيير الحالة",
-    "intent": "النية",
+    "intent": "النيّة العلاجية",
     "priority": "الأولوية",
     "medicationDetails": "تفاصيل الدواء",
     "medicationName": "اسم الدواء",
@@ -1418,13 +1537,13 @@
     "medicationStatus": "حالة الدواء",
     "startDate": "تاريخ البدء",
     "endDate": "تاريخ الانتهاء",
-    "conditionInfo": "معلومات الحالة الصحية المرتبطة",
-    "condition": "الحالة",
+    "conditionInfo": "معلومات التشخيص الصحية المرتبطة",
+    "condition": "التشخيص",
     "isChronic": "مزمن",
     "onSetDate": "تاريخ الظهور",
     "onSetAge": "عمر الظهور",
     "recordDate": "تاريخ التسجيل",
-    "conditionNote": "ملاحظة الحالة",
+    "conditionNote": "ملاحظة التشخيص",
     "summary": "ملخص",
     "extraNote": "ملاحظة إضافية",
     "clinicalStatus": "الحالة السريرية",
@@ -1460,12 +1579,12 @@
   },
   "conditionDetails": {
     "generateArticle": "توليد مقال",
-   "showArticles":"عرض المقالات",
+    "showArticles": "عرض المقالات",
     "details": "التفاصيل",
     "diagnosticReports": "التقارير الطبية",
     "medicationRequest": "طلبات الادوية",
-    "title": "تفاصيل الحالة",
-    "failedToLoad": "فشل تحميل تفاصيل الحالة",
+    "title": "تفاصيل التشخيص",
+    "failedToLoad": "فشل تحميل تفاصيل التشخيص",
     "retry": "إعادة المحاولة",
     "unknownCondition": "حالة غير معروفة",
     "timeline": "الخط الزمني",
@@ -1501,20 +1620,18 @@
     "fetching_articles": "جلب المقالات ...",
     "close": "إغلاق",
     "can_not_generate": "لا يوجد مقال يمكنك توليده.",
-    "No_content":"لا يوجد محتوى متاح",
+    "No_content": "لا يوجد محتوى متاح",
     "select_AI_model": "حدد نموذج الذكاء الاصطناعي",
     "select_language": "اختر اللغة :",
     "arabic": "العربية",
     "english": "الإنكليزية",
     "select_model": "اختر النموذج:",
     "generate": "توليد",
-
-  "noArticlesFound": "لم يتم العثور على مقالات",
-  "noArticlesAvailable": "لا توجد مقالات متاحة لهذه الحالة بعد."
-},
-
+    "noArticlesFound": "لم يتم العثور على مقالات",
+    "noArticlesAvailable": "لا توجد مقالات متاحة لهذا التشخيص بعد."
+  },
   "conditionsFilter": {
-    "title": "تصفية الحالات",
+    "title": "تصفية التشخيصات",
     "all": "الكل",
     "search": "بحث",
     "enterSearchTerm": "أدخل مصطلح البحث",
@@ -1538,30 +1655,6 @@
     "cancel": "إلغاء",
     "apply": "تطبيق"
   },
-  "myMedications": {
-    "noMedicationsFound": "لا توجد أدوية.",
-    "noInstructions": "لا توجد تعليمات",
-    "title": "تفاصيل الدواء",
-    "failedToLoad": "فشل تحميل تفاصيل الدواء. يرجى المحاولة مرة أخرى.",
-    "dosageInfo": "معلومات الجرعات",
-    "dose": "الجرعة",
-    "maxDose": "الجرعة القصوى",
-    "per": "لكل",
-    "instructions": "التعليمات",
-    "patientAndAdditionalInstructions": "تعليمات المريض وتعليمات إضافية",
-    "patientInstructions": "تعليمات للمريض",
-    "additionalInstructions": "تعليمات إضافية",
-    "asNeeded": "حسب الحاجة",
-    "yes": "نعم",
-    "no": "لا",
-    "statusAndDates": "الحالة والتواريخ",
-    "status": "الحالة",
-    "startDate": "تاريخ البدء",
-    "endDate": "تاريخ الانتهاء",
-    "unknownMedication": "دواء غير معروف",
-    "noDescriptionAvailable": "لا يوجد وصف متاح"
-  },
-
   "filterMedications": {
     "title": "تصفية الأدوية",
     "search": "بحث",
@@ -1632,7 +1725,7 @@
     "complainFilter_all": "الكل",
     "cancelButton": "إلغاء"
   },
-  "createComplainPage":{
+  "createComplainPage": {
     "createComplain_pageTitle": "إنشاء شكوى",
     "createComplain_titleLabel": "العنوان",
     "createComplain_titleRequired": "العنوان مطلوب",
@@ -1643,7 +1736,6 @@
     "createComplain_submit": "إرسال",
     "createComplain_addFromGallery": "المعرض",
     "createComplain_takePhoto": "الكاميرا"
-
   },
   "diagnosticReportList": {
     "diagnosticReport_noReportsFound": "لم يتم العثور على تقارير تشخيصية",
@@ -1651,7 +1743,7 @@
     "diagnosticReport_refresh": "تحديث",
     "diagnosticReport_unnamedReport": "تقرير غير مسمى",
     "diagnosticReport_note": "ملاحظة",
-    "diagnosticReport_condition": "الحالة",
+    "diagnosticReport_condition": "التشخيص",
     "diagnosticReport_unknownCondition": "حالة غير معروفة",
     "diagnosticReport_clinicalStatus": "الحالة السريرية",
     "diagnosticReport_verificationStatus": "حالة التحقق",
@@ -1668,14 +1760,14 @@
     "diagnosticReportDetails_unknownReport": "تقرير غير معروف",
     "diagnosticReportDetails_overview": "نظرة عامة",
     "diagnosticReportDetails_reportName": "اسم التقرير",
-    "diagnosticReportDetails_relatedCondition": "الحالة المرتبطة",
+    "diagnosticReportDetails_relatedCondition": "التشخيص المرتبط",
     "diagnosticReportDetails_unknownCondition": "حالة غير معروفة",
     "diagnosticReportDetails_results": "النتائج",
     "diagnosticReportDetails_conclusion": "الخلاصة",
     "diagnosticReport_verificationStatus": "حالة التحقق",
     "diagnosticReport_stage": "المرحلة",
     "diagnosticReportDetails_notes": "ملاحظات",
-    "diagnosticReportDetails_relatedConditionSection": "الحالة المرتبطة",
+    "diagnosticReportDetails_relatedConditionSection": "التشخيص المرتبط",
     "diagnosticReportDetails_status": "الحالة",
     "diagnosticReportDetails_relatedEncounters": "الزيارات المرتبطة",
     "diagnosticReportDetails_relatedServiceRequests": "طلبات الخدمة المرتبطة",
@@ -1697,13 +1789,13 @@
     "diagnosticReportDetails_reason": "السبب",
     "diagnosticReportDetails_occurrenceDate": "تاريخ الحدوث"
   },
-  "diagnosticListAppointmentPage":{
+  "diagnosticListAppointmentPage": {
     "diagnosticReportListAppointment_noReportsFound": "لم يتم العثور على تقارير لهذا الموعد",
     "diagnosticReportListAppointment_tapToRefresh": "يبدو أن لا توجد تقارير لهذا الموعد. انقر للتحديث.",
     "diagnosticReportListAppointment_refresh": "تحديث",
     "diagnosticReportListAppointment_unnamedReport": "تقرير غير مسمى",
     "diagnosticReportListAppointment_note": "ملاحظة",
-    "diagnosticReportListAppointment_condition": "الحالة",
+    "diagnosticReportListAppointment_condition": "التشخيص",
     "diagnosticReportListAppointment_unknownCondition": "حالة غير معروفة",
     "diagnosticReportListAppointment_clinicalStatus": "الحالة السريرية",
     "diagnosticReportListAppointment_verificationStatus": "حالة التحقق",
@@ -1713,7 +1805,7 @@
     "diagnosticReportListAppointment_conclusion": "الخلاصة",
     "diagnosticReportListAppointment_reportStatus": "حالة التقرير"
   },
-  "diagnosticFilterPage":{
+  "diagnosticFilterPage": {
     "diagnosticReportFilter_title": "التقارير التشخيصية",
     "diagnosticReportFilter_search": "بحث",
     "diagnosticReportFilter_enterSearchTerm": "أدخل مصطلح البحث",
@@ -1725,28 +1817,32 @@
   },
   "organizationDetailsPage": {
     "organization": "معلومات المركز",
-    "title":"تفاصيل المركز",
+    "title": "تفاصيل المركز",
     "fetchingDetails": "جاري طلب تفاصيل المركز...",
     "alias": "الإسم المستعار :",
     "type": "النوع",
     "address": "العنوان",
     "phone": "هاتف",
     "workingHours": "ساعات العمل",
-    "status":"الحالة"
-
-  },"invoicesPage":
-{
-  "invoice": "الفواتير",
-  "title": "فواتيري",
-  "paidAppointmentsTab": "المواعيد المدفوعة",
-  "unpaidAppointmentsTab": "المواعيد غير المدفوعة",
-  "noPaidAppointments": "لم يتم العثور على مواعيد مدفوعة.",
-  "noUnpaidAppointments": "لم يتم العثور على مواعيد غير مدفوعة.",
-  "notPaidMessage": "تفاصيل الفاتورة متاحة فقط للمواعيد المدفوعة."
-},
-  "invoiceDetailsPage":
-  {
-
+    "status": "الحالة",
+    "qualifications": "المؤهلات"
+  },
+  "invoicesPage": {
+    "invoice": "الفواتير",
+    "title": "فواتيري",
+    "paidAppointmentsTab": "المواعيد المدفوعة",
+    "unpaidAppointmentsTab": "المواعيد غير المدفوعة",
+    "noPaidAppointments": "لم يتم العثور على مواعيد مدفوعة.",
+    "noUnpaidAppointments": "لم يتم العثور على مواعيد غير مدفوعة.",
+    "notPaidMessage": "تفاصيل الفاتورة متاحة فقط للمواعيد المدفوعة."
+  },
+  "Qualification": {
+    "qualificationOrganization": "منظمة التأهيل",
+    "start": "تاريخ البدء:",
+    "end": "تاريخ الانتهاء:",
+    "type": "النوع:"
+  },
+  "invoiceDetailsPage": {
     "title": "تفاصيل الفاتورة",
     "invoiceHeader": "الفاتورة",
     "invoiceNum": "رقم الفاتورة",
@@ -1766,8 +1862,7 @@
     "statusIssued": "صادرة",
     "statusUnknown": "غير معروف"
   },
-  "invoiceFilterDialog":
-  {
+  "invoiceFilterDialog": {
     "title": "تصفية الفواتير",
     "startDate": "تاريخ البدء",
     "endDate": "تاريخ الانتهاء",
@@ -1787,7 +1882,8 @@
     "error": "خطأ",
     "ok": "حسناً",
     "noHealth": "لا يوجد محتوى نصائح صحية متاح",
-    "notNotification": "لا يوجد أي إشعار."
-
+    "notNotification": "لا يوجد أي إشعار.",
+    "show_all": "عرض الكل",
+    "show_unread": "عرض غير المقروءة"
   }
 }

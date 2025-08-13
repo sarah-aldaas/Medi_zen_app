@@ -29,9 +29,7 @@ class _ArticleDetailsNotificationPageState
   @override
   void initState() {
     super.initState();
-    _cubit = ArticleCubit(
-      remoteDataSource: serviceLocator(),
-    );
+    _cubit = ArticleCubit(remoteDataSource: serviceLocator());
     _cubit.getDetailsArticle(articleId: widget.articleId, context: context);
   }
 
@@ -227,6 +225,7 @@ class _ArticleDetailsNotificationPageState
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Text(
             "articleDetails.removeFavoriteTitle".tr(context),
             style: TextStyle(

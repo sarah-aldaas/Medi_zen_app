@@ -20,6 +20,8 @@ class MedicationDetailsPage extends StatefulWidget {
 }
 
 class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
+  final Map<String, GlobalKey> _tooltipKeys = {};
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +33,57 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
       context: context,
       medicationId: widget.medicationId,
     );
+  }
+
+  void _showCustomTooltip(BuildContext context, String message, GlobalKey key) {
+    final RenderBox renderBox =
+        key.currentContext?.findRenderObject() as RenderBox;
+    final position = renderBox.localToGlobal(Offset.zero);
+    final screenSize = MediaQuery.of(context).size;
+
+    final overlayState = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder:
+          (context) => Positioned(
+            left: position.dx.clamp(10.0, screenSize.width - 200),
+            top: position.dy + 30,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: screenSize.width * 0.8,
+                  maxHeight: 200,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(12),
+                  child: Text(
+                    message,
+                    style: TextStyle(color: AppColors.whiteColor, fontSize: 14),
+                  ),
+                ),
+              ),
+            ),
+          ),
+    );
+
+    overlayState.insert(overlayEntry);
+
+    Future.delayed(const Duration(seconds: 4), () {
+      if (overlayEntry.mounted) {
+        overlayEntry.remove();
+      }
+    });
   }
 
   @override
@@ -105,28 +158,24 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
                   "medicationDetails.instructions".tr(context),
                   medication.dosageInstructions!,
                 ),
-              _buildInfoCard(
-                title: "medicationDetails.dosageInfo".tr(context),
-                children: [
-                  if (medication.dose != null && medication.doseUnit != null)
-                    _buildDetailRow(
-                      "medicationDetails.dose".tr(context),
-                      "${medication.dose} ${medication.doseUnit}",
-                    ),
-                  if (medication.maxDosePerPeriod != null)
-                    _buildDetailRow(
-                      "medicationDetails.maxDose".tr(context),
-                      "${medication.maxDosePerPeriod!.numerator.value} ${medication.maxDosePerPeriod!.numerator.unit} ${"medicationDetails.per".tr(context)} ${medication.maxDosePerPeriod!.denominator.value} ${medication.maxDosePerPeriod!.denominator.unit}",
-                    ),
-                  if (medication.dosageInstructions != null)
-                    _buildDetailRow(
-                      "medicationDetails.instructions".tr(context),
-                      medication.dosageInstructions!,
-                    ),
-
-
-                ],
-              ),
+              if (medication.doseForm != null)
+                _buildDetailRowWithTooltip(
+                  "medicationDetails.doseForm".tr(context),
+                  medication.doseForm!.display,
+                  tooltip: medication.doseForm?.description,
+                ),
+              if (medication.route != null)
+                _buildDetailRowWithTooltip(
+                  "medicationDetails.route".tr(context),
+                  medication.route!.display,
+                  tooltip: medication.route?.description,
+                ),
+              if (medication.site != null)
+                _buildDetailRowWithTooltip(
+                  "medicationDetails.site".tr(context),
+                  medication.site!.display,
+                  tooltip: medication.site?.description,
+                ),
             ],
           ),
           const SizedBox(height: 16),
@@ -152,7 +201,6 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
                   medication.asNeeded!
                       ? 'medicationDetails.yes'.tr(context)
                       : 'medicationDetails.no'.tr(context),
-
                 ),
               if (medication.when != null)
                 _buildDetailRow(
@@ -164,9 +212,8 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
                   "medicationDetails.eventTime".tr(context),
                   medication.event!,
                 ),
-              if (medication.offset != null &&
-                  medication.offsetUnit != null)
-                _buildDetailRow(
+              if (medication.offset != null && medication.offsetUnit != null)
+                _buildDetailRowWithTooltip(
                   "medicationDetails.offset".tr(context),
                   "${medication.offset} ${medication.offsetUnit!.length}",
                 ),
@@ -178,9 +225,10 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
             title: "medicationDetails.statusAndDates".tr(context),
             children: [
               if (medication.status != null)
-                _buildDetailRow(
+                _buildDetailRowWithTooltip(
                   "medicationDetails.status".tr(context),
                   medication.status!.display,
+                  tooltip: medication.status?.description,
                 ),
               if (medication.effectiveMedicationStartDate != null)
                 _buildDetailRow(
@@ -285,6 +333,48 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
           ),
         ),
         Expanded(child: Text(value, style: const TextStyle(fontSize: 15))),
+      ],
+    );
+  }
+
+  Widget _buildDetailRowWithTooltip(
+    String label,
+    String value, {
+    String? tooltip,
+  }) {
+    final key = ValueKey(label);
+    _tooltipKeys[label] = _tooltipKeys[label] ?? GlobalKey();
+
+    Widget valueWidget = Text(value, style: const TextStyle(fontSize: 15));
+
+    if (tooltip != null && tooltip.isNotEmpty) {
+      valueWidget = GestureDetector(
+        onTap: () => _showCustomTooltip(context, tooltip, _tooltipKeys[label]!),
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Container(
+            key: _tooltipKeys[label],
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: valueWidget,
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 120,
+          child: Text(
+            "$label:",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.cyan1,
+            ),
+          ),
+        ),
+        Expanded(child: valueWidget),
       ],
     );
   }

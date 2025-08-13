@@ -242,7 +242,7 @@ class _DiagnosticReportDetailsPageState
                     Chip(
                       backgroundColor: _getStatusColor(report.status!.code),
                       label: Text(
-                        report.status!.display,
+                        _getStatusTranslation(report.status!.display, context),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -833,6 +833,47 @@ class _DiagnosticReportDetailsPageState
       return DateFormat('MMM dd, yyyy - HH:mm').format(dateTime);
     } catch (e) {
       return dateTimeString;
+    }
+  }
+
+  String _getStatusTranslation(String? statusCode, BuildContext context) {
+    switch (statusCode) {
+      case 'final':
+        return 'final_status'.tr(context);
+      case 'completed':
+        return 'completed_status'.tr(context);
+      case 'condition_confirmed':
+        return 'condition_confirmed_status'.tr(context);
+      case 'service_request_active':
+        return 'service_request_active_status'.tr(context);
+      case 'partial':
+        return 'partial_status'.tr(context);
+      case 'service_request_pending':
+        return 'service_request_pending_status'.tr(context);
+      case 'preliminary':
+        return 'preliminary_status'.tr(context);
+      case 'amended':
+        return 'amended_status'.tr(context);
+      case 'corrected':
+        return 'corrected_status'.tr(context);
+      case 'appended':
+        return 'appended_status'.tr(context);
+      case 'cancelled':
+        return 'cancelled_status'.tr(context);
+      case 'service_request_cancelled':
+        return 'service_request_cancelled_status'.tr(context);
+      case 'entered-in-error':
+        return 'entered_in_error_status'.tr(context);
+      case 'unknown':
+        return 'unknown_status'.tr(context);
+      case 'condition_active':
+        return 'condition_active_status'.tr(context);
+      case 'service_request_completed':
+        return 'service_request_completed_status'.tr(context);
+      case 'service_request_rejected':
+        return 'service_request_rejected_status'.tr(context);
+      default:
+        return 'unknown_status'.tr(context);
     }
   }
 

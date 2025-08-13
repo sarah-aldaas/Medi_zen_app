@@ -134,7 +134,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
                 TextFormField(
                   controller: _noteController,
                   decoration: InputDecoration(
-                    labelText: "appointmentDetails.note".tr(context),
+                    labelText: "appointmentDetails.notes".tr(context),
                     border: const OutlineInputBorder(),
                     hintText: "Note optional",
                   ),

@@ -87,7 +87,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 _loadInitialNotifications();
               });
             },
-            tooltip: _showUnreadOnly ? "show_all" : "show_unread",
+            tooltip:
+                _showUnreadOnly
+                    ? 'notifications.show_all'.tr(context)
+                    : 'notifications.show_unread'.tr(context),
           ),
         ],
       ),
@@ -97,9 +100,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           listener: (context, state) {
             if (state is NotificationError) {
               ShowToast.showToastError(message: state.error);
-            } else if (state is FCMOperationSuccess) {
-
-            }
+            } else if (state is FCMOperationSuccess) {}
           },
           builder: (context, state) {
             if (state is NotificationLoading) {
@@ -204,9 +205,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       },
       child:
           cubit.state is NotificationOperationLoading
-              ?  Center(
-                child: LoadingButton(),
-              )
+              ? Center(child: LoadingButton())
               : Card(
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 color:
@@ -242,11 +241,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                       notification.isRead
                                           ? FontWeight.normal
                                           : FontWeight.bold,
-                                  color:
-                                      theme
-                                          .textTheme
-                                          .titleMedium
-                                          ?.color,
+                                  color: theme.textTheme.titleMedium?.color,
                                 ),
                               ),
                               const Gap(4),

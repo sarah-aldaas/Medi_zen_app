@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/constant/app_images.dart';
@@ -34,29 +35,39 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 1800),
     );
 
-// <<<<<<< HEAD
-    _heartbeatAnimation = TweenSequence<double>(
-      <TweenSequenceItem<double>>[
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 1.0, end: 1.25).chain(CurveTween(curve: Curves.easeOut)),
-          weight: 45,
-        ),
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 1.25, end: 0.9).chain(CurveTween(curve: Curves.easeIn)),
-          weight: 30,
-        ),
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 0.9, end: 1.1).chain(CurveTween(curve: Curves.easeOut)),
-          weight: 30,
-        ),
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 1.1, end: 1.0).chain(CurveTween(curve: Curves.easeInOut)),
-          weight: 45,
-        ),
-      ],
-    ).animate(_heartbeatController);
+    // <<<<<<< HEAD
+    _heartbeatAnimation = TweenSequence<double>(<TweenSequenceItem<double>>[
+      TweenSequenceItem<double>(
+        tween: Tween<double>(
+          begin: 1.0,
+          end: 1.25,
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 45,
+      ),
+      TweenSequenceItem<double>(
+        tween: Tween<double>(
+          begin: 1.25,
+          end: 0.9,
+        ).chain(CurveTween(curve: Curves.easeIn)),
+        weight: 30,
+      ),
+      TweenSequenceItem<double>(
+        tween: Tween<double>(
+          begin: 0.9,
+          end: 1.1,
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 30,
+      ),
+      TweenSequenceItem<double>(
+        tween: Tween<double>(
+          begin: 1.1,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 45,
+      ),
+    ]).animate(_heartbeatController);
     _checkFirstLaunchAndPatient();
- 
+
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
         setState(() => _opacity = 1.0);
@@ -88,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (token != null) {
         context.goNamed(AppRouter.homePage.name);
       } else {
-        context.goNamed(AppRouter.login.name);
+        context.goNamed(AppRouter.welcomeScreen.name);
       }
     }
   }
@@ -126,7 +137,6 @@ class _SplashScreenState extends State<SplashScreen>
                         fit: BoxFit.contain,
                       ),
                     ),
-
                   ],
                 ),
               ),

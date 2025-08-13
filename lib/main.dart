@@ -86,7 +86,6 @@ void main() async {
 Future<void> checkAndRequestPermissions() async {
   if (!Platform.isAndroid) return;
 
-  // For Android 10 (API 29) and below
   if (await Permission.storage.isDenied) {
     final status = await Permission.storage.request();
     if (!status.isGranted) {
@@ -94,7 +93,6 @@ Future<void> checkAndRequestPermissions() async {
     }
   }
 
-  // For Android 11 (API 30) and above
   if (await Permission.manageExternalStorage.isDenied) {
     final status = await Permission.manageExternalStorage.request();
     if (!status.isGranted) {
@@ -102,6 +100,7 @@ Future<void> checkAndRequestPermissions() async {
     }
   }
 }
+
 String? token = serviceLocator<StorageService>().getFromDisk(StorageKey.token);
 
 Future<void> bootstrapApplication() async {
@@ -250,7 +249,6 @@ class _MyAppState extends State<MyApp> {
                             (context) => AllergyCubit(
                               remoteDataSource:
                                   serviceLocator<AllergyRemoteDataSource>(),
-
                             ),
                         lazy: false,
                       ),
@@ -259,7 +257,6 @@ class _MyAppState extends State<MyApp> {
                             (context) => ReactionCubit(
                               remoteDataSource:
                                   serviceLocator<ReactionRemoteDataSource>(),
-
                             ),
                         lazy: false,
                       ),
@@ -268,7 +265,6 @@ class _MyAppState extends State<MyApp> {
                             (context) => EncounterCubit(
                               remoteDataSource:
                                   serviceLocator<EncounterRemoteDataSource>(),
-
                             ),
                         lazy: false,
                       ),
@@ -279,7 +275,6 @@ class _MyAppState extends State<MyApp> {
                                   serviceLocator<
                                     ServiceRequestRemoteDataSource
                                   >(),
-
                             ),
                         lazy: false,
                       ),
@@ -288,7 +283,6 @@ class _MyAppState extends State<MyApp> {
                             (context) => SeriesCubit(
                               remoteDataSource:
                                   serviceLocator<SeriesRemoteDataSource>(),
-
                             ),
                         lazy: false,
                       ),
@@ -297,7 +291,6 @@ class _MyAppState extends State<MyApp> {
                             (context) => ObservationCubit(
                               remoteDataSource:
                                   serviceLocator<ObservationRemoteDataSource>(),
-
                             ),
                         lazy: false,
                       ),
@@ -319,7 +312,6 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => ConditionsCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
@@ -327,7 +319,6 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => MedicationRequestCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
@@ -335,7 +326,6 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => MedicationCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
@@ -343,7 +333,6 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => ArticleCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
@@ -351,7 +340,6 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => InvoiceCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
@@ -359,7 +347,6 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => DiagnosticReportCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
@@ -367,7 +354,6 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => ComplainCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
@@ -375,7 +361,6 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => NotificationCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
@@ -383,12 +368,9 @@ class _MyAppState extends State<MyApp> {
                         create:
                             (context) => OrganizationCubit(
                               remoteDataSource: serviceLocator(),
-
                             ),
                         lazy: false,
                       ),
-
-
                     ],
                     child: BlocBuilder<LocalizationBloc, LocalizationState>(
                       builder: (context, state) {

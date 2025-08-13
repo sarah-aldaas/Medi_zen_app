@@ -155,8 +155,8 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                     Icon(Icons.file_present, color: Theme.of(context).primaryColor),
                     const Gap(12),
                     Text(
-                      "Qualifications",
-                      style: const TextStyle(
+                      'organizationDetailsPage.qualifications'.tr(context),
+                      style:  TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),

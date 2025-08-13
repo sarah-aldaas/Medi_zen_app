@@ -27,6 +27,7 @@ class ReactionListItem extends StatelessWidget {
       return 'reactionsPage.invalidDate'.tr(context);
     }
   }
+
   Widget _buildSeverityChip(BuildContext context, CodeModel? severity) {
     final ThemeData theme = Theme.of(context);
     Color chipColor;
@@ -35,27 +36,28 @@ class ReactionListItem extends StatelessWidget {
     switch (severity?.code?.toLowerCase()) {
       case 'mild':
         chipColor = Colors.green.withAlpha(40);
-        displayText = severity?.display ?? 'reactionsPage.mild'.tr(context);
+        displayText = 'reactions.severity.mild'.tr(context);
         break;
       case 'moderate':
         chipColor = Colors.orange.withAlpha(40);
-        displayText = severity?.display ?? 'reactionsPage.moderate'.tr(context);
+        displayText = 'reactions.severity.moderate'.tr(context);
         break;
       case 'severe':
         chipColor = Colors.red.withAlpha(40);
-        displayText = severity?.display ?? 'reactionsPage.severe'.tr(context);
+        displayText = 'reactions.severity.severe'.tr(context);
         break;
       default:
-        chipColor = (theme.textTheme.bodySmall?.color?.withAlpha(20)) ??
+        chipColor =
+            (theme.textTheme.bodySmall?.color?.withAlpha(20)) ??
             Colors.grey.withAlpha(20);
-        displayText = 'reactionsPage.notApplicable'.tr(context);
+        displayText = 'reactions.severity.not_applicable'.tr(context);
     }
 
     return Chip(
       label: Text(
         displayText,
         style: TextStyle(
-          color: chipColor.withAlpha(128),
+          color: chipColor.withAlpha(200),
           fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
@@ -65,8 +67,8 @@ class ReactionListItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: chipColor.withAlpha(100),
-          width: 0.5,
+          color: chipColor.withAlpha(150),
+          width: 0.8,
         ),
       ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -98,9 +100,7 @@ class ReactionListItem extends StatelessWidget {
                     Expanded(
                       child: Text(
                         reaction.manifestation ??
-                            'reactionsPage.unknownReaction'.tr(
-                              context,
-                            ),
+                            'reactionsPage.unknownReaction'.tr(context),
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.textTheme.bodyLarge?.color,

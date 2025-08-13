@@ -12,6 +12,25 @@
     "login": "Login",
     "sign_up": "Sign up"
   },
+  "step_counter": {
+    "title": "Step Counter",
+    "permission_required": "Permission Required",
+    "permission_message": "This app needs activity recognition permission to track your steps.",
+    "grant_permission": "Grant Permission",
+    "set_daily_goal": "Set Daily Goal",
+    "daily_steps_goal": "Daily Steps Goal",
+    "cancel": "Cancel",
+    "save": "Save",
+    "walking": "Walking",
+    "stopped": "Stopped",
+    "steps": "steps",
+    "weekly_activity": "Weekly Activity",
+    "stats": {
+      "calories": "cal",
+      "distance": "km",
+      "time": "min"
+    }
+  },
   "allergyPage": {
     "add_allergy": "Add allergy",
     "unknown_allergy": "Unknown Allergy",
@@ -80,7 +99,10 @@
     "message": "Are you sure you want to cancel your appointment?",
     "refundNote": "Only 50% of the funds will be returned to your account.",
     "backButton": "Back",
-    "confirmButton": "Yes, Cancel"
+    "confirmButton": "Yes, Cancel",
+    "because": "Because I want choose another time.",
+    "reason_cancel": "Reason cancel",
+    "enter_cancellation": "Please enter a cancellation reason"
   },
   "rescheduleSuccess": {
     "title": "Rescheduling Success!",
@@ -88,7 +110,6 @@
     "viewAppointmentButton": "View Appointment",
     "cancelButton": "Cancel"
   },
-
   "allergyFilter": {
     "filterAllergies": "Filter Allergies",
     "search": "Search",
@@ -129,7 +150,7 @@
     "cancel": "Cancel appointment",
     "reason": "Reason",
     "description": "Description",
-    "note": "Note",
+    "notes": "Note",
     "save": "Save",
     "medicalRecord": "Medical record",
     "reasonIsRequired": "Reason is required",
@@ -146,8 +167,74 @@
       "problem": "Problem"
     }
   },
+  "failed_to_fetch_articles": "Failed to fetch articles",
+  "allergies": {
+    "high": "High",
+    "low": "Low",
+    "unable_to_assess": "Unable to assess",
+    "not_applicable": "N/A"
+  },
+  "reactions": {
+    "severity": {
+      "mild": "Mild",
+      "moderate": "Moderate",
+      "severe": "Severe",
+      "not_applicable": "N/A"
+    }
+  },
+  "final_status": "Final",
+  "completed_status": "Completed",
+  "condition_confirmed_status": "Confirmed",
+  "service_request_active_status": "Active",
+  "partial_status": "Partial",
+  "service_request_pending_status": "Pending",
+  "preliminary_status": "Preliminary",
+  "amended_status": "Amended",
+  "corrected_status": "Corrected",
+  "appended_status": "Appended",
+  "cancelled_status": "Cancelled",
+  "service_request_cancelled_status": "Cancelled",
+  "entered_in_error_status": "Entered in Error",
+  "unknown_status": "Unknown",
+  "condition_active_status": "Active",
+  "service_request_completed_status": "Completed",
+  "service_request_rejected_status": "Rejected",
+  "active": "Active",
+  "in_progress": "In Progress",
+  "recurrence": "Recurrence",
+  "relapse": "Relapse",
+  "inactive": "Inactive",
+  "remission": "Remission",
+  "resolved": "Resolved",
+  "completed": "Completed",
+  "entered_in_error": "Entered in Error",
+  "unknown": "Unknown",
+  "click_to_view_details": "Click to view details",
+  "status": {
+    "in_progress": "In Progress",
+    "recurrence": "Recurrence",
+    "inactive": "Inactive",
+    "remission": "Remission",
+    "resolved": "Resolved",
+    "entered_in_error": "Entered in Error",
+    "unknown": "Unknown",
+    "relapse": "Relapse",
+    "in-progress": "In Progress",
+    "final": "Completed",
+    "active": "Active",
+    "on-hold": "On Hold",
+    "revoked": "Revoked",
+    "entered-in-error": "Entered in Error",
+    "rejected": "Rejected",
+    "completed": "Completed",
+    "default": "Unknown"
+  },
+  "failed_to_fetch_condition_article": "Failed to load condition-related article",
+  "removed_from_favorites": "Article removed from favorites successfully",
+  "added_to_favorites": "Article added to favorites successfully",
   "myAppointments": {
     "title": "My Appointments",
+    "booked_appointment": "Booked Appointment",
     "tabs": {
       "upcoming": "Upcoming",
       "completed": "Completed",
@@ -913,7 +1000,8 @@
     "moderate": "Moderate",
     "low": "Low",
     "noAllergiesFound": "No allergies found with current filters. Try adjusting your search.",
-    "refreshList": "Refresh List"
+    "refreshList": "Refresh List",
+    "unableToAssess": "Unable to Assess"
   },
   "healthCareServicesPage": {
     "title": "Health Care Services",
@@ -962,7 +1050,7 @@
     "filterAllergyTooltip": "Filter Allergy",
     "filterServiceRequest": "Filter service request",
     "tabs": {
-      "appointmentDetails":"Appointment details",
+      "appointmentDetails": "Appointment details",
       "encounters": "Encounters",
       "allergies": "Allergies",
       "conditions": "Conditions",
@@ -1047,6 +1135,14 @@
     "statusCancelled": "Cancelled"
   },
   "serviceRequestDetailsPage": {
+    "status": {
+      "active": "Active",
+      "onHold": "On Hold",
+      "revoked": "Revoked",
+      "enteredInError": "Enter in error",
+      "rejected": "Rejected",
+      "completed": "Completed"
+    },
     "appBarTitle": "Service Request Details",
     "noDetailsFoundTitle": "Oops! No details found for this service request.",
     "noDetailsFoundMessage": "It might have been moved, deleted, or you might not have access.",
@@ -1257,7 +1353,10 @@
     "per": "per",
     "whenToTake": "When to take",
     "eventTime": "Event time",
+    "route": "Route",
+    "site": "Site",
     "offset": "Offset",
+    "doseForm": "Dose form",
     "instructions": "Instructions",
     "patientAndAdditionalInstructions": "Patient & Additional Instructions",
     "patientInstructions": "Patient Instructions",
@@ -1272,10 +1371,11 @@
     "unknownMedication": "Unknown Medication",
     "noDescriptionAvailable": "No description available"
   },
-
-
   "myMedications": {
     "title": "My Medications",
+    "noMedicationsFound": "No medications found.",
+    "unknownMedication": "Unknown Medication",
+    "noInstructions": "No instructions",
     "noMedications": "No medications found",
     "filter": {
       "title": "Filter Medications",
@@ -1305,13 +1405,6 @@
       "apply": "Apply",
       "invalidDateRange": "End date must be after start date"
     }
-  },
-  "medicationRequestDetails": {
-    "title": "Medication Request Details",
-    "failedToLoad": "Failed to load medication request details",
-    "requestInfo": "Request Information",
-    "conditionInfo": "Condition Information",
-    "additionalInfo": "Additional Information"
   },
   "myMedicationRequests": {
     "title": "My Medication Requests",
@@ -1346,6 +1439,9 @@
     }
   },
   "filterMedications": {
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
     "title": "Filter Medications",
     "search": "Search",
     "searchHint": "Search by medication name",
@@ -1400,9 +1496,6 @@
     "clearFilters": "Clear Filters",
     "cancel": "Cancel",
     "apply": "Apply"
-  },
-  "myMedicationRequests": {
-    "noRequests": "No medication requests found."
   },
   "medicationRequestCard": {
     "defaultReason": "Medication Request",
@@ -1460,35 +1553,6 @@
     "no": "No",
     "defaultMedicationRequest": "Medication Request",
     "unknownStatus": "Unknown Status"
-  },
-  "filterMedicationRequests": {
-    "title": "Filter Medication Requests",
-    "search": "Search",
-    "searchHint": "Search by reason or note",
-    "doNotPerform": "Do Not Perform",
-    "doNotPerformLabel": "Show only 'Do Not Perform' requests",
-    "status": "Status",
-    "allStatuses": "All Statuses",
-    "intent": "Intent",
-    "selectIntent": "Select Intent",
-    "allIntents": "All Intents",
-    "priority": "Priority",
-    "selectPriority": "Select Priority",
-    "allPriorities": "All Priorities",
-    "courseOfTherapy": "Course of Therapy Type",
-    "selectCourseOfTherapy": "Select Course of Therapy Type",
-    "allCourses": "All Courses",
-    "condition": "Condition",
-    "selectCondition": "Select Condition",
-    "allConditions": "All Conditions",
-    "unknownCondition": "Unknown Condition",
-    "startDate": "Start Date",
-    "selectStartDate": "Select Start Date",
-    "endDate": "End Date",
-    "selectEndDate": "Select End Date",
-    "clearFilters": "Clear Filters",
-    "cancel": "Cancel",
-    "apply": "Apply"
   },
   "conditionsList": {
     "noConditionsFound": "No conditions found",
@@ -1554,7 +1618,6 @@
     "generate": "Generate",
     "noArticlesFound": "No Articles Found",
     "noArticlesAvailable": "There are no articles available for this condition yet."
-
   },
   "conditionsFilter": {
     "title": "Filter Conditions",
@@ -1581,64 +1644,9 @@
     "cancel": "Cancel",
     "apply": "Apply"
   },
-  "myMedications": {
-    "noMedicationsFound": "No medications found.",
-    "unknownMedication": "Unknown Medication",
-    "noInstructions": "No instructions"
-  },
-  "medicationDetails": {
-    "title": "Medication Details",
-    "failedToLoad": "Failed to load medication details. Please try again.",
-    "dosageInfo": "Dosage Information",
-    "dose": "Dose",
-    "maxDose": "Max Dose",
-    "per": "per",
-    "whenToTake": "When to take",
-    "eventTime": "Event time",
-    "offset": "Offset",
-    "instructions": "Instructions",
-    "patientAndAdditionalInstructions": "Patient and Additional Instructions",
-    "patientInstructions": "Patient Instructions",
-    "additionalInstructions": "Additional Instructions",
-    "asNeeded": "As Needed",
-    "yes": "Yes",
-    "no": "No",
-    "statusAndDates": "Status and Dates",
-    "status": "Status",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "unknownMedication": "Unknown Medication",
-    "noDescriptionAvailable": "No description available"
-  },
-  "filterMedications": {
-    "title": "Filter Medications",
-    "search": "Search",
-    "searchHint": "Search by medication name or instructions",
-    "status": "Status",
-    "allStatuses": "All Statuses",
-    "doseForm": "Dose Form",
-    "selectDoseForm": "Select Dose Form",
-    "allDoseForms": "All Dose Forms",
-    "route": "Route",
-    "selectRoute": "Select Route",
-    "allRoutes": "All Routes",
-    "site": "Site",
-    "selectSite": "Select Site",
-    "allSites": "All Sites",
-    "asNeeded": "As Needed",
-    "all": "All",
-    "yes": "Yes",
-    "no": "No",
-    "medicationRequestId": "Medication Request ID",
-    "enterMedicationRequestId": "Enter Medication Request ID",
-    "dateRange": "Date Range",
-    "startFrom": "Start From",
-    "endUntil": "End Until",
-    "selectDate": "Select Date",
-    "clearFilters": "Clear Filters",
-    "cancel": "Cancel",
-    "apply": "Apply",
-    "invalidDateRange": "End date cannot be before start date."
+  "NotFoundDataPage": {
+    "notFound": "Not found any data",
+    "checkAgain": "Check your filters or try again later."
   },
   "complaintList": {
     "myComplaints": "Your Complaints",
@@ -1777,27 +1785,32 @@
   },
   "organizationDetailsPage": {
     "organization": "Organization",
-    "title":"Organization Details",
+    "title": "Organization Details",
     "fetchingDetails": "Fetching organization details...",
     "alias": "Alias :",
     "type": "Type",
     "address": "Address",
     "phone": "Phone",
     "workingHours": "Working Hours",
-    "status":"Status"
-
-  },"invoicesPage":
-{
-  "invoice": "Invoice",
-  "title": "My Invoices",
-  "paidAppointmentsTab": "Paid Appointments",
-  "unpaidAppointmentsTab": "Unpaid Appointments",
-  "noPaidAppointments": "No paid appointments found.",
-  "noUnpaidAppointments": "No unpaid appointments found.",
-  "notPaidMessage": "Invoice details are only available for paid appointments."
-},
-
-  "invoiceDetailsPage":{
+    "status": "Status",
+    "qualifications": "Qualifications"
+  },
+  "invoicesPage": {
+    "invoice": "Invoice",
+    "title": "My Invoices",
+    "paidAppointmentsTab": "Paid Appointments",
+    "unpaidAppointmentsTab": "Unpaid Appointments",
+    "noPaidAppointments": "No paid appointments found.",
+    "noUnpaidAppointments": "No unpaid appointments found.",
+    "notPaidMessage": "Invoice details are only available for paid appointments."
+  },
+  "Qualification": {
+    "qualificationOrganization": "Qualification organization",
+    "start": "Start date:",
+    "end": "End date:",
+    "type": "Type:"
+  },
+  "invoiceDetailsPage": {
     "title": "Invoice Details",
     "invoiceHeader": "Invoice",
     "invoiceNum": "Invoice No.",
@@ -1818,7 +1831,6 @@
     "statusUnknown": "Unknown"
   },
   "invoiceFilterDialog": {
-
     "title": "Filter Invoices",
     "startDate": "Start Date",
     "endDate": "End Date",
@@ -1828,7 +1840,7 @@
     "cancelButton": "Cancel",
     "applyButton": "Apply"
   },
-  "notifications":{
+  "notifications": {
     "title": "Notifications",
     "retry": "Retry",
     "deleteNotification": "Delete notification",
@@ -1838,8 +1850,8 @@
     "error": "Error",
     "ok": "OK",
     "notNotification": "There are not any notification.",
-    "noHealth": "No health tip content available"
-
-
-
-  }}
+    "noHealth": "No health tip content available",
+    "show_all": "show_all",
+    "show_unread": "show_unread"
+  }
+}
