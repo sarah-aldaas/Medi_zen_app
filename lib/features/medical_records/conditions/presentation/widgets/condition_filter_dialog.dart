@@ -290,7 +290,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                             controller: _minOnSetAgeController,
                             decoration: InputDecoration(
                               labelText: "conditionsFilter.minAge".tr(context),
-                              hintText: "10",
+                              // hintText: "10",
                               border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
@@ -302,7 +302,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                             controller: _maxOnSetAgeController,
                             decoration: InputDecoration(
                               labelText: "conditionsFilter.maxAge".tr(context),
-                              hintText: "25",
+                              // hintText: "25",
                               border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
@@ -331,7 +331,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                               ).format(_minOnSetDate!)
                                   : "conditionsFilter.from".tr(context),
                             ),
-                            trailing: const Icon(Icons.calendar_today),
+                            trailing:  Icon(Icons.calendar_today,color: AppColors.primaryColor),
                             onTap: () async {
                               final date = await showDatePicker(
                                 context: context,
@@ -354,7 +354,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                               ).format(_maxOnSetDate!)
                                   : "conditionsFilter.to".tr(context),
                             ),
-                            trailing: const Icon(Icons.calendar_today),
+                            trailing:  Icon(Icons.calendar_today,color: AppColors.primaryColor,),
                             onTap: () async {
                               final date = await showDatePicker(
                                 context: context,
@@ -414,7 +414,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                               ).format(_maxRecordDate!)
                                   : "conditionsFilter.to".tr(context),
                             ),
-                            trailing: const Icon(Icons.calendar_today),
+                            trailing:  Icon(Icons.calendar_today,color: AppColors.primaryColor),
                             onTap: () async {
                               final date = await showDatePicker(
                                 context: context,
@@ -447,7 +447,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                             controller: _minAbatementAgeController,
                             decoration: InputDecoration(
                               labelText: "conditionsFilter.minAge".tr(context),
-                              hintText: "10",
+                              // hintText: "10",
                               border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
@@ -459,7 +459,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                             controller: _maxAbatementAgeController,
                             decoration: InputDecoration(
                               labelText: "conditionsFilter.maxAge".tr(context),
-                              hintText: "25",
+                              // hintText: "25",
                               border: const OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
@@ -488,7 +488,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                               ).format(_minAbatementDate!)
                                   : "conditionsFilter.from".tr(context),
                             ),
-                            trailing: const Icon(Icons.calendar_today),
+                            trailing:  Icon(Icons.calendar_today,color: AppColors.primaryColor),
                             onTap: () async {
                               final date = await showDatePicker(
                                 context: context,
@@ -511,7 +511,7 @@ class _ConditionsFilterDialogState extends State<ConditionsFilterDialog> {
                               ).format(_maxAbatementDate!)
                                   : "conditionsFilter.to".tr(context),
                             ),
-                            trailing: const Icon(Icons.calendar_today),
+                            trailing:  Icon(Icons.calendar_today,color: AppColors.primaryColor),
                             onTap: () async {
                               final date = await showDatePicker(
                                 context: context,

@@ -341,7 +341,7 @@ class _MedicationRequestDetailsPageState
                 _buildDetailRow(
                   label: "medicationRequestDetails.stage".tr(context),
                   value: request.condition?.stage?.display,
-                  icon: Icons.stairs,
+                  icon: Icons.insights,
                   tooltip: request.condition?.stage?.description,
                 ),
               ],

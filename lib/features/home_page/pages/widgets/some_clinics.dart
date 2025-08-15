@@ -171,7 +171,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child:FlexibleImage(imageUrl:clinic.photo ,errorWidget: Center(child: SizedBox(
-                  height: 60,
+                  height: 55,
                   child: Icon(Icons.local_hospital)),),height: 60,)
             ),
             const SizedBox(height: 4.0),

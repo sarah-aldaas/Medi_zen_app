@@ -215,10 +215,10 @@
   },
   "articleDetails": {
     "author": "المؤلف",
-    "removeFavoriteTitle": "إزالة العنوان المفضل",
-    "removeFavoriteMessage": "إزالة الرسالة المفضلة",
+    "removeFavoriteTitle": "إزالة المقال المفضل",
+    "removeFavoriteMessage": "هل حقا تريد إزالة هذا المقال من المفضلة؟",
     "cancel": "إلغاء",
-    "remove": "حذف",
+    "remove": "ازالة",
     "actions": {
       "bookmark": "إشارة مرجعية",
       "share": "مشاركة",
@@ -247,7 +247,7 @@
     "defaultSort": "افتراضي",
     "oldestFirst": "الأقدم أولاً",
     "newestFirst": "الأحدث أولاً",
-    "clearFilters": "مسح الفلترة",
+    "clearFilters": "مسح الفلاتر",
     "cancel": "إلغاء",
     "apply": "تطبيق"
   },
@@ -625,6 +625,7 @@
     "note": "لا توجد مقالات مفضلة حتى الآن"
   },
   "profileDetailsPage": {
+    "no_internet": "يرجى التحقق من اتصالك بالانترنت!!",
     "email": "البريد الإلكتروني",
     "gender": "الجنس",
     "maritalStatus": "الحالة الاجتماعية",
@@ -699,7 +700,7 @@
     "addressType": "نوع العنوان",
     "allTypes": "جميع الأنواع",
     "noAddressTypesAvailable": "لا توجد أنواع عناوين متاحة",
-    "clearFilters": "مسح عوامل التصفية",
+    "clearFilters": "مسح الفلاتر",
     "apply": "تطبيق"
   },
   "common": {
@@ -793,7 +794,7 @@
   },
   "NotFoundDataPage": {
     "notFound": "لم يتم العثور على أي بيانات !!",
-    "checkAgain": "تحقق من الفلترة الخاصة بك أو حاول مرة أخرى لاحقاً."
+    "checkAgain": "تحقق من الفلاتر الخاصة بك أو حاول مرة أخرى لاحقاً."
   },
   "emptyState": {
     "noDataTitle": "لا توجد بيانات متاحة",
@@ -818,12 +819,12 @@
     "selectStartDate": "اختر تاريخ البدء",
     "to": "إلى",
     "selectEndDate": "اختر تاريخ الانتهاء",
-    "clearFilters": "مسح الفلترة",
+    "clearFilters": "مسح الفلاتر",
     "cancel": "إلغاء",
     "apply": "تطبيق",
     "errorLoading": "خطأ في تحميل المواعيد:",
     "noFound": "لم يتم العثور على مواعيد",
-    "checkFilters": "تحقق من الفلترة الخاصة بك أو حاول مرة أخرى لاحقًا.",
+    "checkFilters": "تحقق من الفلاتر الخاصة بك أو حاول مرة أخرى لاحقًا.",
     "encounterDetails": "تفاصيل الزيارة",
     "Error": "خطأ",
     "failedToLoad": "فشل في تحميل تفاصيل الزيارة",
@@ -876,7 +877,7 @@
     "tapToRefresh": "انقر للتحديث",
     "apply": "تطبيق",
     "cancel": "إلغاء",
-    "clearFilters": "مسح الفلترة"
+    "clearFilters": "مسح الفلاتر"
   },
   "allergiesPage": {
     "activeAllergy": "حساسية نشطة",
@@ -1035,7 +1036,7 @@
   "clinicDetails": {
     "alLClinics": "كل العيادات",
     "clinicDetails": "تفاصيل العيادة",
-    "ourDedicatedDoctors": "أطباؤنا المتفانون",
+    "ourDedicatedDoctors": "الأطباء",
     "noAvailable": "لا يوجد أطباء متاحون في هذه العيادة حاليًا.",
     "errorLoadingClinic": "فشل في تحميل تفاصيل العيادة: ",
     "loadMore": "تحميل المزيد من الأطباء",
@@ -1710,7 +1711,7 @@
     "complaintList_myComplaints": "شكواي",
     "complaintList_filterComplaints": "تصفية الشكاوى",
     "complaintList_noComplaintsFound": "لم يتم العثور على شكاوى",
-    "complaintList_adjustFiltersMessage": "حاول تعديل عوامل التصفية أو قم بتحديث القائمة.",
+    "complaintList_adjustFiltersMessage": "حاول تعديل الفلاتر أو قم بتحديث القائمة.",
     "complaintList_refreshList": "تحديث القائمة",
     "complaintList_noTitle": "لا يوجد عنوان"
   },
@@ -1808,10 +1809,10 @@
   "diagnosticFilterPage": {
     "diagnosticReportFilter_title": "التقارير التشخيصية",
     "diagnosticReportFilter_search": "بحث",
-    "diagnosticReportFilter_enterSearchTerm": "أدخل مصطلح البحث",
+    "diagnosticReportFilter_enterSearchTerm": "بحث...",
     "diagnosticReportFilter_all": "الكل",
     "diagnosticReportFilter_status": "الحالة",
-    "diagnosticReportFilter_clearFilters": "مسح عوامل التصفية",
+    "diagnosticReportFilter_clearFilters": "مسح الفلاتر",
     "diagnosticReportFilter_cancel": "إلغاء",
     "diagnosticReportFilter_apply": "تطبيق"
   },

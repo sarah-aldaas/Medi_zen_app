@@ -447,7 +447,7 @@ class _DiagnosticReportDetailsPageState
 
             if (condition.stage != null)
               _buildDetailRow(
-                icon: Icons.meeting_room_rounded,
+                icon: Icons.insights,
                 label: 'diagnosticDetailsPage.diagnosticReport_stage'.tr(
                   context,
                 ),

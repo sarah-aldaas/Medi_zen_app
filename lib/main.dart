@@ -192,13 +192,15 @@ class _MyAppState extends State<MyApp> {
                         create: (context) => serviceLocator<AppointmentCubit>(),
                         lazy: false,
                       ),
-                      BlocProvider<EditProfileFormCubit>(
-                        create:
-                            (context) => EditProfileFormCubit(
-                              serviceLocator<CodeTypesCubit>(),
-                            ),
-                        lazy: false,
-                      ),
+                      // BlocProvider<EditProfileFormCubit>(
+                      //   create:
+                      //       (context) => EditProfileFormCubit(
+                      //         patientModel: null,
+                      //         codeTypesCubit: serviceLocator<CodeTypesCubit>(),
+                      //         context: context, profileCubit: serviceLocator<ProfileCubit>()
+                      //       ),
+                      //   lazy: false,
+                      // ),
 
                       BlocProvider<LocalizationBloc>(
                         create: (context) => serviceLocator<LocalizationBloc>(),
@@ -237,13 +239,13 @@ class _MyAppState extends State<MyApp> {
                         create: (context) => serviceLocator<AppointmentCubit>(),
                         lazy: false,
                       ),
-                      BlocProvider<EditProfileFormCubit>(
-                        create:
-                            (context) => EditProfileFormCubit(
-                              serviceLocator<CodeTypesCubit>(),
-                            ),
-                        lazy: false,
-                      ),
+                      // BlocProvider<EditProfileFormCubit>(
+                      //   create:
+                      //       (context) => EditProfileFormCubit(
+                      //         serviceLocator<CodeTypesCubit>(),
+                      //       ),
+                      //   lazy: false,
+                      // ),
                       BlocProvider<AllergyCubit>(
                         create:
                             (context) => AllergyCubit(

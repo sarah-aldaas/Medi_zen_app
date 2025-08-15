@@ -9,6 +9,7 @@ import 'package:medizen_app/features/medical_records/diagnostic_report/data/mode
 import 'package:medizen_app/features/medical_records/diagnostic_report/data/models/diagnostic_report_model.dart';
 import 'package:medizen_app/features/medical_records/diagnostic_report/presentation/pages/diagnostic_report_details_page.dart';
 
+import '../../../../../base/widgets/not_found_data_page.dart';
 import '../cubit/diagnostic_report_cubit/diagnostic_report_cubit.dart';
 
 class DiagnosticReportListPublicPage extends StatefulWidget {
@@ -96,8 +97,9 @@ class _DiagnosticReportListPublicPageState
             final hasMore =
                 state is DiagnosticReportSuccess ? state.hasMore : false;
 
-            if (reports.isEmpty) {
-            }
+             if (reports.isEmpty) {
+                return NotFoundDataPage(); }
+
 
             return ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -224,7 +226,7 @@ class _DiagnosticReportListPublicPageState
 
                 if (report.condition!.stage != null)
                   _buildInfoRow(
-                    icon: Icons.meeting_room_rounded,
+                    icon: Icons.insights,
                     label:
                         'diagnosticListAppointmentPage.diagnosticReportListAppointment_stage'
                             .tr(context),

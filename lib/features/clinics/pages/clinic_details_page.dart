@@ -699,11 +699,14 @@ class ClinicServicesPage extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Icon(
-                                      Icons.monetization_on_outlined,
-                                      color: Theme.of(
-                                        context,
-                                      ).iconTheme.color?.withOpacity(0.5),
+                                    Text("ل.س",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color:
+                                        Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.color,
+                                      ),
                                     ),
                                     const Gap(12),
                                     Text(

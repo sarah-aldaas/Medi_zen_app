@@ -220,15 +220,15 @@ GoRouter goRouter() {
           );
         },
       ),
-      GoRoute(
-        path: '/edit-profile',
-        name: AppRouter.editProfile.name,
-        builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>?;
-          UpdateProfileRequestModel patientModel = extra?['patientModel'];
-          return EditProfileScreen(patientModel: patientModel);
-        },
-      ),
+      // GoRoute(
+      //   path: '/edit-profile',
+      //   name: AppRouter.editProfile.name,
+      //   builder: (context, state) {
+      //     final extra = state.extra as Map<String, dynamic>?;
+      //     UpdateProfileRequestModel patientModel = extra?['patientModel'];
+      //     return EditProfileScreen(patientModel: patientModel);
+      //   },
+      // ),
       GoRoute(
         path: '/clinic_details',
         name: AppRouter.clinicDetails.name,

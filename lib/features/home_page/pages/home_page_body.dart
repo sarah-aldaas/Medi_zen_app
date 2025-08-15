@@ -110,6 +110,7 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   Widget _buildHeader(BuildContext context) {
     PatientModel? myPatientModel = loadingPatientModel();
+
     final ThemeData theme = Theme.of(context);
     context.read<NotificationCubit>().getMyNotifications(context: context);
     return Padding(
@@ -119,8 +120,12 @@ class _HomePageBodyState extends State<HomePageBody> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                context.pushNamed(AppRouter.profile.name);
-              },
+                  context.pushNamed(AppRouter.profile.name).then((_){
+                    setState(() {
+                      myPatientModel = loadingPatientModel();
+                    });
+                  });
+                },
               child: Row(
                 children: [
                   CircleAvatar(
@@ -298,12 +303,12 @@ class _HomePageBodyState extends State<HomePageBody> {
                     value: 'step',
                     child: ListTile(
                       leading: Icon(
-                        Icons.feedback,
+                        Icons.directions_walk,
                         color: Theme.of(context).primaryColor,
                       ),
 
                       title: Text(
-                        "steps",
+                        "step_counter.title".tr(context),
                         style: TextStyle(
                           color: theme.textTheme.bodyLarge?.color,
                         ),

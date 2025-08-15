@@ -330,8 +330,8 @@
   },
   "articleDetails": {
     "author": "Author",
-    "removeFavoriteTitle": "Remove favorite title",
-    "removeFavoriteMessage": "Remove favorite message",
+    "removeFavoriteTitle": "Remove favorite article",
+    "removeFavoriteMessage": "Do you want to remove this article form favorite?",
     "cancel": "Cancel",
     "remove": "Remove",
     "actions": {
@@ -714,6 +714,7 @@
     "note": "No favorite articles yet"
   },
   "profileDetailsPage": {
+    "no_internet": "Please check the network!!",
     "email": "Email",
     "gender": "Gender",
     "maritalStatus": "Marital Status",
@@ -1094,7 +1095,7 @@
   "clinicDetails": {
     "alLClinics": "AlL Clinics",
     "clinicDetails": "Clinic Details",
-    "ourDedicatedDoctors": "Our Dedicated Doctors",
+    "ourDedicatedDoctors": "The doctors",
     "noAvailable": "No doctors available in this clinic at the moment.",
     "loadMore": "Load More Doctors",
     "errorLoadingClinic": "Failed to load clinic details: ",

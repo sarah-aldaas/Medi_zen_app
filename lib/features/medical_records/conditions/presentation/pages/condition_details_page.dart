@@ -150,13 +150,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 controller: _tabController,
                 children: [
                   _buildConditionDetails(state.condition),
-                  // <<<<<<< HEAD
-                  //
-                  //                   MyMedicationRequestsPage(conditionId: state.condition.id!),
-                  //
-                  // =======
                   MyMedicationRequestsPage(conditionId: state.condition.id!),
-                  // >>>>>>> c804e45c3224c511626af6e9cbcb1dd2e908ee6d
                   DiagnosticReportListPage(conditionId: state.condition.id!),
                 ],
               );
@@ -324,10 +318,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                         condition.clinicalStatus!.code,
                       ),
                       label: Text(
-                        _getStatusTranslation(
                           condition.clinicalStatus!.display,
-                          context,
-                        ),
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -431,7 +422,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
   }) {
     return ElevatedButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon, size: 20),
+      icon: Icon(icon, size: 20,color: Colors.white,),
       label: Text(label),
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
@@ -909,7 +900,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
               ),
             if (condition.stage != null)
               _buildDetailRow(
-                icon: Icons.bar_chart,
+                icon: Icons.insights,
                 label: 'conditionDetails.stage'.tr(context),
                 value: condition.stage!.display,
               ),
@@ -1195,38 +1186,17 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
     );
   }
 
-  String _getStatusTranslation(String? statusCode, BuildContext context) {
-    switch (statusCode) {
-      case 'active':
-        return 'active'.tr(context);
-      case 'in-progress':
-        return 'in_progress'.tr(context);
-      case 'recurrence':
-        return 'recurrence'.tr(context);
-      case 'relapse':
-        return 'relapse'.tr(context);
-      case 'inactive':
-        return 'inactive'.tr(context);
-      case 'remission':
-        return 'remission'.tr(context);
-      case 'resolved':
-        return 'resolved'.tr(context);
-      case 'completed':
-        return 'completed'.tr(context);
-      case 'entered-in-error':
-        return 'entered_in_error'.tr(context);
-      default:
-        return 'unknown'.tr(context);
-    }
-  }
 
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
-      case 'active':
+      case 'condition_active':
+        return AppColors.primaryColor;
+
       case 'in-progress':
         return Colors.blue;
       case 'recurrence':
       case 'relapse':
+      case 'condition_resolved':
         return Colors.orange;
       case 'inactive':
       case 'remission':
@@ -1235,6 +1205,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
       case 'completed':
         return Colors.purple;
       case 'entered-in-error':
+      case 'condition_inactive':
         return AppColors.red;
       default:
         return Colors.grey;

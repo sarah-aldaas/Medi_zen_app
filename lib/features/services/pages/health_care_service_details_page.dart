@@ -356,10 +356,10 @@ class _HealthCareServiceDetailsPageState
                     ),
                     clipBehavior: Clip.antiAlias,
                     child: FlexibleImage(
-                      imageUrl: service.clinic!.photo!,
+                      imageUrl: service.clinic!.photo,
                       height: 150,
                       width: double.infinity,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       placeholder: Center(
                         child: CircularProgressIndicator(color: primaryColor),
                       ),
@@ -421,7 +421,7 @@ class _HealthCareServiceDetailsPageState
                 ),
                 child: ListTile(
                   leading: Icon(
-                    Icons.check_circle_outline,
+                    Icons.star_border_purple500_rounded,
                     color: primaryColor,
                     size: 28,
                   ),

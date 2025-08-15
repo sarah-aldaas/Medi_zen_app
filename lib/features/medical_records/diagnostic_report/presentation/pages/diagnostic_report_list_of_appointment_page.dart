@@ -96,19 +96,19 @@ class _DiagnosticReportListOfAppointmentPageState
           listener: (context, state) {
           },
           builder: (context, state) {
-            if (state is DiagnosticReportLoading && !state.isLoadMore) {
-              return const Center(child: LoadingPage());
-            }
+    if (state is DiagnosticReportLoading && !state.isLoadMore) {
+    return const Center(child: LoadingPage());
+    }
 
-            final reports =
-                state is DiagnosticReportSuccess
-                    ? state.paginatedResponse.paginatedData!.items
-                    : [];
-            final hasMore =
-                state is DiagnosticReportSuccess ? state.hasMore : false;
+    final reports =
+    state is DiagnosticReportSuccess
+    ? state.paginatedResponse.paginatedData!.items
+        : [];
+    final hasMore =
+    state is DiagnosticReportSuccess ? state.hasMore : false;
 
-            if (reports.isEmpty) {
-              return NotFoundDataPage();            }
+    if (reports.isEmpty) {
+    return NotFoundDataPage(); }
 
             return ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -235,7 +235,7 @@ class _DiagnosticReportListOfAppointmentPageState
 
                 if (report.condition!.stage != null)
                   _buildInfoRow(
-                    icon: Icons.meeting_room_rounded,
+                    icon: Icons.insights,
                     label:
                         'diagnosticListAppointmentPage.diagnosticReportListAppointment_stage'
                             .tr(context),
