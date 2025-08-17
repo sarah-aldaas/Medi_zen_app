@@ -105,16 +105,16 @@ flutter:
   # the material Icons class.
 
   uses-material-design: true
-  fonts:
-    - family: ChypreNorm # Or any name you prefer
-      fonts:
-        - asset: assets/fonts/chypre_norm_regular/fonnts.com-Chypre_Norm_Regular.otf
+#  fonts:
+#    - family: ChypreNorm # Or any name you prefer
+#      fonts:
+#        - asset: assets/fonts/chypre_norm_regular/fonnts.com-Chypre_Norm_Regular.otf
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
     - assets/images/locks/
     - assets/lang/
-    - assets/fonts/
+
 
   #   - images/a_dot_ham.jpeg
 
