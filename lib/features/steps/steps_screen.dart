@@ -282,7 +282,7 @@ class _StepsScreenState extends State<StepsScreen> with WidgetsBindingObserver {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: theme.dialogBackgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text("step_counter.set_daily_goal".tr(context), style: TextStyle(color: theme.textTheme.titleLarge?.color)),
         content: TextField(
           controller: controller,

@@ -370,6 +370,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               title: Text("articles.filters.title".tr(context), style: TextStyle(color: AppColors.primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,

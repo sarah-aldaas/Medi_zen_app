@@ -191,7 +191,7 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
         child: GridView.builder(
           controller: _scrollController,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount:2,
             crossAxisSpacing: 16.0,
             mainAxisSpacing: 16.0,
             childAspectRatio: 0.9,
@@ -247,16 +247,36 @@ class _ClinicsGridViewState extends State<_ClinicsGridView> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: FlexibleImage(
-                    imageUrl: clinic.photo!,
-                    errorWidget: Center(
-                      child: SizedBox(
-                        height: 60,
+            // SizedBox(
+            //   width: 30,
+            //   height: 30,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: ClipRRect(
+            //       borderRadius: BorderRadius.circular(10.0),
+            //       child: FlexibleImage(
+            //         imageUrl: clinic.photo!,
+            //         errorWidget: Center(
+            //           child: SizedBox(
+            //
+            //             child: Icon(Icons.local_hospital),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Center(
+              child: SizedBox(
+                width: 70,
+                height: 70,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: FlexibleImage(
+                      imageUrl: clinic.photo,
+                      errorWidget: Center(
                         child: Icon(Icons.local_hospital),
                       ),
                     ),

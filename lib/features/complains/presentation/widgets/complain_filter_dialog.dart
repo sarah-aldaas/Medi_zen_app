@@ -76,62 +76,60 @@ class _ComplainFilterDialogState extends State<ComplainFilterDialog> {
             ),
             const Divider(),
             const Gap(12),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        labelText: 'complainFilterPage.complainFilter_search'
-                            .tr(context),
-                        border: const OutlineInputBorder(),
-                        suffixIcon:
-                            _searchController.text.isNotEmpty
-                                ? IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    setState(() {
-                                      _searchController.clear();
-                                      _filter = _filter.copyWith(
-                                        searchQuery: null,
-                                      );
-                                    });
-                                  },
-                                )
-                                : null,
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _filter = _filter.copyWith(
-                            searchQuery: value.isNotEmpty ? value : null,
-                          );
-                        });
-                      },
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      labelText: 'complainFilterPage.complainFilter_search'
+                          .tr(context),
+                      border: const OutlineInputBorder(),
+                      suffixIcon:
+                          _searchController.text.isNotEmpty
+                              ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  setState(() {
+                                    _searchController.clear();
+                                    _filter = _filter.copyWith(
+                                      searchQuery: null,
+                                    );
+                                  });
+                                },
+                              )
+                              : null,
                     ),
-                    const SizedBox(height: 20),
+                    onChanged: (value) {
+                      setState(() {
+                        _filter = _filter.copyWith(
+                          searchQuery: value.isNotEmpty ? value : null,
+                        );
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
 
-                    _buildStatusDropdown(),
-                    const SizedBox(height: 20),
+                  _buildStatusDropdown(),
+                  const SizedBox(height: 20),
 
-                    _buildTypeDropdown(),
-                    const SizedBox(height: 20),
+                  _buildTypeDropdown(),
+                  const SizedBox(height: 30),
 
-                    SwitchListTile(
-                      title: Text(
-                        'complainFilterPage.complainFilter_assignedToAdmin'.tr(
-                          context,
-                        ),
-                      ),
-                      value: _filter.assignedToAdmin ?? false,
-                      onChanged:
-                          (value) => setState(() {
-                            _filter = _filter.copyWith(assignedToAdmin: value);
-                          }),
-                    ),
-                  ],
-                ),
+                  // SwitchListTile(
+                  //   title: Text(
+                  //     'complainFilterPage.complainFilter_assignedToAdmin'.tr(
+                  //       context,
+                  //     ),
+                  //   ),
+                  //   value: _filter.assignedToAdmin ?? false,
+                  //   onChanged:
+                  //       (value) => setState(() {
+                  //         _filter = _filter.copyWith(assignedToAdmin: value);
+                  //       }),
+                  // ),
+                ],
               ),
             ),
             const Divider(),

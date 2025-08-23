@@ -86,6 +86,7 @@ class _ServiceRequestFilterDialogState
       },
       builder: (context, state) {
         return Dialog(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),

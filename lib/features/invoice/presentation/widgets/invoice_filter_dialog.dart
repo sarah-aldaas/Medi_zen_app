@@ -62,6 +62,7 @@ class _InvoiceFilterDialogState extends State<InvoiceFilterDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Text(
         'invoiceFilterDialog.title'.tr(context),
         style: TextStyle(

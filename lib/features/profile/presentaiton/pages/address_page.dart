@@ -204,6 +204,7 @@ class _AddressListPageState extends State<AddressListPage> {
       context: context,
       builder:
           (context) => AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Text(
               'addressList.deleteAddress'.tr(context),
               style: TextStyle(
