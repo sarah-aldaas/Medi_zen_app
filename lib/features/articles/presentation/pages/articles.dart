@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/widgets/loading_page.dart';
@@ -10,6 +11,7 @@ import 'package:medizen_app/features/articles/presentation/pages/article_details
 import 'package:medizen_app/features/articles/presentation/pages/my_favorite_articles.dart';
 
 import '../../../../base/data/models/code_type_model.dart';
+import '../../../../base/go_router/go_router.dart';
 import '../../../../base/theme/app_color.dart';
 import '../../../../base/widgets/flexible_image.dart';
 import '../cubit/article_cubit/article_cubit.dart';
@@ -133,82 +135,87 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _showSearchField
-            ? _buildSearchField()
-            : Text("articles.title".tr(context)),
-        actions: _showSearchField
-            ? [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              setState(() {
-                _showSearchField = false;
-                _searchController.clear();
-                _loadArticles();
-              });
+    return WillPopScope( // New widget
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: _showSearchField
+              ? _buildSearchField()
+              : Text("articles.title".tr(context)),
+          actions: _showSearchField
+              ? [
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                setState(() {
+                  _showSearchField = false;
+                  _searchController.clear();
+                  _loadArticles();
+                });
+              },
+            ),
+          ]
+              : _buildAppBarActions(),
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            _loadInitialArticles();
+          },
+          child: BlocConsumer<ArticleCubit, ArticleState>(
+            listener: (context, state) {
+              if (state is ArticleError) {
+                if (mounted) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.error)));
+                }
+              }
+            },
+            builder: (context, state) {
+              if (state is ArticleLoading && !state.isLoadMore) {
+                return const Center(child: LoadingPage());
+              }
+
+              if (state is ArticleError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(state.error),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: _loadInitialArticles,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text('articles.retry'.tr(context)),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+
+              final ArticleSuccess? currentArticlesState =
+                  state is ArticleSuccess
+                      ? state
+                      : (context.read<ArticleCubit>().state is ArticleSuccess
+                          ? context.read<ArticleCubit>().state as ArticleSuccess
+                          : null);
+
+              if (currentArticlesState != null) {
+                return _buildContent(currentArticlesState);
+              }
+
+              return const SizedBox.shrink();
             },
           ),
-        ]
-            : _buildAppBarActions(),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          _loadInitialArticles();
-        },
-        child: BlocConsumer<ArticleCubit, ArticleState>(
-          listener: (context, state) {
-            if (state is ArticleError) {
-              if (mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.error)));
-              }
-            }
-          },
-          builder: (context, state) {
-            if (state is ArticleLoading && !state.isLoadMore) {
-              return const Center(child: LoadingPage());
-            }
-
-            if (state is ArticleError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(state.error),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _loadInitialArticles,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text('articles.retry'.tr(context)),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-
-            final ArticleSuccess? currentArticlesState =
-                state is ArticleSuccess
-                    ? state
-                    : (context.read<ArticleCubit>().state is ArticleSuccess
-                        ? context.read<ArticleCubit>().state as ArticleSuccess
-                        : null);
-
-            if (currentArticlesState != null) {
-              return _buildContent(currentArticlesState);
-            }
-
-            return const SizedBox.shrink();
-          },
         ),
       ),
     );

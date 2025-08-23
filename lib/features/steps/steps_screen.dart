@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -332,7 +333,7 @@ class _StepsScreenState extends State<StepsScreen> with WidgetsBindingObserver {
             : [],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: LoadingButton())
           : !_isPermissionGranted
           ? _buildPermissionRequest(theme)
           : _buildMainContent(progress, theme, primaryColor, onPrimary, surface, onSurface),

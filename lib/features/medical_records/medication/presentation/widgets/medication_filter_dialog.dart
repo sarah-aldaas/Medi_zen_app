@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 
 import '../../data/models/medication_filter_model.dart';
 
@@ -126,7 +127,7 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                           statusTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_status').toList() ?? [];
                         }
                         if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return Column(
                           children: [
@@ -161,7 +162,7 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                           doseForms = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_dose_form').toList() ?? [];
                         }
                         if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
@@ -186,7 +187,7 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                           routes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_route').toList() ?? [];
                         }
                         if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
@@ -211,7 +212,7 @@ class _MedicationFilterDialogState extends State<MedicationFilterDialog> {
                           sites = state.codes?.where((code) => code.codeTypeModel?.name == 'body_site').toList() ?? [];
                         }
                         if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),

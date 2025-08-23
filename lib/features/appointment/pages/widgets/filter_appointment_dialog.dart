@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/doctor/data/model/doctor_model.dart';
 
 import '../../../../base/data/models/code_type_model.dart';
@@ -102,8 +103,8 @@ class _AppointmentFilterDialogState extends State<AppointmentFilterDialog> {
                                   [];
                         }
                         if (state is CodeTypesLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+                          return  Center(
+                            child: LoadingButton(),
                           );
                         }
                         if (appointmentTypes.isEmpty) {

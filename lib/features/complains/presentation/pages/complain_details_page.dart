@@ -450,8 +450,8 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
                                 width: 200,
                                 height: 150,
                                 color: Colors.grey[300],
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
+                                child:  Center(
+                                  child: LoadingButton(),
                                 ),
                               );
                             },

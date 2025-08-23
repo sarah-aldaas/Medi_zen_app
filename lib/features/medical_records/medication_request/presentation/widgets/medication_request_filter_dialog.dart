@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/blocs/code_types_bloc/code_types_cubit.dart';
 import 'package:medizen_app/base/data/models/code_type_model.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/medical_records/conditions/data/models/conditions_model.dart';
 
 import '../../../conditions/presentation/cubit/condition_cubit/conditions_cubit.dart';
@@ -137,7 +138,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                           statusTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_request_status').toList() ?? [];
                         }
                         if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return Column(
                           children: [
@@ -173,7 +174,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                           intentTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_request_intent').toList() ?? [];
                         }
                         if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(
@@ -209,7 +210,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                           priorityTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_request_priority').toList() ?? [];
                         }
                         if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(
@@ -245,7 +246,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                           therapyTypes = state.codes?.where((code) => code.codeTypeModel?.name == 'medication_request_therapy_type').toList() ?? [];
                         }
                         if (state is CodeTypesLoading || state is CodesLoading || state is CodeTypesInitial) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(
@@ -281,7 +282,7 @@ class _MedicationRequestFilterDialogState extends State<MedicationRequestFilterD
                           conditions = state.paginatedResponse.paginatedData!.items ?? [];
                         }
                         if (state is ConditionsLoading) {
-                          return const Center(child: CircularProgressIndicator());
+                          return  Center(child: LoadingButton());
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(

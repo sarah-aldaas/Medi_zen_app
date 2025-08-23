@@ -664,6 +664,7 @@ class _ServiceRequestDetailsPageState extends State<ServiceRequestDetailsPage> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12.0),
                       child: FlexibleImage(
+                        fit: BoxFit.fill,
                         height: 180,
                         imageUrl: request.healthCareService!.photo,
                         errorWidget: Container(

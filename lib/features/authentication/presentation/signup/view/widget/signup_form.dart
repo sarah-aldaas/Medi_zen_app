@@ -128,7 +128,7 @@ class _SignupFormState extends State<SignupForm> {
           return 'sign_up_page.validation.${key}_required'.tr(context);
         }
         if (key == 'email' &&
-            !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+            !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
           return 'sign_up_page.validation.email_invalid'.tr(context);
         }
         return null;
