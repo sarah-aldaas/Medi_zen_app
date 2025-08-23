@@ -298,6 +298,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           context: context,
           builder:
               (context) => AlertDialog(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: Text(
                   'notifications.deleteNotification'.tr(context),
                   style: TextStyle(
@@ -848,6 +849,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       context: context,
       builder:
           (context) => AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Text(notification.title),
             content: SingleChildScrollView(
               child: Text(notification.data!.tip!),
@@ -867,6 +869,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       context: context,
       builder:
           (context) => AlertDialog(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Text('notifications.error'.tr(context)),
             content: Text(message),
             actions: [
@@ -887,6 +890,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       context: context,
       builder:
           (context) => AlertDialog(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: Text(
               notification.title,
               style: Theme.of(context).textTheme.titleLarge,
