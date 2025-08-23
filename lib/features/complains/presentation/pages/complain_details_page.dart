@@ -91,6 +91,7 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           'complaintDetailsPage.closeComplaintDialogTitle'.tr(context),
           style: TextStyle(

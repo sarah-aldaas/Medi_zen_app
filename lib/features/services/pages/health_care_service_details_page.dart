@@ -343,60 +343,8 @@ class _HealthCareServiceDetailsPageState
                   "healthCareServicesPage.noClinicDescription".tr(context),
               style: TextStyle(fontSize: 17, color: textColor, height: 1.5),
             ),
-            if (service.clinic!.photo != null &&
-                service.clinic!.photo!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Center(
-                  child: Card(
-                    elevation: 3,
-                    color: cardColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: FlexibleImage(
-                      imageUrl: service.clinic!.photo,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.fill,
-                      placeholder: Center(
-                        child: LoadingButton()
-                      ),
-                      errorWidget: Icon(
-                        Icons.local_hospital_outlined,
-                        size: 80,
-                        color: theme.iconTheme.color?.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Center(
-                  child: Card(
-                    elevation: 3,
-                    color: cardColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Container(
-                      height: 150,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.local_hospital_outlined,
-                        size: 80,
-                        color: theme.iconTheme.color?.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            const Gap(30),
+
+            const Gap(5),
           ],
           if (service.eligibilities != null &&
               service.eligibilities!.isNotEmpty) ...[

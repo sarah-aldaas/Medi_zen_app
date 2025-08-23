@@ -466,6 +466,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               title: Text(
                 "articles.filters.title".tr(context),
                 style: TextStyle(
