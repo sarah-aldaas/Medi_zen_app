@@ -85,69 +85,74 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text(
-          "myAppointments.title".tr(context),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
+    return WillPopScope( // New widget
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Text(
+            "myAppointments.title".tr(context),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryColor,
+            ),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.filter_list, color: AppColors.primaryColor),
+              onPressed: _showFilterDialog,
+            ),
+            IconButton(
+              icon: Icon(Icons.add, color: AppColors.primaryColor),
+              onPressed: () {
+                context.pushNamed(AppRouter.clinics.name).then((value) {
+                  _loadInitialAppointments();
+                });
+              },
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_list, color: AppColors.primaryColor),
-            onPressed: _showFilterDialog,
-          ),
-          IconButton(
-            icon: Icon(Icons.add, color: AppColors.primaryColor),
-            onPressed: () {
-              context.pushNamed(AppRouter.clinics.name).then((value) {
-                _loadInitialAppointments();
-              });
+        body: RefreshIndicator(
+          onRefresh: () async {
+            _loadInitialAppointments();
+          },
+          color: Theme.of(context).primaryColor,
+          child: BlocConsumer<AppointmentCubit, AppointmentState>(
+            listener: (context, state) {
+              if (state is AppointmentError) {
+                ShowToast.showToastError(message: state.error);
+              }
+            },
+            builder: (context, state) {
+              if (state is AppointmentLoading && !state.isLoadMore) {
+                return _buildShimmerLoader();
+              }
+
+              final appointments =
+                  state is AppointmentSuccess
+                      ? state.paginatedResponse.paginatedData!.items
+                      : [];
+              final hasMore = state is AppointmentSuccess ? state.hasMore : false;
+              if (appointments.isEmpty) {
+                return NotFoundDataPage();
+              }
+
+              return ListView.builder(
+                controller: _scrollController,
+                itemCount: appointments.length + (hasMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < appointments.length) {
+                    return _buildAppointmentItem(appointments[index]);
+                  } else if (hasMore && state is! AppointmentError) {
+                    return Center(child: LoadingButton());
+                  }
+                  return SizedBox.shrink();
+                },
+              );
             },
           ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          _loadInitialAppointments();
-        },
-        color: Theme.of(context).primaryColor,
-        child: BlocConsumer<AppointmentCubit, AppointmentState>(
-          listener: (context, state) {
-            if (state is AppointmentError) {
-              ShowToast.showToastError(message: state.error);
-            }
-          },
-          builder: (context, state) {
-            if (state is AppointmentLoading && !state.isLoadMore) {
-              return _buildShimmerLoader();
-            }
-
-            final appointments =
-                state is AppointmentSuccess
-                    ? state.paginatedResponse.paginatedData!.items
-                    : [];
-            final hasMore = state is AppointmentSuccess ? state.hasMore : false;
-            if (appointments.isEmpty) {
-              return NotFoundDataPage();
-            }
-
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: appointments.length + (hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index < appointments.length) {
-                  return _buildAppointmentItem(appointments[index]);
-                } else if (hasMore && state is! AppointmentError) {
-                  return Center(child: LoadingButton());
-                }
-                return SizedBox.shrink();
-              },
-            );
-          },
         ),
       ),
     );

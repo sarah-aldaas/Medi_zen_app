@@ -247,7 +247,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
               if (index < articles.length) {
                 return _buildArticleItem(article: articles[index], context: context);
               } else if (hasMore) {
-                return const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()));
+                return  Center(child: Padding(padding: EdgeInsets.all(16), child: LoadingButton()));
               }
               return const SizedBox.shrink();
             }, childCount: articles.length + (hasMore ? 1 : 0)),

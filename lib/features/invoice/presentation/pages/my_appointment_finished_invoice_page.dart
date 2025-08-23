@@ -232,7 +232,7 @@ class _MyAppointmentFinishedInvoicePageState
                 appointments[index],
               );
             } else if (hasMore) {
-              return const Center(child: CircularProgressIndicator());
+              return  Center(child: LoadingButton());
             }
             return const SizedBox.shrink();
           },

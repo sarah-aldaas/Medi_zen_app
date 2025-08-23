@@ -6,6 +6,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/widgets/flexible_image.dart';
+import 'package:medizen_app/base/widgets/show_toast.dart';
 import 'package:medizen_app/features/authentication/data/models/patient_model.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/definition_widget.dart';
 import 'package:medizen_app/features/home_page/pages/widgets/greeting_widget.dart';
@@ -34,30 +35,44 @@ class HomePageBody extends StatefulWidget {
 class _HomePageBodyState extends State<HomePageBody> {
   final String clinicId = "1";
   int? _selectedLogoutOption;
-
+  DateTime? _lastPressedAt;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildHeader(context),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SomeClinics(),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: DefinitionWidget(),
-              ),
-              Gap(12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SimpleArticlesPage(),
-              ),
-            ],
+    return WillPopScope( // New widget
+      onWillPop: () async {
+        if (_lastPressedAt == null ||
+            DateTime.now().difference(_lastPressedAt!) >
+                const Duration(seconds: 2)) {
+
+          ShowToast.customShowToast(message: "اضغط مرة اخرى للخروج",color: Colors.black38);
+
+          _lastPressedAt = DateTime.now();
+          return false; // Prevent the app from exiting
+        }
+        return true; // Allow the app to exit
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildHeader(context),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SomeClinics(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: DefinitionWidget(),
+                ),
+                Gap(12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SimpleArticlesPage(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
