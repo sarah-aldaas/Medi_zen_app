@@ -345,7 +345,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                       doctor.avatar,
                       height: 100,
                       width: 100,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       errorBuilder:
                           (context, error, stackTrace) => Icon(
                             Icons.person_outline,
@@ -612,7 +612,7 @@ class ClinicServicesPage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     child: Image.network(
                                       service.photo!,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fill,
                                       errorBuilder:
                                           (context, error, stackTrace) => Icon(
                                             Icons.image_not_supported_outlined,

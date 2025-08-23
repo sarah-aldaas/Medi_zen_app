@@ -197,9 +197,7 @@ class _DiagnosticReportListPublicPageState
                         'diagnosticListAppointmentPage.diagnosticReportListAppointment_clinicalStatus'
                             .tr(context),
                     value: report.condition!.clinicalStatus!.display,
-                    color: _getStatusColor(
-                      report.condition!.clinicalStatus!.code,
-                    ),
+                    color: AppColors.primaryColor
                   ),
 
                 if (report.condition!.verificationStatus != null)
@@ -209,9 +207,7 @@ class _DiagnosticReportListPublicPageState
                         'diagnosticListAppointmentPage.diagnosticReportListAppointment_verificationStatus'
                             .tr(context),
                     value: report.condition!.verificationStatus!.display,
-                    color: _getStatusColor(
-                      report.condition!.verificationStatus!.code,
-                    ),
+                    color:AppColors.primaryColor
                   ),
 
                 if (report.condition!.bodySite != null)
@@ -263,7 +259,7 @@ class _DiagnosticReportListPublicPageState
                       'diagnosticListAppointmentPage.diagnosticReportListAppointment_reportStatus'
                           .tr(context),
                   value: report.status!.display,
-                  color: _getStatusColor(report.status!.code),
+                  color: AppColors.primaryColor
                 ),
             ],
           ),
@@ -324,22 +320,6 @@ class _DiagnosticReportListPublicPageState
       return DateFormat('MMM dd, yyyy').format(dateTime);
     } catch (e) {
       return dateString;
-    }
-  }
-
-  Color _getStatusColor(String? statusCode) {
-    switch (statusCode) {
-      case 'diagnostic_report_final':
-        return Colors.green;
-
-      case 'diagnostic_report_registered':
-        return Colors.blue;
-
-      case 'diagnostic_report_cancelled':
-        return Colors.red;
-      case 'unknown':
-      default:
-        return Colors.grey;
     }
   }
 }

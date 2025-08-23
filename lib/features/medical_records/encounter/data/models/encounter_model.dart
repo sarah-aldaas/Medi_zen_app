@@ -35,7 +35,7 @@ class EncounterModel {
       reason: json['reason'].toString(),
       actualStartDate: json['actual_start_date'].toString(),
       actualEndDate: json['actual_end_date'].toString(),
-      specialArrangement: json['special_arrangement'].toString(),
+      specialArrangement: json['special_arrangement'],
       appointment:json['appointment']!=null? AppointmentModel.fromJson(json['appointment']):null,
       type:json['type']!=null? CodeModel.fromJson(json['type']):null,
       status: json['status']!=null?CodeModel.fromJson(json['status']):null,

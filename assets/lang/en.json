@@ -436,6 +436,7 @@
     }
   },
   "doctorDetails": {
+    "bookingAppointment": "Booking appointment on",
     "doctorName": "Dr. Jenny Watson",
     "specialty": "Immunologists",
     "hospital": "Christ Hospital in London, UK",

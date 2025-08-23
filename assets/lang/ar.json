@@ -348,6 +348,7 @@
     }
   },
   "doctorDetails": {
+    "bookingAppointment": "الموعد سيكون في",
     "doctorName": "د. جيني واتسون",
     "specialty": "أخصائي المناعة",
     "hospital": "مستشفى المسيح في لندن، المملكة المتحدة",

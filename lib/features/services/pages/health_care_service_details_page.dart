@@ -162,7 +162,7 @@ class _HealthCareServiceDetailsPageState
                   imageUrl: service.photo!,
                   height: 250,
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   placeholder: Center(
                     child: CircularProgressIndicator(color: primaryColor),
                   ),

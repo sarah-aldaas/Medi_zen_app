@@ -287,7 +287,7 @@ class _CreateComplainPageState extends State<CreateComplainPage> {
                               borderRadius: BorderRadius.circular(10),
                               image: DecorationImage(
                                 image: FileImage(_attachments[index]),
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                               ),
                             ),
                           ),

@@ -362,7 +362,7 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
                     image: FileImage(File(_attachments[index].path)),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
@@ -443,7 +443,7 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
                             attachment.fileUrl,
                             width: 200,
                             height: 150,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
                               return Container(

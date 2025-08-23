@@ -37,41 +37,27 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) {
-          return;
-        }
-        final bool shouldPop = await _showExitConfirmationDialog(context);
-        if (shouldPop) {
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
-        }
-      },
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildHeader(context),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SomeClinics(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: DefinitionWidget(),
-                ),
-                Gap(12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SimpleArticlesPage(),
-                ),
-              ],
-            ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildHeader(context),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SomeClinics(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: DefinitionWidget(),
+              ),
+              Gap(12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SimpleArticlesPage(),
+              ),
+            ],
           ),
         ),
       ),

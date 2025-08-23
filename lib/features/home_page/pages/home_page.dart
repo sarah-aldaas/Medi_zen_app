@@ -27,17 +27,7 @@ class _HomePageState extends State<HomePage> {
       const ArticlesPage(),
     ];
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (_selectedIndex != 0) {
-          setState(() {
-            _selectedIndex = 0;
-          });
-          return false;
-        }
-        return true;
-      },
-      child: Scaffold(
+    return Scaffold(
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
@@ -113,7 +103,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
+
     );
   }
 }

@@ -437,8 +437,7 @@ class _AllergyDetailsPageState extends State<AllergyDetailsPage> {
                         DateTime.parse(allergy.encounter!.actualStartDate!),
                       ),
                     ),
-                  if (allergy.encounter?.specialArrangement?.isNotEmpty ??
-                      false)
+                  if (allergy.encounter?.specialArrangement!=null)
                     _buildDetailRow(
                       context,
                       Icons.note_alt_outlined,

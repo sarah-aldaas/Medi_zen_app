@@ -127,7 +127,7 @@ class DiagnosticReportCubit extends Cubit<DiagnosticReportState> {
     required BuildContext context,
   }) async {
     emit(DiagnosticReportLoading());
-
+try{
     final result = await remoteDataSource.getDetailsDiagnosticReport(diagnosticReportId: diagnosticReportId);
     if (result is Success<DiagnosticReportModel>) {
       if (result.data.name == "Unauthorized. Please login first.") {
@@ -136,6 +136,10 @@ class DiagnosticReportCubit extends Cubit<DiagnosticReportState> {
       emit(DiagnosticReportDetailsSuccess(diagnosticReport: result.data));
     } else if (result is ResponseError<DiagnosticReportModel>) {
       emit(DiagnosticReportError(error: result.message ?? 'Failed to fetch diagnostic report details'));
+    }}
+    catch(e){
+      emit(DiagnosticReportError(error:'Diagnostic Report not owned by this patient.'));
+
     }
   }
 

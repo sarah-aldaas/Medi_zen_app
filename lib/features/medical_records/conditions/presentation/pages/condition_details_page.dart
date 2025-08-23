@@ -14,6 +14,7 @@ import '../../../../articles/data/model/article_model.dart';
 import '../../../../articles/presentation/cubit/article_cubit/article_cubit.dart';
 import '../../../diagnostic_report/presentation/pages/diagnostic_report_list_page.dart';
 import '../../../medication_request/presentation/pages/my_medication_requests_page.dart';
+import '../../../service_request/presentation/pages/service_request_details_page.dart';
 import '../cubit/condition_cubit/conditions_cubit.dart';
 
 class ConditionDetailsPage extends StatefulWidget {
@@ -302,8 +303,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    condition.healthIssue ??
-                        'conditionDetails.unknownCondition'.tr(context),
+                    condition.healthIssue??"",
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.green,
@@ -946,8 +946,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                           size: 28,
                         ),
                         title: Text(
-                          encounter.reason ??
-                              'conditionDetails.unknownReason'.tr(context),
+                          encounter.reason??"",
                           style: Theme.of(context).textTheme.titleSmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -999,15 +998,13 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                         size: 28,
                       ),
                       title: Text(
-                        request.healthCareService?.name ??
-                            'conditionDetails.unknownService'.tr(context),
+                        request.orderDetails ??"",
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       subtitle: Text(
-                        request.serviceRequestStatus?.display ??
-                            'conditionDetails.unknownStatus'.tr(context),
+                        request.reason ??"",
                         style: TextStyle(
                           color: _getStatusColor(
                             request.serviceRequestStatus?.code,
@@ -1022,10 +1019,7 @@ class _ConditionDetailsPageState extends State<ConditionDetailsPage>
                         color: Colors.grey,
                       ),
                       onTap: () {
-                        ShowToast.showToastInfo(
-                          message: "conditionDetails.serviceRequestDetailsToast"
-                              .tr(context),
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ServiceRequestDetailsPage(serviceId: request.id!,)));
                       },
                     ),
                   ),

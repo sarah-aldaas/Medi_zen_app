@@ -255,7 +255,7 @@ class _EncounterDetailsPageState extends State<EncounterDetailsPage> {
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
                 ),
-              if (encounter.specialArrangement?.isNotEmpty ?? false)
+              if (encounter.specialArrangement!=null)
                 _buildDetailRow(
                   context,
                   label: 'encountersPge.specialNotes'.tr(context),

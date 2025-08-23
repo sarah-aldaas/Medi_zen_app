@@ -329,7 +329,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
                     article.image ?? '',
                     width: 80,
                     height: 80,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.article, size: 40)),
                   ),
                 ),

@@ -227,9 +227,7 @@ class _DiagnosticReportDetailsPageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    report.name ??
-                        'diagnosticDetailsPage.diagnosticReportDetails_unknownReport'
-                            .tr(context),
+                    report.name ??"",
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.green,
@@ -242,7 +240,7 @@ class _DiagnosticReportDetailsPageState
                     Chip(
                       backgroundColor: _getStatusColor(report.status!.code),
                       label: Text(
-                        _getStatusTranslation(report.status!.display, context),
+                        report.status!.display,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -297,9 +295,7 @@ class _DiagnosticReportDetailsPageState
                     'diagnosticDetailsPage.diagnosticReportDetails_relatedCondition'
                         .tr(context),
                 value:
-                    report.condition!.healthIssue ??
-                    'diagnosticDetailsPage.diagnosticReportDetails_unknownCondition'
-                        .tr(context),
+                    report.condition!.healthIssue??"",
                 iconColor: Colors.green,
               ),
           ],
@@ -366,9 +362,7 @@ class _DiagnosticReportDetailsPageState
                 size: 28,
               ),
               title: Text(
-                condition.healthIssue ??
-                    'diagnosticDetailsPage.diagnosticReportDetails_unknownCondition'
-                        .tr(context),
+                condition.healthIssue ??"",
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -559,9 +553,7 @@ class _DiagnosticReportDetailsPageState
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    encounter.reason ??
-                        'diagnosticDetailsPage.diagnosticReportDetails_unknownReason'
-                            .tr(context),
+                    encounter.reason ??"",
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -594,6 +586,7 @@ class _DiagnosticReportDetailsPageState
 
             if (encounter.specialArrangement != null &&
                 encounter.specialArrangement!.isNotEmpty)
+              if(encounter.specialArrangement!=null)
               _buildDetailRow(
                 icon: Icons.settings,
                 label:
@@ -668,24 +661,22 @@ class _DiagnosticReportDetailsPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(Icons.medical_services, color: AppColors.primaryColor),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    request.healthCareService?.name ??
-                        'diagnosticDetailsPage.diagnosticReportDetails_unknownService'
-                            .tr(context),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     Icon(Icons.medical_services, color: AppColors.primaryColor),
+            //     const SizedBox(width: 8),
+            //     Expanded(
+            //       child: Text(
+            //         request. ??"",
+            //         style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
 
-            const SizedBox(height: 8),
+            // const SizedBox(height: 8),
 
             if (request.serviceRequestStatus != null)
               _buildDetailRow(
@@ -836,46 +827,6 @@ class _DiagnosticReportDetailsPageState
     }
   }
 
-  String _getStatusTranslation(String? statusCode, BuildContext context) {
-    switch (statusCode) {
-      case 'final':
-        return 'final_status'.tr(context);
-      case 'completed':
-        return 'completed_status'.tr(context);
-      case 'condition_confirmed':
-        return 'condition_confirmed_status'.tr(context);
-      case 'service_request_active':
-        return 'service_request_active_status'.tr(context);
-      case 'partial':
-        return 'partial_status'.tr(context);
-      case 'service_request_pending':
-        return 'service_request_pending_status'.tr(context);
-      case 'preliminary':
-        return 'preliminary_status'.tr(context);
-      case 'amended':
-        return 'amended_status'.tr(context);
-      case 'corrected':
-        return 'corrected_status'.tr(context);
-      case 'appended':
-        return 'appended_status'.tr(context);
-      case 'cancelled':
-        return 'cancelled_status'.tr(context);
-      case 'service_request_cancelled':
-        return 'service_request_cancelled_status'.tr(context);
-      case 'entered-in-error':
-        return 'entered_in_error_status'.tr(context);
-      case 'unknown':
-        return 'unknown_status'.tr(context);
-      case 'condition_active':
-        return 'condition_active_status'.tr(context);
-      case 'service_request_completed':
-        return 'service_request_completed_status'.tr(context);
-      case 'service_request_rejected':
-        return 'service_request_rejected_status'.tr(context);
-      default:
-        return 'unknown_status'.tr(context);
-    }
-  }
 
   Color _getStatusColor(String? statusCode) {
     switch (statusCode) {
@@ -883,11 +834,13 @@ class _DiagnosticReportDetailsPageState
       case 'completed':
       case 'condition_confirmed':
       case 'service_request_active':
-        return Colors.green;
+      case 'diagnostic_report_final':
+        return AppColors.primaryColor;
       case 'partial':
       case 'service_request_pending':
         return Colors.orange;
       case 'preliminary':
+      case 'diagnostic_report_registered':
         return Colors.blue;
       case 'amended':
         return Colors.purple;
@@ -907,6 +860,7 @@ class _DiagnosticReportDetailsPageState
       case 'service_request_completed':
         return Colors.green.shade600;
       case 'service_request_rejected':
+      case 'diagnostic_report_cancelled':
         return Colors.red.shade600;
       default:
         return Colors.grey;
