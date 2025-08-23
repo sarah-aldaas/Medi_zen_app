@@ -498,7 +498,7 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
               _buildDetailRow(
                 context,
                 'imagingStudyDetailsPage.imagesCountLabel'.tr(context),
-                '${series.images.length}',
+                '{${series.images.length}}',
               ),
               if (series.images.isNotEmpty)
                 Padding(
@@ -517,7 +517,7 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
                                 () => _viewImageFullScreen(context, imageUrl),
                             child: FlexibleImage(
                               imageUrl: imageUrl,
-                              assetPath: AppAssetImages.article6,
+                              // assetPath: AppAssetImages.article6,
                               height: 100,
                               width: 100,
                               placeholder: Center(

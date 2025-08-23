@@ -52,18 +52,4 @@ class StorageService {
     logger.log.i('(TRACE) LocalStorageService:savePatient. key: $key value: $jsonString');
   }
 
-  PatientModel? getPatient(String key) {
-    final jsonString = getFromDisk(key) as String?;
-    if (jsonString == null) {
-      logger.log.i('(TRACE) LocalStorageService:getPatient. key: $key value: null');
-      return null;
-    }
-    try {
-      final jsonMap = jsonDecode(jsonString) as Map<String, dynamic>;
-      return PatientModel.fromJson(jsonMap);
-    } catch (e) {
-      logger.log.e('Error decoding Patient JSON: $e');
-      return null;
-    }
-  }
 }

@@ -19,7 +19,6 @@ import '../../features/authentication/presentation/otp/otp_verification_screen.d
 import '../../features/authentication/presentation/signup/view/signup_screen.dart';
 import '../../features/clinics/pages/clinics_page.dart';
 import '../../features/doctor/pages/details_doctor.dart';
-import '../../features/help_center/pages/help_center.dart';
 import '../../features/home_page/pages/home_page.dart';
 import '../../features/home_page/pages/home_page_body.dart';
 import '../../features/medical_records/Medical_Record.dart';
@@ -52,7 +51,6 @@ enum AppRouter {
   profile,
   editProfile,
   notificationSettings,
-  helpCenter,
   articles,
   myBookMark,
   clinics,
@@ -186,13 +184,7 @@ GoRouter goRouter() {
           return ProfilePage();
         },
       ),
-      GoRoute(
-        path: "/helpCenter",
-        name: AppRouter.helpCenter.name,
-        builder: (BuildContext context, GoRouterState state) {
-          return HelpCenterPage();
-        },
-      ),
+
       GoRoute(
         path: "/articles",
         name: AppRouter.articles.name,
@@ -228,15 +220,15 @@ GoRouter goRouter() {
           );
         },
       ),
-      GoRoute(
-        path: '/edit-profile',
-        name: AppRouter.editProfile.name,
-        builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>?;
-          UpdateProfileRequestModel patientModel = extra?['patientModel'];
-          return EditProfileScreen(patientModel: patientModel);
-        },
-      ),
+      // GoRoute(
+      //   path: '/edit-profile',
+      //   name: AppRouter.editProfile.name,
+      //   builder: (context, state) {
+      //     final extra = state.extra as Map<String, dynamic>?;
+      //     UpdateProfileRequestModel patientModel = extra?['patientModel'];
+      //     return EditProfileScreen(patientModel: patientModel);
+      //   },
+      // ),
       GoRoute(
         path: '/clinic_details',
         name: AppRouter.clinicDetails.name,

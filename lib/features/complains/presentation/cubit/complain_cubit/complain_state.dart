@@ -16,34 +16,26 @@ class ComplainSuccess extends ComplainState {
   final bool hasMore;
   final PaginatedResponse<ComplainModel> paginatedResponse;
 
-  const ComplainSuccess({
-    required this.paginatedResponse,
-    required this.hasMore,
-  });
+  const ComplainSuccess({required this.paginatedResponse, required this.hasMore});
 }
 
 class ComplainDetailsSuccess extends ComplainState {
   final ComplainModel complain;
 
-  const ComplainDetailsSuccess({
-    required this.complain,
-  });
+  const ComplainDetailsSuccess({required this.complain});
 }
 
 class ComplainResponsesSuccess extends ComplainState {
   final List<ComplainResponseModel> responses;
 
-  const ComplainResponsesSuccess({
-    required this.responses,
-  });
+  const ComplainResponsesSuccess({required this.responses});
 }
 
 class ComplainActionSuccess extends ComplainState {
   final String message;
+  final bool isCloseAction;
 
-  const ComplainActionSuccess({
-    required this.message,
-  });
+  const ComplainActionSuccess({required this.message, this.isCloseAction = false});
 }
 
 class ComplainError extends ComplainState {
@@ -51,4 +43,3 @@ class ComplainError extends ComplainState {
 
   const ComplainError({required this.error});
 }
-

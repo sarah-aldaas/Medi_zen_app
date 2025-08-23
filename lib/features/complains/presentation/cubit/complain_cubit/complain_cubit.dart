@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -138,30 +137,39 @@ class ComplainCubit extends Cubit<ComplainState> {
     }
   }
 
-  Future<void> createComplain({
-    required String appointmentId,
-    required ComplainModel complain,
+  Future<void> getComplainResponses({
+    required String complainId,
     required BuildContext context,
   }) async {
     emit(ComplainLoading());
 
-       final result = await remoteDataSource.createComplain(
-      appointmentId: appointmentId,
-      complain: complain,
-    );
+    final result = await remoteDataSource.getResponseOfComplain(complainId: complainId);
+    if (result is Success<List<ComplainResponseModel>>) {
+      emit(ComplainResponsesSuccess(responses: result.data));
+    } else if (result is ResponseError<List<ComplainResponseModel>>) {
+      emit(ComplainError(error: result.message ?? 'Failed to fetch responses'));
 
+    }
+  }
+  Future<void> closeComplain({
+    required String complainId,
+    required BuildContext context,
+  }) async {
+    emit(ComplainLoading());
+
+    final result = await remoteDataSource.closeComplain(complainId: complainId);
     if (result is Success<PublicResponseModel>) {
       if(result.data.status) {
-        emit(ComplainActionSuccess(message: result.data.msg));
-      }else{
-        ShowToast.showToastError(message: result.data.msg ?? 'Failed to delete complain');
-
+        emit(ComplainActionSuccess(
+          message: result.data.msg,
+          isCloseAction: true,  // Mark this as a close action
+        ));
+      } else {
+        emit(ComplainError(error: result.data.msg));
+        ShowToast.showToastError(message: result.data.msg);
       }
-
     } else if (result is ResponseError<PublicResponseModel>) {
-      emit(ComplainError(error: result.message ?? 'Failed to create complain'));
-      ShowToast.showToastError(message: result.message ?? 'Failed to create complain');
-
+      emit(ComplainError(error: result.message ?? 'Failed to close complain'));
     }
   }
 
@@ -179,51 +187,44 @@ class ComplainCubit extends Cubit<ComplainState> {
     );
 
     if (result is Success<PublicResponseModel>) {
-      if(result.data.status)
-      {
-        emit(ComplainActionSuccess(message: result.data.msg));
-      }else{
+      if(result.data.status) {
+        emit(ComplainActionSuccess(
+          message: result.data.msg,
+          isCloseAction: false,  // Not a close action
+        ));
+      } else {
         ShowToast.showToastError(message: result.data.msg);
-
       }
     } else if (result is ResponseError<PublicResponseModel>) {
       emit(ComplainError(error: result.message ?? 'Failed to submit response'));
       ShowToast.showToastError(message: result.message ?? 'Failed to submit response');
-
     }
   }
 
-  Future<void> getComplainResponses({
-    required String complainId,
+  Future<void> createComplain({
+    required String appointmentId,
+    required ComplainModel complain,
     required BuildContext context,
   }) async {
     emit(ComplainLoading());
 
-    final result = await remoteDataSource.getResponseOfComplain(complainId: complainId);
-    if (result is Success<List<ComplainResponseModel>>) {
-      emit(ComplainResponsesSuccess(responses: result.data));
-    } else if (result is ResponseError<List<ComplainResponseModel>>) {
-      emit(ComplainError(error: result.message ?? 'Failed to fetch responses'));
+    final result = await remoteDataSource.createComplain(
+      appointmentId: appointmentId,
+      complain: complain,
+    );
 
-    }
-  }
-
-  Future<void> closeComplain({
-    required String complainId,
-    required BuildContext context,
-  }) async {
-    emit(ComplainLoading());
-
-    final result = await remoteDataSource.closeComplain(complainId: complainId);
     if (result is Success<PublicResponseModel>) {
-      if(result.data.status){
-        emit(ComplainActionSuccess(message: result.data.msg));
-      }else{
-      emit(ComplainError(error: result.data.msg));
-      ShowToast.showToastError(message: result.data.msg);
-  }
-      } else if (result is ResponseError<PublicResponseModel>) {
-      emit(ComplainError(error: result.message ?? 'Failed to close complain'));
+      if(result.data.status) {
+        emit(ComplainActionSuccess(
+          message: result.data.msg,
+          isCloseAction: false,
+        ));
+      } else {
+        ShowToast.showToastError(message: result.data.msg ?? 'Failed to create complain');
+      }
+    } else if (result is ResponseError<PublicResponseModel>) {
+      emit(ComplainError(error: result.message ?? 'Failed to create complain'));
+      ShowToast.showToastError(message: result.message ?? 'Failed to create complain');
     }
   }
 
@@ -234,11 +235,12 @@ class ComplainCubit extends Cubit<ComplainState> {
     emit(ComplainLoading());
     final result = await remoteDataSource.deleteComplain(complainId: complainId);
     if (result is Success<PublicResponseModel>) {
-      if(result.data.status){
-        emit(ComplainActionSuccess(message: result.data.msg));
-
-      }
-      else{
+      if(result.data.status) {
+        emit(ComplainActionSuccess(
+          message: result.data.msg,
+          isCloseAction: false,
+        ));
+      } else {
         emit(ComplainError(error: result.data.msg));
         ShowToast.showToastError(message: result.data.msg);
       }

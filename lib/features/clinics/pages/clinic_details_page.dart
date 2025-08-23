@@ -345,7 +345,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                       doctor.avatar,
                       height: 100,
                       width: 100,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       errorBuilder:
                           (context, error, stackTrace) => Icon(
                             Icons.person_outline,
@@ -612,7 +612,7 @@ class ClinicServicesPage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     child: Image.network(
                                       service.photo!,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fill,
                                       errorBuilder:
                                           (context, error, stackTrace) => Icon(
                                             Icons.image_not_supported_outlined,
@@ -699,11 +699,14 @@ class ClinicServicesPage extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Icon(
-                                      Icons.monetization_on_outlined,
-                                      color: Theme.of(
-                                        context,
-                                      ).iconTheme.color?.withOpacity(0.5),
+                                    Text("ل.س",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color:
+                                        Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.color,
+                                      ),
                                     ),
                                     const Gap(12),
                                     Text(

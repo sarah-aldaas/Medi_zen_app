@@ -47,33 +47,36 @@ dependencies:
   open_filex:
   shimmer:
   intl:
-  connectivity_plus:
+  sensors_plus:
+#  connectivity_plus:
   go_router:
   flutter_localization: ^0.3.1
   get_it:
   url_launcher:
-  internet_connection_checker_plus:
+#  internet_connection_checker_plus:
   dio:
   gap:
   pretty_dio_logger:
   equatable:
   device_info_plus:
   firebase_core:
-  firebase_auth:
+#  firebase_auth:
   flutter_local_notifications: ^19.3.0
   firebase_messaging:
   http:
-  firebase_storage:
+#  firebase_storage:
   permission_handler:
+  pedometer:
 #  health:
   loading_animation_widget:
-  curved_navigation_bar: ^1.0.6
+#  curved_navigation_bar: ^1.0.6
   google_nav_bar: ^5.0.7
   dartz:
   pin_code_fields:
   path_provider: ^2.1.5
   photo_view:
-  cached_network_image:
+  flutter_svg: ^2.2.0
+#  cached_network_image:
 
 dev_dependencies:
   flutter_test:
@@ -110,11 +113,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/images/articles/
     - assets/images/locks/
-    - assets/images/clinic/
     - assets/lang/
     - assets/fonts/
+
 
   #   - images/a_dot_ham.jpeg
 

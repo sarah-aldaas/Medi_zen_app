@@ -365,7 +365,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
         ListTile(
           leading: const Icon(Icons.density_medium_rounded),
           title: Text(appointment.type?.display ?? 'N/A'),
-          subtitle: Text(appointment.description ?? 'N/A'),
+          subtitle: Text(appointment.type?.description ?? 'N/A'),
         ),
       ],
     );
@@ -436,31 +436,6 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     }
   }
 
-  void _rescheduleAppointment(BuildContext context) {}
-
-  Future<void> _confirmDelete(BuildContext context) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder:
-          (context) =>
-          AlertDialog(
-            title: Text("appointmentDetails.confirmDelete".tr(context)),
-            content: Text("appointmentDetails.deleteMessage".tr(context)),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text("appointmentDetails.no".tr(context)),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: Text("appointmentDetails.yes".tr(context)),
-              ),
-            ],
-          ),
-    );
-
-    if (confirmed == true) {}
-  }
 
   void _editAppointment(BuildContext context, AppointmentModel appointment) {
     if (appointment.id == null) {

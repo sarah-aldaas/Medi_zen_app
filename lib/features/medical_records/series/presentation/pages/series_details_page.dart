@@ -272,7 +272,7 @@ class _SeriesDetailsPageState extends State<SeriesDetailsPage> {
             borderRadius: BorderRadius.circular(15),
             child: Image.network(
               imageUrl,
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Center(

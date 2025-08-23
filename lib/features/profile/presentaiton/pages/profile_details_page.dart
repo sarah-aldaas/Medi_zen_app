@@ -12,6 +12,7 @@ import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/pr
 
 import '../../../../base/theme/app_color.dart';
 import '../../data/models/address_model.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileDetailsPage extends StatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -110,7 +111,14 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           }
 
           if (state.status == ProfileStatus.error) {
-            return Center(child: Text(state.errorMessage));
+            return Center(child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 10,
+              children: [
+                Text("profileDetailsPage.no_internet".tr(context),style: TextStyle(color: AppColors.primaryColor),),
+                Icon(Icons.network_wifi_1_bar,color: AppColors.primaryColor,)
+              ],
+            ));
           }
 
           if (state.status == ProfileStatus.success && state.patient != null) {
@@ -162,20 +170,23 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                   actions: [
                     IconButton(
                       onPressed: () {
-                        context.pushNamed(
-                          AppRouter.editProfile.name,
-                          extra: {
-                            'patientModel': UpdateProfileRequestModel(
-                              image: patient.avatar,
-                              genderId: patient.genderId,
-                              maritalStatusId: patient.maritalStatusId,
-                              fName: patient.fName,
-                              lName: patient.lName,
-                            ),
-                          },
-                        ).then((_){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfileScreen(patientModel:patient))).then((_){
                           context.read<ProfileCubit>().fetchMyProfile(context: context);
                         });
+                        // context.pushNamed(
+                        //   AppRouter.editProfile.name,
+                        //   extra: {
+                        //     'patientModel': UpdateProfileRequestModel(
+                        //       image: patient.avatar,
+                        //       genderId: patient.genderId,
+                        //       maritalStatusId: patient.maritalStatusId,
+                        //       fName: patient.fName,
+                        //       lName: patient.lName,
+                        //     ),
+                        //   },
+                        // ).then((_){
+                        //   context.read<ProfileCubit>().fetchMyProfile(context: context);
+                        // });
                       },
                       icon: const Icon(Icons.edit, color: Colors.white),
                     ),

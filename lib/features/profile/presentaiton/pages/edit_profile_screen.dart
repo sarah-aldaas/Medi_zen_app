@@ -15,11 +15,12 @@ import 'package:medizen_app/features/profile/presentaiton/cubit/profile_cubit/pr
 
 import '../../../../../../base/data/models/code_type_model.dart';
 import '../../../../base/theme/app_color.dart';
+import '../../../authentication/data/models/patient_model.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key, required this.patientModel});
 
-  final UpdateProfileRequestModel patientModel;
+  final PatientModel patientModel;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class EditProfileScreen extends StatelessWidget {
         ),
         BlocProvider(
           create:
-              (context) => EditProfileFormCubit(context.read<CodeTypesCubit>()),
+              (context) => EditProfileFormCubit(context.read<CodeTypesCubit>(),patientModel),
         ),
       ],
       child: Scaffold(
@@ -381,9 +382,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                         setState(() {
                           avatarChanged = true;
                           image = null;
-                          debugPrint(
-                            'Image cleared, new avatar: ${pickedFile.path}',
-                          );
+
                         });
                         _cubit.updateAvatar(File(pickedFile.path));
                       }
@@ -407,9 +406,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
                         setState(() {
                           avatarChanged = true;
                           image = null;
-                          debugPrint(
-                            'Image cleared, new avatar: ${pickedFile.path}',
-                          );
                         });
                         _cubit.updateAvatar(File(pickedFile.path));
                       }
@@ -430,7 +426,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
                         setState(() {
                           avatarChanged = true;
                           image = null;
-                          debugPrint('Image removed');
                         });
                         _cubit.updateAvatar(null);
                       },
@@ -501,11 +496,11 @@ class EditProfileFormState {
 
 class EditProfileFormCubit extends Cubit<EditProfileFormState> {
   final CodeTypesCubit codeTypesCubit;
+  final PatientModel patientModel;
   final String id = UniqueKey().toString();
 
-  EditProfileFormCubit(this.codeTypesCubit) : super(EditProfileFormState()) {
-    debugPrint('EditProfileFormCubit created: $id');
-  }
+  EditProfileFormCubit(this.codeTypesCubit,this.patientModel) : super(EditProfileFormState()) {
+ }
 
   Future<void> loadCodes({required BuildContext context}) async {
     if (state.isLoadingCodes) {
@@ -523,20 +518,15 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
         uniqueMaritalStatusCodes[code.id.toString()] = code;
       }
 
-      debugPrint('Gender Codes: ${uniqueGenderCodes.values.toList()}');
-      debugPrint(
-        'Marital Status Codes: ${uniqueMaritalStatusCodes.values.toList()}',
-      );
-
       emit(
         state.copyWith(
           genderCodes: uniqueGenderCodes.values.toList(),
           maritalStatusCodes: uniqueMaritalStatusCodes.values.toList(),
           isLoadingCodes: false,
           genderId:
-              state.genderId ?? uniqueGenderCodes.values.first.id.toString(),
+              patientModel.gender!.id ?? uniqueGenderCodes.values.first.id.toString(),
           maritalStatusId:
-              state.maritalStatusId ??
+              patientModel.maritalStatus!.id ??
               uniqueMaritalStatusCodes.values.first.id.toString(),
         ),
       );
@@ -549,12 +539,10 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
   }
 
   void updateGenderId(String? value) {
-    debugPrint('Updated genderId: $value');
     emit(state.copyWith(genderId: value));
   }
 
   void updateMaritalStatusId(String? value) {
-    debugPrint('Updated maritalStatusId: $value');
     emit(state.copyWith(maritalStatusId: value));
   }
 
@@ -569,27 +557,37 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
     required String? maritalStatusId,
     String? image,
   }) {
-    debugPrint(
-      'Pre-filling form: firstName=$firstName, lastName=$lastName, genderId=$genderId, maritalStatusId=$maritalStatusId, image=$image',
-    );
     final newFormData =
         Map<String, String>.from(state.formData)
           ..['firstName'] = firstName ?? ''
           ..['lastName'] = lastName ?? '';
+
+
+    // Ensure the genderId from the profile is valid
     final validGenderId =
-        state.genderCodes.any((code) => code.id.toString() == genderId)
-            ? genderId
-            : state.genderCodes.isNotEmpty
-            ? state.genderCodes.first.id.toString()
-            : null;
+    state.genderCodes.any((code) => code.id.toString() == genderId)
+        ? genderId
+        : null; // Set to null if not found
+
+    // Ensure the maritalStatusId from the profile is valid
     final validMaritalStatusId =
-        state.maritalStatusCodes.any(
-              (code) => code.id.toString() == maritalStatusId,
-            )
-            ? maritalStatusId
-            : state.maritalStatusCodes.isNotEmpty
-            ? state.maritalStatusCodes.first.id.toString()
-            : null;
+    state.maritalStatusCodes.any((code) => code.id.toString() == maritalStatusId)
+        ? maritalStatusId
+        : null; // Set to null if not found
+    // final validGenderId =
+    //     state.genderCodes.any((code) => code.id.toString() == genderId)
+    //         ? genderId
+    //         : state.genderCodes.isNotEmpty
+    //         ? state.genderCodes.first.id.toString()
+    //         : null;
+    // final validMaritalStatusId =
+    //     state.maritalStatusCodes.any(
+    //           (code) => code.id.toString() == maritalStatusId,
+    //         )
+    //         ? maritalStatusId
+    //         : state.maritalStatusCodes.isNotEmpty
+    //         ? state.maritalStatusCodes.first.id.toString()
+    //         : null;
     emit(
       state.copyWith(
         formData: newFormData,
@@ -620,9 +618,6 @@ class EditProfileFormCubit extends Cubit<EditProfileFormState> {
 
   bool isFormValid() {
     final data = state.formData;
-    debugPrint(
-      'Form Validation: firstName=${data['firstName']}, lastName=${data['lastName']}, genderId=${state.genderId}, maritalStatusId=${state.maritalStatusId}',
-    );
     return data['firstName']!.isNotEmpty &&
         data['lastName']!.isNotEmpty &&
         state.genderId != null &&

@@ -277,23 +277,19 @@ class _HealthCareServiceFilterDialogState
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    BlocConsumer<CodeTypesCubit, CodeTypesState>(
-                      listener: (context, state) {
+                    BlocBuilder<CodeTypesCubit, CodeTypesState>(
+                      builder: (context, state) {
                         if (state is CodeTypesSuccess) {
-                          setState(() {
                             categories =
                                 state.codes
                                     ?.where(
                                       (code) =>
-                                          code.codeTypeModel?.name ==
-                                          'categories',
-                                    )
+                                  code.codeTypeModel?.name ==
+                                      'categories',
+                                )
                                     .toList() ??
-                                [];
-                          });
-                        }
-                      },
-                      builder: (context, state) {
+                                    [];
+                          }
                         if (state is CodesLoading) {
                           return Center(child: LoadingButton());
                         }

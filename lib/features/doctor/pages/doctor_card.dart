@@ -34,7 +34,7 @@ class DoctorCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     image: AssetImage(imagePath),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),

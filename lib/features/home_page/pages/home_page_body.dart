@@ -22,6 +22,7 @@ import '../../../main.dart';
 import '../../authentication/presentation/logout/cubit/logout_cubit.dart';
 import '../../complains/presentation/pages/complain_list_page.dart';
 import '../../invoice/presentation/pages/my_appointment_finished_invoice_page.dart';
+import '../../steps/steps_screen.dart';
 
 class HomePageBody extends StatefulWidget {
   const HomePageBody({super.key});
@@ -36,41 +37,27 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) {
-          return;
-        }
-        final bool shouldPop = await _showExitConfirmationDialog(context);
-        if (shouldPop) {
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
-        }
-      },
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildHeader(context),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SomeClinics(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: DefinitionWidget(),
-                ),
-                Gap(12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SimpleArticlesPage(),
-                ),
-              ],
-            ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildHeader(context),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SomeClinics(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: DefinitionWidget(),
+              ),
+              Gap(12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SimpleArticlesPage(),
+              ),
+            ],
           ),
         ),
       ),
@@ -109,6 +96,7 @@ class _HomePageBodyState extends State<HomePageBody> {
 
   Widget _buildHeader(BuildContext context) {
     PatientModel? myPatientModel = loadingPatientModel();
+
     final ThemeData theme = Theme.of(context);
     context.read<NotificationCubit>().getMyNotifications(context: context);
     return Padding(
@@ -118,8 +106,12 @@ class _HomePageBodyState extends State<HomePageBody> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                context.pushNamed(AppRouter.profile.name);
-              },
+                  context.pushNamed(AppRouter.profile.name).then((_){
+                    setState(() {
+                      myPatientModel = loadingPatientModel();
+                    });
+                  });
+                },
               child: Row(
                 children: [
                   CircleAvatar(
@@ -235,6 +227,11 @@ class _HomePageBodyState extends State<HomePageBody> {
                   context,
                   MaterialPageRoute(builder: (context) => ComplainListPage()),
                 );
+              }else if (value == 'step') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StepsScreen()),
+                );
               }
             },
             itemBuilder:
@@ -282,6 +279,22 @@ class _HomePageBodyState extends State<HomePageBody> {
 
                       title: Text(
                         'homePage.complaints'.tr(context),
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'step',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.directions_walk,
+                        color: Theme.of(context).primaryColor,
+                      ),
+
+                      title: Text(
+                        "step_counter.title".tr(context),
                         style: TextStyle(
                           color: theme.textTheme.bodyLarge?.color,
                         ),

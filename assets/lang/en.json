@@ -12,6 +12,25 @@
     "login": "Login",
     "sign_up": "Sign up"
   },
+  "step_counter": {
+    "title": "Step Counter",
+    "permission_required": "Permission Required",
+    "permission_message": "This app needs activity recognition permission to track your steps.",
+    "grant_permission": "Grant Permission",
+    "set_daily_goal": "Set Daily Goal",
+    "daily_steps_goal": "Daily Steps Goal",
+    "cancel": "Cancel",
+    "save": "Save",
+    "walking": "Walking",
+    "stopped": "Stopped",
+    "steps": "steps",
+    "weekly_activity": "Weekly Activity",
+    "stats": {
+      "calories": "cal",
+      "distance": "km",
+      "time": "min"
+    }
+  },
   "allergyPage": {
     "add_allergy": "Add allergy",
     "unknown_allergy": "Unknown Allergy",
@@ -311,8 +330,8 @@
   },
   "articleDetails": {
     "author": "Author",
-    "removeFavoriteTitle": "Remove favorite title",
-    "removeFavoriteMessage": "Remove favorite message",
+    "removeFavoriteTitle": "Remove favorite article",
+    "removeFavoriteMessage": "Do you want to remove this article form favorite?",
     "cancel": "Cancel",
     "remove": "Remove",
     "actions": {
@@ -417,6 +436,7 @@
     }
   },
   "doctorDetails": {
+    "bookingAppointment": "Booking appointment on",
     "doctorName": "Dr. Jenny Watson",
     "specialty": "Immunologists",
     "hospital": "Christ Hospital in London, UK",
@@ -695,6 +715,7 @@
     "note": "No favorite articles yet"
   },
   "profileDetailsPage": {
+    "no_internet": "Please check the network!!",
     "email": "Email",
     "gender": "Gender",
     "maritalStatus": "Marital Status",
@@ -1075,7 +1096,7 @@
   "clinicDetails": {
     "alLClinics": "AlL Clinics",
     "clinicDetails": "Clinic Details",
-    "ourDedicatedDoctors": "Our Dedicated Doctors",
+    "ourDedicatedDoctors": "The doctors",
     "noAvailable": "No doctors available in this clinic at the moment.",
     "loadMore": "Load More Doctors",
     "errorLoadingClinic": "Failed to load clinic details: ",

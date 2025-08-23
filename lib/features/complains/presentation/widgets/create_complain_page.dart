@@ -166,7 +166,7 @@ class _CreateComplainPageState extends State<CreateComplainPage> {
                     );
                   }
                   if (state is CodeTypesLoading || state is CodesLoading) {
-                    return const Center(child: LoadingPage());
+                    return  Center(child: LoadingButton());
                   }
 
                   final types =
@@ -215,7 +215,7 @@ class _CreateComplainPageState extends State<CreateComplainPage> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _pickImage,
-                      icon: const Icon(Icons.photo_library),
+                      icon: const Icon(Icons.photo_library,color: Colors.white,),
                       label: Text(
                         'createComplainPage.createComplain_addFromGallery'.tr(
                           context,
@@ -243,7 +243,7 @@ class _CreateComplainPageState extends State<CreateComplainPage> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _takePhoto,
-                      icon: const Icon(Icons.camera_alt),
+                      icon: const Icon(Icons.camera_alt,color: Colors.white,),
                       label: Text(
                         'createComplainPage.createComplain_takePhoto'.tr(
                           context,
@@ -287,7 +287,7 @@ class _CreateComplainPageState extends State<CreateComplainPage> {
                               borderRadius: BorderRadius.circular(10),
                               image: DecorationImage(
                                 image: FileImage(_attachments[index]),
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                               ),
                             ),
                           ),

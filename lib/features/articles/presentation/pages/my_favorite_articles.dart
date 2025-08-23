@@ -19,10 +19,7 @@ class MyFavoriteArticles extends StatefulWidget {
 }
 
 class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
-  final List<String> _sortOptions = [
-    "articles.filters.asc",
-    "articles.filters.desc",
-  ];
+  final List<String> _sortOptions = ["articles.filters.asc", "articles.filters.desc"];
   String? _selectedSort;
   String? _selectedCategoryId;
   String? _selectedCategoryDisplay;
@@ -53,37 +50,23 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
 
   void _loadInitialArticles() {
     _isLoadingMore = false;
-    context.read<ArticleCubit>().getMyFavoriteArticles(
-      context: context,
-      filters: _buildFilters(),
-    );
+    context.read<ArticleCubit>().getMyFavoriteArticles(context: context, filters: _buildFilters());
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        !_isLoadingMore) {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
       if (!mounted) return;
       setState(() => _isLoadingMore = true);
-      context
-          .read<ArticleCubit>()
-          .getMyFavoriteArticles(
-            filters: _buildFilters(),
-            loadMore: true,
-            context: context,
-          )
-          .then((_) {
-            if (mounted) {
-              setState(() => _isLoadingMore = false);
-            }
-          });
+      context.read<ArticleCubit>().getMyFavoriteArticles(filters: _buildFilters(), loadMore: true, context: context).then((_) {
+        if (mounted) {
+          setState(() => _isLoadingMore = false);
+        }
+      });
     }
   }
 
   void _loadCategories() async {
-    final categories = await context
-        .read<CodeTypesCubit>()
-        .articleCategoryTypeCodes(context: context);
+    final categories = await context.read<CodeTypesCubit>().articleCategoryTypeCodes(context: context);
     if (mounted) {
       setState(() {
         _categories = categories;
@@ -94,18 +77,14 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
   void _loadArticles() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        context.read<ArticleCubit>().getMyFavoriteArticles(
-          context: context,
-          filters: _buildFilters(),
-        );
+        context.read<ArticleCubit>().getMyFavoriteArticles(context: context, filters: _buildFilters());
       }
     });
   }
 
   Map<String, dynamic> _buildFilters() {
     final filter = ArticleFilter(
-      searchQuery:
-          _searchController.text.isNotEmpty ? _searchController.text : null,
+      searchQuery: _searchController.text.isNotEmpty ? _searchController.text : null,
       sort: _selectedSort != null ? _getSortField() : null,
       categoryId: _selectedCategoryId,
     );
@@ -127,12 +106,22 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text("articles.my_favorite".tr(context)),
-        actions: _buildAppBarActions(),
+        title: _showSearchField ? _buildSearchField() : Text("articles.my_favorite".tr(context)),
+        actions:
+            _showSearchField
+                ? [
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      setState(() {
+                        _showSearchField = false;
+                        _searchController.clear();
+                        _loadArticles();
+                      });
+                    },
+                  ),
+                ]
+                : _buildAppBarActions(),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -142,9 +131,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
           listener: (context, state) {
             if (state is ArticleError) {
               if (mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.error)));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
               }
             }
           },
@@ -165,9 +152,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                       child: Text('articles.retry'.tr(context)),
                     ),
@@ -179,9 +164,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
             final ArticleSuccess? currentArticlesState =
                 state is ArticleSuccess
                     ? state
-                    : (context.read<ArticleCubit>().state is ArticleSuccess
-                        ? context.read<ArticleCubit>().state as ArticleSuccess
-                        : null);
+                    : (context.read<ArticleCubit>().state is ArticleSuccess ? context.read<ArticleCubit>().state as ArticleSuccess : null);
 
             if (currentArticlesState != null) {
               return _buildContent(currentArticlesState);
@@ -214,10 +197,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
           });
         },
       ),
-      IconButton(
-        icon: const Icon(Icons.filter_list),
-        onPressed: _showFilterDialog,
-      ),
+      IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
     ];
   }
 
@@ -259,26 +239,15 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          sliver: _buildActiveFilters(),
-        ),
+        SliverPadding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), sliver: _buildActiveFilters()),
         SliverPadding(
           padding: const EdgeInsets.all(16),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               if (index < articles.length) {
-                return _buildArticleItem(
-                  article: articles[index],
-                  context: context,
-                );
+                return _buildArticleItem(article: articles[index], context: context);
               } else if (hasMore) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: CircularProgressIndicator(),
-                  ),
-                );
+                return const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()));
               }
               return const SizedBox.shrink();
             }, childCount: articles.length + (hasMore ? 1 : 0)),
@@ -334,18 +303,10 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
       );
     }
 
-    return SliverToBoxAdapter(
-      child:
-          activeFilters.isNotEmpty
-              ? Wrap(spacing: 8, runSpacing: 8, children: activeFilters)
-              : const SizedBox.shrink(),
-    );
+    return SliverToBoxAdapter(child: activeFilters.isNotEmpty ? Wrap(spacing: 8, runSpacing: 8, children: activeFilters) : const SizedBox.shrink());
   }
 
-  Widget _buildArticleItem({
-    required ArticleModel article,
-    required BuildContext context,
-  }) {
+  Widget _buildArticleItem({required ArticleModel article, required BuildContext context}) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
@@ -368,10 +329,8 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
                     article.image ?? '',
                     width: 80,
                     height: 80,
-                    fit: BoxFit.cover,
-                    errorBuilder:
-                        (context, error, stackTrace) =>
-                            const Center(child: Icon(Icons.article, size: 40)),
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.article, size: 40)),
                   ),
                 ),
               ),
@@ -380,14 +339,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (article.category != null)
-                      Text(
-                        article.category!.display,
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 12,
-                        ),
-                      ),
+                    if (article.category != null) Text(article.category!.display, style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 12)),
                     const SizedBox(height: 4),
                     Text(
                       article.title ?? 'articles.noTitle'.tr(context),
@@ -396,11 +348,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      article.createdAt?.toLocal().toString().split(' ')[0] ??
-                          '',
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
+                    Text(article.createdAt?.toLocal().toString().split(' ')[0] ?? '', style: const TextStyle(fontSize: 12, color: Colors.grey)),
                   ],
                 ),
               ),
@@ -422,22 +370,12 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text(
-                "articles.filters.title".tr(context),
-                style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              title: Text("articles.filters.title".tr(context), style: TextStyle(color: AppColors.primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "articles.filters.sortBy".tr(context),
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                  Text("articles.filters.sortBy".tr(context), style: const TextStyle(fontSize: 16)),
                   RadioListTile<String?>(
                     title: Text("articles.filters.none".tr(context)),
                     value: null,
@@ -461,35 +399,19 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
                     );
                   }).toList(),
                   const SizedBox(height: 16),
-                  Text(
-                    "articles.filters.category".tr(context),
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                  Text("articles.filters.category".tr(context), style: const TextStyle(fontSize: 16)),
                   DropdownButtonFormField<String>(
                     value: tempCategoryId,
                     items: [
-                      DropdownMenuItem(
-                        value: null,
-                        child: Text(
-                          "articles.filters.allCategories".tr(context),
-                        ),
-                      ),
+                      DropdownMenuItem(value: null, child: Text("articles.filters.allCategories".tr(context))),
                       ..._categories.map((category) {
-                        return DropdownMenuItem(
-                          value: category.id,
-                          child: Text(category.display),
-                        );
+                        return DropdownMenuItem(value: category.id, child: Text(category.display));
                       }).toList(),
                     ],
                     onChanged: (value) {
                       setState(() {
                         tempCategoryId = value;
-                        tempCategoryDisplay =
-                            value != null
-                                ? _categories
-                                    .firstWhere((c) => c.id == value)
-                                    .display
-                                : null;
+                        tempCategoryDisplay = value != null ? _categories.firstWhere((c) => c.id == value).display : null;
                       });
                     },
                   ),
@@ -498,38 +420,18 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text(
-                    "articles.cancel".tr(context),
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: Text("articles.cancel".tr(context), style: TextStyle(color: AppColors.primaryColor, fontSize: 15, fontWeight: FontWeight.bold)),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, {
-                      'sort': tempSort,
-                      'categoryId': tempCategoryId,
-                      'categoryDisplay': tempCategoryDisplay,
-                    });
+                    Navigator.pop(context, {'sort': tempSort, 'categoryId': tempCategoryId, 'categoryDisplay': tempCategoryDisplay});
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
 
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                   ),
-                  child: Text(
-                    "articles.apply".tr(context),
-                    style: TextStyle(
-                      color: AppColors.whiteColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: Text("articles.apply".tr(context), style: TextStyle(color: AppColors.whiteColor, fontSize: 15, fontWeight: FontWeight.bold)),
                 ),
               ],
             );
@@ -549,12 +451,7 @@ class _MyFavoriteArticlesState extends State<MyFavoriteArticles> {
   }
 
   void _navigateToDetails(ArticleModel article, BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ArticleDetailsPage(article: article),
-      ),
-    ).then((value) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleDetailsPage(article: article))).then((value) {
       _loadInitialArticles();
     });
   }

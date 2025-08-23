@@ -96,19 +96,19 @@ class _DiagnosticReportListOfAppointmentPageState
           listener: (context, state) {
           },
           builder: (context, state) {
-            if (state is DiagnosticReportLoading && !state.isLoadMore) {
-              return const Center(child: LoadingPage());
-            }
+    if (state is DiagnosticReportLoading && !state.isLoadMore) {
+    return const Center(child: LoadingPage());
+    }
 
-            final reports =
-                state is DiagnosticReportSuccess
-                    ? state.paginatedResponse.paginatedData!.items
-                    : [];
-            final hasMore =
-                state is DiagnosticReportSuccess ? state.hasMore : false;
+    final reports =
+    state is DiagnosticReportSuccess
+    ? state.paginatedResponse.paginatedData!.items
+        : [];
+    final hasMore =
+    state is DiagnosticReportSuccess ? state.hasMore : false;
 
-            if (reports.isEmpty) {
-              return NotFoundDataPage();            }
+    if (reports.isEmpty) {
+    return NotFoundDataPage(); }
 
             return ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -206,9 +206,7 @@ class _DiagnosticReportListOfAppointmentPageState
                         'diagnosticListAppointmentPage.diagnosticReportListAppointment_clinicalStatus'
                             .tr(context),
                     value: report.condition!.clinicalStatus!.display,
-                    color: _getStatusColor(
-                      report.condition!.clinicalStatus!.code,
-                    ),
+                    color: AppColors.primaryColor
                   ),
 
                 if (report.condition!.verificationStatus != null)
@@ -218,9 +216,7 @@ class _DiagnosticReportListOfAppointmentPageState
                         'diagnosticListAppointmentPage.diagnosticReportListAppointment_verificationStatus'
                             .tr(context),
                     value: report.condition!.verificationStatus!.display,
-                    color: _getStatusColor(
-                      report.condition!.verificationStatus!.code,
-                    ),
+                    color: AppColors.primaryColor
                   ),
 
                 if (report.condition!.bodySite != null)
@@ -235,7 +231,7 @@ class _DiagnosticReportListOfAppointmentPageState
 
                 if (report.condition!.stage != null)
                   _buildInfoRow(
-                    icon: Icons.meeting_room_rounded,
+                    icon: Icons.insights,
                     label:
                         'diagnosticListAppointmentPage.diagnosticReportListAppointment_stage'
                             .tr(context),
@@ -272,7 +268,7 @@ class _DiagnosticReportListOfAppointmentPageState
                       'diagnosticListAppointmentPage.diagnosticReportListAppointment_reportStatus'
                           .tr(context),
                   value: report.status!.display,
-                  color: _getStatusColor(report.status!.code),
+                  color: AppColors.primaryColor,
                 ),
             ],
           ),
@@ -324,19 +320,4 @@ class _DiagnosticReportListOfAppointmentPageState
     }
   }
 
-  Color _getStatusColor(String? statusCode) {
-    switch (statusCode) {
-      case 'diagnostic_report_final':
-        return Colors.green;
-
-      case 'diagnostic_report_registered':
-        return Colors.blue;
-
-      case 'diagnostic_report_cancelled':
-        return Colors.red;
-      case 'unknown':
-      default:
-        return Colors.grey;
-    }
-  }
 }

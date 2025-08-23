@@ -135,8 +135,23 @@ class _ArticlesPageState extends State<ArticlesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("articles.title".tr(context)),
-        actions: _buildAppBarActions(),
+        title: _showSearchField
+            ? _buildSearchField()
+            : Text("articles.title".tr(context)),
+        actions: _showSearchField
+            ? [
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              setState(() {
+                _showSearchField = false;
+                _searchController.clear();
+                _loadArticles();
+              });
+            },
+          ),
+        ]
+            : _buildAppBarActions(),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -276,7 +291,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
       slivers: [
         // SliverPadding(
         //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        //   sliver: _buildActiveFilters(),
+        //   sliver: _buildSearchField(),
         // ),
         SliverPadding(
           padding: const EdgeInsets.all(16),
@@ -289,11 +304,11 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   context: context,
                 );
               } else if (hasMore) {
-                return const Center(
+                return  Center(
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child:
-                        CircularProgressIndicator(),
+                        LoadingButton(),
                   ),
                 );
               }

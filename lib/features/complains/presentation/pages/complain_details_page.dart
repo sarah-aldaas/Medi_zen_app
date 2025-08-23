@@ -34,6 +34,9 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
   void initState() {
     super.initState();
     _loadInitialData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
   }
 
   void _loadInitialData() {
@@ -52,15 +55,9 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
   }
 
   void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
   }
 
   Future<void> _pickImages() async {
@@ -93,51 +90,53 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
   void _confirmCloseComplain() {
     showDialog(
       context: context,
-      builder:
-          (ctx) => AlertDialog(
-            title: Text(
-              'complaintDetailsPage.closeComplaintDialogTitle'.tr(context),
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          'complaintDetailsPage.closeComplaintDialogTitle'.tr(context),
+          style: TextStyle(
+            color: AppColors.primaryColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        content: Text(
+          'complaintDetailsPage.closeComplaintDialogContent'.tr(context),
+          style: const TextStyle(fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'complaintDetailsPage.cancelButton'.tr(context),
               style: TextStyle(
                 color: AppColors.primaryColor,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
               ),
             ),
-            content: Text(
-              'complaintDetailsPage.closeComplaintDialogContent'.tr(context),
-              style: const TextStyle(fontSize: 16),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text(
-                  'complaintDetailsPage.cancelButton'.tr(context),
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                  context.read<ComplainCubit>().closeComplain(
-                    complainId: widget.complainId,
-                    context: context,
-                  );
-                },
-                child: Text(
-                  'complaintDetailsPage.closeButton'.tr(context),
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<ComplainCubit>().closeComplain(
+                complainId: widget.complainId,
+                context: context,
+              );
+              // ShowToast.showToastSuccess(
+              //   message: 'Close request submitted. Refresh to see changes.',
+              // );
+            },
+            child: Text(
+              'complaintDetailsPage.closeButton'.tr(context),
+              style: TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -147,8 +146,6 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
     _responseController.dispose();
     super.dispose();
   }
-
-  bool isClose = false;
 
   @override
   Widget build(BuildContext context) {
@@ -180,18 +177,32 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
       body: BlocConsumer<ComplainCubit, ComplainState>(
         listener: (context, state) {
           if (state is ComplainError) {
-          ShowToast.showToastError(message: state.error);
+            ShowToast.showToastError(message: state.error);
             setState(() => _isSending = false);
           } else if (state is ComplainActionSuccess) {
-           ShowToast.showToastError(message: state.message);
             _responseController.clear();
             setState(() {
               _isSending = false;
               _attachments.clear();
             });
-            _loadResponses();
+
+            if (!state.isCloseAction) {
+              _loadResponses();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _scrollToBottom();
+              });
+            } else {
+              // When a complaint is closed, reload initial data to update UI
+              _loadInitialData();
+              ShowToast.showToastSuccess(
+                message: state.message, // Use the message from the state
+              );
+            }
           } else if (state is ComplainDetailsSuccess) {
             setState(() => _currentComplain = state.complain);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _scrollToBottom();
+            });
           }
         },
         builder: (context, state) {
@@ -204,9 +215,7 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'complaintDetailsPage.failedToLoadComplaint'.tr(context),
-                  ),
+                  Text('complaintDetailsPage.failedToLoadComplaint'.tr(context)),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _loadInitialData,
@@ -222,24 +231,18 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
   }
 
   Widget _buildChatInterface(ComplainModel complain, bool isDarkMode) {
-    isClose = complain.status?.code == 'complaint_closed';
+    final isClose = _currentComplain?.status?.code == 'complaint_closed';
 
     return Column(
       children: [
         GestureDetector(
-          onTap:
-              complain.status?.code == "complaint_closed"
-                  ? null
-                  : _confirmCloseComplain,
+          onTap: isClose ? null : _confirmCloseComplain,
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
-            color: _getStatusColor(
-              complain.status?.code,
-            ).withOpacity(isDarkMode ? 0.3 : 0.2),
+            color: _getStatusColor(complain.status?.code).withOpacity(isDarkMode ? 0.3 : 0.2),
             child: Center(
               child: Text(
-                complain.status?.display ??
-                    'complaintDetailsPage.noStatus'.tr(context),
+                complain.status?.display ?? 'complaintDetailsPage.noStatus'.tr(context),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: _getStatusColor(complain.status?.code),
@@ -249,36 +252,42 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
           ),
         ),
         Expanded(
-          child: BlocBuilder<ComplainCubit, ComplainState>(
-            buildWhen:
-                (previous, current) =>
-                    current is ComplainResponsesSuccess ||
-                    current is ComplainLoading,
-            builder: (context, state) {
-              if (state is ComplainResponsesSuccess) {
-                final allMessages = _combineAndSortMessages(
-                  complain,
-                  state.responses,
-                );
-                return ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.all(8),
-                  itemCount: allMessages.length,
-                  itemBuilder: (context, index) {
-                    final message = allMessages[index];
-                    return _buildMessageBubble(
-                      message: message.response ?? '',
-                      isMe: message.isFromUser,
-                      sender: message.senderName,
-                      time: message.createdAt,
-                      isDarkMode: isDarkMode,
-                      attachments: message.attachmentsUrl,
-                    );
-                  },
-                );
-              }
-              return const Center(child: LoadingPage());
+          child: RefreshIndicator(
+            onRefresh: () async {
+              _loadInitialData();
             },
+            child: BlocBuilder<ComplainCubit, ComplainState>(
+              buildWhen: (previous, current) =>
+              current is ComplainResponsesSuccess || current is ComplainLoading,
+              builder: (context, state) {
+                if (state is ComplainResponsesSuccess) {
+                  final allMessages = _combineAndSortMessages(
+                    complain,
+                    state.responses,
+                  );
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _scrollToBottom();
+                  });
+                  return ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(8),
+                    itemCount: allMessages.length,
+                    itemBuilder: (context, index) {
+                      final message = allMessages[index];
+                      return _buildMessageBubble(
+                        message: message.response ?? '',
+                        isMe: message.isFromUser,
+                        sender: message.senderName,
+                        time: message.createdAt,
+                        isDarkMode: isDarkMode,
+                        attachments: message.attachmentsUrl,
+                      );
+                    },
+                  );
+                }
+                return const Center(child: LoadingPage());
+              },
+            ),
           ),
         ),
         if (!isClose) ...[
@@ -310,9 +319,9 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
   }
 
   List<_MessageItem> _combineAndSortMessages(
-    ComplainModel complain,
-    List<ComplainResponseModel> responses,
-  ) {
+      ComplainModel complain,
+      List<ComplainResponseModel> responses,
+      ) {
     final allMessages = <_MessageItem>[
       _MessageItem(
         response: complain.description,
@@ -322,12 +331,11 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
         attachmentsUrl: complain.attachmentsUrl ?? [],
       ),
       ...responses.map(
-        (r) => _MessageItem(
+            (r) => _MessageItem(
           response: r.response,
           createdAt: r.createdAt!,
           isFromUser: r.sender?.id == loadingPatientModel().id,
-          senderName:
-              r.sender?.fName ?? 'complaintDetailsPage.staffSender'.tr(context),
+          senderName: r.sender?.fName ?? 'complaintDetailsPage.staffSender'.tr(context),
           attachmentsUrl: r.attachmentsUrl ?? [],
         ),
       ),
@@ -354,7 +362,7 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
                     image: FileImage(File(_attachments[index].path)),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
@@ -378,16 +386,12 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
     required bool isMe,
     required String sender,
     required DateTime time,
-    bool isFirstMessage = false,
     required bool isDarkMode,
     required List<ComplaintResponseAttachment> attachments,
   }) {
-    final bubbleColor =
-        isMe
-            ? (isDarkMode
-                ? AppColors.backGroundLogo
-                : Theme.of(context).primaryColor)
-            : (isDarkMode ? Colors.grey[800]! : Colors.grey[200]!);
+    final bubbleColor = isMe
+        ? (isDarkMode ? AppColors.backGroundLogo : Theme.of(context).primaryColor)
+        : (isDarkMode ? Colors.grey[800]! : Colors.grey[200]!);
 
     final textColor = isDarkMode ? Colors.white : Colors.black;
 
@@ -400,14 +404,10 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
             maxWidth: MediaQuery.of(context).size.width * 0.8,
           ),
           child: Column(
-            crossAxisAlignment:
-                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
                   color: bubbleColor,
                   borderRadius: BorderRadius.circular(16),
@@ -434,49 +434,35 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
                       ),
                     if (attachments.isNotEmpty)
                       Column(
-                        children:
-                            attachments
-                                .map(
-                                  (attachment) => Container(
-                                    margin: const EdgeInsets.only(top: 8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Image.network(
-                                      attachment.fileUrl,
-                                      width: 200,
-                                      height: 150,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (
-                                        context,
-                                        child,
-                                        loadingProgress,
-                                      ) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Container(
-                                          width: 200,
-                                          height: 150,
-                                          color: Colors.grey[300],
-                                          child: const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        );
-                                      },
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Container(
-                                                width: 200,
-                                                height: 150,
-                                                color: Colors.grey[300],
-                                                child: const Icon(
-                                                  Icons.broken_image,
-                                                ),
-                                              ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                        children: attachments.map((attachment) => Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Image.network(
+                            attachment.fileUrl,
+                            width: 200,
+                            height: 150,
+                            fit: BoxFit.fill,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                width: 200,
+                                height: 150,
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              width: 200,
+                              height: 150,
+                              color: Colors.grey[300],
+                              child: const Icon(Icons.broken_image),
+                            ),
+                          ),
+                        )).toList(),
                       ),
                   ],
                 ),
@@ -498,7 +484,7 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
     );
   }
 
-  Widget _buildInputArea(bool isDarkMode) {
+    Widget _buildInputArea(bool isDarkMode) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -552,7 +538,7 @@ class _ComplainDetailsPageState extends State<ComplainDetailsPage> {
               ),
               const SizedBox(width: 8),
               _isSending
-                  ? const LoadingPage()
+                  ?  LoadingButton()
                   : IconButton(
                     icon: Icon(
                       Icons.send,
@@ -614,3 +600,4 @@ class _MessageItem {
     required this.attachmentsUrl,
   });
 }
+

@@ -458,7 +458,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                             await _showAppointmentDialog(
                               context: context,
                               title:
-                                  'Booking appointment on ${'doctorDetails.selected'.tr(context)}: ${DateFormat('EEE, MMM d').format(_selectedDate)} at ${_selectedTime!.format(context)}',
+                                  '${'doctorDetails.bookingAppointment'.tr(context)} : ${DateFormat('EEE, MMM d').format(_selectedDate)} في ${_selectedTime!.format(context)}',
                             );
                           },
                   style: ElevatedButton.styleFrom(
@@ -762,6 +762,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
             }
           },
           child: AlertDialog(
+            backgroundColor:Theme.of(context).scaffoldBackgroundColor,
             content: SizedBox(
               width: context.width,
               child: Form(

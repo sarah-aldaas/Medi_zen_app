@@ -65,7 +65,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           } else {
             fetchMyProfile(context: context);
 
-            Navigator.of(context).pop();
+            // Navigator.of(context).pop();
           }
           emit(ProfileState.success(null));
         },
