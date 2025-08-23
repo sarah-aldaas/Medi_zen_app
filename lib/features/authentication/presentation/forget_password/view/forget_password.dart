@@ -120,9 +120,10 @@ class _ForgotPasswordContentState extends State<_ForgotPasswordContent> {
                             context,
                           );
                         }
+
                         if (!RegExp(
                           r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                        ).hasMatch(value)) {
+                        ).hasMatch(value.trim())) {
                           return "login_page.validation.email_invalid".tr(
                             context,
                           );

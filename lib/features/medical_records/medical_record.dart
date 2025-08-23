@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/features/medical_records/allergy/data/models/allergy_filter_model.dart';
 import 'package:medizen_app/features/medical_records/allergy/presentation/pages/all_allergies_page.dart';
@@ -13,6 +14,7 @@ import 'package:medizen_app/features/medical_records/medication_request/presenta
 import 'package:medizen_app/features/medical_records/service_request/data/models/service_request_filter.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/pages/service_requests_page.dart';
 import 'package:medizen_app/features/medical_records/service_request/presentation/widgets/service_request_filter_dialog.dart';
+import '../../base/go_router/go_router.dart';
 import '../../base/theme/app_color.dart';
 import 'conditions/presentation/pages/conditions_list_page.dart';
 import 'diagnostic_report/presentation/pages/diagnostic_report_list_public_page.dart';
@@ -135,58 +137,63 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> with SingleTicker
       'medicalRecordPage.tabs.diagnosticReports'.tr(context),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        title: Text('medicalRecordPage.title'.tr(context), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: AppColors.primaryColor)),
-        centerTitle: true,
-        actions: [
-          if (_tabController.index == 0)
-            IconButton(
-              icon: const Icon(Icons.filter_list),
-              onPressed: _showEncounterFilterDialog,
-              tooltip: 'medicalRecordPage.filterEncountersTooltip'.tr(context),
-            ),
-          if (_tabController.index == 1)
-            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showAllergyFilterDialog, tooltip: 'medicalRecordPage.filterAllergyTooltip'.tr(context)),
-          if (_tabController.index == 2)
-            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showServiceRequestFilterDialog, tooltip: "Filter service request"),
-          if (_tabController.index == 3) IconButton(icon: const Icon(Icons.filter_list), onPressed: _showConditionFilterDialog, tooltip: "Filter condition"),
-          if (_tabController.index == 4)
-            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showMedicationRequestFilterDialog, tooltip: "Filter mediation request"),
-          if (_tabController.index == 5) IconButton(icon: const Icon(Icons.filter_list), onPressed: _showMedicationFilterDialog, tooltip: "Filter mediation"),
-          if (_tabController.index == 6)
-            IconButton(icon: const Icon(Icons.filter_list), onPressed: _showDiagnosticReportFilterDialog, tooltip: "Filter mediation"),
-        ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48),
-          child: Container(
-            color: Theme.of(context).appBarTheme.backgroundColor,
-            child: TabBar(
-              tabAlignment: TabAlignment.start,
-              controller: _tabController,
-              isScrollable: true,
-              labelColor: AppColors.primaryColor,
-              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              indicatorColor: AppColors.primaryColor,
-              tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+    return WillPopScope( // New widget
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          title: Text('medicalRecordPage.title'.tr(context), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: AppColors.primaryColor)),
+          centerTitle: true,
+          actions: [
+            if (_tabController.index == 0)
+              IconButton(
+                icon: const Icon(Icons.filter_list),
+                onPressed: _showEncounterFilterDialog,
+                tooltip: 'medicalRecordPage.filterEncountersTooltip'.tr(context),
+              ),
+            if (_tabController.index == 1)
+              IconButton(icon: const Icon(Icons.filter_list), onPressed: _showAllergyFilterDialog, tooltip: 'medicalRecordPage.filterAllergyTooltip'.tr(context)),
+            if (_tabController.index == 2)
+              IconButton(icon: const Icon(Icons.filter_list), onPressed: _showServiceRequestFilterDialog, tooltip: "Filter service request"),
+            if (_tabController.index == 3) IconButton(icon: const Icon(Icons.filter_list), onPressed: _showConditionFilterDialog, tooltip: "Filter condition"),
+            if (_tabController.index == 4)
+              IconButton(icon: const Icon(Icons.filter_list), onPressed: _showMedicationRequestFilterDialog, tooltip: "Filter mediation request"),
+            if (_tabController.index == 5) IconButton(icon: const Icon(Icons.filter_list), onPressed: _showMedicationFilterDialog, tooltip: "Filter mediation"),
+            if (_tabController.index == 6)
+              IconButton(icon: const Icon(Icons.filter_list), onPressed: _showDiagnosticReportFilterDialog, tooltip: "Filter mediation"),
+          ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(48),
+            child: Container(
+              color: Theme.of(context).appBarTheme.backgroundColor,
+              child: TabBar(
+                tabAlignment: TabAlignment.start,
+                controller: _tabController,
+                isScrollable: true,
+                labelColor: AppColors.primaryColor,
+                labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                indicatorColor: AppColors.primaryColor,
+                tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+              ),
             ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            AllEncountersPage(filter: _encounterFilter),
-            AllAllergiesPage(filter: _allergyFilter),
-            ServiceRequestsPage(filter: _serviceRequestFilter),
-            ConditionsListPage(filter: _conditionFilter),
-            MyMedicationRequestsPublicPage(filter: _medicationRequestFilter),
-            MyMedicationsPublicPage(filter: _medicationFilter),
-            DiagnosticReportListPublicPage(filter: _diagnosticReportFilter),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              AllEncountersPage(filter: _encounterFilter),
+              AllAllergiesPage(filter: _allergyFilter),
+              ServiceRequestsPage(filter: _serviceRequestFilter),
+              ConditionsListPage(filter: _conditionFilter),
+              MyMedicationRequestsPublicPage(filter: _medicationRequestFilter),
+              MyMedicationsPublicPage(filter: _medicationFilter),
+              DiagnosticReportListPublicPage(filter: _diagnosticReportFilter),
+            ],
+          ),
         ),
       ),
     );

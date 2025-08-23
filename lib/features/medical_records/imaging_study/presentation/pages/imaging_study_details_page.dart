@@ -521,9 +521,7 @@ class _ImagingStudyDetailsPageState extends State<ImagingStudyDetailsPage> {
                               height: 100,
                               width: 100,
                               placeholder: Center(
-                                child: CircularProgressIndicator(
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                                child: LoadingButton()
                               ),
                               errorWidget: const Icon(
                                 Icons.broken_image,

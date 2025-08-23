@@ -37,7 +37,7 @@ class _LoginFormState extends State<LoginForm> {
         } else if (state is LoginError) {
           ShowToast.showToastError(message: state.error);
           if(state.error=="Account is not verified, Please verify your account.") {
-            context.pushNamed(AppRouter.otpVerification.name,extra: {'email': _emailController.text});
+            context.pushNamed(AppRouter.otpVerification.name,extra: {'email': _emailController.text.trim()});
           }
         }
       },
@@ -48,6 +48,7 @@ class _LoginFormState extends State<LoginForm> {
             children: [
               TextFormField(
                 controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: "login_page.email".tr(context),
                   prefixIcon: Icon(Icons.email, color: Theme.of(context).primaryColor),
@@ -61,7 +62,8 @@ class _LoginFormState extends State<LoginForm> {
                   if (value == null || value.isEmpty) {
                     return "login_page.validation.email_required".tr(context);
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  final trimmedValue = value.trim();
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(trimmedValue)) {
                     return "login_page.validation.email_invalid".tr(context);
                   }
                   return null;

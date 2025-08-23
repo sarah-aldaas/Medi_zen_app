@@ -148,12 +148,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                       fit: StackFit.expand,
                       children: [
                         FlexibleImage(
-                          imageUrl: patient.avatar ?? '',
+                          imageUrl: patient.avatar,
                           errorWidget: const Icon(
                             Icons.person,
                             size: 60,
                             color: Colors.white70,
                           ),
+                          fit: BoxFit.fill,
                         ),
                         const DecoratedBox(
                           decoration: BoxDecoration(

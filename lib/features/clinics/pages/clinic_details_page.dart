@@ -6,6 +6,7 @@ import 'package:medizen_app/base/extensions/localization_extensions.dart';
 import 'package:medizen_app/base/go_router/go_router.dart';
 import 'package:medizen_app/base/services/di/injection_container_common.dart';
 import 'package:medizen_app/base/theme/app_color.dart';
+import 'package:medizen_app/base/widgets/loading_page.dart';
 import 'package:medizen_app/features/clinics/data/models/clinic_model.dart';
 import 'package:medizen_app/features/clinics/pages/cubit/clinic_cubit/clinic_cubit.dart';
 
@@ -101,9 +102,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         builder: (context, clinicState) {
           if (clinicState is ClinicLoading) {
             return Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor,
-              ),
+              child: LoadingButton()
             );
           }
           if (clinicState is ClinicError) {
@@ -120,9 +119,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             return _buildClinicDetails(clinicState.clinic);
           }
           return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ),
+            child:LoadingButton()
           );
         },
       ),
@@ -236,9 +233,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
                         child: Center(
                           child:
                               _doctorCubit.isLoading
-                                  ? CircularProgressIndicator(
-                                    color: Theme.of(context).primaryColor,
-                                  )
+                                  ? LoadingButton()
                                   : TextButton(
                                     onPressed: () {
                                       _doctorCubit.getDoctorsOfClinic(
@@ -303,9 +298,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
           );
         } else if (state is DoctorLoading && !_doctorCubit.isLoading) {
           content = Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ),
+            child: LoadingButton(),
           );
         } else {
           content = const SizedBox.shrink();

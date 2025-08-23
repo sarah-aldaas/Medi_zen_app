@@ -164,7 +164,7 @@ class _HealthCareServiceDetailsPageState
                   width: double.infinity,
                   fit: BoxFit.fill,
                   placeholder: Center(
-                    child: CircularProgressIndicator(color: primaryColor),
+                    child: LoadingButton(),
                   ),
                   errorWidget: Icon(
                     Icons.medical_services_outlined,
@@ -361,7 +361,7 @@ class _HealthCareServiceDetailsPageState
                       width: double.infinity,
                       fit: BoxFit.fill,
                       placeholder: Center(
-                        child: CircularProgressIndicator(color: primaryColor),
+                        child: LoadingButton()
                       ),
                       errorWidget: Icon(
                         Icons.local_hospital_outlined,

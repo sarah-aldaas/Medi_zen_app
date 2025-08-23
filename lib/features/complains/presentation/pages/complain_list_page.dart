@@ -182,9 +182,9 @@ class _ComplainListPageState extends State<ComplainListPage> {
                 if (index < complains.length) {
                   return _buildComplainItem(context, complains[index]);
                 } else {
-                  return const Padding(
+                  return  Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(child: LoadingButton()),
                   );
                 }
               },
