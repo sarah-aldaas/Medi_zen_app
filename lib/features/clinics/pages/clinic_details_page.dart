@@ -168,9 +168,13 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         clipBehavior: Clip.antiAlias,
         child: AspectRatio(
           aspectRatio: 16 / 9,
-          child: FlexibleImage(
-            imageUrl: clinic.photo,
-            errorWidget: Center(child: Icon(Icons.local_hospital)),
+          child: Center(
+            child: FlexibleImage(
+              height: 70,
+              width: 70,
+              imageUrl: clinic.photo,
+              errorWidget: Center(child: Icon(Icons.local_hospital)),
+            ),
           ),
 
         ),
