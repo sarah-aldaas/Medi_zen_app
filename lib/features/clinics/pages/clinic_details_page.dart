@@ -101,9 +101,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
         bloc: _clinicCubit,
         builder: (context, clinicState) {
           if (clinicState is ClinicLoading) {
-            return Center(
-              child: LoadingButton()
-            );
+            return Center(child: LoadingButton());
           }
           if (clinicState is ClinicError) {
             return Center(
@@ -118,9 +116,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
           if (clinicState is ClinicLoadedSuccess) {
             return _buildClinicDetails(clinicState.clinic);
           }
-          return Center(
-            child:LoadingButton()
-          );
+          return Center(child: LoadingButton());
         },
       ),
     );
@@ -170,13 +166,12 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
           aspectRatio: 16 / 9,
           child: Center(
             child: FlexibleImage(
-              height: 70,
-              width: 70,
+              height: 100,
+              width: 100,
               imageUrl: clinic.photo,
               errorWidget: Center(child: Icon(Icons.local_hospital)),
             ),
           ),
-
         ),
       ),
     );
@@ -301,9 +296,7 @@ class _ClinicDetailsPageState extends State<ClinicDetailsPage> {
             ),
           );
         } else if (state is DoctorLoading && !_doctorCubit.isLoading) {
-          content = Center(
-            child: LoadingButton(),
-          );
+          content = Center(child: LoadingButton());
         } else {
           content = const SizedBox.shrink();
         }
@@ -572,9 +565,7 @@ class ClinicServicesPage extends StatelessWidget {
             services.isEmpty
                 ? Center(
                   child: Text(
-                    'clinicDetails.noServicesAvailable'.tr(
-                      context,
-                    ),
+                    'clinicDetails.noServicesAvailable'.tr(context),
                     style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).textTheme.bodySmall?.color,
@@ -696,13 +687,14 @@ class ClinicServicesPage extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Text("ل.س",
+                                    Text(
+                                      "ل.س",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color:
-                                        Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge?.color,
+                                            Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge?.color,
                                       ),
                                     ),
                                     const Gap(12),
