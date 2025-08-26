@@ -299,6 +299,42 @@ class CodeTypesCubit extends Cubit<CodeTypesState> {
     }
     return [];
   }
+  Future<List<CodeModel>> getAppointmentStatusCodes({required BuildContext context}) async {
+    final codeTypes =
+    state is CodeTypesSuccess
+        ? (state as CodeTypesSuccess).codeTypes
+        : await getCachedCodeTypes();
+    if (codeTypes == null) {
+      await fetchCodeTypes(context: context);
+      return getAppointmentStatusCodes(context: context);
+    }
+
+    final appointmentTypeCodeType = codeTypes.firstWhere(
+          (ct) => ct.name == 'status_appointment',
+      orElse: () => throw Exception('Appointment type code status not found'),
+    );
+    final currentCodes =
+        (state is CodeTypesSuccess ? (state as CodeTypesSuccess).codes : null) ?? [];
+
+    if (!currentCodes.any(
+          (code) => code.codeTypeModel!.id == appointmentTypeCodeType.id,
+    )) {
+      await fetchCodes(
+        codeTypeId: appointmentTypeCodeType.id,
+        codeTypes: codeTypes,
+        context: context,
+      );
+    }
+
+    final updatedState = state;
+    if (updatedState is CodeTypesSuccess) {
+      return updatedState.codes
+          ?.where((code) => code.codeTypeModel!.id == appointmentTypeCodeType.id)
+          .toList() ??
+          [];
+    }
+    return [];
+  }
 
   Future<List<CodeModel>> getServiceCategoryCodes({required BuildContext context}) async {
     final codeTypes =
